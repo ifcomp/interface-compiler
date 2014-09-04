@@ -1,32 +1,29 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef CLASS_H
+#define CLASS_H
 
-#include "string"
-#include "boost/shared_ptr.hpp"
-#include "model/documentation.hpp"
+#include "model/object.hpp"
+#include "model/operation.hpp"
 
-class Object
+class Class : public Object
 {
 public:
-    Object();
+    Class();
 
-    std::string name();
-    void setName(std::string name);
+    bool isValueType();
+    void setValueType(bool isValueType);
 
-    std::string shortName();
-    void setShortName(std::string name);
+    bool isAbstractType();
+    void setAbstractType(bool isAbstractType);
 
-    std::shared_ptr<Object> parent();
-    void setParent(std::shared_ptr<Object> parent);
-
-    DocumentationPtr doc();
-    void setDoc(DocumentationPtr doc);
+    void addOperation(ParameterPtr param);
+    std::vector<ParameterPtr> operations();
 
 private:
-    std::string mName;
-    std::string mShortName;
-    std::shared_ptr<Object> mParent;
-    DocumentationPtr mDoc;
+    bool mValueType;
+    bool mAbstractType;
+    std::vector<OperationPtr> mOperations;
 };
 
-#endif // OBJECT_H
+typedef std::shared_ptr<Class> ClassPtr;
+
+#endif // CLASS_H

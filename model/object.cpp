@@ -1,10 +1,5 @@
-#include "model/object.hpp"
+#include "model/class.hpp"
 
-Object::Object()
+Class::Class()
 {
-}
-
-void Object::setName(std::string name)
-{
-
 }
