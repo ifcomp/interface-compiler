@@ -1,0 +1,25 @@
+set(SRC_LIST
+   ${SRC_LIST}
+   ${CMAKE_CURRENT_SOURCE_DIR}/class.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/documentation.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/namespace.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/object.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/observables.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/operation.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/parameter.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/parametertype.cpp
+   PARENT_SCOPE
+)
+
+set(HDR_LIST
+   ${HDR_LIST}
+   ${CMAKE_CURRENT_SOURCE_DIR}/class.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/documentation.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/namespace.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/object.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/observables.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/operation.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/parameter.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/parametertype.hpp
+   PARENT_SCOPE
+)
