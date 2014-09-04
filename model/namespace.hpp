@@ -2,22 +2,30 @@
 #define NAMESPACE_H
 
 #include <string>
-#include "model/class.hpp"
+#include <map>
+#include "model/baseObject.hpp"
 
-class Namespace
+namespace Api
 {
-public:
-    Namespace();
+    namespace Model
+    {
+        class Namespace
+        {
+        public:
+            Namespace();
 
-    std::string name();
-    void setName(std::string name);
+            std::string name();
+            void setName(std::string name);
 
-    ClassPtr classes();
-    void addClass(ClassPtr apiClass);
+            BaseObjectPtr object(std::string name);
+            std::map<std::string, BaseObjectPtr> objects();
+            void addObject(std::string name, BaseObjectPtr object);
 
-private:
-    std::string mName;
-    std::vector<ClassPtr> mClasses;
-};
+        private:
+            std::string mName;
+            std::map<std::string, BaseObjectPtr> mObjects;
+        };
+    }
+}
 
 #endif // NAMESPACE_H

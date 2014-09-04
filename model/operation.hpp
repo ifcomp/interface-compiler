@@ -1,10 +1,10 @@
 #ifndef OPERATION_H
 #define OPERATION_H
 
-#include "model/object.hpp"
+#include "model/baseObject.hpp"
 #include "model/parameter.hpp"
 
-class Operation : public Object
+class Operation : public BaseObject
 {
 public:
     Operation();

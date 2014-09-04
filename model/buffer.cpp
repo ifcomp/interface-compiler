@@ -1,5 +1,6 @@
 #include "buffer.hpp"
 
-Buffer::Buffer()
+Api::Model::Buffer::Buffer()
 {
+
 }

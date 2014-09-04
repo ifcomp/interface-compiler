@@ -1,14 +1,14 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "string"
-#include "boost/shared_ptr.hpp"
+#include <string>
+#include <boost/shared_ptr.hpp>
 #include "model/documentation.hpp"
 
-class Object
+class BaseObject
 {
 public:
-    Object();
+    BaseObject();
 
     std::string name();
     void setName(std::string name);
@@ -16,17 +16,15 @@ public:
     std::string shortName();
     void setShortName(std::string name);
 
-    std::shared_ptr<Object> parent();
-    void setParent(std::shared_ptr<Object> parent);
-
     DocumentationPtr doc();
     void setDoc(DocumentationPtr doc);
 
 private:
     std::string mName;
     std::string mShortName;
-    std::shared_ptr<Object> mParent;
     DocumentationPtr mDoc;
 };
+
+typedef std::shared_ptr<BaseObject> BaseObjectPtr;
 
 #endif // OBJECT_H

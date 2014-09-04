@@ -1,10 +1,10 @@
 #include "model/object.hpp"
 
-Object::Object()
+BaseObject::BaseObject()
 {
 }
 
-void Object::setName(std::string name)
+void BaseObject::setName(std::string name)
 {
 
 }

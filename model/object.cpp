@@ -1,5 +1,5 @@
-#include "model/class.hpp"
+#include "model/object.hpp"
 
-Class::Class()
+Object::Object()
 {
 }

@@ -1,5 +1,6 @@
 #include "model/namespace.hpp"
 
-Namespace::Namespace()
+Api::Model::Namespace::Namespace()
 {
+
 }

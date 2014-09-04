@@ -3,7 +3,7 @@
 
 #include <string>
 #include <boost/shared_ptr.hpp>
-#include "model/parametertype.hpp"
+#include "model/baseObject.hpp"
 
 class Parameter
 {
@@ -13,11 +13,12 @@ public:
     std::string name();
     void setName(std::string name);
 
-    ParameterType type();
+    BaseObjectPtr type();
     void setType();
 
 private:
-    ParameterType mType;
+    std::string mName;
+    BaseObjectPtr mType;
 };
 
 typedef std::shared_ptr<Parameter> ParameterPtr;

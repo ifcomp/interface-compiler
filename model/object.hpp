@@ -1,13 +1,13 @@
 #ifndef CLASS_H
 #define CLASS_H
 
-#include "model/object.hpp"
+#include "model/baseObject.hpp"
 #include "model/operation.hpp"
 
-class Class : public Object
+class Object : public BaseObject
 {
 public:
-    Class();
+    Object();
 
     bool isValueType();
     void setValueType(bool isValueType);
@@ -15,15 +15,19 @@ public:
     bool isAbstractType();
     void setAbstractType(bool isAbstractType);
 
+    std::shared_ptr<BaseObject> parent();
+    void setParent(std::shared_ptr<BaseObject> parent);
+
     void addOperation(ParameterPtr param);
     std::vector<ParameterPtr> operations();
 
 private:
     bool mValueType;
     bool mAbstractType;
+    std::shared_ptr<BaseObject> mParent;
     std::vector<OperationPtr> mOperations;
 };
 
-typedef std::shared_ptr<Class> ClassPtr;
+typedef std::shared_ptr<Object> ClassPtr;
 
 #endif // CLASS_H
