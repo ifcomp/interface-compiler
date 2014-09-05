@@ -1,12 +1,15 @@
 #ifndef PRIMITIVE_HPP
 #define PRIMITIVE_HPP
 
-#include "model/baseObject.hpp"
+#include <memory>
+#include "model/namespace_member.hpp"
 
-class Primitive : public BaseObject
+namespace Api { namespace Model {
+
+class Primitive : public NamespaceMember
 {
 public:
-    enum PrimitiveType
+    enum class PrimitiveType
     {
         BYTE,
         UINT32,
@@ -20,17 +23,17 @@ public:
 
 private:
     PrimitiveType mType;
-    std::string mMapTo;
 
 public:
     Primitive();
+    virtual ~Primitive();
 
     PrimitiveType type();
     void setType(PrimitiveType type);
-
-    std::string mapTo();
-    void setMapTo(std::string mapTo);
-
 };
+
+typedef std::shared_ptr<Primitive> PrimitivePtr;
+
+} } // namespace Api::Model
 
 #endif // PRIMITIVE_HPP

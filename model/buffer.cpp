@@ -1,6 +1,21 @@
 #include "buffer.hpp"
 
-Api::Model::Buffer::Buffer()
-{
+using namespace Api::Model;
 
+Buffer::Buffer()
+{
+}
+
+Buffer::~Buffer()
+{
+}
+
+Buffer::BufferType Buffer::type()
+{
+	return mType;
+}
+
+void Buffer::setType(BufferType type)
+{
+	mType = type;
 }

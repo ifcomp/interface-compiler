@@ -1,31 +1,28 @@
-#ifndef NAMESPACE_H
-#define NAMESPACE_H
+#ifndef NAMESPACE_HPP
+#define NAMESPACE_HPP
 
 #include <string>
 #include <map>
-#include "model/baseObject.hpp"
+#include <memory>
+#include "model/namespace_member.hpp"
 
-namespace Api
+namespace Api { namespace Model {
+
+class Namespace : public NamespaceMember
 {
-    namespace Model
-    {
-        class Namespace
-        {
-        public:
-            Namespace();
+public:
+    Namespace();
+    virtual ~Namespace();
 
-            std::string name();
-            void setName(std::string name);
+    void addMember(NamespaceMemberPtr member);
+    const std::map<std::string, NamespaceMemberPtr>& members();
 
-            BaseObjectPtr object(std::string name);
-            std::map<std::string, BaseObjectPtr> objects();
-            void addObject(std::string name, BaseObjectPtr object);
+private:
+    std::map<std::string, NamespaceMemberPtr> mMembers;
+};
 
-        private:
-            std::string mName;
-            std::map<std::string, BaseObjectPtr> mObjects;
-        };
-    }
-}
+typedef std::shared_ptr<Namespace> NamespacePtr;
 
-#endif // NAMESPACE_H
+} } // namespace Api::Model
+
+#endif // NAMESPACE_HPP

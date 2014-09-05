@@ -1,33 +1,41 @@
 set(SRC_LIST
    ${SRC_LIST}
-   ${CMAKE_CURRENT_SOURCE_DIR}/baseObject.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/buffer.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/class.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/event.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/identifiable.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/name.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/object.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/observables.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/namespace_member.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/operation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/parameter.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/primitive.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/struct.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/type.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/value.cpp
    PARENT_SCOPE
 )
 
 set(HDR_LIST
    ${HDR_LIST}
-   ${CMAKE_CURRENT_SOURCE_DIR}/baseObject.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/buffer.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/class.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/event.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/identifiable.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/name.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace.hpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/object.hpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/observables.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/namespace_member.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/operation.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/parameter.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/primitive.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/struct.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/type.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/value.hpp
    PARENT_SCOPE
 )

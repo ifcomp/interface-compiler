@@ -1,19 +1,22 @@
-#ifndef DOCUMENTATION_H
-#define DOCUMENTATION_H
+#ifndef DOCUMENTATION_HPP
+#define DOCUMENTATION_HPP
 
 #include <string>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
+namespace Api { namespace Model {
 
 class Documentation
 {
 public:
     Documentation();
+    virtual ~Documentation();
 
     std::string brief();
-    void setBrief(std::string text);
+    void setBrief(std::string brief);
 
     std::string more();
-    void setMore(std::string text);
+    void setMore(std::string more);
 
 private:
     std::string mBrief;
@@ -22,4 +25,6 @@ private:
 
 typedef std::shared_ptr<Documentation> DocumentationPtr;
 
-#endif // DOCUMENTATION_H
+} } // namespace Api::Model
+
+#endif // DOCUMENTATION_HPP

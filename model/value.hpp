@@ -2,24 +2,26 @@
 #define VALUE_HPP
 
 #include <string>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include "model/identifiable.hpp"
 
-class Value
+namespace Api { namespace Model {
+
+class Value : public Identifiable
 {
 public:
     Value();
-
-    std::string name();
-    void setName(std::string name);
+    virtual ~Value();
 
     int32_t value();
     void setValue(int32_t value);
 
 private:
-    std::string mName;
     int32_t mValue;
 };
 
 typedef std::shared_ptr<Value> ValuePtr;
+
+} } // namespace Api::Model
 
 #endif // VALUE_HPP

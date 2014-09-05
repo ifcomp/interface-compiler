@@ -1,19 +1,29 @@
 #ifndef ENUM_HPP
 #define ENUM_HPP
 
-#include "model/baseObject.hpp"
+#include <string>
+#include <map>
+#include <memory>
+#include "model/namespace_member.hpp"
 #include "model/value.hpp"
 
-class Enum : public BaseObject
+namespace Api { namespace Model {
+
+class Enum : public NamespaceMember
 {
 public:
     Enum();
+    virtual ~Enum();
 
-    void addValue(Value value);
-    std::vector<ValuePtr> values();
+    void addValue(ValuePtr value);
+    const std::map<std::string, ValuePtr>& values();
 
 private:
-    std::vector<ValuePtr> mValues;
+    std::map<std::string, ValuePtr> mValues;
 };
+
+typedef std::shared_ptr<Enum> EnumPtr;
+
+} } // namespace Api::Model
 
 #endif // ENUM_HPP

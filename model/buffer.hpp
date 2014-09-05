@@ -2,35 +2,33 @@
 #define BUFFER_HPP
 
 #include <string>
-#include "model/baseObject.hpp"
+#include <memory>
+#include "model/namespace_member.hpp"
 
-namespace Api
+namespace Api { namespace Model {
+
+class Buffer : public NamespaceMember
 {
-    namespace Model
+public:
+    enum class BufferType
     {
-        class Buffer : public BaseObject
-        {
-        public:
-            enum BufferType
-            {
-                BUFFER,
-                CONST_BUFFER
-            };
+        BUFFER,
+        CONST_BUFFER
+    };
 
-        private:
-            BufferType mType;
-            std::string mMapTo;
+private:
+    BufferType mType;
 
-        public:
-            Buffer();
+public:
+    Buffer();
+    virtual ~Buffer();
 
-            BufferType type();
-            void setType(BufferType type);
+    BufferType type();
+    void setType(BufferType type);
+};
 
-            std::string mapTo();
-            void setMapTo(std::string mapTo);
-        };
-    }
-}
+typedef std::shared_ptr<Buffer> BufferPtr;
+
+} } // namespace Api::Model
 
 #endif // BUFFER_HPP
