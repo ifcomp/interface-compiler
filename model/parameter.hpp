@@ -1,26 +1,28 @@
-#ifndef PARAMETER_H
-#define PARAMETER_H
+#ifndef PARAMETER_HPP
+#define PARAMETER_HPP
 
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include "model/baseObject.hpp"
+#include <memory>
+#include "model/identifiable.hpp"
+#include "model/type.hpp"
 
-class Parameter
+namespace Api { namespace Model {
+
+class Parameter : public Identifiable
 {
 public:
     Parameter();
+    virtual ~Parameter();
 
-    std::string name();
-    void setName(std::string name);
-
-    BaseObjectPtr type();
-    void setType();
+    TypePtr type();
+    void setType(TypePtr type);
 
 private:
-    std::string mName;
-    BaseObjectPtr mType;
+    TypePtr mType;
 };
 
 typedef std::shared_ptr<Parameter> ParameterPtr;
 
-#endif // PARAMETER_H
+} } // namespace Api::Model
+
+#endif // PARAMETER_HPP

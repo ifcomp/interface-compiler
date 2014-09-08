@@ -1,12 +1,15 @@
 #ifndef CONTAINER_HPP
 #define CONTAINER_HPP
 
-#include "model/baseObject.hpp"
+#include <memory>
+#include "model/namespace_member.hpp"
 
-class Container : public BaseObject
+namespace Api { namespace Model {
+
+class Container : public NamespaceMember
 {
 public:
-    enum ContainerType
+    enum class ContainerType
     {
         VECTOR,
         LIST,
@@ -15,20 +18,17 @@ public:
 
 private:
     ContainerType mType;
-    BaseObjectPtr mPayloadType;
-    std::string mMapTo;
 
 public:
     Container();
+    virtual ~Container();
 
     ContainerType type();
     void setType(ContainerType type);
-
-    BaseObjectPtr payloadType();
-    void setPayloadType(BaseObjectPtr type);
-
-    std::string mapTo();
-    void setMapTo(std::string mapTo);
 };
+
+typedef std::shared_ptr<Container> ContainerPtr;
+
+} } // namespace Api::Model
 
 #endif // CONTAINER_HPP

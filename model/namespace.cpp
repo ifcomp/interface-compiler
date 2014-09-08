@@ -1,6 +1,21 @@
 #include "model/namespace.hpp"
 
-Api::Model::Namespace::Namespace()
-{
+using namespace Api::Model;
 
+Namespace::Namespace()
+{
+}
+
+Namespace::~Namespace()
+{
+}
+
+const std::map<std::string, NamespaceMemberPtr>& Namespace::members()
+{
+	return mMembers;
+}
+
+void Namespace::addMember(NamespaceMemberPtr member)
+{
+	mMembers[member->name().longName()] = member;
 }

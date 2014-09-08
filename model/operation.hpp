@@ -1,13 +1,19 @@
-#ifndef OPERATION_H
-#define OPERATION_H
+#ifndef OPERATION_HPP
+#define OPERATION_HPP
 
-#include "model/baseObject.hpp"
+#include <string>
+#include <map>
+#include <memory>
+#include "model/identifiable.hpp"
 #include "model/parameter.hpp"
 
-class Operation : public BaseObject
+namespace Api { namespace Model {
+
+class Operation : public Identifiable
 {
 public:
     Operation();
+    virtual ~Operation();
 
     bool isStatic();
     void setStatic(bool isStatic);
@@ -16,18 +22,20 @@ public:
     void setSynchronous(bool isSynchronous);
 
     void addParam(ParameterPtr param);
-    std::vector<ParameterPtr> params();
+    const std::map<std::string, ParameterPtr>& params();
 
-    void setReturnValue(ParameterPtr param);
-    ParameterPtr returnValue();
+    void setResult(ParameterPtr result);
+    ParameterPtr result();
 
 private:
-    bool mStaticFunction;
-    bool mSynchronous;
-    std::vector<ParameterPtr> mParams;
-    ParameterPtr mReturnValue;
+    bool mIsStatic;
+    bool mIsSynchronous;
+    std::map<std::string, ParameterPtr> mParams;
+    ParameterPtr mResult;
 };
 
 typedef std::shared_ptr<Operation> OperationPtr;
 
-#endif // OPERATION_H
+} } // namespace Api::Model
+
+#endif // OPERATION_HPP
