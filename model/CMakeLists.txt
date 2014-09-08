@@ -6,7 +6,6 @@ set(SRC_LIST
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/event.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/identifiable.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/name.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace_member.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/operation.cpp
@@ -26,7 +25,6 @@ set(HDR_LIST
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/event.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/identifiable.hpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/name.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/namespace_member.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/operation.hpp

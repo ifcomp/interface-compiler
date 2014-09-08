@@ -32,7 +32,7 @@ void Operation::setSynchronous(bool isSynchronous)
 
 void Operation::addParam(ParameterPtr param)
 {
-	mParams[param->name().longName()] = param;
+    mParams[param->longName()] = param;
 }
 
 const std::map<std::string, ParameterPtr>& Operation::params()

@@ -3,7 +3,6 @@
 
 #include <string>
 #include <memory>
-#include "model/name.hpp"
 #include "model/documentation.hpp"
 
 namespace Api { namespace Model {
@@ -14,14 +13,18 @@ public:
     Identifiable();
     virtual ~Identifiable();
 
-    Name name();
-    void setName(Name name);
+    std::string longName();
+    void setLongName(std::string longName);
+
+    std::string shortName();
+    void setShortName(std::string shortName);
 
     DocumentationPtr doc();
     void setDoc(DocumentationPtr doc);
 
 private:
-    Name mName;
+    std::string mLongName;
+    std::string mShortName;
     DocumentationPtr mDoc;
 };
 

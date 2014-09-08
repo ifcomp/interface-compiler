@@ -12,7 +12,7 @@ Struct::~Struct()
 
 void Struct::addField(ParameterPtr field)
 {
-	mFields[field->name().longName()] = field;
+    mFields[field->longName()] = field;
 }
 
 const std::map<std::string, ParameterPtr>& Struct::fields()

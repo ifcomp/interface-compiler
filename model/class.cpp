@@ -32,7 +32,7 @@ void Class::setParent(std::shared_ptr<Class> parent)
 
 void Class::addOperation(OperationPtr operation)
 {
-	mOperations[operation->name().longName()] = operation;
+    mOperations[operation->longName()] = operation;
 }
 
 const std::map<std::string, OperationPtr>& Class::operations()
@@ -42,7 +42,7 @@ const std::map<std::string, OperationPtr>& Class::operations()
 
 void Class::addEvent(EventPtr event)
 {
-	mEvents[event->name().longName()] = event;
+    mEvents[event->longName()] = event;
 }
 
 const std::map<std::string, EventPtr>& Class::events()

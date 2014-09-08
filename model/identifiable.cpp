@@ -10,14 +10,24 @@ Identifiable::~Identifiable()
 {
 }
 
-Name Identifiable::name()
+std::string Identifiable::longName()
 {
-	return mName;
+    return mLongName;
 }
 
-void Identifiable::setName(Name name)
+void Identifiable::setLongName(std::string longName)
 {
-	mName = name;
+    mLongName = longName;
+}
+
+std::string Identifiable::shortName()
+{
+    return mShortName;
+}
+
+void Identifiable::setShortName(std::string shortName)
+{
+    mShortName = shortName;
 }
 
 DocumentationPtr Identifiable::doc()

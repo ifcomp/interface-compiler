@@ -2,7 +2,6 @@
 #define VALUE_HPP
 
 #include <string>
-#include <memory>
 #include "model/identifiable.hpp"
 
 namespace Api { namespace Model {

@@ -17,5 +17,5 @@ const std::map<std::string, NamespaceMemberPtr>& Namespace::members()
 
 void Namespace::addMember(NamespaceMemberPtr member)
 {
-	mMembers[member->name().longName()] = member;
+    mMembers[member->longName()] = member;
 }

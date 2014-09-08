@@ -38,7 +38,7 @@
             - { name: Credential, type: Everbase::Credential }
         - name: GetAll
           static: true
-          return: { name: User, type: [ Everbase::Set, Everbase::User ] }
+          return: { name: User, type: [ Everbase::Set, Everbase::User, Drittes::Ding ] }
           params:
             - { name: Domain, type: Everbase::Domain }
 
