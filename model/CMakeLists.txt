@@ -1,6 +1,5 @@
 set(SRC_LIST
    ${SRC_LIST}
-   ${CMAKE_CURRENT_SOURCE_DIR}/buffer.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/class.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.cpp
@@ -21,7 +20,6 @@ set(SRC_LIST
 
 set(HDR_LIST
    ${HDR_LIST}
-   ${CMAKE_CURRENT_SOURCE_DIR}/buffer.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/class.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.hpp

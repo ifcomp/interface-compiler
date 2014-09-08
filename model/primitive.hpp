@@ -18,7 +18,9 @@ public:
         BOOLEAN,
         TIMESTAMP,
         STRING,
-        UUID
+        UUID,
+        BUFFER,
+        CONST_BUFFER
     };
 
 private:

@@ -1,0 +1,199 @@
+- name: Everbase
+  nodetype: namespace
+  members:
+    - name: Global
+      nodetype: class
+      operations:
+        - name: GetSyncStatus
+          static: true
+          return: { name: SyncStatus, type: Everbase::SyncStatus }
+      observables:
+        - name: SyncStatus
+          static: true
+          values:
+            - { name: SyncStatus, type: Everbase::SyncStatus }
+
+    - name: Path
+      nodetype: class
+      valueType: true
+      operations:
+        - name: FromId
+          static: true
+          synchronous: true
+          return: { name: Path, type: Everbase::Path }
+          params:
+            - { name: ObjectId, type: Everbase::Uuid }
+            - { name: VersionId, type: Everbase::Uuid }
+
+    - name: User
+      nodetype: class
+      inherits: UserEntity
+      operations:
+        - name: Create
+          static: true
+          return: { name: User, type: Everbase::User }
+          params:
+            - { name: Domain, type: Everbase::Domain }
+            - { name: VCard, type: Everbase::String }
+            - { name: Credential, type: Everbase::Credential }
+        - name: GetAll
+          static: true
+          return: { name: User, type: [ Everbase::Set, Everbase::User ] }
+          params:
+            - { name: Domain, type: Everbase::Domain }
+
+    - name: Permission
+      operations:
+        - name: SetMode
+          params:
+            - { name: Mode, type: Everbase::PermissionMode }
+        - name: GetMode
+          return: { name: Mode, type: Everbase::PermissionMode }
+
+    - name: Metadata
+      short: Meta
+      nodetype: class
+      doc: { brief: 'Key-value store', more: 'Maps strings to bytes' }
+      operations:
+        - name: SetValue
+          params:
+            - { name: Key, type: Everbase::String }
+            - { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+        - name: GetValue
+          return: { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+          params:
+            - { name: Key, type: Everbase::String }
+
+    - name: Node
+      nodetype: class
+      operations:
+        - name: GetStatus
+          static: true
+          return: { name: Status, type: Everbase::NodeStatus }
+          params:
+            - { name: Profile, type: Everbase::Profile }
+            - { name: Path, type: Everbase::Path }
+        - name: GetVersions
+          return: { name: VersionedPaths, type: [ Everbase::List, Everbase::Path ] }
+          doc: { brief: 'paths contain embedded version information' }
+        - name: GetMetadata
+          return: { name: Metadata, type: Everbase::Metadata }
+
+    - name: Directory
+      short: Dir
+      nodetype: class
+      inherits: Node
+      operations:
+        - name: Create
+          static: true
+          return: { name: Directory, type: Everbase::Directory }
+          params:
+            - { name: Profile, type: Everbase::Profile }
+            - { name: Parent, type: Everbase::Path }
+            - { name: Name, type: Everbase::String }
+        - name: Open
+          static: true
+          return: { name: Directory, type: Everbase::Directory }
+          params:
+            - { name: Profile, type: Everbase::Profile }
+            - { name: Path, type: Everbase::Path }
+        - name: GetEntries
+          return: { name: Entries, type: [ Everbase::Set, Everbase::Path ] }
+
+    - name: Profile
+      nodetype: class
+      inherits: Directory
+      prime: Node
+      doc: { brief: 'allows iteration over authenticated domains' }
+      operations:
+        - name: GetAll
+          static: true
+          return: { name: Ids, type: [ Everbase::Set, Everbase::Uuid ] }
+        - name: GetTransfers
+          return: { name: Paths, type: [ Everbase::Set, Everbase::Path ] }
+          params:
+            - { name: Recursive, type: Primitives::Boolean }
+
+    - name: File
+      nodetype: class
+      inherits: Node
+      operations:
+        - name: Write
+          params:
+            - { name: SourceBuffer, type: Everbase::ConstBuffer }
+        - name: Read
+          return: { name: BytesRead, type: Everbase::UInt32 }
+          params:
+            - { name: TargetBuffer, type: Everbase::Buffer }
+            - { name: FillBuffer, type: Everbase::Boolean }
+
+    # structs
+
+    - name: SyncStatus
+      nodetype: struct
+      fields:
+        - { name: Mode, type: Everbase::SyncMode }
+        - { name: UploadSpeed, type: Everbase::UInt32 }   # bytes per second
+        - { name: DownloadSpeed, type: Everbase::UInt32 } # bytes per second
+        - { name: Conflicts, type: Everbase::UInt32 }
+
+    #enums
+
+    - name: SyncMode
+      nodetype: enum
+      values:
+        - { name: Idle, value: 0x1 }
+        - { name: Waiting, value: 0x2 }
+        - { name: Uploading, value: 0x4 }
+        - { name: Downloading, value: 0x8 }
+
+    - name: NodeType
+      nodetype: enum
+      values:
+        - { name: Directory, value: 0x1 } # b0001
+        - { name: Root, value: 0x3 }      # b0011 (is a Directory)
+        - { name: EverbaseDomain, value: 0x5 }    # b0101 (is a Directory)
+        - { name: File, value: 0x8 }      # b1000
+
+    #primitives
+
+    - name: Byte
+      nodetype: primitive
+
+    - name: UInt32
+      nodetype: primitive
+
+    - name: UInt64
+      nodetype: primitive
+
+    - name: Float
+      nodetype: primitive
+
+    - name: Boolean
+      nodetype: primitive
+
+    - name: Timestamp
+      nodetype: primitive
+
+    - name: String
+      nodetype: primitive
+
+    - name: Uuid
+      nodetype: primitive
+
+    - name: Buffer
+      nodetype: primitive
+
+    - name: ConstBuffer
+      nodetype: primitive
+
+    # containers
+
+    - name: Vector
+      nodetype: container
+
+    - name: List
+      nodetype: container
+
+    - name: Set
+      nodetype: container
