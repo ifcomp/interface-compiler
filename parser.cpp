@@ -1,15 +1,4 @@
 #include "parser.hpp"
-#include <model/class.hpp>
-#include <model/enum.hpp>
-#include <model/struct.hpp>
-#include <model/container.hpp>
-#include <model/primitive.hpp>
-#include <model/documentation.hpp>
-#include <model/operation.hpp>
-#include <model/event.hpp>
-#include <model/parameter.hpp>
-#include <model/type.hpp>
-#include <model/value.hpp>
 
 
 using namespace std;
@@ -39,12 +28,12 @@ const char *Parser::KEY_PARAMS          = "params";
 const char *Parser::KEY_FIELDS          = "fields";
 const char *Parser::KEY_VALUES          = "values";
 const char *Parser::KEY_OPERATIONS      = "operations";
-const char *Parser::KEY_OBSERVABLES     = "observables";
+const char *Parser::KEY_EVENTS          = "observables";
 
 const char *Parser::FLAG_STATIC         = "static";
 const char *Parser::FLAG_SYNCHRONOUS    = "synchronous";
 const char *Parser::FLAG_VALUETYPE      = "valueType";
-const char *Parser::FLAG_INHERITS       = "inherits";
+const char *Parser::KEY_INHERITS        = "inherits";
 
 
 Parser::Parser(Model::NamespacePtr rootNamespace) :
@@ -63,18 +52,23 @@ void Api::Parser::parseFile(std::string filename)
 {
     mYamlConfig = YAML::LoadFile(filename);
 
-//    vector<string> nodeTypes;
-//    extractNodeTypes(mYamlConfig, nodeTypes);
-
     parseNodeSequence(mYamlConfig, mRootNamespace);
 
     cout << "root namespace = " << mRootNamespace->longName() << endl;
 
-//    for (auto nodeType : nodeTypes)
-//    {
-//        cout << "parsing " << nodeType << endl;
-//    }
+    for (auto member : mRootNamespace->members())
+    {
+        cout << "MEMBER: " << member.first << endl;
+        NamespacePtr namespacePtr = dynamic_pointer_cast<Namespace>(member.second);
 
+        if (namespacePtr)
+        {
+            for (auto member : namespacePtr->members())
+            {
+                cout << "2. MEMBER: " << member.first << endl;
+            }
+        }
+    }
 }
 
 
@@ -108,20 +102,21 @@ void Parser::parseNodeSequence(const YAML::Node &node, NamespacePtr rootNamespac
             string nodeType = node[n][KEY_NODETYPE].as<string>();
             cout << "found nodetype " << nodeType << " on level " << counter << endl;
 
-            try {
+            try
+            {
                 MemberFunc func = mParserMethods[nodeType];
                 NamespaceMemberPtr member = (this->*func)(node[n]);
                 rootNamespace->addMember(member);
-                cout << "got new namespace member " << member->longName() << " on level " << counter << endl;
+                cout << "new namespace member " << member->longName() << " on level " << counter << endl;
             }
-            catch (exception e)
+            catch (const exception &e)
             {
                 cout << "PARSER ERROR: nodetype " << nodeType << " unknown! (" << e.what() << ")" << endl;
             }
         }
         else
         {
-            cout << "oh oh, no nodetype defined!" << endl;
+            cout << "PARSER ERROR: no nodetype defined!" << endl;
         }
     }
 
@@ -131,7 +126,7 @@ void Parser::parseNodeSequence(const YAML::Node &node, NamespacePtr rootNamespac
 
 NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
 {
-    NamespacePtr newNamespace = newNamespaceMember<Namespace>(node);
+    NamespacePtr newNamespace = newIdentifiable<Namespace>(node);
 
     cout << "parsing namespace " << newNamespace->longName() << endl;
 
@@ -145,7 +140,41 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
 NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
 {
     cout << "parseClass()" << endl;
-    ClassPtr newClass = newNamespaceMember<Class>(node);
+    ClassPtr newClass = newIdentifiable<Class>(node);
+
+    if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
+    {
+        newClass->setType(Class::ClassType::VALUE);
+    }
+    else
+    {
+        newClass->setType(Class::ClassType::ABSTRACT);
+    }
+
+    if (node[KEY_INHERITS].IsScalar())
+    {
+        cout << newClass->longName() << " inherits from " << node[KEY_INHERITS].Scalar();
+        ///< TODO: resolve class
+    }
+
+    const YAML::Node &operationsNode = node[KEY_OPERATIONS];
+    if (operationsNode.IsSequence())
+    {
+        for (int n = 0; n < operationsNode.size(); ++n)
+        {
+            newClass->addOperation(parseOperation(operationsNode[n]));
+        }
+    }
+
+    const YAML::Node &eventsNode = node[KEY_EVENTS];
+    if (eventsNode.IsSequence())
+    {
+        for (int n = 0; n < eventsNode.size(); ++n)
+        {
+            newClass->addEvent(parseEvent(eventsNode[n]));
+        }
+    }
+
     return newClass;
 }
 
@@ -154,31 +183,51 @@ NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
 {
     cout << "parsePrimitive()" << endl;
 
-    PrimitivePtr newPrimitive = newNamespaceMember<Primitive>(node);
+    PrimitivePtr newPrimitive = newIdentifiable<Primitive>(node);
 
     return newPrimitive;
 }
 
+
 NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
 {
     cout << "parseEnum()" << endl;
-    EnumPtr newEnum = newNamespaceMember<Enum>(node);
+    EnumPtr newEnum = newIdentifiable<Enum>(node);
     return newEnum;
 }
+
 
 NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
 {
     cout << "parseStruct()" << endl;
-    StructPtr newStruct = newNamespaceMember<Struct>(node);
+    StructPtr newStruct = newIdentifiable<Struct>(node);
     return newStruct;
 }
+
 
 NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
 {
     cout << "parseContainer()" << endl;
-    ContainerPtr newContainer = newNamespaceMember<Container>(node);
+    ContainerPtr newContainer = newIdentifiable<Container>(node);
     return newContainer;
 }
+
+
+OperationPtr Parser::parseOperation(const YAML::Node &node)
+{
+    cout << "parseOperations()" << endl;
+    OperationPtr newOperation = newIdentifiable<Operation>(node);
+    return newOperation;
+}
+
+
+EventPtr Parser::parseEvent(const YAML::Node &node)
+{
+    cout << "parseEvent()" << endl;
+    EventPtr newEvent = newIdentifiable<Event>(node);
+    return newEvent;
+}
+
 
 void Parser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
 {
@@ -228,12 +277,21 @@ void Parser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
 }
 
 template <class T>
-std::shared_ptr<T> Parser::newNamespaceMember(const YAML::Node &node)
+std::shared_ptr<T> Parser::newIdentifiable(const YAML::Node &node)
 {
     std::shared_ptr<T> newMember(new T);
 
-    parseName(node, newMember);
-    parseDoc(node, newMember);
+    IdentifiablePtr identifiable = dynamic_pointer_cast<Identifiable>(newMember);
+    if (identifiable)
+    {
+        parseName(node, identifiable);
+        parseDoc(node, identifiable);
+    }
+    else
+    {
+        cout << "newIdentifiable(): Type is not an Identifiable!" << endl;
+        throw exception();
+    }
     return newMember;
 }
 
