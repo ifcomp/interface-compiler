@@ -112,7 +112,7 @@
         - name: GetTransfers
           return: { name: Paths, type: [ Everbase::Set, Everbase::Path ] }
           params:
-            - { name: Recursive, type: Primitives::Boolean }
+            - { name: Recursive, type: Everbase::Boolean }
 
     - name: File
       nodetype: class

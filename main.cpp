@@ -124,6 +124,7 @@ int main()
 //    }
 
     Model::NamespacePtr rootNamespace(new Model::Namespace);
+    rootNamespace->setLongName("::");
     Parser parser(rootNamespace);
     parser.parseFile("../api-generator/yaml/test.yaml");
 

@@ -39,7 +39,7 @@ private:
     std::map<std::string, EventPtr> mEvents;
 };
 
-typedef std::shared_ptr<Class> ObjectPtr;
+typedef std::shared_ptr<Class> ClassPtr;
 
 } } // namespace Api::Model
 
