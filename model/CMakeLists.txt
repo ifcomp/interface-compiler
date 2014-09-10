@@ -13,6 +13,8 @@ set(SRC_LIST
    ${CMAKE_CURRENT_SOURCE_DIR}/primitive.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/struct.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/type.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/unresolvedType.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/resolvedType.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/value.cpp
    PARENT_SCOPE
 )
@@ -32,6 +34,8 @@ set(HDR_LIST
    ${CMAKE_CURRENT_SOURCE_DIR}/primitive.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/struct.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/type.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/unresolvedType.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/resolvedType.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/value.hpp
    PARENT_SCOPE
 )

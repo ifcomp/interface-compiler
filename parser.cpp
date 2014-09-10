@@ -95,17 +95,17 @@ void Parser::parseNodeSequence(const YAML::Node &node, NamespacePtr rootNamespac
     static int counter = 0;
     ++counter;
 
-    for (int n = 0; n < node.size(); ++n)
+    for (auto sequenceNode : node)
     {
-        if (node[n][KEY_NODETYPE].IsScalar())
+        if (sequenceNode[KEY_NODETYPE].IsScalar())
         {
-            string nodeType = node[n][KEY_NODETYPE].as<string>();
+            string nodeType = sequenceNode[KEY_NODETYPE].as<string>();
             cout << "found nodetype " << nodeType << " on level " << counter << endl;
 
             try
             {
                 MemberFunc func = mParserMethods[nodeType];
-                NamespaceMemberPtr member = (this->*func)(node[n]);
+                NamespaceMemberPtr member = (this->*func)(sequenceNode);
                 rootNamespace->addMember(member);
                 cout << "new namespace member " << member->longName() << " on level " << counter << endl;
             }
@@ -160,19 +160,25 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
     const YAML::Node &operationsNode = node[KEY_OPERATIONS];
     if (operationsNode.IsSequence())
     {
-        for (int n = 0; n < operationsNode.size(); ++n)
+        for (auto operationNode : operationsNode)
         {
-            newClass->addOperation(parseOperation(operationsNode[n]));
+            newClass->addOperation(parseOperation(operationNode));
         }
     }
 
     const YAML::Node &eventsNode = node[KEY_EVENTS];
     if (eventsNode.IsSequence())
     {
-        for (int n = 0; n < eventsNode.size(); ++n)
+        for (auto eventNode : eventsNode)
         {
-            newClass->addEvent(parseEvent(eventsNode[n]));
+            newClass->addEvent(parseEvent(eventNode));
         }
+    }
+
+    if (newClass->operations().size() == 0 &&
+        newClass->events().size() == 0)
+    {
+        cout << "WARNING: no operations or events defined in class " << newClass->longName() << endl;
     }
 
     return newClass;
@@ -181,11 +187,8 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
 
 NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
 {
-    cout << "parsePrimitive()" << endl;
-
-    PrimitivePtr newPrimitive = newIdentifiable<Primitive>(node);
-
-    return newPrimitive;
+    // Primitives only consist of their names
+    return newIdentifiable<Primitive>(node);
 }
 
 
@@ -193,6 +196,20 @@ NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
 {
     cout << "parseEnum()" << endl;
     EnumPtr newEnum = newIdentifiable<Enum>(node);
+
+    if (node[KEY_VALUES].IsSequence())
+    {
+        for (auto enumNode : node[KEY_VALUES])
+        {
+            newEnum->addValue(parseValue(enumNode));
+            cout << "enum value " << enumNode[KEY_NAME] << endl;
+        }
+    }
+    else
+    {
+        cout << "WARNING: enum " << newEnum->longName() << " has no values" << endl;
+    }
+
     return newEnum;
 }
 
@@ -201,6 +218,7 @@ NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
 {
     cout << "parseStruct()" << endl;
     StructPtr newStruct = newIdentifiable<Struct>(node);
+
     return newStruct;
 }
 
@@ -226,6 +244,18 @@ EventPtr Parser::parseEvent(const YAML::Node &node)
     cout << "parseEvent()" << endl;
     EventPtr newEvent = newIdentifiable<Event>(node);
     return newEvent;
+}
+
+ValuePtr Parser::parseValue(const YAML::Node &node)
+{
+    cout << "parseValue()" << endl;
+    ValuePtr newValue = newIdentifiable<Value>(node);
+
+    if (node[KEY_VALUE].IsScalar())
+    {
+        newValue->setValue(node[KEY_VALUE].as<int32_t>());
+    }
+    return newValue;
 }
 
 

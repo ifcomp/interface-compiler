@@ -113,6 +113,7 @@ private:
 
     Model::OperationPtr parseOperation(const YAML::Node &node);
     Model::EventPtr parseEvent(const YAML::Node &node);
+    Model::ValuePtr parseValue(const YAML::Node &node);
 
     /**
      * @brief Parse long and short name from node into identifiable.
