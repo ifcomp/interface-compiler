@@ -1,3 +1,4 @@
+#include <iostream>
 #include "model/namespace.hpp"
 
 using namespace Api::Model;
@@ -17,5 +18,15 @@ const std::map<std::string, NamespaceMemberPtr>& Namespace::members()
 
 void Namespace::addMember(NamespaceMemberPtr member)
 {
-    mMembers[member->longName()] = member;
+    using namespace std;
+
+    string key = member->longName();
+    if (mMembers.find(key) == mMembers.end())
+    {
+        mMembers[key] = member;
+    }
+    else
+    {
+        cout << "Namespace " << key << " already exists" << endl;
+    }
 }

@@ -2,7 +2,8 @@
 
 using namespace Api::Model;
 
-Event::Event()
+Event::Event() :
+    mIsStatic(false)
 {
 }
 
@@ -10,14 +11,14 @@ Event::~Event()
 {
 }
 
-void Event::addParam(ParameterPtr param)
+bool Event::isStatic()
 {
-    mParams[param->longName()] = param;
+    return mIsStatic;
 }
 
-const std::map<std::string, ParameterPtr>& Event::params()
+void Event::setStatic(bool isStatic)
 {
-	return mParams;
+    mIsStatic = isStatic;
 }
 
 void Event::addResult(ParameterPtr result)

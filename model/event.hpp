@@ -14,14 +14,14 @@ public:
     Event();
     virtual ~Event();
 
-    void addParam(ParameterPtr param);
-    const std::map<std::string, ParameterPtr>& params();
+    bool isStatic();
+    void setStatic(bool isStatic);
 
     void addResult(ParameterPtr result);
     const std::map<std::string, ParameterPtr>& results();
 
 private:
-    std::map<std::string, ParameterPtr> mParams;
+    bool mIsStatic;
     std::map<std::string, ParameterPtr> mResults;
 };
 

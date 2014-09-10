@@ -7,7 +7,7 @@
         - name: GetSyncStatus
           static: true
           return: { name: SyncStatus, type: Everbase::SyncStatus }
-      observables:
+      events:
         - name: SyncStatus
           static: true
           values:
@@ -43,6 +43,7 @@
             - { name: Domain, type: Everbase::Domain }
 
     - name: Permission
+      nodetype: class
       operations:
         - name: SetMode
           params:
@@ -191,9 +192,66 @@
 
     - name: Vector
       nodetype: container
+      containertype: vector
 
     - name: List
       nodetype: container
+      containertype: list
 
     - name: Set
       nodetype: container
+      containertype: set
+
+- name: Gu
+  nodetype: namespace
+  members:
+
+    - name: Wurst
+      nodetype: primitive
+
+    - name: Kaese
+      nodetype: namespace
+      members:
+
+        - name: Butter
+          nodetype: primitive
+
+        - name: Glibsch
+          nodetype: namespace
+          members:
+
+            - name: SyncMode
+              nodetype: enum
+              values:
+                - { name: IdleX, value: 0x1 }
+                - { name: WaitingX, value: 0x2 }
+                - { name: UploadingX, value: 0x4 }
+                - { name: DownloadingX, value: 0x8 }
+
+- name: Everbase
+  nodetype: namespace
+  members:
+
+    - name: EverBass
+      nodetype: primitive
+
+- name: Gu
+  nodetype: namespace
+  members:
+
+    - name: Wurst
+      nodetype: primitive
+
+    - name: Kaese
+      nodetype: namespace
+      members:
+
+        - name: BitteEinBit
+          nodetype: primitive
+
+- name: Gu::Kaese   # this doesn't work as expected!
+  nodetype: namespace
+  members:
+
+    - name: Kuhl
+      nodetype: primitive

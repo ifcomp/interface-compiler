@@ -11,11 +11,15 @@ public:
     UnresolvedType();
     virtual ~UnresolvedType();
 
-    std::string typeName();
-    void setTypeName(std::string typeName);
+    std::string primary();
+    void setPrimary(std::string primary);
+
+    void addParam(std::string param);
+    const std::vector<std::string>& params();
 
 private:
-    std::string mTypeName;
+    std::string mPrimary;
+    std::vector<std::string> mParams;
 };
 
 typedef std::shared_ptr<UnresolvedType> UnresolvedTypePtr;

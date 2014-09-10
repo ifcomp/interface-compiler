@@ -33,9 +33,14 @@ public:
     static const char *TYPE_STRUCT;
     static const char *TYPE_CONTAINER;
 
+    static const char *CONTAINER_VECTOR;
+    static const char *CONTAINER_LIST;
+    static const char *CONTAINER_SET;
+
     static const char *KEY_NAME;
     static const char *KEY_SHORTNAME;
     static const char *KEY_NODETYPE;
+    static const char *KEY_CONTAINER_TYPE;
     static const char *KEY_INHERITS;
     static const char *KEY_TYPE;
     static const char *KEY_VALUE;
@@ -73,20 +78,18 @@ public:
     void setRootNamespace(Model::NamespacePtr rootNamespace);
 
 private:
-//    void extractNodeTypes(const YAML::Node &node, std::vector<std::string> &nodeTypes);
-
     /**
-     * @brief Parse whole YAML tree into rootNamespace by starting at node.
-     * @param node  YAML root node
+     * @brief Parse namespace members into rootNamespace starting at node.
+     * @param node          YAML root node
      * @param rootNamespace Pointer to Namespace object that acts as root for found entries
      */
-    void parseNodeSequence(const YAML::Node &node, Model::NamespacePtr rootNamespace);
+    void parseNamespaceMembers(const YAML::Node &node, Model::NamespacePtr rootNamespace);
 
     /**
      * @brief Parse TYPE_NAMESPACE section
      * @param node  YAML node that contains namespace definition
-     * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @return  Shared pointer to a filled Object
+     * @throws  std::exeption on incomplete definition
      */
     Model::NamespaceMemberPtr parseNamespace(const YAML::Node &node);
 
@@ -114,6 +117,8 @@ private:
     Model::OperationPtr parseOperation(const YAML::Node &node);
     Model::EventPtr parseEvent(const YAML::Node &node);
     Model::ValuePtr parseValue(const YAML::Node &node);
+    Model::ParameterPtr parseParameter(const YAML::Node &node);
+    Model::TypePtr parseType(const YAML::Node &node);
 
     /**
      * @brief Parse long and short name from node into identifiable.
@@ -130,16 +135,40 @@ private:
      */
     void parseDoc(const YAML::Node &node, Model::IdentifiablePtr identifiable);
 
+    /**
+     * @brief Check if node[key] has a specific type.
+     * @param node          YAML node
+     * @param key           Key name
+     * @param expectedType  YAML node type
+     * @param mandatory     Flag that marks key as mandatory
+     * @return true if node[key] has expectedType
+     * @throws std::exception if types don't match and mandatory is set
+     */
+    bool checkNode(const YAML::Node &node, const char *key,
+                   YAML::NodeType::value expectedType = YAML::NodeType::Scalar, bool mandatory = false);
+
+    /**
+     * @brief Register type of member in map of known types.
+     * @param member    Member object
+     */
+    void registerType(Model::NamespaceMemberPtr member);
+
+    Model::NamespaceMemberPtr resolveType(std::string typeName);
+
+    void startNamespace(Model::NamespacePtr namespaceRoot);
+    void endNamespace();
+    std::string getCurrentNamespace();
+
     bool resolveIdentifier(std::string identifier);
 
     template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
-
-
 
 private:
     YAML::Node mYamlConfig;
     Model::NamespacePtr mRootNamespace;
     std::map<std::string, MemberFunc> mParserMethods;
+    std::map<std::string, Model::NamespaceMemberPtr> mKnownTypes;
+    std::vector<std::string> mCurrentNamespaceElements;
 };
 
 } // namespace Api

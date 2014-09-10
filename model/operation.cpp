@@ -2,7 +2,9 @@
 
 using namespace Api::Model;
 
-Operation::Operation()
+Operation::Operation() :
+    mIsStatic(false),
+    mIsSynchronous(false)
 {
 }
 
