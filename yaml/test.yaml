@@ -38,7 +38,7 @@
             - { name: Credential, type: Everbase::Credential }
         - name: GetAll
           static: true
-          return: { name: User, type: [ Everbase::Set, Everbase::User, Drittes::Ding ] }
+          return: { name: User, type: [ Everbase::Set, Everbase::User, Gu::Kaese::BitteEinBit ] }
           params:
             - { name: Domain, type: Everbase::Domain }
 
@@ -233,6 +233,24 @@
   members:
 
     - name: EverBass
+      nodetype: primitive
+
+    - name: PermissionMode
+      nodetype: primitive
+
+    - name: Credential
+      nodetype: primitive
+
+    - name: Domain
+      nodetype: primitive
+
+    - name: Directory
+      nodetype: primitive
+
+    - name: Metadata
+      nodetype: primitive
+
+    - name: NodeStatus
       nodetype: primitive
 
 - name: Gu

@@ -1,5 +1,4 @@
 #include "parser.hpp"
-#include "model/unresolvedType.hpp"
 
 using namespace std;
 using namespace Api;
@@ -80,6 +79,10 @@ void Api::Parser::parseFile(std::string filename)
     {
         cout << type.first << endl;
     }
+
+    cout << "----------------------- RESOLVE ------------------------" << endl;
+
+    resolveTypesInNamespace(mRootNamespace);
 }
 
 
@@ -134,7 +137,7 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
         }
     }
 
-    NamespacePtr newNamespace = dynamic_pointer_cast<Namespace>(resolveType(namespaceName));
+    NamespacePtr newNamespace = dynamic_pointer_cast<Namespace>(resolveTypeName(namespaceName));
 
     if (newNamespace)
     {
@@ -504,7 +507,7 @@ void Parser::registerType(NamespaceMemberPtr member)
 }
 
 
-NamespaceMemberPtr Parser::resolveType(string typeName)
+NamespaceMemberPtr Parser::resolveTypeName(string typeName)
 {
     std::string key = getCurrentNamespace() + "::" + typeName;
     if (mKnownTypes.find(key) != mKnownTypes.end())
@@ -512,6 +515,46 @@ NamespaceMemberPtr Parser::resolveType(string typeName)
         return mKnownTypes[key];
     }
     return nullptr;
+}
+
+
+void Parser::resolveParameterTypes(ParameterPtr parameter)
+{
+    UnresolvedTypePtr unresolvedType = dynamic_pointer_cast<UnresolvedType>(parameter->type());
+
+    if (unresolvedType)
+    {
+        NamespaceMemberPtr member = resolveTypeName(unresolvedType->primary());
+
+        if (member)
+        {
+            cout << "resolved primary type " << member->longName() <<  " of param " << parameter->longName() << endl;
+
+            ResolvedTypePtr resolvedType = make_shared<ResolvedType>();
+            resolvedType->setPrimary(member);
+
+            // resolve list of typenames
+            for (auto paramTypeName : unresolvedType->params())
+            {
+                member = resolveTypeName(paramTypeName);
+                if (member)
+                {
+                    cout << "resolved subtype " << member->longName() <<  " of param " << parameter->longName() << endl;
+                    resolvedType->addParam(member);
+                }
+                else
+                {
+                    cout << "ERROR: could not resolve subtype " << paramTypeName << " in parameter " << parameter->longName() << endl;
+                    throw std::exception();
+                }
+            }
+        }
+        else
+        {
+            cout << "ERROR: could not resolve primary type " << unresolvedType->primary() << " in parameter " << parameter->longName() << endl;
+            throw std::exception();
+        }
+    }
 }
 
 
@@ -535,6 +578,66 @@ string Parser::getCurrentNamespace()
         fullNamespace += "::" + namespaceElement;
     }
     return fullNamespace;
+}
+
+
+void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
+{
+    NamespaceMemberPtr resolvedObject = nullptr;
+
+    for (auto memberPair : rootNamespace->members())
+    {
+        // namespace
+        NamespacePtr nestedNamespace = dynamic_pointer_cast<Namespace>(memberPair.second);
+        if (nestedNamespace)
+        {
+            resolveTypesInNamespace(nestedNamespace);
+        }
+        else
+        {
+            // resolve events, operations & return
+            cout << "resolving " << memberPair.first << endl;
+            const ClassPtr &classPtr = dynamic_pointer_cast<Class>(memberPair.second);
+
+            if (classPtr)
+            {
+                for (auto operation : classPtr->operations())
+                {
+                    for (auto parameter : operation.second->params())
+                    {
+                        resolveParameterTypes(parameter.second);
+                    }
+
+                    // resolve operation's return parameter
+                    const ParameterPtr &resultParamPtr = operation.second->result();
+                    if (resultParamPtr)
+                    {
+                        resolveParameterTypes(resultParamPtr);
+                    }
+                }
+
+                for (auto event : classPtr->events())
+                {
+                    for (auto result : event.second->results())
+                    {
+                        resolveParameterTypes(result.second);
+                    }
+                }
+            }
+            else
+            {
+                // resolve structs
+                const StructPtr &structPtr = dynamic_pointer_cast<Struct>(memberPair.second);
+                if (structPtr)
+                {
+                    for (auto field : structPtr->fields())
+                    {
+                        resolveParameterTypes(field.second);
+                    }
+                }
+            }
+        }
+    }
 }
 
 

@@ -17,6 +17,8 @@
 #include <model/parameter.hpp>
 #include <model/type.hpp>
 #include <model/value.hpp>
+#include "model/unresolvedType.hpp"
+#include "model/resolvedType.hpp"
 
 namespace Api {
 
@@ -153,13 +155,20 @@ private:
      */
     void registerType(Model::NamespaceMemberPtr member);
 
-    Model::NamespaceMemberPtr resolveType(std::string typeName);
+
+    Model::NamespaceMemberPtr resolveTypeName(std::string typeName);
+
+    /**
+     * @brief Try to resolve all types included in parameter
+     * @param parameter Parameter
+     */
+    void resolveParameterTypes(Model::ParameterPtr parameter);
 
     void startNamespace(Model::NamespacePtr namespaceRoot);
     void endNamespace();
     std::string getCurrentNamespace();
 
-    bool resolveIdentifier(std::string identifier);
+    void resolveTypesInNamespace(Model::NamespacePtr rootNamespace);
 
     template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
 
