@@ -25,8 +25,4 @@ void Namespace::addMember(NamespaceMemberPtr member)
     {
         mMembers[key] = member;
     }
-    else
-    {
-        cout << "Namespace " << key << " already exists" << endl;
-    }
 }

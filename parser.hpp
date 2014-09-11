@@ -22,7 +22,10 @@
 
 namespace Api {
 
-
+/**
+ * YAML parser class for namespace objects
+ * @author Gunther Lemm <lemm@silpion.de>
+ */
 class Parser
 {
     typedef Model::NamespaceMemberPtr (Parser::*MemberFunc)(const YAML::Node &);
@@ -79,6 +82,11 @@ public:
      */
     void setRootNamespace(Model::NamespacePtr rootNamespace);
 
+    /**
+     * @brief Reset parsers type cache and namespace stack
+     */
+    void reset();
+
 private:
     /**
      * @brief Parse namespace members into rootNamespace starting at node.
@@ -111,9 +119,28 @@ private:
      */
     Model::NamespaceMemberPtr parsePrimitive(const YAML::Node &node);
 
-
+    /**
+     * @brief Parse TYPE_ENUM section
+     * @param node  YAML node that contains enum definition
+     * @return Shared pointer to a filled Object
+     * @throws std::exeption on incomplete definition
+     */
     Model::NamespaceMemberPtr parseEnum(const YAML::Node &node);
+
+    /**
+     * @brief Parse TYPE_STRUCT section
+     * @param node  YAML node that contains struct definition
+     * @return Shared pointer to a filled Object
+     * @throws std::exeption on incomplete definition
+     */
     Model::NamespaceMemberPtr parseStruct(const YAML::Node &node);
+
+    /**
+     * @brief Parse TYPE_PRIMITIVE section
+     * @param node  YAML node that contains primitive definition
+     * @return Shared pointer to a filled Object
+     * @throws std::exeption on incomplete definition
+     */
     Model::NamespaceMemberPtr parseContainer(const YAML::Node &node);
 
     Model::OperationPtr parseOperation(const YAML::Node &node);
@@ -133,16 +160,16 @@ private:
     /**
      * @brief Parse documentation into identifiable
      * @param node  YAML node that contains KEY_DOC
-     * @param identifiable
+     * @param identifiable  Pointer to Identifiable object
      */
     void parseDoc(const YAML::Node &node, Model::IdentifiablePtr identifiable);
 
     /**
      * @brief Check if node[key] has a specific type.
-     * @param node          YAML node
-     * @param key           Key name
+     * @param node  YAML node
+     * @param key   Key name
      * @param expectedType  YAML node type
-     * @param mandatory     Flag that marks key as mandatory
+     * @param mandatory if true, key must be found and must have the right type
      * @return true if node[key] has expectedType
      * @throws std::exception if types don't match and mandatory is set
      */
@@ -155,21 +182,56 @@ private:
      */
     void registerType(Model::NamespaceMemberPtr member);
 
-
+    /**
+     * @brief Try to resolve typeName to a NamespaceMemberPtr
+     * @param typeName  Name of type relative to current namespace stack
+     * @return Pointer to NamespaceMember object | nullptr if not found
+     */
     Model::NamespaceMemberPtr resolveTypeName(std::string typeName);
+
+    /**
+     * @brief Try to resolve UnresolvedType object into a new ResolvedType object
+     * @param type  Type object that may be of type UnresolvedType or ResolvedType
+     * @return new or existing ResolvedType object
+     * @throws std::exception if type is not resolvable or contains a base object
+     */
+    Model::ResolvedTypePtr resolveType(Model::TypePtr type);
 
     /**
      * @brief Try to resolve all types included in parameter
      * @param parameter Parameter
+     * @throws std::exception in case of an unresolvable type
      */
-    void resolveParameterTypes(Model::ParameterPtr parameter);
+    void resolveParameterType(Model::ParameterPtr parameter);
 
-    void startNamespace(Model::NamespacePtr namespaceRoot);
-    void endNamespace();
-    std::string getCurrentNamespace();
-
+    /**
+     * @brief Try to resolve all types contained in rootNamespace
+     * @param rootNamespace Namespace that will be scanned for unresolved types
+     */
     void resolveTypesInNamespace(Model::NamespacePtr rootNamespace);
 
+    /**
+     * @brief Push current namespace onto namespace element stack
+     * @param namespaceRoot
+     */
+    void startNamespace(Model::NamespacePtr namespaceRoot);
+
+    /**
+     * @brief Pop current namespace from namespace element stack
+     */
+    void endNamespace();
+
+    /**
+     * @brief Get fully qualified name of current namespace
+     * @return  Fully qualified name of current namespace
+     */
+    std::string getCurrentNamespace();
+
+    /**
+     * @brief Create new Identifiable object of type T from name and doc info in node
+     * @param node  YAML node that must contain at least a KEY_NAME
+     * @return new Identifiable-based object of type T
+     */
     template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
 
 private:
@@ -177,7 +239,7 @@ private:
     Model::NamespacePtr mRootNamespace;
     std::map<std::string, MemberFunc> mParserMethods;
     std::map<std::string, Model::NamespaceMemberPtr> mKnownTypes;
-    std::vector<std::string> mCurrentNamespaceElements;
+    std::vector<std::string> mNamespaceElementStack;
 };
 
 } // namespace Api

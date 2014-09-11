@@ -27,7 +27,7 @@
 
     - name: User
       nodetype: class
-      inherits: UserEntity
+      inherits: Everbase::UserEntity
       operations:
         - name: Create
           static: true
@@ -83,7 +83,7 @@
     - name: Directory
       short: Dir
       nodetype: class
-      inherits: Node
+      inherits: Everbase::Node
       operations:
         - name: Create
           static: true
@@ -103,7 +103,7 @@
 
     - name: Profile
       nodetype: class
-      inherits: Directory
+      inherits: Everbase::Directory
       prime: Node
       doc: { brief: 'allows iteration over authenticated domains' }
       operations:
@@ -117,7 +117,7 @@
 
     - name: File
       nodetype: class
-      inherits: Node
+      inherits: Everbase::Node
       operations:
         - name: Write
           params:
@@ -251,6 +251,9 @@
       nodetype: primitive
 
     - name: NodeStatus
+      nodetype: primitive
+
+    - name: UserEntity
       nodetype: primitive
 
 - name: Gu

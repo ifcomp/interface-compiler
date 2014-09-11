@@ -17,15 +17,15 @@ Class::ClassType Class::type()
 
 void Class::setType(Class::ClassType type)
 {
-	mType = type;
+    mType = type;
 }
 
-std::shared_ptr<Class> Class::parent()
+TypePtr Class::parent()
 {
-	return mParent;
+    return mParent;
 }
 
-void Class::setParent(std::shared_ptr<Class> parent)
+void Class::setParent(TypePtr parent)
 {
 	mParent = parent;
 }

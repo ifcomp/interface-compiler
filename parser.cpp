@@ -59,6 +59,8 @@ void Api::Parser::parseFile(std::string filename)
     try {
         parseNamespaceMembers(mYamlConfig, mRootNamespace);
 
+        ///< @todo remove debug output
+
         cout << "----------------------- TYPES ------------------------" << endl;
         for (auto type : mKnownTypes)
         {
@@ -74,14 +76,19 @@ void Api::Parser::parseFile(std::string filename)
         cout << "PARSE ERROR - please check your config" << endl;
     }
 
-    cout << "root namespace = " << mRootNamespace->longName() << endl;
-
 }
 
 
 void Api::Parser::setRootNamespace(Api::Model::NamespacePtr rootNamespace)
 {
     mRootNamespace = rootNamespace;
+}
+
+
+void Parser::reset()
+{
+    mKnownTypes.clear();
+    mNamespaceElementStack.clear();
 }
 
 
@@ -92,14 +99,12 @@ void Parser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootName
         if (checkNode(sequenceNode, KEY_NODETYPE, YAML::NodeType::Scalar, true))
         {
             string nodeType = sequenceNode[KEY_NODETYPE].as<string>();
-            cout << "found nodetype " << nodeType << endl;
 
             if (mParserMethods.find(nodeType) != mParserMethods.end())
             {
                 MemberFunc func = mParserMethods[nodeType];
                 NamespaceMemberPtr member = (this->*func)(sequenceNode);
                 rootNamespace->addMember(member);
-                cout << "new namespace member " << member->longName() << endl;
             }
             else
             {
@@ -117,19 +122,13 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
     if (checkNode(node, KEY_NAME))
     {
         namespaceName = node[KEY_NAME].Scalar();
-
-        if (namespaceName.find("::") != string::npos)
-        {
-            cout << "ERROR: please add a namespace section for each namespace part in " << namespaceName << endl;
-            throw std::exception();
-        }
     }
 
     NamespacePtr newNamespace = dynamic_pointer_cast<Namespace>(resolveTypeName(namespaceName));
 
     if (newNamespace)
     {
-        cout << " *** using existing namespace " << newNamespace->longName() << endl;
+        cout << "using existing namespace " << newNamespace->longName() << endl;
     }
     else
     {
@@ -154,7 +153,6 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
 
 NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
 {
-    cout << "parseClass()" << endl;
     ClassPtr newClass = newIdentifiable<Class>(node);
     registerType(newClass);
 
@@ -171,8 +169,7 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
     {
         UnresolvedTypePtr newType = make_shared<UnresolvedType>();
         newType->setPrimary(node[KEY_INHERITS].Scalar());
-        /// @TODO: newType should actually be a pointer to a class - this would only work after resolving
-//        newClass->setParent(newType);
+        newClass->setParent(newType);
     }
 
     if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
@@ -212,7 +209,6 @@ NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
 
 NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
 {
-    cout << "parseEnum()" << endl;
     EnumPtr newEnum = newIdentifiable<Enum>(node);
     registerType(newEnum);
 
@@ -221,7 +217,6 @@ NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
         for (auto enumNode : node[KEY_VALUES])
         {
             newEnum->addValue(parseValue(enumNode));
-            cout << "enum value " << enumNode[KEY_NAME] << endl;
         }
     }
 
@@ -309,7 +304,6 @@ OperationPtr Parser::parseOperation(const YAML::Node &node)
 
 EventPtr Parser::parseEvent(const YAML::Node &node)
 {
-    cout << "parseEvent()" << endl;
     EventPtr newEvent = newIdentifiable<Event>(node);
 
     if (checkNode(node, FLAG_STATIC))
@@ -331,13 +325,11 @@ EventPtr Parser::parseEvent(const YAML::Node &node)
 
 ValuePtr Parser::parseValue(const YAML::Node &node)
 {
-    cout << "parseValue()" << endl;
     ValuePtr newValue = newIdentifiable<Value>(node);
 
     if (node[KEY_VALUE].IsScalar())
     {
         newValue->setValue(node[KEY_VALUE].as<int32_t>());
-        cout << "Value: " << newValue->longName() << " = " << newValue->value() << endl;
     }
     else
     {
@@ -350,7 +342,6 @@ ValuePtr Parser::parseValue(const YAML::Node &node)
 
 ParameterPtr Parser::parseParameter(const YAML::Node &node)
 {
-    cout << "parseParameter()" << endl;
     ParameterPtr newParameter = newIdentifiable<Parameter>(node);
     newParameter->setType(parseType(node));
     return newParameter;
@@ -393,7 +384,6 @@ TypePtr Parser::parseType(const YAML::Node &node)
                         throw std::exception();
                     }
                 }
-                cout << "New type " << newType->primary() << " with " << newType->params().size() << " subtypes" << endl;
             }
             break;
 
@@ -407,49 +397,48 @@ TypePtr Parser::parseType(const YAML::Node &node)
 
 void Parser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
 {
-    if (node[KEY_NAME].IsScalar())
+    if (checkNode(node, KEY_NAME, YAML::NodeType::Scalar, true))
     {
-        identifiable->setLongName(node[KEY_NAME].Scalar());
+        const string &name = node[KEY_NAME].Scalar();
 
-        if (node[KEY_SHORTNAME].IsScalar())
+        if (name.find("::") != string::npos)
+        {
+            cout << "ERROR: please add a namespace section for each namespace part in " << name << endl;
+            throw std::exception();
+        }
+
+        identifiable->setLongName(name);
+
+        if (checkNode(node, KEY_SHORTNAME))
         {
             identifiable->setLongName(node[KEY_SHORTNAME].Scalar());
         }
-    }
-    else
-    {
-        cout << "argh, no name" << endl;
-        throw exception();
     }
 }
 
 
 void Parser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
 {
-    const YAML::Node &docNode = node[KEY_DOC];
-
-    if (docNode.IsMap())
+    if (checkNode(node, KEY_DOC, YAML::NodeType::Map))
     {
+        const YAML::Node &docNode = node[KEY_DOC];
         DocumentationPtr newDoc = std::shared_ptr<Documentation>(new Documentation);
 
-        if (docNode[KEY_BRIEF].IsScalar())
+        if (checkNode(docNode, KEY_BRIEF))
         {
             newDoc->setBrief(docNode[KEY_BRIEF].Scalar());
 
-            if (docNode[KEY_BRIEF].IsScalar())
+            if (checkNode(docNode, KEY_MORE))
             {
-                newDoc->setBrief(docNode[KEY_BRIEF].Scalar());
+                newDoc->setMore(docNode[KEY_MORE].Scalar());
             }
             identifiable->setDoc(newDoc);
         }
         else
         {
             cout << "documentation of " << identifiable->longName() << " is missing brief description" << endl;
+            throw std::exception();
         }
-    }
-    else
-    {
-        cout << "doc-node of " << identifiable->longName() << " is not set" << endl;
     }
 }
 
@@ -485,7 +474,6 @@ void Parser::registerType(NamespaceMemberPtr member)
 
     if (mKnownTypes.find(type) == mKnownTypes.end())
     {
-        cout << "REGISTERED TYPE: " << type << endl;
         mKnownTypes[type] = member;
     }
     else
@@ -499,6 +487,7 @@ void Parser::registerType(NamespaceMemberPtr member)
 NamespaceMemberPtr Parser::resolveTypeName(string typeName)
 {
     std::string key = getCurrentNamespace() + "::" + typeName;
+
     if (mKnownTypes.find(key) != mKnownTypes.end())
     {
         return mKnownTypes[key];
@@ -507,9 +496,9 @@ NamespaceMemberPtr Parser::resolveTypeName(string typeName)
 }
 
 
-void Parser::resolveParameterTypes(ParameterPtr parameter)
+ResolvedTypePtr Parser::resolveType(TypePtr type)
 {
-    UnresolvedTypePtr unresolvedType = dynamic_pointer_cast<UnresolvedType>(parameter->type());
+    UnresolvedTypePtr unresolvedType = dynamic_pointer_cast<UnresolvedType>(type);
 
     if (unresolvedType)
     {
@@ -517,7 +506,7 @@ void Parser::resolveParameterTypes(ParameterPtr parameter)
 
         if (member)
         {
-            cout << "resolved primary type " << member->longName() <<  " of param " << parameter->longName() << endl;
+            cout << "resolved primary type " << member->longName() << endl;
 
             ResolvedTypePtr resolvedType = make_shared<ResolvedType>();
             resolvedType->setPrimary(member);
@@ -528,54 +517,54 @@ void Parser::resolveParameterTypes(ParameterPtr parameter)
                 member = resolveTypeName(paramTypeName);
                 if (member)
                 {
-                    cout << "resolved subtype " << member->longName() <<  " of param " << parameter->longName() << endl;
+                    cout << "resolved subtype " << member->longName() << endl;
                     resolvedType->addParam(member);
                 }
                 else
                 {
-                    cout << "ERROR: could not resolve subtype " << paramTypeName << " in parameter " << parameter->longName() << endl;
+                    cout << "ERROR: could not resolve subtype " << paramTypeName << endl;
                     throw std::exception();
                 }
             }
 
-            parameter->setType(resolvedType);
+            return resolvedType;
+        }
+
+        cout << "ERROR: could not resolve primary type " << unresolvedType->primary() << endl;
+        throw std::exception();
+    }
+    else
+    {
+        const ResolvedTypePtr &resolvedType = dynamic_pointer_cast<ResolvedType>(type);
+        if (resolvedType)
+        {
+            return resolvedType;
         }
         else
         {
-            cout << "ERROR: could not resolve primary type " << unresolvedType->primary() << " in parameter " << parameter->longName() << endl;
+            cout << "resolveType(): parameter object has base type but must be derived type!";
             throw std::exception();
         }
     }
 }
 
 
-void Parser::startNamespace(NamespacePtr namespaceRoot)
+void Parser::resolveParameterType(ParameterPtr parameter)
 {
-    mCurrentNamespaceElements.push_back(namespaceRoot->longName());
-}
-
-
-void Parser::endNamespace()
-{
-    mCurrentNamespaceElements.pop_back();
-}
-
-
-string Parser::getCurrentNamespace()
-{
-    string fullNamespace;
-    for (auto namespaceElement : mCurrentNamespaceElements)
+    try
     {
-        fullNamespace += "::" + namespaceElement;
+        parameter->setType(resolveType(parameter->type()));
     }
-    return fullNamespace;
+    catch (const std::exception e)
+    {
+        cout << "resolve error in parameter " << parameter->longName() << endl;
+        throw e;
+    }
 }
 
 
 void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
 {
-    NamespaceMemberPtr resolvedObject = nullptr;
-
     for (auto memberPair : rootNamespace->members())
     {
         // namespace
@@ -587,23 +576,29 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
         else
         {
             // resolve events, operations & return
-            cout << "resolving " << memberPair.first << endl;
             const ClassPtr &classPtr = dynamic_pointer_cast<Class>(memberPair.second);
 
             if (classPtr)
             {
+                // resolve parent
+                if (classPtr->parent())
+                {
+                    cout << "resolving PARENT" << endl;
+                    classPtr->setParent(resolveType(classPtr->parent()));
+                }
+
                 for (auto operation : classPtr->operations())
                 {
                     for (auto parameter : operation.second->params())
                     {
-                        resolveParameterTypes(parameter.second);
+                        resolveParameterType(parameter.second);
                     }
 
                     // resolve operation's return parameter
                     const ParameterPtr &resultParamPtr = operation.second->result();
                     if (resultParamPtr)
                     {
-                        resolveParameterTypes(resultParamPtr);
+                        resolveParameterType(resultParamPtr);
                     }
                 }
 
@@ -611,7 +606,7 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
                 {
                     for (auto result : event.second->results())
                     {
-                        resolveParameterTypes(result.second);
+                        resolveParameterType(result.second);
                     }
                 }
             }
@@ -623,12 +618,35 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
                 {
                     for (auto field : structPtr->fields())
                     {
-                        resolveParameterTypes(field.second);
+                        resolveParameterType(field.second);
                     }
                 }
             }
         }
     }
+}
+
+
+void Parser::startNamespace(NamespacePtr namespaceRoot)
+{
+    mNamespaceElementStack.push_back(namespaceRoot->longName());
+}
+
+
+void Parser::endNamespace()
+{
+    mNamespaceElementStack.pop_back();
+}
+
+
+string Parser::getCurrentNamespace()
+{
+    string fullNamespace;
+    for (auto namespaceElement : mNamespaceElementStack)
+    {
+        fullNamespace += "::" + namespaceElement;
+    }
+    return fullNamespace;
 }
 
 
@@ -646,7 +664,7 @@ std::shared_ptr<T> Parser::newIdentifiable(const YAML::Node &node)
     else
     {
         cout << "newIdentifiable(): Type is not an Identifiable!" << endl;
-        throw exception();
+        throw std::exception();
     }
     return newMember;
 }

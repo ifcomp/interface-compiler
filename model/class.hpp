@@ -5,6 +5,7 @@
 #include "model/namespace_member.hpp"
 #include "model/operation.hpp"
 #include "model/event.hpp"
+#include "model/type.hpp"
 
 namespace Api { namespace Model {
 
@@ -23,8 +24,8 @@ public:
     ClassType type();
     void setType(ClassType type);
 
-    std::shared_ptr<Class> parent();
-    void setParent(std::shared_ptr<Class> parent);
+    TypePtr parent();
+    void setParent(TypePtr parent);
 
     void addOperation(OperationPtr operation);
     const std::map<std::string, OperationPtr>& operations();
@@ -34,7 +35,7 @@ public:
 
 private:
     ClassType mType;
-    std::shared_ptr<Class> mParent;
+    TypePtr mParent;
     std::map<std::string, OperationPtr> mOperations;
     std::map<std::string, EventPtr> mEvents;
 };
