@@ -1,8 +1,6 @@
 #include "unresolvedType.hpp"
-#include <iostream>
 
 using namespace Api::Model;
-using namespace std;
 
 UnresolvedType::UnresolvedType()
 {
@@ -10,7 +8,6 @@ UnresolvedType::UnresolvedType()
 
 Api::Model::UnresolvedType::~UnresolvedType()
 {
-    cout << "CLEANUP of UnresolvedType " << mPrimary << endl;
 }
 
 std::string Api::Model::UnresolvedType::primary()

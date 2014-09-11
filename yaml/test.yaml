@@ -257,7 +257,7 @@
   nodetype: namespace
   members:
 
-    - name: Wurst
+    - name: Bier
       nodetype: primitive
 
     - name: Kaese
@@ -266,10 +266,3 @@
 
         - name: BitteEinBit
           nodetype: primitive
-
-- name: Gu::Kaese   # this doesn't work as expected!
-  nodetype: namespace
-  members:
-
-    - name: Kuhl
-      nodetype: primitive

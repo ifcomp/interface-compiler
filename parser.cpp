@@ -56,33 +56,26 @@ void Api::Parser::parseFile(std::string filename)
 {
     mYamlConfig = YAML::LoadFile(filename);
 
-    parseNamespaceMembers(mYamlConfig, mRootNamespace);
+    try {
+        parseNamespaceMembers(mYamlConfig, mRootNamespace);
+
+        cout << "----------------------- TYPES ------------------------" << endl;
+        for (auto type : mKnownTypes)
+        {
+            cout << type.first << endl;
+        }
+
+        cout << "----------------------- RESOLVE ------------------------" << endl;
+
+        resolveTypesInNamespace(mRootNamespace);
+    }
+    catch (const std::exception e)
+    {
+        cout << "PARSE ERROR - please check your config" << endl;
+    }
 
     cout << "root namespace = " << mRootNamespace->longName() << endl;
 
-    for (auto member : mRootNamespace->members())
-    {
-        cout << "MEMBER: " << member.first << endl;
-        NamespacePtr namespacePtr = dynamic_pointer_cast<Namespace>(member.second);
-
-        if (namespacePtr)
-        {
-            for (auto member : namespacePtr->members())
-            {
-                cout << "2. MEMBER: " << member.first << endl;
-            }
-        }
-    }
-
-    cout << "----------------------- TYPES ------------------------" << endl;
-    for (auto type : mKnownTypes)
-    {
-        cout << type.first << endl;
-    }
-
-    cout << "----------------------- RESOLVE ------------------------" << endl;
-
-    resolveTypesInNamespace(mRootNamespace);
 }
 
 
@@ -94,31 +87,26 @@ void Api::Parser::setRootNamespace(Api::Model::NamespacePtr rootNamespace)
 
 void Parser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootNamespace)
 {
-    static int counter = 0;
-    ++counter;
-
     for (auto sequenceNode : node)
     {
         if (checkNode(sequenceNode, KEY_NODETYPE, YAML::NodeType::Scalar, true))
         {
             string nodeType = sequenceNode[KEY_NODETYPE].as<string>();
-            cout << "found nodetype " << nodeType << " on level " << counter << endl;
+            cout << "found nodetype " << nodeType << endl;
 
-            try
+            if (mParserMethods.find(nodeType) != mParserMethods.end())
             {
                 MemberFunc func = mParserMethods[nodeType];
                 NamespaceMemberPtr member = (this->*func)(sequenceNode);
                 rootNamespace->addMember(member);
-                cout << "new namespace member " << member->longName() << " on level " << counter << endl;
+                cout << "new namespace member " << member->longName() << endl;
             }
-            catch (const exception &e)
+            else
             {
-                cout << "PARSER ERROR: nodetype " << nodeType << " unknown! (" << e.what() << ")" << endl;
+                cout << "WARNING: ignoring unknown nodetype " << nodeType << endl;
             }
         }
     }
-
-    --counter;
 }
 
 
@@ -497,6 +485,7 @@ void Parser::registerType(NamespaceMemberPtr member)
 
     if (mKnownTypes.find(type) == mKnownTypes.end())
     {
+        cout << "REGISTERED TYPE: " << type << endl;
         mKnownTypes[type] = member;
     }
     else
@@ -548,6 +537,8 @@ void Parser::resolveParameterTypes(ParameterPtr parameter)
                     throw std::exception();
                 }
             }
+
+            parameter->setType(resolvedType);
         }
         else
         {
