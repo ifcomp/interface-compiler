@@ -27,7 +27,6 @@
 
     - name: User
       nodetype: class
-      inherits: Everbase::UserEntity
       operations:
         - name: Create
           static: true
@@ -73,6 +72,7 @@
           return: { name: Status, type: Everbase::NodeStatus }
           params:
             - { name: Profile, type: Everbase::Profile }
+            - { name: Path, type: Everbase::Path }
             - { name: Path, type: Everbase::Path }
         - name: GetVersions
           return: { name: VersionedPaths, type: [ Everbase::List, Everbase::Path ] }
@@ -242,12 +242,6 @@
       nodetype: primitive
 
     - name: Domain
-      nodetype: primitive
-
-    - name: Directory
-      nodetype: primitive
-
-    - name: Metadata
       nodetype: primitive
 
     - name: NodeStatus

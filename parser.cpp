@@ -1,5 +1,9 @@
 #include "parser.hpp"
 
+#define addFQNameToException(member, delimiter)     getCurrentNamespace() + "::" + member->longName() + delimiter + e.what()
+#define addObjectNameToException(member)            member->longName() + " " + e.what()
+#define addSectionToException(key)                  "in section " + string(key) + " : " + e.what()
+
 using namespace std;
 using namespace Api;
 using namespace Model;
@@ -71,9 +75,9 @@ void Api::Parser::parseFile(std::string filename)
 
         resolveTypesInNamespace(mRootNamespace);
     }
-    catch (const std::exception e)
+    catch (const runtime_error &e)
     {
-        cout << "PARSE ERROR - please check your config" << endl;
+        cout << "[PARSE ERROR] " << e.what() << "please check your config" << endl;
     }
 
 }
@@ -156,42 +160,49 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
     ClassPtr newClass = newIdentifiable<Class>(node);
     registerType(newClass);
 
-    if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
+    try
     {
-        newClass->setType(Class::ClassType::VALUE);
-    }
-    else
-    {
-        newClass->setType(Class::ClassType::ABSTRACT);
-    }
-
-    if (checkNode(node, KEY_INHERITS))
-    {
-        UnresolvedTypePtr newType = make_shared<UnresolvedType>();
-        newType->setPrimary(node[KEY_INHERITS].Scalar());
-        newClass->setParent(newType);
-    }
-
-    if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
-    {
-        for (auto operationNode : node[KEY_OPERATIONS])
+        if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
         {
-            newClass->addOperation(parseOperation(operationNode));
+            newClass->setType(Class::ClassType::VALUE);
+        }
+        else
+        {
+            newClass->setType(Class::ClassType::ABSTRACT);
+        }
+
+        if (checkNode(node, KEY_INHERITS))
+        {
+            UnresolvedTypePtr newType = make_shared<UnresolvedType>();
+            newType->setPrimary(node[KEY_INHERITS].Scalar());
+            newClass->setParent(newType);
+        }
+
+        if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
+        {
+            for (auto operationNode : node[KEY_OPERATIONS])
+            {
+                newClass->addOperation(parseOperation(operationNode));
+            }
+        }
+
+        if (checkNode(node, KEY_EVENTS, YAML::NodeType::Sequence))
+        {
+            for (auto eventNode : node[KEY_EVENTS])
+            {
+                newClass->addEvent(parseEvent(eventNode));
+            }
+        }
+
+        if (newClass->operations().size() == 0 &&
+            newClass->events().size() == 0)
+        {
+            cout << "WARNING: no operations or events defined in class " << newClass->longName() << endl;
         }
     }
-
-    if (checkNode(node, KEY_EVENTS, YAML::NodeType::Sequence))
+    catch (const runtime_error &e)
     {
-        for (auto eventNode : node[KEY_EVENTS])
-        {
-            newClass->addEvent(parseEvent(eventNode));
-        }
-    }
-
-    if (newClass->operations().size() == 0 &&
-        newClass->events().size() == 0)
-    {
-        cout << "WARNING: no operations or events defined in class " << newClass->longName() << endl;
+        throw runtime_error(addFQNameToException(newClass, "::"));
     }
 
     return newClass;
@@ -212,12 +223,26 @@ NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
     EnumPtr newEnum = newIdentifiable<Enum>(node);
     registerType(newEnum);
 
-    if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
+    try
     {
-        for (auto enumNode : node[KEY_VALUES])
+        if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
         {
-            newEnum->addValue(parseValue(enumNode));
+            try
+            {
+                for (auto enumNode : node[KEY_VALUES])
+                {
+                    newEnum->addValue(parseValue(enumNode));
+                }
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addSectionToException(KEY_VALUES));
+            }
         }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newEnum, " : "));
     }
 
     return newEnum;
@@ -229,12 +254,26 @@ NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
     StructPtr newStruct = newIdentifiable<Struct>(node);
     registerType(newStruct);
 
-    if (checkNode(node, KEY_FIELDS, YAML::NodeType::Sequence, true))
+    try
     {
-        for (auto fieldNode : node[KEY_FIELDS])
+        if (checkNode(node, KEY_FIELDS, YAML::NodeType::Sequence, true))
         {
-            newStruct->addField(parseParameter(fieldNode));
+            try
+            {
+                for (auto fieldNode : node[KEY_FIELDS])
+                {
+                    newStruct->addField(parseParameter(fieldNode));
+                }
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addSectionToException(KEY_FIELDS));
+            }
         }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newStruct, " : "));
     }
 
     return newStruct;
@@ -246,25 +285,36 @@ NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
     ContainerPtr newContainer = newIdentifiable<Container>(node);
     registerType(newContainer);
 
-    if (checkNode(node, KEY_CONTAINER_TYPE, YAML::NodeType::Scalar, true))
+    try
     {
-        string typeName = node[KEY_CONTAINER_TYPE].Scalar();
-        Container::ContainerType type;
+        if (checkNode(node, KEY_CONTAINER_TYPE, YAML::NodeType::Scalar, true))
+        {
+            string typeName = node[KEY_CONTAINER_TYPE].Scalar();
+            Container::ContainerType type;
 
-        if (typeName == CONTAINER_VECTOR)
-        {
-            type = Container::ContainerType::VECTOR;
-        }
-        else if (typeName == CONTAINER_LIST)
-        {
-            type = Container::ContainerType::LIST;
-        }
-        else if (typeName == CONTAINER_SET)
-        {
-            type = Container::ContainerType::SET;
-        }
+            if (typeName == CONTAINER_VECTOR)
+            {
+                type = Container::ContainerType::VECTOR;
+            }
+            else if (typeName == CONTAINER_LIST)
+            {
+                type = Container::ContainerType::LIST;
+            }
+            else if (typeName == CONTAINER_SET)
+            {
+                type = Container::ContainerType::SET;
+            }
+            else
+            {
+                throw runtime_error("container " + newContainer->longName() + " has no container type");
+            }
 
-        newContainer->setType(type);
+            newContainer->setType(type);
+        }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newContainer, " : "));
     }
 
     return newContainer;
@@ -275,27 +325,40 @@ OperationPtr Parser::parseOperation(const YAML::Node &node)
 {
     OperationPtr newOperation = newIdentifiable<Operation>(node);
 
-    if (checkNode(node, FLAG_STATIC))
+    try
     {
-        newOperation->setStatic(node[FLAG_STATIC].as<bool>());
-    }
-
-    if (checkNode(node, FLAG_SYNCHRONOUS))
-    {
-        newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
-    }
-
-    if (checkNode(node, KEY_PARAMS, YAML::NodeType::Sequence))
-    {
-        for (auto param : node[KEY_PARAMS])
+        if (checkNode(node, FLAG_STATIC))
         {
-            newOperation->addParam(parseParameter(param));
+            newOperation->setStatic(node[FLAG_STATIC].as<bool>());
+        }
+
+        if (checkNode(node, FLAG_SYNCHRONOUS))
+        {
+            newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
+        }
+
+        if (checkNode(node, KEY_PARAMS, YAML::NodeType::Sequence))
+        {
+            try {
+                for (auto param : node[KEY_PARAMS])
+                {
+                    newOperation->addParam(parseParameter(param));
+                }
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addSectionToException(KEY_PARAMS));
+            }
+        }
+
+        if (checkNode(node, KEY_RETURN, YAML::NodeType::Map))
+        {
+            newOperation->setResult(parseParameter(node[KEY_RETURN]));
         }
     }
-
-    if (checkNode(node, KEY_RETURN, YAML::NodeType::Map))
+    catch (const runtime_error &e)
     {
-        newOperation->setResult(parseParameter(node[KEY_RETURN]));
+        throw runtime_error(addObjectNameToException(newOperation));
     }
 
     return newOperation;
@@ -306,17 +369,29 @@ EventPtr Parser::parseEvent(const YAML::Node &node)
 {
     EventPtr newEvent = newIdentifiable<Event>(node);
 
-    if (checkNode(node, FLAG_STATIC))
+    try
     {
-        newEvent->setStatic(node[FLAG_STATIC].as<bool>());
-    }
-
-    if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
-    {
-        for (auto valueNode : node[KEY_VALUES])
+        if (checkNode(node, FLAG_STATIC))
         {
-            newEvent->addResult(parseParameter(valueNode));
+            newEvent->setStatic(node[FLAG_STATIC].as<bool>());
         }
+
+        if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
+        {
+            for (auto valueNode : node[KEY_VALUES])
+            {
+                newEvent->addResult(parseParameter(valueNode));
+            }
+        }
+
+        if (newEvent->results().size() == 0)
+        {
+            throw runtime_error("event " + newEvent->longName() + " has no result values\n");
+        }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addObjectNameToException(newEvent));
     }
 
     return newEvent;
@@ -333,8 +408,7 @@ ValuePtr Parser::parseValue(const YAML::Node &node)
     }
     else
     {
-        cout << "PARSE ERROR: value definition " << newValue->longName() << " has no value!" << endl;
-        throw std::exception();
+        throw runtime_error("value definition " + newValue->longName() + " has no value!\n");
     }
     return newValue;
 }
@@ -380,16 +454,14 @@ TypePtr Parser::parseType(const YAML::Node &node)
                     }
                     else
                     {
-                        cout << "ERROR: bad nested type definition" << endl;
-                        throw std::exception();
+                        throw runtime_error("bad nested type definition\n");
                     }
                 }
             }
             break;
 
         default:
-            cout << "ERROR: bad type definition" << endl;
-            throw std::exception();
+            throw runtime_error("bad type definition\n");
     }
     return newType;
 }
@@ -403,15 +475,14 @@ void Parser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
 
         if (name.find("::") != string::npos)
         {
-            cout << "ERROR: please add a namespace section for each namespace part in " << name << endl;
-            throw std::exception();
+            throw runtime_error("please add a namespace section for each namespace part in " + name + "\n");
         }
 
         identifiable->setLongName(name);
 
         if (checkNode(node, KEY_SHORTNAME))
         {
-            identifiable->setLongName(node[KEY_SHORTNAME].Scalar());
+            identifiable->setShortName(node[KEY_SHORTNAME].Scalar());
         }
     }
 }
@@ -436,8 +507,7 @@ void Parser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
         }
         else
         {
-            cout << "documentation of " << identifiable->longName() << " is missing brief description" << endl;
-            throw std::exception();
+            throw runtime_error("documentation of " + identifiable->longName() + " is missing a brief description\n");
         }
     }
 }
@@ -454,14 +524,12 @@ bool Parser::checkNode(const YAML::Node &node, const char *key, YAML::NodeType::
     {
         if (mandatory)
         {
-            cout << "ERROR: definition of " << key << " is missing!"<< endl;
-            throw std::exception();
+            throw runtime_error("definition of key '" + string(key) + "' is missing!\n");
         }
     }
     else
     {
-        cout << "ERROR: bad definition of " << key << endl;
-        throw std::exception();
+        throw runtime_error("bad definition of key '" + string(key) + "'\n");
     }
 
     return false;
@@ -478,8 +546,7 @@ void Parser::registerType(NamespaceMemberPtr member)
     }
     else
     {
-        cout << "ERROR: type " << type << " already exists!" << endl;
-        throw std::exception();
+        throw runtime_error("type " + type + " already exists!\n");
     }
 }
 
@@ -522,16 +589,14 @@ ResolvedTypePtr Parser::resolveType(TypePtr type)
                 }
                 else
                 {
-                    cout << "ERROR: could not resolve subtype " << paramTypeName << endl;
-                    throw std::exception();
+                    throw runtime_error("could not resolve subtype " + paramTypeName + "\n");
                 }
             }
 
             return resolvedType;
         }
 
-        cout << "ERROR: could not resolve primary type " << unresolvedType->primary() << endl;
-        throw std::exception();
+        throw runtime_error("could not resolve primary type " + unresolvedType->primary() + "\n");
     }
     else
     {
@@ -542,8 +607,7 @@ ResolvedTypePtr Parser::resolveType(TypePtr type)
         }
         else
         {
-            cout << "resolveType(): parameter object has base type but must be derived type!";
-            throw std::exception();
+            throw runtime_error("resolveType(): parameter object has base type but must be derived type!\n");
         }
     }
 }
@@ -555,10 +619,9 @@ void Parser::resolveParameterType(ParameterPtr parameter)
     {
         parameter->setType(resolveType(parameter->type()));
     }
-    catch (const std::exception e)
+    catch (const runtime_error &e)
     {
-        cout << "resolve error in parameter " << parameter->longName() << endl;
-        throw e;
+        throw runtime_error("in parameter " + parameter->longName() + ": " + e.what());
     }
 }
 
@@ -583,8 +646,16 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
                 // resolve parent
                 if (classPtr->parent())
                 {
-                    cout << "resolving PARENT" << endl;
-                    classPtr->setParent(resolveType(classPtr->parent()));
+                    const ResolvedTypePtr &parentType = resolveType(classPtr->parent());
+
+                    if (dynamic_pointer_cast<Class>(parentType->primary()))
+                    {
+                        classPtr->setParent(parentType);
+                    }
+                    else
+                    {
+                        throw runtime_error("inherited element in " + classPtr->longName() + " must point to a class\n");
+                    }
                 }
 
                 for (auto operation : classPtr->operations())
@@ -663,8 +734,7 @@ std::shared_ptr<T> Parser::newIdentifiable(const YAML::Node &node)
     }
     else
     {
-        cout << "newIdentifiable(): Type is not an Identifiable!" << endl;
-        throw std::exception();
+        throw runtime_error("newIdentifiable(): Type is not an Identifiable!\n");
     }
     return newMember;
 }

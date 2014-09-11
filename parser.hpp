@@ -99,7 +99,7 @@ private:
      * @brief Parse TYPE_NAMESPACE section
      * @param node  YAML node that contains namespace definition
      * @return  Shared pointer to a filled Object
-     * @throws  std::exeption on incomplete definition
+     * @throw  std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parseNamespace(const YAML::Node &node);
 
@@ -107,7 +107,7 @@ private:
      * @brief Parse TYPE_CLASS section
      * @param node  YAML node that contains class definition
      * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parseClass(const YAML::Node &node);
 
@@ -115,7 +115,7 @@ private:
      * @brief Parse TYPE_PRIMITIVE section
      * @param node  YAML node that contains primitive definition
      * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parsePrimitive(const YAML::Node &node);
 
@@ -123,7 +123,7 @@ private:
      * @brief Parse TYPE_ENUM section
      * @param node  YAML node that contains enum definition
      * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parseEnum(const YAML::Node &node);
 
@@ -131,7 +131,7 @@ private:
      * @brief Parse TYPE_STRUCT section
      * @param node  YAML node that contains struct definition
      * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parseStruct(const YAML::Node &node);
 
@@ -139,7 +139,7 @@ private:
      * @brief Parse TYPE_PRIMITIVE section
      * @param node  YAML node that contains primitive definition
      * @return Shared pointer to a filled Object
-     * @throws std::exeption on incomplete definition
+     * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberPtr parseContainer(const YAML::Node &node);
 
@@ -153,7 +153,7 @@ private:
      * @brief Parse long and short name from node into identifiable.
      * @param node  YAML node with mandatory KEY_NAME and optional KEY_SHORTNAME
      * @param identifiable  Pointer to Identifiable object that will be named
-     * @throws std::exception if KEY_NAME was not found
+     * @throw std::runtime_error if KEY_NAME was not found
      */
     void parseName(const YAML::Node &node, Model::IdentifiablePtr identifiable);
 
@@ -171,7 +171,7 @@ private:
      * @param expectedType  YAML node type
      * @param mandatory if true, key must be found and must have the right type
      * @return true if node[key] has expectedType
-     * @throws std::exception if types don't match and mandatory is set
+     * @throw std::runtime_error if types don't match and mandatory is set
      */
     bool checkNode(const YAML::Node &node, const char *key,
                    YAML::NodeType::value expectedType = YAML::NodeType::Scalar, bool mandatory = false);
@@ -193,14 +193,14 @@ private:
      * @brief Try to resolve UnresolvedType object into a new ResolvedType object
      * @param type  Type object that may be of type UnresolvedType or ResolvedType
      * @return new or existing ResolvedType object
-     * @throws std::exception if type is not resolvable or contains a base object
+     * @throw std::runtime_error if type is not resolvable or contains a base object
      */
     Model::ResolvedTypePtr resolveType(Model::TypePtr type);
 
     /**
      * @brief Try to resolve all types included in parameter
      * @param parameter Parameter
-     * @throws std::exception in case of an unresolvable type
+     * @throw std::runtime_error in case of an unresolvable type
      */
     void resolveParameterType(Model::ParameterPtr parameter);
 
@@ -231,6 +231,7 @@ private:
      * @brief Create new Identifiable object of type T from name and doc info in node
      * @param node  YAML node that must contain at least a KEY_NAME
      * @return new Identifiable-based object of type T
+     * @throw std::runtime_error in case T is not derived from Identifiable
      */
     template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
 
