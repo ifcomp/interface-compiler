@@ -87,6 +87,23 @@ public:
      */
     void reset();
 
+    /**
+     * @brief Try to resolve all types contained in rootNamespace.
+     *
+     * This method replaces all UnresolvedType objects with correctly linked
+     * ResolvedType() objects. Type lookup is done via mKnownTypes map.
+     *
+     * @param rootNamespace Namespace that will be scanned for unresolved types
+     * @throw std::runtime_error in case of unresolvable types
+     */
+    void resolveTypesInNamespace(Model::NamespacePtr rootNamespace);
+
+    /**
+     * @brief Prints all registered types to stdout.
+     */
+    void listKnownTypes();
+
+
 private:
     /**
      * @brief Parse namespace members into rootNamespace starting at node.
@@ -205,12 +222,6 @@ private:
     void resolveParameterType(Model::ParameterPtr parameter);
 
     /**
-     * @brief Try to resolve all types contained in rootNamespace
-     * @param rootNamespace Namespace that will be scanned for unresolved types
-     */
-    void resolveTypesInNamespace(Model::NamespacePtr rootNamespace);
-
-    /**
      * @brief Push current namespace onto namespace element stack
      * @param namespaceRoot
      */
@@ -236,7 +247,6 @@ private:
     template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
 
 private:
-    YAML::Node mYamlConfig;
     Model::NamespacePtr mRootNamespace;
     std::map<std::string, MemberFunc> mParserMethods;
     std::map<std::string, Model::NamespaceMemberPtr> mKnownTypes;

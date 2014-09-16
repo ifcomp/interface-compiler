@@ -1,11 +1,15 @@
 set(SRC_LIST
    ${SRC_LIST}
-#   ${CMAKE_CURRENT_SOURCE_DIR}/class.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/generator.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/formatter.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/cppGenerator.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/cppFormatter.cpp
    PARENT_SCOPE
 )
 
 set(HDR_LIST
    ${HDR_LIST}
-#   ${CMAKE_CURRENT_SOURCE_DIR}/class.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/cppGenerator.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/cppFormatter.hpp
    PARENT_SCOPE
 )

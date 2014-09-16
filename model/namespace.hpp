@@ -12,6 +12,7 @@ class Namespace : public NamespaceMember
 {
 public:
     Namespace();
+    Namespace(std::string longName);
     virtual ~Namespace();
 
     void addMember(NamespaceMemberPtr member);

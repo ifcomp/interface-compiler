@@ -7,6 +7,11 @@ Namespace::Namespace()
 {
 }
 
+Namespace::Namespace(std::string longName)
+{
+    setLongName(longName);
+}
+
 Namespace::~Namespace()
 {
 }

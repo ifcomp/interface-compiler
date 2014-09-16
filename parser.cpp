@@ -58,28 +58,15 @@ Parser::Parser(Model::NamespacePtr rootNamespace) :
 
 void Api::Parser::parseFile(std::string filename)
 {
-    mYamlConfig = YAML::LoadFile(filename);
+    YAML::Node yamlConfig = YAML::LoadFile(filename);
 
     try {
-        parseNamespaceMembers(mYamlConfig, mRootNamespace);
-
-        ///< @todo remove debug output
-
-        cout << "----------------------- TYPES ------------------------" << endl;
-        for (auto type : mKnownTypes)
-        {
-            cout << type.first << endl;
-        }
-
-        cout << "----------------------- RESOLVE ------------------------" << endl;
-
-        resolveTypesInNamespace(mRootNamespace);
+        parseNamespaceMembers(yamlConfig, mRootNamespace);
     }
     catch (const runtime_error &e)
     {
-        cout << "[PARSE ERROR] " << e.what() << "please check your config" << endl;
+        throw e;
     }
-
 }
 
 
@@ -130,11 +117,7 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
 
     NamespacePtr newNamespace = dynamic_pointer_cast<Namespace>(resolveTypeName(namespaceName));
 
-    if (newNamespace)
-    {
-        cout << "using existing namespace " << newNamespace->longName() << endl;
-    }
-    else
+    if (!newNamespace)
     {
         // Namespace doesn't exist --> create new namespace object
         newNamespace = newIdentifiable<Namespace>(node);
@@ -142,8 +125,6 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
     }
 
     startNamespace(newNamespace);
-
-    cout << "parsing namespace " << newNamespace->longName() << endl;
 
     if (checkNode(node, KEY_MEMBERS, YAML::NodeType::Sequence, true))
     {
@@ -573,7 +554,7 @@ ResolvedTypePtr Parser::resolveType(TypePtr type)
 
         if (member)
         {
-            cout << "resolved primary type " << member->longName() << endl;
+//            cout << "resolved primary type " << member->longName() << endl;
 
             ResolvedTypePtr resolvedType = make_shared<ResolvedType>();
             resolvedType->setPrimary(member);
@@ -584,7 +565,7 @@ ResolvedTypePtr Parser::resolveType(TypePtr type)
                 member = resolveTypeName(paramTypeName);
                 if (member)
                 {
-                    cout << "resolved subtype " << member->longName() << endl;
+//                    cout << "resolved subtype " << member->longName() << endl;
                     resolvedType->addParam(member);
                 }
                 else
@@ -695,6 +676,19 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
             }
         }
     }
+}
+
+
+void Parser::listKnownTypes()
+{
+    cout << "----------------------- REGISTERED TYPES ------------------------" << endl;
+
+    for (auto type : mKnownTypes)
+    {
+        cout << type.first << endl;
+    }
+
+    cout << "-----------------------------------------------------------------" << endl;
 }
 
 
