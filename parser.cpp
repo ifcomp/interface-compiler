@@ -14,6 +14,7 @@ const char *Parser::TYPE_PRIMITIVE      = "primitive";
 const char *Parser::TYPE_ENUM           = "enum";
 const char *Parser::TYPE_STRUCT         = "struct";
 const char *Parser::TYPE_CONTAINER      = "container";
+const char *Parser::TYPE_CONSTANT       = "constant";
 
 const char *Parser::CONTAINER_VECTOR    = "vector";
 const char *Parser::CONTAINER_LIST      = "list";
@@ -47,12 +48,16 @@ const char *Parser::KEY_INHERITS        = "inherits";
 Parser::Parser(Model::NamespacePtr rootNamespace) :
     mRootNamespace(rootNamespace)
 {
+    // All first level entries have nodetypes TYPE_*
+    // These nodetype strings are used to lookup the
+    // corresponding parser function:
     mParserMethods[TYPE_NAMESPACE]  = &Parser::parseNamespace;
     mParserMethods[TYPE_CLASS]      = &Parser::parseClass;
     mParserMethods[TYPE_PRIMITIVE]  = &Parser::parsePrimitive;
     mParserMethods[TYPE_ENUM]       = &Parser::parseEnum;
     mParserMethods[TYPE_STRUCT]     = &Parser::parseStruct;
     mParserMethods[TYPE_CONTAINER]  = &Parser::parseContainer;
+    mParserMethods[TYPE_CONSTANT]   = &Parser::parseConstant;
 }
 
 
@@ -65,7 +70,7 @@ void Api::Parser::parseFile(std::string filename)
     }
     catch (const runtime_error &e)
     {
-        throw e;
+        throw;
     }
 }
 
@@ -95,6 +100,7 @@ void Parser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootName
             {
                 MemberFunc func = mParserMethods[nodeType];
                 NamespaceMemberPtr member = (this->*func)(sequenceNode);
+                member->setParentIdentifiable(rootNamespace);
                 rootNamespace->addMember(member);
             }
             else
@@ -115,6 +121,7 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
         namespaceName = node[KEY_NAME].Scalar();
     }
 
+    // check if we already know this namespace
     NamespacePtr newNamespace = dynamic_pointer_cast<Namespace>(resolveTypeName(namespaceName));
 
     if (!newNamespace)
@@ -163,7 +170,9 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
         {
             for (auto operationNode : node[KEY_OPERATIONS])
             {
-                newClass->addOperation(parseOperation(operationNode));
+                OperationPtr newOperation = parseOperation(operationNode);
+                newOperation->setParentIdentifiable(newClass);
+                newClass->addOperation(newOperation);
             }
         }
 
@@ -171,7 +180,9 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
         {
             for (auto eventNode : node[KEY_EVENTS])
             {
-                newClass->addEvent(parseEvent(eventNode));
+                EventPtr newEvent = parseEvent(eventNode);
+                newEvent->setParentIdentifiable(newClass);
+                newClass->addEvent(newEvent);
             }
         }
 
@@ -212,7 +223,9 @@ NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
             {
                 for (auto enumNode : node[KEY_VALUES])
                 {
-                    newEnum->addValue(parseValue(enumNode));
+                    ValuePtr newValue = parseValue(enumNode);
+                    newValue->setParentIdentifiable(newEnum);
+                    newEnum->addValue(newValue);
                 }
             }
             catch (const runtime_error &e)
@@ -243,7 +256,9 @@ NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
             {
                 for (auto fieldNode : node[KEY_FIELDS])
                 {
-                    newStruct->addField(parseParameter(fieldNode));
+                    ParameterPtr newField = parseParameter(fieldNode);
+                    newField->setParentIdentifiable(newStruct);
+                    newStruct->addField(newField);
                 }
             }
             catch (const runtime_error &e)
@@ -323,7 +338,9 @@ OperationPtr Parser::parseOperation(const YAML::Node &node)
             try {
                 for (auto param : node[KEY_PARAMS])
                 {
-                    newOperation->addParam(parseParameter(param));
+                    ParameterPtr newParam = parseParameter(param);
+                    newParam->setParentIdentifiable(newOperation);
+                    newOperation->addParam(newParam);
                 }
             }
             catch (const runtime_error &e)
@@ -334,7 +351,9 @@ OperationPtr Parser::parseOperation(const YAML::Node &node)
 
         if (checkNode(node, KEY_RETURN, YAML::NodeType::Map))
         {
-            newOperation->setResult(parseParameter(node[KEY_RETURN]));
+            ParameterPtr newResult = parseParameter(node[KEY_RETURN]);
+            newResult->setParentIdentifiable(newOperation);
+            newOperation->setResult(newResult);
         }
     }
     catch (const runtime_error &e)
@@ -361,7 +380,9 @@ EventPtr Parser::parseEvent(const YAML::Node &node)
         {
             for (auto valueNode : node[KEY_VALUES])
             {
-                newEvent->addResult(parseParameter(valueNode));
+                ParameterPtr newParam = parseParameter(valueNode);
+                newParam->setParentIdentifiable(newEvent);
+                newEvent->addResult(newParam);
             }
         }
 
@@ -445,6 +466,34 @@ TypePtr Parser::parseType(const YAML::Node &node)
             throw runtime_error("bad type definition\n");
     }
     return newType;
+}
+
+
+NamespaceMemberPtr Parser::parseConstant(const YAML::Node &node)
+{
+    ConstantPtr newConstant = newIdentifiable<Constant>(node);
+    registerType(newConstant);
+
+    try
+    {
+        if (checkNode(node, KEY_TYPE, YAML::NodeType::Scalar, true))
+        {
+            UnresolvedTypePtr newType = make_shared<UnresolvedType>();
+            newType->setPrimary(node[KEY_TYPE].Scalar());
+            newConstant->setType(newType);
+        }
+
+        if (checkNode(node, KEY_VALUE, YAML::NodeType::Scalar, true))
+        {
+            newConstant->setValue(node[KEY_VALUE].Scalar());
+        }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newConstant, " : "));
+    }
+
+    return newConstant;
 }
 
 
@@ -681,14 +730,14 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
 
 void Parser::listKnownTypes()
 {
-    cout << "----------------------- REGISTERED TYPES ------------------------" << endl;
+    cout << "------- REGISTERED TYPES -------" << endl;
 
     for (auto type : mKnownTypes)
     {
         cout << type.first << endl;
     }
 
-    cout << "-----------------------------------------------------------------" << endl;
+    cout << "--------------------------------" << endl;
 }
 
 

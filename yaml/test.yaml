@@ -228,6 +228,9 @@
                 - { name: UploadingX, value: 0x4 }
                 - { name: DownloadingX, value: 0x8 }
 
+    - name: String
+      nodetype: primitive
+
 - name: Everbase
   nodetype: namespace
   members:
@@ -263,3 +266,8 @@
 
         - name: BitteEinBit
           nodetype: primitive
+
+    - name: WurstKoffer
+      nodetype: constant
+      type: Gu::String
+      value: "Deutsche Wurst - Alles andere ist Käse"

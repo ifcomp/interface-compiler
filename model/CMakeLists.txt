@@ -1,6 +1,7 @@
 set(SRC_LIST
    ${SRC_LIST}
    ${CMAKE_CURRENT_SOURCE_DIR}/class.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/constant.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.cpp
@@ -22,6 +23,7 @@ set(SRC_LIST
 set(HDR_LIST
    ${HDR_LIST}
    ${CMAKE_CURRENT_SOURCE_DIR}/class.hpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/constant.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/container.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/documentation.hpp
    ${CMAKE_CURRENT_SOURCE_DIR}/enum.hpp

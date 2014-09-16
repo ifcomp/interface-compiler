@@ -7,11 +7,17 @@
 
 namespace Api { namespace Model {
 
+class Identifiable;
+typedef std::shared_ptr<Identifiable> IdentifiablePtr;
+
 class Identifiable
 {
 public:
-    Identifiable();
+    Identifiable(IdentifiablePtr parentIdentifiable = nullptr);
     virtual ~Identifiable();
+
+    IdentifiablePtr parentIdentifiable();
+    void setParentIdentifiable(IdentifiablePtr parentIdentifiable);
 
     std::string longName();
     void setLongName(std::string longName);
@@ -23,12 +29,12 @@ public:
     void setDoc(DocumentationPtr doc);
 
 private:
+    IdentifiablePtr mParentIdentifiable;
     std::string mLongName;
     std::string mShortName;
     DocumentationPtr mDoc;
 };
 
-typedef std::shared_ptr<Identifiable> IdentifiablePtr;
 
 } } // namespace Api::Model
 

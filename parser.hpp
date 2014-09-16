@@ -19,6 +19,7 @@
 #include <model/value.hpp>
 #include "model/unresolvedType.hpp"
 #include "model/resolvedType.hpp"
+#include "model/constant.hpp"
 
 namespace Api {
 
@@ -28,20 +29,39 @@ namespace Api {
  */
 class Parser
 {
+    /**
+     * Member function signature for nodetype-lookup
+     * @see Parser::Parser
+     */
     typedef Model::NamespaceMemberPtr (Parser::*MemberFunc)(const YAML::Node &);
 
 public:
+    /**
+     * @brief Nodetypes of KEY_NODETYPE
+     * @{
+     */
     static const char *TYPE_NAMESPACE;
     static const char *TYPE_CLASS;
     static const char *TYPE_PRIMITIVE;
     static const char *TYPE_ENUM;
     static const char *TYPE_STRUCT;
     static const char *TYPE_CONTAINER;
+    static const char *TYPE_CONSTANT;
+    /** @} */
 
+    /**
+     * @brief Container types of KEY_CONTAINER_TYPE
+     * @{
+     */
     static const char *CONTAINER_VECTOR;
     static const char *CONTAINER_LIST;
     static const char *CONTAINER_SET;
+    /** @} */
 
+    /**
+     * @brief Keys that appear in different sections
+     * @{
+     */
     static const char *KEY_NAME;
     static const char *KEY_SHORTNAME;
     static const char *KEY_NODETYPE;
@@ -61,10 +81,15 @@ public:
     static const char *KEY_VALUES;
     static const char *KEY_OPERATIONS;
     static const char *KEY_EVENTS;
+    /** @} */
 
+    /**
+     * @brief Keywords that are interpreted as boolean flags
+     */
     static const char *FLAG_STATIC;
     static const char *FLAG_SYNCHRONOUS;
     static const char *FLAG_VALUETYPE;
+    /** @} */
 
 public:
     Parser(Model::NamespacePtr rootNamespace);
@@ -160,10 +185,52 @@ private:
      */
     Model::NamespaceMemberPtr parseContainer(const YAML::Node &node);
 
+    /**
+     * @brief Parse TYPE_CONSTANT definition
+     * @param node  YAML node that contains a constant definition
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
+    Model::NamespaceMemberPtr parseConstant(const YAML::Node &node);
+
+    /**
+     * @brief Parse operation definition (entries of KEY_OPERATIONS inside TYPE_CLASS section);
+     * @param node  YAML node that contains a single operation definition
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
     Model::OperationPtr parseOperation(const YAML::Node &node);
+
+    /**
+     * @brief Parse event definition (entries of KEY_EVENTS inside TYPE_CLASS section)
+     * @param node  YAML node that contains a single event definition
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
     Model::EventPtr parseEvent(const YAML::Node &node);
+
+    /**
+     * @brief Parse a value definition (KEY_VALUE inside KEY_VALUES section)
+     * @param node  YAML node that contains a value definition in KEY_VALUE
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
     Model::ValuePtr parseValue(const YAML::Node &node);
+
+    /**
+     * @brief Parse parameter definition
+     * @param node  YAML node that contains a parameter definition
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
     Model::ParameterPtr parseParameter(const YAML::Node &node);
+
+    /**
+     * @brief Parse type information
+     * @param node  YAML node that contains a type definition after KEY_TYPE
+     * @return Shared pointer to a filled Object
+     * @throw std::runtime_error on incomplete definition
+     */
     Model::TypePtr parseType(const YAML::Node &node);
 
     /**
