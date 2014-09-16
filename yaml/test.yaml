@@ -160,33 +160,43 @@
 
     - name: Byte
       nodetype: primitive
+      primitivetype: byte
 
     - name: UInt32
       nodetype: primitive
+      primitivetype: uint32
 
     - name: UInt64
       nodetype: primitive
+      primitivetype: uint64
 
     - name: Float
       nodetype: primitive
+      primitivetype: float
 
     - name: Boolean
       nodetype: primitive
+      primitivetype: bool
 
     - name: Timestamp
       nodetype: primitive
+      primitivetype: timestamp
 
     - name: String
       nodetype: primitive
+      primitivetype: string
 
     - name: Uuid
       nodetype: primitive
+      primitivetype: uuid
 
     - name: Buffer
       nodetype: primitive
+      primitivetype: buffer
 
     - name: ConstBuffer
       nodetype: primitive
+      primitivetype: const-buffer
 
     # containers
 
@@ -208,6 +218,7 @@
 
     - name: Wurst
       nodetype: primitive
+      primitivetype: string
 
     - name: Kaese
       nodetype: namespace
@@ -215,6 +226,7 @@
 
         - name: Butter
           nodetype: primitive
+          primitivetype: float
 
         - name: Glibsch
           nodetype: namespace
@@ -230,6 +242,7 @@
 
     - name: String
       nodetype: primitive
+      primitivetype: uuid
 
 - name: Everbase
   nodetype: namespace
@@ -237,21 +250,27 @@
 
     - name: EverBass
       nodetype: primitive
+      primitivetype: byte
 
     - name: PermissionMode
       nodetype: primitive
+      primitivetype: uint32
 
     - name: Credential
       nodetype: primitive
+      primitivetype: string
 
     - name: Domain
       nodetype: primitive
+      primitivetype: string
 
     - name: NodeStatus
       nodetype: primitive
+      primitivetype: string
 
     - name: UserEntity
       nodetype: primitive
+      primitivetype: uint64
 
 - name: Gu
   nodetype: namespace
@@ -259,6 +278,7 @@
 
     - name: Bier
       nodetype: primitive
+      primitivetype: float
 
     - name: Kaese
       nodetype: namespace
@@ -266,6 +286,7 @@
 
         - name: BitteEinBit
           nodetype: primitive
+          primitivetype: float
 
     - name: WurstKoffer
       nodetype: constant

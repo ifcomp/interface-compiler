@@ -1,0 +1,37 @@
+# language-specific config
+
+typemap:
+    - Byte: std::uint8_t
+    - UInt32: std::uint32_t
+    - UInt64: std::uint64_t
+    - Float: float
+    - Boolean: bool
+    - Timestamp: std::time_t
+    - String: std::string
+    - Uuid: boost::uuids::uuid
+
+style:
+    - context: general
+      name-style: camelcase
+      name-delimiter: ""
+      name-use-short: false
+
+    - context: parameter
+      name-style: lowercase
+      name-delimiter: "_"
+      name-use-short: true
+
+    - context: enum
+      name-style: uppercase
+  
+    - context: struct
+      indent: 4
+      name-style: lowercase
+      name-delimiter: "_"
+
+    - context: doc
+      max-width: 80
+
+    - context: class
+      
+      

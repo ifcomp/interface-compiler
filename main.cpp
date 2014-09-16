@@ -1,8 +1,6 @@
 #include "model/namespace.hpp"
 #include "parser.hpp"
-
-#include <iostream>
-//#include <yaml-cpp/yaml.h>
+#include "generator/cppGenerator.hpp"
 
 using namespace std;
 using namespace Api;
@@ -35,6 +33,8 @@ int main(int argc, char **argv)
 
         parser.resolveTypesInNamespace(rootNamespace);
         parser.listKnownTypes();
+
+        Gen::CppGenerator generator(rootNamespace, "");
 
         cout << "done" << endl;
         return 0;

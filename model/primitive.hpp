@@ -9,8 +9,10 @@ namespace Api { namespace Model {
 class Primitive : public NamespaceMember
 {
 public:
+
     enum class PrimitiveType
     {
+        UNDEFINED = -1,
         BYTE,
         UINT32,
         UINT64,
@@ -20,8 +22,14 @@ public:
         STRING,
         UUID,
         BUFFER,
-        CONST_BUFFER
+        CONST_BUFFER,
+        _PRIMITIVE_COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
     };
+
+    /**
+     * @brief Mapping of primitive name strings to PrimitiveType enum
+     */
+    static const char *primitiveNames[int(PrimitiveType::_PRIMITIVE_COUNT_)];
 
 private:
     PrimitiveType mType;
@@ -32,6 +40,8 @@ public:
 
     PrimitiveType type();
     void setType(PrimitiveType type);
+
+    static std::string listSupportedTypes();
 };
 
 typedef std::shared_ptr<Primitive> PrimitivePtr;

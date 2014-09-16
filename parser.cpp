@@ -8,41 +8,38 @@ using namespace std;
 using namespace Api;
 using namespace Model;
 
-const char *Parser::TYPE_NAMESPACE      = "namespace";
-const char *Parser::TYPE_CLASS          = "class";
-const char *Parser::TYPE_PRIMITIVE      = "primitive";
-const char *Parser::TYPE_ENUM           = "enum";
-const char *Parser::TYPE_STRUCT         = "struct";
-const char *Parser::TYPE_CONTAINER      = "container";
-const char *Parser::TYPE_CONSTANT       = "constant";
+const char *Parser::TYPE_NAMESPACE          = "namespace";
+const char *Parser::TYPE_CLASS              = "class";
+const char *Parser::TYPE_PRIMITIVE          = "primitive";
+const char *Parser::TYPE_ENUM               = "enum";
+const char *Parser::TYPE_STRUCT             = "struct";
+const char *Parser::TYPE_CONTAINER          = "container";
+const char *Parser::TYPE_CONSTANT           = "constant";
 
-const char *Parser::CONTAINER_VECTOR    = "vector";
-const char *Parser::CONTAINER_LIST      = "list";
-const char *Parser::CONTAINER_SET       = "set";
+const char *Parser::KEY_NAME                = "name";
+const char *Parser::KEY_SHORTNAME           = "short";
+const char *Parser::KEY_NODETYPE            = "nodetype";
+const char *Parser::KEY_CONTAINER_TYPE      = "containertype";
+const char *Parser::KEY_PRIMITIVE_TYPE      = "primitivetype";
+const char *Parser::KEY_TYPE                = "type";
+const char *Parser::KEY_VALUE               = "value";
+const char *Parser::KEY_RETURN              = "return";
 
-const char *Parser::KEY_NAME            = "name";
-const char *Parser::KEY_SHORTNAME       = "short";
-const char *Parser::KEY_NODETYPE        = "nodetype";
-const char *Parser::KEY_CONTAINER_TYPE  = "containertype";
-const char *Parser::KEY_TYPE            = "type";
-const char *Parser::KEY_VALUE           = "value";
-const char *Parser::KEY_RETURN          = "return";
+const char *Parser::KEY_DOC                 = "doc";
+const char *Parser::KEY_BRIEF               = "brief";
+const char *Parser::KEY_MORE                = "more";
 
-const char *Parser::KEY_DOC             = "doc";
-const char *Parser::KEY_BRIEF           = "brief";
-const char *Parser::KEY_MORE            = "more";
+const char *Parser::KEY_MEMBERS             = "members";
+const char *Parser::KEY_PARAMS              = "params";
+const char *Parser::KEY_FIELDS              = "fields";
+const char *Parser::KEY_VALUES              = "values";
+const char *Parser::KEY_OPERATIONS          = "operations";
+const char *Parser::KEY_EVENTS              = "events";
 
-const char *Parser::KEY_MEMBERS         = "members";
-const char *Parser::KEY_PARAMS          = "params";
-const char *Parser::KEY_FIELDS          = "fields";
-const char *Parser::KEY_VALUES          = "values";
-const char *Parser::KEY_OPERATIONS      = "operations";
-const char *Parser::KEY_EVENTS          = "events";
-
-const char *Parser::FLAG_STATIC         = "static";
-const char *Parser::FLAG_SYNCHRONOUS    = "synchronous";
-const char *Parser::FLAG_VALUETYPE      = "valueType";
-const char *Parser::KEY_INHERITS        = "inherits";
+const char *Parser::FLAG_STATIC             = "static";
+const char *Parser::FLAG_SYNCHRONOUS        = "synchronous";
+const char *Parser::FLAG_VALUETYPE          = "valueType";
+const char *Parser::KEY_INHERITS            = "inherits";
 
 
 Parser::Parser(Model::NamespacePtr rootNamespace) :
@@ -206,6 +203,30 @@ NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
     // Primitives only consist of their names
     PrimitivePtr newPrimitive = newIdentifiable<Primitive>(node);
     registerType(newPrimitive);
+
+    try {
+        if (checkNode(node, KEY_PRIMITIVE_TYPE, YAML::NodeType::Scalar, true))
+        {
+            std::string primitiveType = node[KEY_PRIMITIVE_TYPE].Scalar();
+
+            for (int n = 0; n < int(Primitive::PrimitiveType::_PRIMITIVE_COUNT_); ++n)
+            {
+                if (primitiveType == Primitive::primitiveNames[n])
+                {
+                    newPrimitive->setType((Primitive::PrimitiveType) n);
+                }
+            }
+            if (newPrimitive->type() == Primitive::PrimitiveType::UNDEFINED)
+            {
+                throw runtime_error("unknown primitivetype " + primitiveType + "\n" + Primitive::listSupportedTypes());
+            }
+        }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newPrimitive, " : "));
+    }
+
     return newPrimitive;
 }
 
@@ -288,21 +309,17 @@ NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
             string typeName = node[KEY_CONTAINER_TYPE].Scalar();
             Container::ContainerType type;
 
-            if (typeName == CONTAINER_VECTOR)
+            for (int n = 0; n < int(Container::ContainerType::_CONTAINER_COUNT_); ++n)
             {
-                type = Container::ContainerType::VECTOR;
+                if (typeName == Container::containerNames[n])
+                {
+                    newContainer->setType((Container::ContainerType) n);
+                }
             }
-            else if (typeName == CONTAINER_LIST)
+
+            if (newContainer->type() == Container::ContainerType::UNDEFINED)
             {
-                type = Container::ContainerType::LIST;
-            }
-            else if (typeName == CONTAINER_SET)
-            {
-                type = Container::ContainerType::SET;
-            }
-            else
-            {
-                throw runtime_error("container " + newContainer->longName() + " has no container type");
+                throw runtime_error("unknown containertype " + typeName + "\n" + Container::listSupportedTypes());
             }
 
             newContainer->setType(type);

@@ -50,15 +50,6 @@ public:
     /** @} */
 
     /**
-     * @brief Container types of KEY_CONTAINER_TYPE
-     * @{
-     */
-    static const char *CONTAINER_VECTOR;
-    static const char *CONTAINER_LIST;
-    static const char *CONTAINER_SET;
-    /** @} */
-
-    /**
      * @brief Keys that appear in different sections
      * @{
      */
@@ -66,6 +57,7 @@ public:
     static const char *KEY_SHORTNAME;
     static const char *KEY_NODETYPE;
     static const char *KEY_CONTAINER_TYPE;
+    static const char *KEY_PRIMITIVE_TYPE;
     static const char *KEY_INHERITS;
     static const char *KEY_TYPE;
     static const char *KEY_VALUE;
@@ -90,6 +82,11 @@ public:
     static const char *FLAG_SYNCHRONOUS;
     static const char *FLAG_VALUETYPE;
     /** @} */
+
+    /**
+     * @brief Mappingtable of PRIMITIVE_* strings to resolve KEY_PRIMITIVE_TYPE
+     */
+    static const char *mPrimitiveMap[int(Model::Primitive::PrimitiveType::_PRIMITIVE_COUNT_)];
 
 public:
     Parser(Model::NamespacePtr rootNamespace);

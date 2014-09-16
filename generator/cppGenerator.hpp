@@ -10,6 +10,9 @@ class CppGenerator : public Generator
 public:
     CppGenerator(Model::NamespacePtr rootNamespace, std::string outputDirectory);
 
+    void writeHeader();
+    void writeGlue();
+
 };
 
 } } // namespace Api::Gen

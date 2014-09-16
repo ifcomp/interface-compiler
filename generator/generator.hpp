@@ -25,9 +25,10 @@ protected:
 
     std::string writeType(Model::ResolvedTypePtr type);
 
+protected:
+    FormatterPtr mFormatter;
 
 private:
-    FormatterPtr mFormatter;
     Model::NamespacePtr mRootNamespace;
     std::string mOutputDirectory;
 };

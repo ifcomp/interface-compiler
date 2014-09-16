@@ -1,6 +1,9 @@
 #ifndef FORMATTER_HPP
 #define FORMATTER_HPP
 
+#include <iostream>
+#include <yaml-cpp/yaml.h>
+
 #include "model/identifiable.hpp"
 #include "model/namespace.hpp"
 #include "model/resolvedType.hpp"
@@ -15,7 +18,7 @@ namespace Api { namespace Gen {
 class Formatter
 {
 protected:
-    Formatter(std::string typemapFilename, std::string configFilename);
+    Formatter(std::string configFilename);
 
     virtual std::string name(Model::IdentifiablePtr identifiable);                      // c++: MeinAuto, c: mein_auto_t
     virtual std::string type(Model::TypePtr type, bool fullyQualified = false);         // c++: std::shared_ptr<Everbase::MeinAuto>, c: mein_auto_t
@@ -27,8 +30,8 @@ protected:
     virtual std::string event(Model::OperationPtr event) = 0;
 
 protected:
-    std::string mTypemapFilename;
     std::string mConfigFilename;
+    YAML::Node mYamlConfig;
     std::map<std::string, std::string> mTypeMap;            ///< type mapping from object model to language specific type
 };
 
