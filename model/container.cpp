@@ -31,7 +31,7 @@ void Container::setType(Container::ContainerType type)
 
 void Container::setType(std::string typeName)
 {
-    mType = resolveType(typeName);
+    mType = decodeTypeName(typeName);
 
     if (mType == ContainerType::UNDEFINED)
     {
@@ -40,7 +40,7 @@ void Container::setType(std::string typeName)
 }
 
 
-Container::ContainerType Container::resolveType(std::string typeName)
+Container::ContainerType Container::decodeTypeName(std::string typeName)
 {
     for (int n = 0; n < int(ContainerType::_CONTAINER_COUNT_); ++n)
     {

@@ -30,7 +30,17 @@ public:
     Container();
     virtual ~Container();
 
+    /**
+     * @brief Get ContainerType
+     * @return Current ContainerType
+     */
     ContainerType type();
+
+    /**
+     * @brief Set type by ContainerType.
+     * @see ContainerType
+     * @param type ContainerType to set
+     */
     void setType(ContainerType type);
 
     /**
@@ -46,7 +56,7 @@ public:
      * @param typeName Type name as listed in containerNames
      * @return Returns ContainerType (ContainerType::UNDEFINED if name was not found)
      */
-    ContainerType resolveType(std::string typeName);
+    static ContainerType decodeTypeName(std::string typeName);
 
     /**
      * @brief Return human-readable list of known container types.

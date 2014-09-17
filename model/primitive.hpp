@@ -38,6 +38,10 @@ public:
     Primitive();
     virtual ~Primitive();
 
+    /**
+     * @brief Get PrimitiveType
+     * @return Current PrimitiveType
+     */
     PrimitiveType type();
 
     /**
@@ -56,11 +60,11 @@ public:
     void setType(std::string typeName);
 
     /**
-     * @brief Resolve type name to PrimitiveType
+     * @brief Decode type name to PrimitiveType
      * @param typeName Type name as listed in primitiveNames
      * @return Returns PrimitiveType (PrimitiveType::UNDEFINED if name was not found)
      */
-    PrimitiveType resolveType(std::string typeName);
+    static PrimitiveType decodeTypeName(std::string typeName);
 
     /**
      * @brief Return human-readable list of known primitive types.

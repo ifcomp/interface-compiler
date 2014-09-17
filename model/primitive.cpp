@@ -42,7 +42,7 @@ void Primitive::setType(Primitive::PrimitiveType type)
 
 void Primitive::setType(std::string typeName)
 {
-    mType = resolveType(typeName);
+    mType = decodeTypeName(typeName);
 
     if (mType == PrimitiveType::UNDEFINED)
     {
@@ -51,7 +51,7 @@ void Primitive::setType(std::string typeName)
 }
 
 
-Primitive::PrimitiveType Primitive::resolveType(std::string typeName)
+Primitive::PrimitiveType Primitive::decodeTypeName(std::string typeName)
 {
     for (int n = 0; n < int(PrimitiveType::_PRIMITIVE_COUNT_); ++n)
     {
