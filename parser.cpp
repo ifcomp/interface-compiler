@@ -207,18 +207,12 @@ NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
     try {
         if (checkNode(node, KEY_PRIMITIVE_TYPE, YAML::NodeType::Scalar, true))
         {
-            std::string primitiveType = node[KEY_PRIMITIVE_TYPE].Scalar();
-
-            for (int n = 0; n < int(Primitive::PrimitiveType::_PRIMITIVE_COUNT_); ++n)
-            {
-                if (primitiveType == Primitive::primitiveNames[n])
-                {
-                    newPrimitive->setType((Primitive::PrimitiveType) n);
-                }
+            try {
+                newPrimitive->setType(node[KEY_PRIMITIVE_TYPE].Scalar());
             }
-            if (newPrimitive->type() == Primitive::PrimitiveType::UNDEFINED)
+            catch (const runtime_error &e)
             {
-                throw runtime_error("unknown primitivetype " + primitiveType + "\n" + Primitive::listSupportedTypes());
+                throw runtime_error(e.what() + Primitive::listSupportedTypes());
             }
         }
     }
@@ -306,23 +300,13 @@ NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
     {
         if (checkNode(node, KEY_CONTAINER_TYPE, YAML::NodeType::Scalar, true))
         {
-            string typeName = node[KEY_CONTAINER_TYPE].Scalar();
-            Container::ContainerType type;
-
-            for (int n = 0; n < int(Container::ContainerType::_CONTAINER_COUNT_); ++n)
-            {
-                if (typeName == Container::containerNames[n])
-                {
-                    newContainer->setType((Container::ContainerType) n);
-                }
+            try {
+                newContainer->setType(node[KEY_CONTAINER_TYPE].Scalar());
             }
-
-            if (newContainer->type() == Container::ContainerType::UNDEFINED)
+            catch (const runtime_error &e)
             {
-                throw runtime_error("unknown containertype " + typeName + "\n" + Container::listSupportedTypes());
+                throw runtime_error(e.what() + Container::listSupportedTypes());
             }
-
-            newContainer->setType(type);
         }
     }
     catch (const runtime_error &e)

@@ -39,8 +39,33 @@ public:
     virtual ~Primitive();
 
     PrimitiveType type();
+
+    /**
+     * @brief Set type by PrimitiveType.
+     * @see PrimitiveType
+     * @param type PrimitiveType to set
+     */
     void setType(PrimitiveType type);
 
+    /**
+     * @brief Set type by type name.
+     * @see primitiveNames
+     * @param typeName Type name as listed in primitiveNames
+     * @throw std::runtime_error if name was not found
+     */
+    void setType(std::string typeName);
+
+    /**
+     * @brief Resolve type name to PrimitiveType
+     * @param typeName Type name as listed in primitiveNames
+     * @return Returns PrimitiveType (PrimitiveType::UNDEFINED if name was not found)
+     */
+    PrimitiveType resolveType(std::string typeName);
+
+    /**
+     * @brief Return human-readable list of known primitive types.
+     * @return String containing a list of type names, each one in a row.
+     */
     static std::string listSupportedTypes();
 };
 

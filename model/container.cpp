@@ -28,6 +28,31 @@ void Container::setType(Container::ContainerType type)
     mType = type;
 }
 
+
+void Container::setType(std::string typeName)
+{
+    mType = resolveType(typeName);
+
+    if (mType == ContainerType::UNDEFINED)
+    {
+        throw std::runtime_error("unknown container type " + typeName + "\n");
+    }
+}
+
+
+Container::ContainerType Container::resolveType(std::string typeName)
+{
+    for (int n = 0; n < int(ContainerType::_CONTAINER_COUNT_); ++n)
+    {
+        if (typeName == containerNames[n])
+        {
+            return (ContainerType) n;
+        }
+    }
+    return ContainerType::UNDEFINED;
+}
+
+
 std::string Container::listSupportedTypes()
 {
     std::string list = "the following container types are supported:\n";

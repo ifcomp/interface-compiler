@@ -33,6 +33,25 @@ public:
     ContainerType type();
     void setType(ContainerType type);
 
+    /**
+     * @brief Set type by type name.
+     * @see containerNames
+     * @param typeName Type name as listed in containerNames
+     * @throw std::runtime_error if name was not found
+     */
+    void setType(std::string typeName);
+
+    /**
+     * @brief Resolve type name to ContainerType
+     * @param typeName Type name as listed in containerNames
+     * @return Returns ContainerType (ContainerType::UNDEFINED if name was not found)
+     */
+    ContainerType resolveType(std::string typeName);
+
+    /**
+     * @brief Return human-readable list of known container types.
+     * @return String containing a list of type names, each one in a row.
+     */
     static std::string listSupportedTypes();
 };
 
