@@ -16,8 +16,4 @@ void Generator::setOutputDirectory(std::string outputDirectory)
 
 void Generator::generate(bool glue)
 {
-    for (auto member : mRootNamespace->members())
-    {
-
-    }
 }

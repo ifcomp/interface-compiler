@@ -3,15 +3,12 @@
 using namespace Api::Gen;
 using namespace std;
 
+
 Formatter::Formatter(std::string configFilename)
+    : mParser(configFilename)
 {
     cout << "starting to parse configfile " << configFilename << endl;
-    mYamlConfig = YAML::LoadFile(configFilename);
-
-    for (auto sequenceNode : mYamlConfig["typemap"])
-    {
-        cout << "a node with type " << sequenceNode.Type() << endl;
-
+    mParser.parseTypeMap();
 
 //    if (sequenceNode.IsMap())
 //    {
@@ -44,7 +41,6 @@ Formatter::Formatter(std::string configFilename)
 //        {
 //            cout << "typemapping: " << type.first.Scalar() << " => " << type.second.Scalar() << endl;
 //        }
-    }
 }
 
 std::string Formatter::name(Api::Model::IdentifiablePtr identifiable)
@@ -71,3 +67,4 @@ std::string Formatter::doc(Api::Model::Documentation doc)
 {
     return "";
 }
+

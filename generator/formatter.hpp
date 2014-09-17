@@ -1,9 +1,6 @@
 #ifndef FORMATTER_HPP
 #define FORMATTER_HPP
 
-#include <iostream>
-#include <yaml-cpp/yaml.h>
-
 #include "model/identifiable.hpp"
 #include "model/namespace.hpp"
 #include "model/resolvedType.hpp"
@@ -12,11 +9,25 @@
 #include "model/documentation.hpp"
 #include "model/operation.hpp"
 #include "model/event.hpp"
+#include "parser/langConfigParser.hpp"
 
 namespace Api { namespace Gen {
 
 class Formatter
 {
+public:
+    static const char* KEY_TYPEMAP;
+    static const char* KEY_TYPE_PRIMITIVES;
+    static const char* KEY_TYPE_CONTAINERS;
+
+    static const char* KEY_STYLE;
+    static const char* KEY_STYLE_CONTEXT;
+    static const char* KEY_STYLE_NAMESTYLE;
+    static const char* KEY_STYLE_NAMEDELIMITER;
+    static const char* KEY_STYLE_NAMEUSESHORT;
+
+    static const char* styleContextKeys[];
+
 protected:
     Formatter(std::string configFilename);
 
@@ -31,8 +42,8 @@ protected:
 
 protected:
     std::string mConfigFilename;
-    YAML::Node mYamlConfig;
-    std::map<std::string, std::string> mTypeMap;            ///< type mapping from object model to language specific type
+    Parser::LangConfigParser mParser;
+
 };
 
 typedef std::shared_ptr<Formatter>  FormatterPtr;

@@ -1,66 +1,66 @@
-#include "parser.hpp"
+#include "parser/namespaceParser.hpp"
 
 #define addFQNameToException(member, delimiter)     getCurrentNamespace() + "::" + member->longName() + delimiter + e.what()
 #define addObjectNameToException(member)            member->longName() + " " + e.what()
 #define addSectionToException(key)                  "in section " + string(key) + " : " + e.what()
 
 using namespace std;
-using namespace Api;
-using namespace Model;
+using namespace Api::Parser;
+using namespace Api::Model;
 
-const char *Parser::TYPE_NAMESPACE          = "namespace";
-const char *Parser::TYPE_CLASS              = "class";
-const char *Parser::TYPE_PRIMITIVE          = "primitive";
-const char *Parser::TYPE_ENUM               = "enum";
-const char *Parser::TYPE_STRUCT             = "struct";
-const char *Parser::TYPE_CONTAINER          = "container";
-const char *Parser::TYPE_CONSTANT           = "constant";
+const char *NamespaceParser::TYPE_NAMESPACE          = "namespace";
+const char *NamespaceParser::TYPE_CLASS              = "class";
+const char *NamespaceParser::TYPE_PRIMITIVE          = "primitive";
+const char *NamespaceParser::TYPE_ENUM               = "enum";
+const char *NamespaceParser::TYPE_STRUCT             = "struct";
+const char *NamespaceParser::TYPE_CONTAINER          = "container";
+const char *NamespaceParser::TYPE_CONSTANT           = "constant";
 
-const char *Parser::KEY_NAME                = "name";
-const char *Parser::KEY_SHORTNAME           = "short";
-const char *Parser::KEY_NODETYPE            = "nodetype";
-const char *Parser::KEY_CONTAINER_TYPE      = "containertype";
-const char *Parser::KEY_PRIMITIVE_TYPE      = "primitivetype";
-const char *Parser::KEY_TYPE                = "type";
-const char *Parser::KEY_VALUE               = "value";
-const char *Parser::KEY_RETURN              = "return";
+const char *NamespaceParser::KEY_NAME                = "name";
+const char *NamespaceParser::KEY_SHORTNAME           = "short";
+const char *NamespaceParser::KEY_NODETYPE            = "nodetype";
+const char *NamespaceParser::KEY_CONTAINER_TYPE      = "containertype";
+const char *NamespaceParser::KEY_PRIMITIVE_TYPE      = "primitivetype";
+const char *NamespaceParser::KEY_TYPE                = "type";
+const char *NamespaceParser::KEY_VALUE               = "value";
+const char *NamespaceParser::KEY_RETURN              = "return";
 
-const char *Parser::KEY_DOC                 = "doc";
-const char *Parser::KEY_BRIEF               = "brief";
-const char *Parser::KEY_MORE                = "more";
+const char *NamespaceParser::KEY_DOC                 = "doc";
+const char *NamespaceParser::KEY_BRIEF               = "brief";
+const char *NamespaceParser::KEY_MORE                = "more";
 
-const char *Parser::KEY_MEMBERS             = "members";
-const char *Parser::KEY_PARAMS              = "params";
-const char *Parser::KEY_FIELDS              = "fields";
-const char *Parser::KEY_VALUES              = "values";
-const char *Parser::KEY_OPERATIONS          = "operations";
-const char *Parser::KEY_EVENTS              = "events";
+const char *NamespaceParser::KEY_MEMBERS             = "members";
+const char *NamespaceParser::KEY_PARAMS              = "params";
+const char *NamespaceParser::KEY_FIELDS              = "fields";
+const char *NamespaceParser::KEY_VALUES              = "values";
+const char *NamespaceParser::KEY_OPERATIONS          = "operations";
+const char *NamespaceParser::KEY_EVENTS              = "events";
 
-const char *Parser::FLAG_STATIC             = "static";
-const char *Parser::FLAG_SYNCHRONOUS        = "synchronous";
-const char *Parser::FLAG_VALUETYPE          = "valueType";
-const char *Parser::KEY_INHERITS            = "inherits";
+const char *NamespaceParser::FLAG_STATIC             = "static";
+const char *NamespaceParser::FLAG_SYNCHRONOUS        = "synchronous";
+const char *NamespaceParser::FLAG_VALUETYPE          = "valueType";
+const char *NamespaceParser::KEY_INHERITS            = "inherits";
 
 
-Parser::Parser(Model::NamespacePtr rootNamespace) :
+NamespaceParser::NamespaceParser(Model::NamespacePtr rootNamespace) :
     mRootNamespace(rootNamespace)
 {
     // All first level entries have nodetypes TYPE_*
     // These nodetype strings are used to lookup the
     // corresponding parser function:
-    mParserMethods[TYPE_NAMESPACE]  = &Parser::parseNamespace;
-    mParserMethods[TYPE_CLASS]      = &Parser::parseClass;
-    mParserMethods[TYPE_PRIMITIVE]  = &Parser::parsePrimitive;
-    mParserMethods[TYPE_ENUM]       = &Parser::parseEnum;
-    mParserMethods[TYPE_STRUCT]     = &Parser::parseStruct;
-    mParserMethods[TYPE_CONTAINER]  = &Parser::parseContainer;
-    mParserMethods[TYPE_CONSTANT]   = &Parser::parseConstant;
+    mParserMethods[TYPE_NAMESPACE]  = &NamespaceParser::parseNamespace;
+    mParserMethods[TYPE_CLASS]      = &NamespaceParser::parseClass;
+    mParserMethods[TYPE_PRIMITIVE]  = &NamespaceParser::parsePrimitive;
+    mParserMethods[TYPE_ENUM]       = &NamespaceParser::parseEnum;
+    mParserMethods[TYPE_STRUCT]     = &NamespaceParser::parseStruct;
+    mParserMethods[TYPE_CONTAINER]  = &NamespaceParser::parseContainer;
+    mParserMethods[TYPE_CONSTANT]   = &NamespaceParser::parseConstant;
 }
 
 
-void Api::Parser::parseFile(std::string filename)
+void NamespaceParser::parseFile(std::string filename)
 {
-    YAML::Node yamlConfig = YAML::LoadFile(filename);
+    YAML::Node yamlConfig = loadFile(filename);
 
     try {
         parseNamespaceMembers(yamlConfig, mRootNamespace);
@@ -72,20 +72,20 @@ void Api::Parser::parseFile(std::string filename)
 }
 
 
-void Api::Parser::setRootNamespace(Api::Model::NamespacePtr rootNamespace)
+void NamespaceParser::setRootNamespace(Api::Model::NamespacePtr rootNamespace)
 {
     mRootNamespace = rootNamespace;
 }
 
 
-void Parser::reset()
+void NamespaceParser::reset()
 {
     mKnownTypes.clear();
     mNamespaceElementStack.clear();
 }
 
 
-void Parser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootNamespace)
+void NamespaceParser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootNamespace)
 {
     for (auto sequenceNode : node)
     {
@@ -109,7 +109,7 @@ void Parser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr rootName
 }
 
 
-NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseNamespace(const YAML::Node &node)
 {
     string namespaceName;
 
@@ -140,7 +140,7 @@ NamespaceMemberPtr Parser::parseNamespace(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseClass(const YAML::Node &node)
 {
     ClassPtr newClass = newIdentifiable<Class>(node);
     registerType(newClass);
@@ -198,7 +198,7 @@ NamespaceMemberPtr Parser::parseClass(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parsePrimitive(const YAML::Node &node)
 {
     // Primitives only consist of their names
     PrimitivePtr newPrimitive = newIdentifiable<Primitive>(node);
@@ -225,7 +225,7 @@ NamespaceMemberPtr Parser::parsePrimitive(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseEnum(const YAML::Node &node)
 {
     EnumPtr newEnum = newIdentifiable<Enum>(node);
     registerType(newEnum);
@@ -258,7 +258,7 @@ NamespaceMemberPtr Parser::parseEnum(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseStruct(const YAML::Node &node)
 {
     StructPtr newStruct = newIdentifiable<Struct>(node);
     registerType(newStruct);
@@ -291,7 +291,7 @@ NamespaceMemberPtr Parser::parseStruct(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseContainer(const YAML::Node &node)
 {
     ContainerPtr newContainer = newIdentifiable<Container>(node);
     registerType(newContainer);
@@ -318,7 +318,7 @@ NamespaceMemberPtr Parser::parseContainer(const YAML::Node &node)
 }
 
 
-OperationPtr Parser::parseOperation(const YAML::Node &node)
+OperationPtr NamespaceParser::parseOperation(const YAML::Node &node)
 {
     OperationPtr newOperation = newIdentifiable<Operation>(node);
 
@@ -366,7 +366,7 @@ OperationPtr Parser::parseOperation(const YAML::Node &node)
 }
 
 
-EventPtr Parser::parseEvent(const YAML::Node &node)
+EventPtr NamespaceParser::parseEvent(const YAML::Node &node)
 {
     EventPtr newEvent = newIdentifiable<Event>(node);
 
@@ -401,7 +401,7 @@ EventPtr Parser::parseEvent(const YAML::Node &node)
 }
 
 
-ValuePtr Parser::parseValue(const YAML::Node &node)
+ValuePtr NamespaceParser::parseValue(const YAML::Node &node)
 {
     ValuePtr newValue = newIdentifiable<Value>(node);
 
@@ -417,7 +417,7 @@ ValuePtr Parser::parseValue(const YAML::Node &node)
 }
 
 
-ParameterPtr Parser::parseParameter(const YAML::Node &node)
+ParameterPtr NamespaceParser::parseParameter(const YAML::Node &node)
 {
     ParameterPtr newParameter = newIdentifiable<Parameter>(node);
     newParameter->setType(parseType(node));
@@ -425,7 +425,7 @@ ParameterPtr Parser::parseParameter(const YAML::Node &node)
 }
 
 
-TypePtr Parser::parseType(const YAML::Node &node)
+TypePtr NamespaceParser::parseType(const YAML::Node &node)
 {
     UnresolvedTypePtr newType = make_shared<UnresolvedType>();
 
@@ -470,7 +470,7 @@ TypePtr Parser::parseType(const YAML::Node &node)
 }
 
 
-NamespaceMemberPtr Parser::parseConstant(const YAML::Node &node)
+NamespaceMemberPtr NamespaceParser::parseConstant(const YAML::Node &node)
 {
     ConstantPtr newConstant = newIdentifiable<Constant>(node);
     registerType(newConstant);
@@ -498,7 +498,7 @@ NamespaceMemberPtr Parser::parseConstant(const YAML::Node &node)
 }
 
 
-void Parser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
+void NamespaceParser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
 {
     if (checkNode(node, KEY_NAME, YAML::NodeType::Scalar, true))
     {
@@ -519,7 +519,7 @@ void Parser::parseName(const YAML::Node &node, IdentifiablePtr identifiable)
 }
 
 
-void Parser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
+void NamespaceParser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
 {
     if (checkNode(node, KEY_DOC, YAML::NodeType::Map))
     {
@@ -544,30 +544,7 @@ void Parser::parseDoc(const YAML::Node &node, IdentifiablePtr identifiable)
 }
 
 
-bool Parser::checkNode(const YAML::Node &node, const char *key, YAML::NodeType::value expectedType, bool mandatory)
-{
-    if (node[key].Type() == expectedType)
-    {
-        return true;
-    }
-
-    if (!node[key].IsDefined())
-    {
-        if (mandatory)
-        {
-            throw runtime_error("definition of key '" + string(key) + "' is missing!\n");
-        }
-    }
-    else
-    {
-        throw runtime_error("bad definition of key '" + string(key) + "'\n");
-    }
-
-    return false;
-}
-
-
-void Parser::registerType(NamespaceMemberPtr member)
+void NamespaceParser::registerType(NamespaceMemberPtr member)
 {
     std::string type = getCurrentNamespace() + "::" + member->longName();
 
@@ -582,7 +559,7 @@ void Parser::registerType(NamespaceMemberPtr member)
 }
 
 
-NamespaceMemberPtr Parser::resolveTypeName(string typeName)
+NamespaceMemberPtr NamespaceParser::resolveTypeName(string typeName)
 {
     std::string key = getCurrentNamespace() + "::" + typeName;
 
@@ -594,7 +571,7 @@ NamespaceMemberPtr Parser::resolveTypeName(string typeName)
 }
 
 
-ResolvedTypePtr Parser::resolveType(TypePtr type)
+ResolvedTypePtr NamespaceParser::resolveType(TypePtr type)
 {
     UnresolvedTypePtr unresolvedType = dynamic_pointer_cast<UnresolvedType>(type);
 
@@ -644,7 +621,7 @@ ResolvedTypePtr Parser::resolveType(TypePtr type)
 }
 
 
-void Parser::resolveParameterType(ParameterPtr parameter)
+void NamespaceParser::resolveParameterType(ParameterPtr parameter)
 {
     try
     {
@@ -657,7 +634,7 @@ void Parser::resolveParameterType(ParameterPtr parameter)
 }
 
 
-void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
+void NamespaceParser::resolveTypesInNamespace(NamespacePtr rootNamespace)
 {
     for (auto memberPair : rootNamespace->members())
     {
@@ -729,7 +706,7 @@ void Parser::resolveTypesInNamespace(NamespacePtr rootNamespace)
 }
 
 
-void Parser::listKnownTypes()
+void NamespaceParser::listKnownTypes()
 {
     cout << "------- REGISTERED TYPES -------" << endl;
 
@@ -742,19 +719,19 @@ void Parser::listKnownTypes()
 }
 
 
-void Parser::startNamespace(NamespacePtr namespaceRoot)
+void NamespaceParser::startNamespace(NamespacePtr namespaceRoot)
 {
     mNamespaceElementStack.push_back(namespaceRoot->longName());
 }
 
 
-void Parser::endNamespace()
+void NamespaceParser::endNamespace()
 {
     mNamespaceElementStack.pop_back();
 }
 
 
-string Parser::getCurrentNamespace()
+string NamespaceParser::getCurrentNamespace()
 {
     string fullNamespace;
     for (auto namespaceElement : mNamespaceElementStack)
@@ -766,7 +743,7 @@ string Parser::getCurrentNamespace()
 
 
 template <class T>
-std::shared_ptr<T> Parser::newIdentifiable(const YAML::Node &node)
+std::shared_ptr<T> NamespaceParser::newIdentifiable(const YAML::Node &node)
 {
     std::shared_ptr<T> newMember(new T);
 

@@ -1,5 +1,5 @@
 #include "model/namespace.hpp"
-#include "parser.hpp"
+#include "parser/namespaceParser.hpp"
 #include "generator/cppGenerator.hpp"
 
 using namespace std;
@@ -8,7 +8,7 @@ using namespace Api;
 int main(int argc, char **argv)
 {
     Model::NamespacePtr rootNamespace(new Model::Namespace("::"));
-    Parser parser(rootNamespace);
+    Parser::NamespaceParser parser(rootNamespace);
 
     if (argc >= 2)
     {
@@ -18,11 +18,6 @@ int main(int argc, char **argv)
                 cout << "*** parsing file " << argv[n] << " ***" << endl;
 
                 parser.parseFile(argv[n]);
-            }
-            catch (const YAML::Exception &e)
-            {
-                cout << "Something's wrong with your YAML input file: " << e.what() << endl;
-                return 1;
             }
             catch (const runtime_error &e)
             {

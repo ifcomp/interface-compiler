@@ -1,10 +1,10 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef NAMESPACE_PARSER_H
+#define NAMESPACE_PARSER_H
 
+#include "parser/yamlParser.hpp"
 #include <iostream>
 #include <functional>
 #include <map>
-#include <yaml-cpp/yaml.h>
 #include <model/namespace.hpp>
 #include <model/class.hpp>
 #include <model/enum.hpp>
@@ -21,19 +21,20 @@
 #include "model/resolvedType.hpp"
 #include "model/constant.hpp"
 
-namespace Api {
+
+namespace Api { namespace Parser {
 
 /**
- * YAML parser class for namespace objects
+ * @brief YAML parser class for namespace objects
  * @author Gunther Lemm <lemm@silpion.de>
  */
-class Parser
+class NamespaceParser : public YamlParser
 {
     /**
      * Member function signature for nodetype-lookup
      * @see Parser::Parser
      */
-    typedef Model::NamespaceMemberPtr (Parser::*MemberFunc)(const YAML::Node &);
+    typedef Model::NamespaceMemberPtr (NamespaceParser::*MemberFunc)(const YAML::Node &);
 
 public:
     /**
@@ -89,12 +90,13 @@ public:
     static const char *mPrimitiveMap[int(Model::Primitive::PrimitiveType::_PRIMITIVE_COUNT_)];
 
 public:
-    Parser(Model::NamespacePtr rootNamespace);
+    NamespaceParser(Model::NamespacePtr rootNamespace);
 
     /**
      * @brief Read an parse YAML file that conains namespace objects. All objects
      *        are placed into currently set root namespace.
      * @param filename  filename
+     * @throw std::runtime_error on parse errors
      */
     void parseFile(std::string filename);
 
@@ -246,18 +248,6 @@ private:
     void parseDoc(const YAML::Node &node, Model::IdentifiablePtr identifiable);
 
     /**
-     * @brief Check if node[key] has a specific type.
-     * @param node  YAML node
-     * @param key   Key name
-     * @param expectedType  YAML node type
-     * @param mandatory if true, key must be found and must have the right type
-     * @return true if node[key] has expectedType
-     * @throw std::runtime_error if types don't match and mandatory is set
-     */
-    bool checkNode(const YAML::Node &node, const char *key,
-                   YAML::NodeType::value expectedType = YAML::NodeType::Scalar, bool mandatory = false);
-
-    /**
      * @brief Register type of member in map of known types.
      * @param member    Member object
      */
@@ -317,6 +307,6 @@ private:
     std::vector<std::string> mNamespaceElementStack;
 };
 
-} // namespace Api
+} } // namespace Api::Parser
 
-#endif // PARSER_H
+#endif // NAMESPACE_PARSER_H
