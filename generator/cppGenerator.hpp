@@ -13,6 +13,9 @@ public:
     void writeHeader();
     void writeGlue();
 
+private:
+    void iterateNamespace(Model::NamespacePtr namespacePtr);
+
 };
 
 } } // namespace Api::Gen

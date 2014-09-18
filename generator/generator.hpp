@@ -9,9 +9,7 @@ namespace Api { namespace Gen {
 
 class Generator
 {
-protected:
-    Generator(Model::NamespacePtr rootNamespace, std::string outputDirectory);
-
+public:
     void setOutputDirectory(std::string outputDirectory);
 
     /**
@@ -20,6 +18,9 @@ protected:
      */
     void generate(bool glue = false);
 
+protected:
+    Generator(Model::NamespacePtr rootNamespace, std::string outputDirectory);
+
     virtual void writeHeader() = 0;
     virtual void writeGlue() = 0;
 
@@ -27,8 +28,6 @@ protected:
 
 protected:
     FormatterPtr mFormatter;
-
-private:
     Model::NamespacePtr mRootNamespace;
     std::string mOutputDirectory;
 };

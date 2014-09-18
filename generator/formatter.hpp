@@ -28,9 +28,9 @@ public:
 
     static const char* styleContextKeys[];
 
-protected:
     Formatter(std::string configFilename);
 
+public:
     virtual std::string name(Model::IdentifiablePtr identifiable);                      // c++: MeinAuto, c: mein_auto_t
     virtual std::string type(Model::TypePtr type, bool fullyQualified = false);         // c++: std::shared_ptr<Everbase::MeinAuto>, c: mein_auto_t
     virtual std::string classType(Model::ClassPtr classPtr);                            // if (classType == ABSTRACT) return "virtual";
@@ -40,6 +40,7 @@ protected:
     virtual std::string operation(Model::OperationPtr operation) = 0;
     virtual std::string event(Model::OperationPtr event) = 0;
 
+protected:
     /**
      * @brief Convert name into styled name by looking at the language-specific config.
      * @param name Unstyled name

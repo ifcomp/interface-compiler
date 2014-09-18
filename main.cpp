@@ -31,6 +31,7 @@ int main(int argc, char **argv)
 
         try {
             Gen::CppGenerator generator(rootNamespace, "");
+            generator.generate();
         }
         catch (const runtime_error &e)
         {

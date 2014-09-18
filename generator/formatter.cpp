@@ -61,9 +61,9 @@ std::string Formatter::type(TypePtr type, bool fullyQualified)
         {
             token = mParser.primitiveToLang(primitive);
         }
-        else if (ContainerPtr container = dynamic_pointer_cast<Container>(resolvedType->primary()))
+        else if (dynamic_pointer_cast<Container>(resolvedType->primary()))
         {
-            token = mParser.containerToLang(container);
+            token = mParser.containerTypeToLang(resolvedType);
         }
         else
         {

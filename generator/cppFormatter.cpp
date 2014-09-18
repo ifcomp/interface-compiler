@@ -8,3 +8,8 @@ CppFormatter::CppFormatter(std::string configFilename)
 {
 
 }
+
+string CppFormatter::param(Api::Model::ParameterPtr param)
+{
+    return type(param->type()) + " " + param->longName();
+}

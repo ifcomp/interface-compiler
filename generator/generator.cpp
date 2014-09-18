@@ -16,4 +16,12 @@ void Generator::setOutputDirectory(std::string outputDirectory)
 
 void Generator::generate(bool glue)
 {
+    if (glue)
+    {
+        writeGlue();
+    }
+    else
+    {
+        writeHeader();
+    }
 }
