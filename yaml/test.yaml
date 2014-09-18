@@ -87,6 +87,7 @@
       operations:
         - name: Create
           static: true
+          doc: { brief: 'create something', more: 'creates vacuum between developers ears' }
           return: { name: Directory, type: Everbase::Directory }
           params:
             - { name: Profile, type: Everbase::Profile }

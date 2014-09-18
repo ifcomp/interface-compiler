@@ -13,7 +13,7 @@ public:
     std::string param(Model::ParameterPtr param);
     std::string result(Model::ParameterPtr param, bool fullyQualified);
     std::string operation(Model::OperationPtr operation);
-    std::string event(Model::OperationPtr event) { return ""; };
+    std::string event(Model::EventPtr event);
 
 };
 

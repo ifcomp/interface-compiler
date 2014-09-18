@@ -4,6 +4,8 @@
 #include "model/container.hpp"
 #include "model/primitive.hpp"
 
+#include <sstream>
+
 using namespace Api::Gen;
 using namespace Api::Model;
 using namespace std;
@@ -58,23 +60,23 @@ string Formatter::type(TypePtr type, bool fullyQualified)
 
 string Formatter::doc(DocumentationPtr doc)
 {
+    stringstream output;
+
     if (doc)
     {
-        string text =   indent() + "\n" +
-                        indent() + string("/**\n") +
-                        indent() + " * @brief: " + wrapText(doc->brief()) + "\n";
+        output << indent() << endl;
+        output << indent() << "/**" << endl;
+        output << indent() << " * @brief " << wrapText(doc->brief()) << endl;
 
         if (doc->more().size())
         {
-            text += indent() + " *\n" +
-                    indent() + string(" * ") + wrapText(doc->more());
+            output << indent() << " *" << endl;
+            output << indent() << " * " + wrapText(doc->more()) << endl;
         }
 
-        text += indent() + " */\n";
-
-        return text;
+        output << indent() << " */" << endl;
     }
-    return "";
+    return output.str();
 }
 
 

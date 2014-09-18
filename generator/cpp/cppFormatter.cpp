@@ -1,10 +1,11 @@
-#include "cppFormatter.hpp"
+#include "generator/cpp/cppFormatter.hpp"
 
 using namespace Api::Gen;
 using namespace Api::Model;
 using namespace std;
 
-CppFormatter::CppFormatter(std::string configFilename)
+
+CppFormatter::CppFormatter(string configFilename)
     : Formatter(configFilename)
 {
 
@@ -42,10 +43,17 @@ string CppFormatter::operation(Api::Model::OperationPtr operation)
 
     if (operation->params().size())
     {
+        // remove trailing delimiter
         output.resize(output.size() - 2);
     }
 
     output += ");";
 
     return output;
+}
+
+
+string CppFormatter::event(EventPtr event)
+{
+    return "";
 }

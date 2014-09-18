@@ -15,7 +15,7 @@
 namespace Api { namespace Gen {
 
 /**
- * @brief Class for formatting language-specific output files.
+ * @brief Base class for formatting language-specific output files.
  * @author Gunther Lemm <lemm@silpion.de>
  */
 class Formatter
@@ -33,22 +33,66 @@ public:
 
     static const char* styleContextKeys[];
 
-    Formatter(std::string configFilename);
-
 public:
     /**
-     * @brief Output a name token.
+     * @brief Format a name token without indentation.
+     * @note Converts object name to something like this: c++: MyCar, c: my_car
      * @param identifiable Pointer to Identifiable object as source of name
-     * @return Name string
+     * @return Formatted name string
      */
-    virtual std::string name(Model::IdentifiablePtr identifiable);                      // c++: MeinAuto, c: mein_auto_t
-    virtual std::string type(Model::TypePtr type, bool fullyQualified = false);         // c++: std::shared_ptr<Everbase::MeinAuto>, c: mein_auto_t
-    virtual std::string doc(Model::DocumentationPtr doc);                               // /**\n  *....
+    virtual std::string name(Model::IdentifiablePtr identifiable);
 
-    virtual std::string param(Model::ParameterPtr param) = 0;                           // c++ std::shared_ptr<Everbase::MeinAuto> autoMobil
+    /**
+     * @brief Format a type token without indentation.
+     * @note Converts type info to something like this: c++: std::shared_ptr<Everbase::MyCar>, c: my_car_t
+     * @param type Pointer to ResolvedType object
+     * @param fullyQualified Add namespace if true
+     * @return Formatted type string
+     * @throw std::runtime_error in case of wrong type
+     */
+    virtual std::string type(Model::TypePtr type, bool fullyQualified = false);
+
+    /**
+     * @brief Format indented doxygen documentation entry including parameter documentation.
+     * @param doc Pointer to Documentation object
+     * @return Formatted documentation for doc
+     */
+    virtual std::string doc(Model::DocumentationPtr doc);
+
+    /**
+     * @brief Format parameter in a language-specific way without indentation.
+     * @note This method is implemented by derived class. Its output may look like:
+     *       c++: std::shared_ptr<Everbase::MyCar> myCar, c: my_car_t my_car
+     * @param param Pointer to Parameter object
+     * @return Formatted parameter
+     */
+    virtual std::string param(Model::ParameterPtr param) = 0;
+
+    /**
+     * @brief Format result in a language-specific way without indentation.
+     * @note This method is implemented by derived class.
+     * @param param Pointer to Parameter object
+     * @param fullyQualified Add namespace if true
+     * @return Formatted result string
+     */
     virtual std::string result(Model::ParameterPtr param, bool fullyQualified = false) = 0;
+
+    /**
+     * @brief Format operation in a language-specific way including indentation.
+     * @note This method is implemented by derived class.
+     * @param operation Pointer to Operation object
+     * @return Formatted operation including documentation, result, function name & params.
+     */
     virtual std::string operation(Model::OperationPtr operation) = 0;
-    virtual std::string event(Model::OperationPtr event) = 0;
+
+
+    /**
+     * @brief Format event in a language-specific way including indentation.
+     * @note This method is implemented by derived class.
+     * @param event Pointer to Event object
+     * @return Formatted event string
+     */
+    virtual std::string event(Model::EventPtr event) = 0;
 
     /**
      * @brief Start section with incremented indent.
@@ -80,6 +124,8 @@ public:
     std::string indent();
 
 protected:
+    Formatter(std::string configFilename);
+
     /**
      * @brief Convert name into styled name by looking at the language-specific config.
      * @param name Unstyled name
@@ -105,7 +151,6 @@ protected:
     std::string wrapText(std::string text, Model::IdentifiablePtr identifiable = nullptr);
 
 protected:
-    std::string mConfigFilename;
     Parser::LangConfigParser mParser;
 
 private:

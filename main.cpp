@@ -1,6 +1,6 @@
 #include "model/namespace.hpp"
 #include "parser/namespaceParser.hpp"
-#include "generator/cppGenerator.hpp"
+#include "generator/cpp/cppHeaders.hpp"
 
 using namespace std;
 using namespace Api;
@@ -30,7 +30,7 @@ int main(int argc, char **argv)
         parser.listKnownTypes();
 
         try {
-            Gen::CppGenerator generator(rootNamespace, "");
+            Gen::CppHeaders generator(rootNamespace, "");
             generator.generate();
         }
         catch (const runtime_error &e)
