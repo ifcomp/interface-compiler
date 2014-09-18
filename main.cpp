@@ -29,7 +29,13 @@ int main(int argc, char **argv)
         parser.resolveTypesInNamespace(rootNamespace);
         parser.listKnownTypes();
 
-        Gen::CppGenerator generator(rootNamespace, "");
+        try {
+            Gen::CppGenerator generator(rootNamespace, "");
+        }
+        catch (const runtime_error &e)
+        {
+            cout << "could not start generator: " << e.what() << endl;
+        }
 
         cout << "done" << endl;
         return 0;
@@ -39,8 +45,5 @@ int main(int argc, char **argv)
         cout << "gimme some YAML to chew on!" << endl;
         return 1;
     }
-
-//    parser.parseFile("../api-generator/yaml/test.yaml");
-
 }
 

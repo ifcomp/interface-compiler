@@ -44,6 +44,12 @@ public:
     void setType(ContainerType type);
 
     /**
+     * @brief Get type name
+     * @return Type name
+     */
+    std::string typeName();
+
+    /**
      * @brief Set type by type name.
      * @see containerNames
      * @param typeName Type name as listed in containerNames

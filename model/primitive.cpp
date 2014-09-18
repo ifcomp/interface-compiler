@@ -40,6 +40,12 @@ void Primitive::setType(Primitive::PrimitiveType type)
 }
 
 
+std::string Primitive::typeName()
+{
+    return primitiveNames[ int(mType) ];
+}
+
+
 void Primitive::setType(std::string typeName)
 {
     mType = decodeTypeName(typeName);

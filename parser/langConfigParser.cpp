@@ -14,6 +14,8 @@ const char* LangConfigParser::KEY_STYLE_NAMESTYLE          = "name-style";
 const char* LangConfigParser::KEY_STYLE_NAMEDELIMITER      = "name-delimiter";
 const char* LangConfigParser::KEY_STYLE_NAMEUSESHORT       = "name-use-short";
 
+const char  LangConfigParser::TYPE_PLACEHOLDER             = '@';
+
 const char* LangConfigParser::styleContextKeys[] =
 {
     "class", "constant", "container", "doc", "enum", "event", "namespace",
@@ -68,5 +70,73 @@ void LangConfigParser::parseTypeMap()
 
 std::string LangConfigParser::primitiveToLang(Api::Model::PrimitivePtr primitive)
 {
+    string typeName = primitive->typeName();
 
+    if (mPrimitiveMap.find(typeName) == mPrimitiveMap.end())
+    {
+        throw runtime_error("primitive type " + typeName + " not declared in language config!\n");
+    }
+    return mPrimitiveMap[typeName];
+}
+
+
+string LangConfigParser::containerToLang(Api::Model::ContainerPtr container)
+{
+    string typeName = container->typeName();
+
+    if (mContainerMap.find(typeName) == mContainerMap.end())
+    {
+        throw runtime_error("container type " + typeName + " not declared in language config!\n");
+    }
+    return mContainerMap[typeName];
+}
+
+
+string LangConfigParser::containerTypeToLang(Model::TypePtr type)
+{
+    if (Model::ResolvedTypePtr resolvedType = dynamic_pointer_cast<Model::ResolvedType>(type))
+    {
+        string output;
+
+        if (Model::ContainerPtr container = dynamic_pointer_cast<Model::Container>(resolvedType->primary()))
+        {
+            output = containerToLang(container);
+
+            vector<string> params;
+
+            // resolve subtype strings
+            for (Model::NamespaceMemberPtr param : resolvedType->params())
+            {
+                if (Model::PrimitivePtr primitive = dynamic_pointer_cast<Model::Primitive>(param))
+                {
+                    params.push_back(primitiveToLang(primitive));
+                }
+                else
+                {
+                    ///< @todo: how do we know if we need to add a namespace?
+                    params.push_back(param->longName());
+                }
+            }
+
+            // replace subtype placeholders
+            size_t pos = 0;
+            int paramCount = 0;
+
+            while ((pos = output.find(TYPE_PLACEHOLDER, pos)) != string::npos)
+            {
+                output.replace(pos, 1, params.at(paramCount));
+                ++paramCount;
+            }
+
+            if (paramCount != params.size())
+            {
+                throw runtime_error("LangConfigParser::containerTypeToLang(): subtype count in " +
+                                    resolvedType->primary()->longName() +
+                                    "definition does not match language-specific config!\n");
+            }
+            return output;
+        }
+        throw runtime_error("LangConfigParser::containerTypeToLang(): primary is not a container!\n");
+    }
+    throw runtime_error("LangConfigParser::containerTypeToLang(): bad type!\n");
 }

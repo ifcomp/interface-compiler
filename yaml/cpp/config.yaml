@@ -10,6 +10,8 @@ typemap:
         - timestamp: std::time_t
         - string: std::string
         - uuid: boost::uuids::uuid
+        - buffer: evb::Buffer
+        - const-buffer: evb::ConstBuffer
 
     containers:
         - vector: 'std::vector<@>'
@@ -21,6 +23,9 @@ style:
       name-style: camelcase
       name-delimiter: ""
       name-use-short: false
+
+    - context: namespace
+      name-delimiter: "::"
 
     - context: parameter
       name-style: lowercase

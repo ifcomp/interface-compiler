@@ -35,10 +35,26 @@ protected:
     virtual std::string type(Model::TypePtr type, bool fullyQualified = false);         // c++: std::shared_ptr<Everbase::MeinAuto>, c: mein_auto_t
     virtual std::string classType(Model::ClassPtr classPtr);                            // if (classType == ABSTRACT) return "virtual";
     virtual std::string doc(Model::Documentation doc);                                  // /**\n  *....
-    virtual std::string param(Model::ParameterPtr param);                               // c++ std::shared_ptr<Everbase::MeinAuto> autoMobil
 
+    virtual std::string param(Model::ParameterPtr param) = 0;                               // c++ std::shared_ptr<Everbase::MeinAuto> autoMobil
     virtual std::string operation(Model::OperationPtr operation) = 0;
     virtual std::string event(Model::OperationPtr event) = 0;
+
+    /**
+     * @brief Convert name into styled name by looking at the language-specific config.
+     * @param name Unstyled name
+     * @param identifiable Identifiable object that is used to pick object-specific style config
+     *                     or nullptr to use general style config
+     * @return Styled name
+     */
+    virtual std::string styleToken(std::string name, Model::IdentifiablePtr identifiable = nullptr);
+
+    /**
+     * @brief Resolve namespace of identifiable object by traversing parent pointers.
+     * @param identifiable Pointer to Identifiable object
+     * @return Namespace string
+     */
+    virtual std::string objectNamespace(Model::IdentifiablePtr identifiable);
 
 protected:
     std::string mConfigFilename;

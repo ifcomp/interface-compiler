@@ -52,6 +52,12 @@ public:
     void setType(PrimitiveType type);
 
     /**
+     * @brief Get type name
+     * @return Type name
+     */
+    std::string typeName();
+
+    /**
      * @brief Set type by type name.
      * @see primitiveNames
      * @param typeName Type name as listed in primitiveNames

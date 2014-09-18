@@ -1,6 +1,11 @@
 #include "formatter.hpp"
 
+#include "model/resolvedType.hpp"
+#include "model/container.hpp"
+#include "model/primitive.hpp"
+
 using namespace Api::Gen;
+using namespace Api::Model;
 using namespace std;
 
 
@@ -37,34 +42,73 @@ Formatter::Formatter(std::string configFilename)
 //        }
 //    }
 
-//        for (auto type : sequenceNode["typemap"])
-//        {
-//            cout << "typemapping: " << type.first.Scalar() << " => " << type.second.Scalar() << endl;
-//        }
 }
 
-std::string Formatter::name(Api::Model::IdentifiablePtr identifiable)
+std::string Formatter::name(IdentifiablePtr identifiable)
+{
+    ///< @todo: check short name config in parser
+    return styleToken(identifiable->longName());
+}
+
+
+std::string Formatter::type(TypePtr type, bool fullyQualified)
+{
+    if (ResolvedTypePtr resolvedType = dynamic_pointer_cast<ResolvedType>(type))
+    {
+        string token;
+
+        if (PrimitivePtr primitive = dynamic_pointer_cast<Primitive>(resolvedType->primary()))
+        {
+            token = mParser.primitiveToLang(primitive);
+        }
+        else if (ContainerPtr container = dynamic_pointer_cast<Container>(resolvedType->primary()))
+        {
+            token = mParser.containerToLang(container);
+        }
+        else
+        {
+            token = resolvedType->primary()->longName();
+        }
+
+        token = styleToken(token);
+
+        if (fullyQualified)
+        {
+            token = objectNamespace(resolvedType->primary()) + token;
+        }
+        return token;
+    }
+    throw runtime_error("Formatter::type() : type object is not of ResolvedType\n");
+}
+
+
+std::string Formatter::classType(ClassPtr classPtr)
 {
     return "";
 }
 
-std::string Formatter::type(Api::Model::TypePtr type, bool fullyQualified)
+
+std::string Formatter::doc(Documentation doc)
 {
     return "";
 }
 
-std::string Formatter::classType(Api::Model::ClassPtr classPtr)
+string Formatter::styleToken(string name, IdentifiablePtr identifiable)
 {
-    return "";
+    ///< @todo: lookup style in parser
+    return name;
 }
 
-std::string Formatter::param(Api::Model::ParameterPtr param)
+string Formatter::objectNamespace(IdentifiablePtr identifiable)
 {
-    return "";
-}
+    IdentifiablePtr tempPtr = identifiable;
+    string namespaceName;
+    string delimiter = "::";            ///< todo: retrieve delimiter from parser
 
-std::string Formatter::doc(Api::Model::Documentation doc)
-{
-    return "";
+    while (tempPtr)
+    {
+        namespaceName += tempPtr->longName() + delimiter;
+    }
+    return namespaceName;
 }
 

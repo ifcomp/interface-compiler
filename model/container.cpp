@@ -9,23 +9,33 @@ const char *Container::containerNames[] =
     "set"
 };
 
+
 Container::Container()
     : mType(ContainerType::UNDEFINED)
 {
 }
 
+
 Container::~Container()
 {
 }
+
 
 Container::ContainerType Container::type()
 {
 	return mType;
 }
 
+
 void Container::setType(Container::ContainerType type)
 {
     mType = type;
+}
+
+
+std::string Container::typeName()
+{
+    return containerNames[ int(mType) ];
 }
 
 
