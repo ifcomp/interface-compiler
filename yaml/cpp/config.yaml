@@ -21,15 +21,15 @@ typemap:
 style:
     - context: general
       name-style: camelcase
-      name-delimiter: ""
+      name-delimiter: ''
       name-use-short: false
 
     - context: namespace
-      name-delimiter: "::"
+      name-delimiter: '::'
 
     - context: parameter
       name-style: lowercase
-      name-delimiter: "_"
+      name-delimiter: '_'
       name-use-short: true
 
     - context: enum
@@ -38,7 +38,7 @@ style:
     - context: struct
       indent: 4
       name-style: lowercase
-      name-delimiter: "_"
+      name-delimiter: '_'
 
     - context: doc
       max-width: 80

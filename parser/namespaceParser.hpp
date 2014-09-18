@@ -62,7 +62,7 @@ public:
     static const char *KEY_INHERITS;
     static const char *KEY_TYPE;
     static const char *KEY_VALUE;
-    static const char *KEY_RETURN;
+    static const char *KEY_RESULT;
 
     static const char *KEY_DOC;
     static const char *KEY_BRIEF;

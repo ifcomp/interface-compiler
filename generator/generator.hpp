@@ -24,8 +24,6 @@ protected:
     virtual void writeHeader() = 0;
     virtual void writeGlue() = 0;
 
-    std::string writeType(Model::ResolvedTypePtr type);
-
 protected:
     FormatterPtr mFormatter;
     Model::NamespacePtr mRootNamespace;

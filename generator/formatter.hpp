@@ -1,6 +1,7 @@
 #ifndef FORMATTER_HPP
 #define FORMATTER_HPP
 
+#include <stack>
 #include "model/identifiable.hpp"
 #include "model/namespace.hpp"
 #include "model/resolvedType.hpp"
@@ -13,6 +14,10 @@
 
 namespace Api { namespace Gen {
 
+/**
+ * @brief Class for formatting language-specific output files.
+ * @author Gunther Lemm <lemm@silpion.de>
+ */
 class Formatter
 {
 public:
@@ -31,14 +36,48 @@ public:
     Formatter(std::string configFilename);
 
 public:
+    /**
+     * @brief Output a name token.
+     * @param identifiable Pointer to Identifiable object as source of name
+     * @return Name string
+     */
     virtual std::string name(Model::IdentifiablePtr identifiable);                      // c++: MeinAuto, c: mein_auto_t
     virtual std::string type(Model::TypePtr type, bool fullyQualified = false);         // c++: std::shared_ptr<Everbase::MeinAuto>, c: mein_auto_t
-    virtual std::string classType(Model::ClassPtr classPtr);                            // if (classType == ABSTRACT) return "virtual";
-    virtual std::string doc(Model::Documentation doc);                                  // /**\n  *....
+    virtual std::string doc(Model::DocumentationPtr doc);                               // /**\n  *....
 
-    virtual std::string param(Model::ParameterPtr param) = 0;                               // c++ std::shared_ptr<Everbase::MeinAuto> autoMobil
+    virtual std::string param(Model::ParameterPtr param) = 0;                           // c++ std::shared_ptr<Everbase::MeinAuto> autoMobil
+    virtual std::string result(Model::ParameterPtr param, bool fullyQualified = false) = 0;
     virtual std::string operation(Model::OperationPtr operation) = 0;
     virtual std::string event(Model::OperationPtr event) = 0;
+
+    /**
+     * @brief Start section with incremented indent.
+     * @param indent Number of additional indent whitespaces
+     */
+    void beginIndent(uint32_t indentCount);
+
+    /**
+     * @brief Start section with an additional indent as defined in identifiable's config.
+     * @param identifiable Pointer to Identifiable to determine config section
+     */
+    void beginIndent(Model::IdentifiablePtr identifiable);
+
+    /**
+     * @brief Decrement indentation by last incremented step.
+     */
+    void endIndent();
+
+    /**
+     * @brief Get current indent.
+     * @return Number of indentation chars
+     */
+    uint32_t indentCount();
+
+    /**
+     * @brief Return mCurrentIndent whitespaces
+     * @return Whitespace string
+     */
+    std::string indent();
 
 protected:
     /**
@@ -57,10 +96,21 @@ protected:
      */
     virtual std::string objectNamespace(Model::IdentifiablePtr identifiable);
 
+    /**
+     * @brief Add newlines to text as defined in language-specific config
+     * @param text Text
+     * @param identifiable Pointer to Identifiable object to determine config context
+     * @return Wrapped text
+     */
+    std::string wrapText(std::string text, Model::IdentifiablePtr identifiable = nullptr);
+
 protected:
     std::string mConfigFilename;
     Parser::LangConfigParser mParser;
 
+private:
+    uint32_t mCurrentIndent;
+    std::stack<uint32_t> mIndentStack;
 };
 
 typedef std::shared_ptr<Formatter>  FormatterPtr;

@@ -23,7 +23,7 @@ const char *NamespaceParser::KEY_CONTAINER_TYPE      = "containertype";
 const char *NamespaceParser::KEY_PRIMITIVE_TYPE      = "primitivetype";
 const char *NamespaceParser::KEY_TYPE                = "type";
 const char *NamespaceParser::KEY_VALUE               = "value";
-const char *NamespaceParser::KEY_RETURN              = "return";
+const char *NamespaceParser::KEY_RESULT              = "return";
 
 const char *NamespaceParser::KEY_DOC                 = "doc";
 const char *NamespaceParser::KEY_BRIEF               = "brief";
@@ -350,9 +350,9 @@ OperationPtr NamespaceParser::parseOperation(const YAML::Node &node)
             }
         }
 
-        if (checkNode(node, KEY_RETURN, YAML::NodeType::Map))
+        if (checkNode(node, KEY_RESULT, YAML::NodeType::Map))
         {
-            ParameterPtr newResult = parseParameter(node[KEY_RETURN]);
+            ParameterPtr newResult = parseParameter(node[KEY_RESULT]);
             newResult->setParentIdentifiable(newOperation);
             newOperation->setResult(newResult);
         }

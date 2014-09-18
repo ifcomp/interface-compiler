@@ -11,7 +11,8 @@ public:
     CppFormatter(std::string configFilename);
 
     std::string param(Model::ParameterPtr param);
-    std::string operation(Model::OperationPtr operation) { return ""; };
+    std::string result(Model::ParameterPtr param, bool fullyQualified);
+    std::string operation(Model::OperationPtr operation);
     std::string event(Model::OperationPtr event) { return ""; };
 
 };

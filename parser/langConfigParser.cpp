@@ -132,7 +132,7 @@ string LangConfigParser::containerTypeToLang(Model::TypePtr type)
             {
                 throw runtime_error("LangConfigParser::containerTypeToLang(): subtype count in " +
                                     resolvedType->primary()->longName() +
-                                    "definition does not match language-specific config!\n");
+                                    " definition does not match language-specific config!\n");
             }
             return output;
         }
