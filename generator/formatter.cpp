@@ -102,8 +102,7 @@ void Formatter::beginIndent(uint32_t indent)
 
 void Formatter::beginIndent(IdentifiablePtr identifiable)
 {
-    ///< @todo: fetch indent from config
-    beginIndent(4);
+    beginIndent(mParser.configIndent(mParser.identifiableToStyleContext(identifiable)));
 }
 
 
@@ -128,17 +127,19 @@ string Formatter::indent()
 
 string Formatter::styleToken(string input, LangConfigParser::StyleContext styleContext)
 {
-    string output = "~" + std::to_string(styleContext) + "~";
+    string output;
 
     if (styleContext != LangConfigParser::StyleContext::PRIMITIVE &&
         styleContext != LangConfigParser::StyleContext::CONTAINER)
     {
         LangConfigParser::NameStyle nameStyle = mParser.configNameStyle(styleContext);
+        string delimiter = mParser.configNameDelimiter(styleContext);
 
         boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
-        string::const_iterator start    = input.begin();
-        string::const_iterator end      = input.end();
+        string::const_iterator start = input.begin();
+        string::const_iterator end = input.end();
         boost::smatch matches;
+        int elementCount = 0;
 
         while(regex_search(start, end, matches, regularExpression))
         {
@@ -159,7 +160,13 @@ string Formatter::styleToken(string input, LangConfigParser::StyleContext styleC
                     break;
             }
 
+            if (elementCount)
+            {
+                temp = delimiter + temp;
+            }
+
             output += temp;
+            ++elementCount;
 
             // update search position:
             start = matches[0].second;
@@ -167,10 +174,10 @@ string Formatter::styleToken(string input, LangConfigParser::StyleContext styleC
     }
     else
     {
-        output = "PRIM:" + input;
+        output = input;
     }
 
-    return output + "|";
+    return output;
 }
 
 

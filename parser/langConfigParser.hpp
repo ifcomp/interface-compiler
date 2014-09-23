@@ -47,6 +47,7 @@ public:
     static const char* KEY_STYLE_NAMESTYLE;
     static const char* KEY_STYLE_NAMEDELIMITER;
     static const char* KEY_STYLE_NAMEUSESHORT;
+    static const char* KEY_STYLE_INDENT;
 
     static const char* styleContextKeys[int(StyleContext::_STYLE_CONTEXT_COUNT_)];
     static const char* nameStyleKeys[int(NameStyle::_NAME_STYLE_COUNT_)];
@@ -119,6 +120,7 @@ public:
 
     bool configUseShortNames(LangConfigParser::StyleContext styleContext);
     std::string configNameDelimiter(LangConfigParser::StyleContext styleContext);
+    uint configIndent(LangConfigParser::StyleContext styleContext);
 
     /**
      * @brief Map Identifiable object to StyleContext

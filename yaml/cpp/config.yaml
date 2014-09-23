@@ -23,10 +23,12 @@ style:
         name-style: camelcase
         name-delimiter: ''
         name-use-short: false
+        indent: 4
 
     namespace:
         name-delimiter: '::'
         name-style: lowercase
+        indent: 2
 
     parameter:
         name-style: lowercase
@@ -37,7 +39,7 @@ style:
         name-style: uppercase
   
     struct:
-        indent: 4
+        indent: 6
         name-style: lowercase
         name-delimiter: '_'
 
@@ -47,3 +49,7 @@ style:
     class:
         name-style: uppercase
         name-delimiter: '+'
+
+    operation:
+        name-style: lowercase
+        name-delimiter: '_'

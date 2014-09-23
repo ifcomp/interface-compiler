@@ -16,18 +16,18 @@ using namespace std;
 using namespace Api::Parser;
 
 
-const char* LangConfigParser::KEY_TYPEMAP                  = "typemap";
-const char* LangConfigParser::KEY_TYPE_PRIMITIVES          = "primitives";
-const char* LangConfigParser::KEY_TYPE_CONTAINERS          = "containers";
+const char* LangConfigParser::KEY_TYPEMAP                   = "typemap";
+const char* LangConfigParser::KEY_TYPE_PRIMITIVES           = "primitives";
+const char* LangConfigParser::KEY_TYPE_CONTAINERS           = "containers";
 
-const char* LangConfigParser::KEY_STYLE                    = "style";
-const char* LangConfigParser::KEY_STYLE_CONTEXT            = "context";
+const char* LangConfigParser::KEY_STYLE                     = "style";
 
-const char* LangConfigParser::KEY_STYLE_NAMESTYLE          = "name-style";
-const char* LangConfigParser::KEY_STYLE_NAMEDELIMITER      = "name-delimiter";
-const char* LangConfigParser::KEY_STYLE_NAMEUSESHORT       = "name-use-short";
+const char* LangConfigParser::KEY_STYLE_NAMESTYLE           = "name-style";
+const char* LangConfigParser::KEY_STYLE_NAMEDELIMITER       = "name-delimiter";
+const char* LangConfigParser::KEY_STYLE_NAMEUSESHORT        = "name-use-short";
+const char* LangConfigParser::KEY_STYLE_INDENT              = "indent";
 
-const char  LangConfigParser::TYPE_PLACEHOLDER             = '@';
+const char  LangConfigParser::TYPE_PLACEHOLDER              = '@';
 
 const char* LangConfigParser::styleContextKeys[] =
 {
@@ -228,6 +228,13 @@ string LangConfigParser::configNameDelimiter(LangConfigParser::StyleContext styl
 {
     const YAML::Node &node = configValue(KEY_STYLE_NAMEDELIMITER, styleContext);
     return node.as<string>();
+}
+
+
+uint LangConfigParser::configIndent(LangConfigParser::StyleContext styleContext)
+{
+    const YAML::Node &node = configValue(KEY_STYLE_INDENT, styleContext);
+    return node.as<uint>();
 }
 
 
