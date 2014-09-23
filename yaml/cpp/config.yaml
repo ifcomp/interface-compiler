@@ -19,30 +19,31 @@ typemap:
         - set: 'std::set<@>'
 
 style:
-    - context: general
-      name-style: camelcase
-      name-delimiter: ''
-      name-use-short: false
+    default:
+        name-style: camelcase
+        name-delimiter: ''
+        name-use-short: false
 
-    - context: namespace
-      name-delimiter: '::'
+    namespace:
+        name-delimiter: '::'
+        name-style: lowercase
 
-    - context: parameter
-      name-style: lowercase
-      name-delimiter: '_'
-      name-use-short: true
+    parameter:
+        name-style: lowercase
+        name-delimiter: '_'
+        name-use-short: true
 
-    - context: enum
-      name-style: uppercase
+    enum:
+        name-style: uppercase
   
-    - context: struct
-      indent: 4
-      name-style: lowercase
-      name-delimiter: '_'
+    struct:
+        indent: 4
+        name-style: lowercase
+        name-delimiter: '_'
 
-    - context: doc
-      max-width: 80
+    doc:
+        max-width: 80
 
-    - context: class
-      
-      
+    class:
+        name-style: uppercase
+        name-delimiter: '+'

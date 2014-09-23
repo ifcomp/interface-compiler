@@ -20,18 +20,18 @@ namespace Api { namespace Gen {
  */
 class Formatter
 {
-public:
-    static const char* KEY_TYPEMAP;
-    static const char* KEY_TYPE_PRIMITIVES;
-    static const char* KEY_TYPE_CONTAINERS;
+//public:
+//    static const char* KEY_TYPEMAP;
+//    static const char* KEY_TYPE_PRIMITIVES;
+//    static const char* KEY_TYPE_CONTAINERS;
 
-    static const char* KEY_STYLE;
-    static const char* KEY_STYLE_CONTEXT;
-    static const char* KEY_STYLE_NAMESTYLE;
-    static const char* KEY_STYLE_NAMEDELIMITER;
-    static const char* KEY_STYLE_NAMEUSESHORT;
+//    static const char* KEY_STYLE;
+//    static const char* KEY_STYLE_CONTEXT;
+//    static const char* KEY_STYLE_NAMESTYLE;
+//    static const char* KEY_STYLE_NAMEDELIMITER;
+//    static const char* KEY_STYLE_NAMEUSESHORT;
 
-    static const char* styleContextKeys[];
+//    static const char* styleContextKeys[];
 
 public:
     /**
@@ -123,17 +123,24 @@ public:
      */
     std::string indent();
 
+    /**
+     * @brief Resolve Parameter to language-specific output string
+     * @param parameter Parameter object
+     * @return Language-specific token
+     */
+    std::string containerTypeToLang(Model::TypePtr type, bool fullyQualified);
+
 protected:
     Formatter(std::string configFilename);
 
     /**
      * @brief Convert name into styled name by looking at the language-specific config.
      * @param name Unstyled name
-     * @param identifiable Identifiable object that is used to pick object-specific style config
-     *                     or nullptr to use general style config
-     * @return Styled name
+     * @param styleContext Configuration context
+     * @return Styled output string
      */
-    virtual std::string styleToken(std::string name, Model::IdentifiablePtr identifiable = nullptr);
+    virtual std::string styleToken(std::string name, Parser::LangConfigParser::StyleContext styleContext =
+            Parser::LangConfigParser::StyleContext::DEFAULT);
 
     /**
      * @brief Resolve namespace of identifiable object by traversing parent pointers.

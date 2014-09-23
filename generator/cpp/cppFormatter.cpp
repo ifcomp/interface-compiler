@@ -13,7 +13,7 @@ CppFormatter::CppFormatter(string configFilename)
 
 string CppFormatter::param(Api::Model::ParameterPtr param)
 {
-    return type(param->type(), true) + " " + param->longName();
+    return type(param->type(), true) + " " + name(param);
 }
 
 
