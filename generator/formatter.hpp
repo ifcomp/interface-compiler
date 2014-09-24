@@ -136,11 +136,11 @@ protected:
     /**
      * @brief Convert name into styled name by looking at the language-specific config.
      * @param name Unstyled name
-     * @param styleContext Configuration context
+     * @param styleContext Configuration context from which the config will be fetched
      * @return Styled output string
      */
     virtual std::string styleToken(std::string name, Parser::LangConfigParser::StyleContext styleContext =
-            Parser::LangConfigParser::StyleContext::DEFAULT);
+                                                     Parser::LangConfigParser::StyleContext::DEFAULT);
 
     /**
      * @brief Resolve namespace of identifiable object by traversing parent pointers.
@@ -152,10 +152,12 @@ protected:
     /**
      * @brief Add newlines to text as defined in language-specific config
      * @param text Text
-     * @param identifiable Pointer to Identifiable object to determine config context
+     * @param styleContext Configuration context from which the config will be fetched
      * @return Wrapped text
      */
-    std::string wrapText(std::string text, Model::IdentifiablePtr identifiable = nullptr);
+    std::string wrapText(std::string text, Parser::LangConfigParser::StyleContext styleContext =
+                                           Parser::LangConfigParser::StyleContext::DEFAULT,
+                         std::string linePrefix = "");
 
 protected:
     Parser::LangConfigParser mParser;

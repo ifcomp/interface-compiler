@@ -766,23 +766,3 @@ string NamespaceParser::getCurrentNamespace()
 }
 
 
-template <class T>
-std::shared_ptr<T> NamespaceParser::newIdentifiable(const YAML::Node &node)
-{
-    std::shared_ptr<T> newMember(new T);
-
-    IdentifiablePtr identifiable = dynamic_pointer_cast<Identifiable>(newMember);
-    if (identifiable)
-    {
-        parseName(node, identifiable);
-        parseDoc(node, identifiable);
-    }
-    else
-    {
-        throw runtime_error("newIdentifiable(): Type is not an Identifiable!\n");
-    }
-    return newMember;
-}
-
-
-

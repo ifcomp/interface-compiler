@@ -298,7 +298,22 @@ private:
      * @return new Identifiable-based object of type T
      * @throw std::runtime_error in case T is not derived from Identifiable
      */
-    template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node);
+    template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node)
+    {
+        std::shared_ptr<T> newMember(new T);
+
+        Model::IdentifiablePtr identifiable = std::dynamic_pointer_cast<Model::Identifiable>(newMember);
+        if (identifiable)
+        {
+            parseName(node, identifiable);
+            parseDoc(node, identifiable);
+        }
+        else
+        {
+            throw std::runtime_error("newIdentifiable(): Type is not an Identifiable!\n");
+        }
+        return newMember;
+    }
 
 private:
     Model::NamespacePtr mRootNamespace;

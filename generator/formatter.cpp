@@ -25,7 +25,9 @@ Formatter::Formatter(std::string configFilename)
 
 string Formatter::name(IdentifiablePtr identifiable)
 {
-    bool useShortName = mParser.configUseShortNames(mParser.identifiableToStyleContext(identifiable));
+//    bool useShortName = mParser.configUseShortNames(mParser.identifiableToStyleContext(identifiable));
+    bool useShortName = mParser.configAttribute<bool>(LangConfigParser::StyleAttribute::NAME_USE_SHORT,
+                                                      mParser.identifiableToStyleContext(identifiable));
     string name;
 
     if (useShortName && identifiable->shortName().size())
@@ -78,19 +80,18 @@ string Formatter::doc(DocumentationPtr doc)
     {
         output << indent() << endl;
         output << indent() << "/**" << endl;
-        output << indent() << " * @brief " << wrapText(doc->brief()) << endl;
+        output << indent() << " * @brief " << wrapText(doc->brief(), LangConfigParser::StyleContext::DOC, " * ") << endl;
 
         if (doc->more().size())
         {
             output << indent() << " *" << endl;
-            output << indent() << " * " + wrapText(doc->more()) << endl;
+            output << indent() << " * " + wrapText(doc->more(), LangConfigParser::StyleContext::DOC, " * ") << endl;
         }
 
         output << indent() << " */" << endl;
     }
     return output.str();
 }
-
 
 
 void Formatter::beginIndent(uint32_t indent)
@@ -102,7 +103,7 @@ void Formatter::beginIndent(uint32_t indent)
 
 void Formatter::beginIndent(IdentifiablePtr identifiable)
 {
-    beginIndent(mParser.configIndent(mParser.identifiableToStyleContext(identifiable)));
+    beginIndent(mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::INDENT, mParser.identifiableToStyleContext(identifiable)));
 }
 
 
@@ -133,7 +134,7 @@ string Formatter::styleToken(string input, LangConfigParser::StyleContext styleC
         styleContext != LangConfigParser::StyleContext::CONTAINER)
     {
         LangConfigParser::NameStyle nameStyle = mParser.configNameStyle(styleContext);
-        string delimiter = mParser.configNameDelimiter(styleContext);
+        string delimiter = mParser.configAttribute<string>(LangConfigParser::StyleAttribute::NAME_DELIMITER, styleContext);
 
         boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
         string::const_iterator start = input.begin();
@@ -199,15 +200,27 @@ string Formatter::objectNamespace(IdentifiablePtr identifiable)
 }
 
 
-string Formatter::wrapText(string text, IdentifiablePtr identifiable)
+string Formatter::wrapText(string text, LangConfigParser::StyleContext styleContext, string linePrefix)
 {
-    int wrapLength = 80;        ///< @todo: fetch max-length from config
+    uint wrapLength = mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::TEXT_WRAP, styleContext);
 
-//    size_t pos = 0;
-//    while (pos < (text.length() - wrapLength))
-//    {
+    size_t pos = wrapLength;
+    char whitespace = ' ';
 
-//    }
+    while (pos < text.size())
+    {
+        size_t foundPos = text.rfind(whitespace, pos);
+
+        if (foundPos != string::npos)
+        {
+            text.replace(foundPos, 1, "\n" + indent() + linePrefix);
+            pos = foundPos + wrapLength + 1;
+        }
+        else
+        {
+            break;
+        }
+    }
     return text;
 }
 

@@ -36,6 +36,7 @@ public:
         NAME_DELIMITER,
         NAME_USE_SHORT,
         INDENT,
+        TEXT_WRAP,
         _STYLE_ATTRIB_COUNT_
     };
 
@@ -98,27 +99,6 @@ public:
     NameStyle configNameStyle(LangConfigParser::StyleContext styleContext);
 
     /**
-     * @brief Fetch NAME_USE_SHORT config entry.
-     * @param styleContext Style context enum entry to specify the config section
-     * @return True if the use of short names is configured for styleContext
-     */
-    bool configUseShortNames(LangConfigParser::StyleContext styleContext);
-
-    /**
-     * @brief Fetch NAME_DELIMITER config entry.
-     * @param styleContext Style context enum entry to specify the config section
-     * @return Delimiter string
-     */
-    std::string configNameDelimiter(LangConfigParser::StyleContext styleContext);
-
-    /**
-     * @brief Fetch INDENT config entry.
-     * @param styleContext Style context enum entry to specify the config section
-     * @return Number of whitespaces to use for indentation
-     */
-    uint configIndent(LangConfigParser::StyleContext styleContext);
-
-    /**
      * @brief Map Identifiable object to StyleContext
      * @param identifiable Pointer to Identifiable object
      * @return StyleContext of identifiable (DEFAULT if not found)
@@ -136,6 +116,19 @@ public:
      * @return List as string
      */
     std::string listKnownStyleAttributes();
+
+    /**
+     * Fetch style attribute from config.
+     * @param styleAttribute Attribute to fetch
+     * @param styleContext Style context to search attribute in
+     * @return Attribute value
+     */
+    template <typename T> T configAttribute(StyleAttribute styleAttribute,
+                                            StyleContext styleContext)
+    {
+        const YAML::Node &node = configValue(styleAttribute, styleContext);
+        return node.as<T>();
+    }
 
 private:
     /**

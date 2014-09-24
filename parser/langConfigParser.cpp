@@ -25,16 +25,19 @@ const char* LangConfigParser::KEY_SECTION_STYLE     = "style";
 
 const char  LangConfigParser::TYPE_PLACEHOLDER      = '@';
 
+
 const char* LangConfigParser::styleContextKeys[] =
 {
     "default", "class", "constant", "container", "doc", "enum", "event",
     "namespace", "operation", "parameter", "primitive", "struct", "type", "value"
 };
 
+
 const char* LangConfigParser::styleAttributeKeys[] =
 {
-    "name-style", "name-delimiter", "name-use-short", "indent"
+    "name-style", "name-delimiter", "name-use-short", "indent", "text-wrap"
 };
+
 
 const char* LangConfigParser::nameStyleKeys[] =
 {
@@ -126,27 +129,6 @@ LangConfigParser::NameStyle LangConfigParser::configNameStyle(LangConfigParser::
         }
     }
     return CAMELCASE;
-}
-
-
-bool LangConfigParser::configUseShortNames(StyleContext styleContext)
-{
-    const YAML::Node &node = configValue(StyleAttribute::NAME_USE_SHORT, styleContext);
-    return node.as<bool>();
-}
-
-
-string LangConfigParser::configNameDelimiter(LangConfigParser::StyleContext styleContext)
-{
-    const YAML::Node &node = configValue(StyleAttribute::NAME_DELIMITER, styleContext);
-    return node.as<string>();
-}
-
-
-uint LangConfigParser::configIndent(LangConfigParser::StyleContext styleContext)
-{
-    const YAML::Node &node = configValue(StyleAttribute::INDENT, styleContext);
-    return node.as<uint>();
 }
 
 

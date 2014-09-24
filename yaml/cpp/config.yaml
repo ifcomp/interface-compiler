@@ -17,13 +17,14 @@ typemap:
         - vector: 'std::vector<@>'
         - list: 'std::list<@>'
         - set: 'std::set<@>'
+        - map: 'std::map<@, @>'
 
 style:
-#    default:
-#        name-style: camelcase
-#        name-delimiter: ''
-#        name-use-short: false
-#        indent: 4
+    default:
+        name-style: camelcase
+        name-delimiter: ''
+        name-use-short: false
+        indent: 4
 
     namespace:
         name-delimiter: '::'
@@ -44,7 +45,7 @@ style:
         name-delimiter: '_'
 
     doc:
-        max-width: 80
+        text-wrap: 80
 
     class:
         name-style: uppercase
