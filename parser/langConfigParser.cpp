@@ -12,27 +12,28 @@
 #include "model/primitive.hpp"
 #include "model/struct.hpp"
 
+#include <sstream>
+
 using namespace std;
 using namespace Api::Parser;
 
 
-const char* LangConfigParser::KEY_TYPEMAP                   = "typemap";
-const char* LangConfigParser::KEY_TYPE_PRIMITIVES           = "primitives";
-const char* LangConfigParser::KEY_TYPE_CONTAINERS           = "containers";
+const char* LangConfigParser::KEY_SECTION_TYPEMAP   = "typemap";
+const char* LangConfigParser::KEY_TYPE_PRIMITIVES   = "primitives";
+const char* LangConfigParser::KEY_TYPE_CONTAINERS   = "containers";
+const char* LangConfigParser::KEY_SECTION_STYLE     = "style";
 
-const char* LangConfigParser::KEY_STYLE                     = "style";
-
-const char* LangConfigParser::KEY_STYLE_NAMESTYLE           = "name-style";
-const char* LangConfigParser::KEY_STYLE_NAMEDELIMITER       = "name-delimiter";
-const char* LangConfigParser::KEY_STYLE_NAMEUSESHORT        = "name-use-short";
-const char* LangConfigParser::KEY_STYLE_INDENT              = "indent";
-
-const char  LangConfigParser::TYPE_PLACEHOLDER              = '@';
+const char  LangConfigParser::TYPE_PLACEHOLDER      = '@';
 
 const char* LangConfigParser::styleContextKeys[] =
 {
     "default", "class", "constant", "container", "doc", "enum", "event",
     "namespace", "operation", "parameter", "primitive", "struct", "type", "value"
+};
+
+const char* LangConfigParser::styleAttributeKeys[] =
+{
+    "name-style", "name-delimiter", "name-use-short", "indent"
 };
 
 const char* LangConfigParser::nameStyleKeys[] =
@@ -49,11 +50,11 @@ LangConfigParser::LangConfigParser(std::string configFilename)
 
 void LangConfigParser::parseTypeMap()
 {
-    if (checkNode(mRootNode, KEY_TYPEMAP, YAML::NodeType::Map, true))
+    if (checkNode(mRootNode, KEY_SECTION_TYPEMAP, YAML::NodeType::Map, true))
     {
-        if (checkNode(mRootNode[KEY_TYPEMAP], KEY_TYPE_PRIMITIVES, YAML::NodeType::Sequence, true))
+        if (checkNode(mRootNode[KEY_SECTION_TYPEMAP], KEY_TYPE_PRIMITIVES, YAML::NodeType::Sequence, true))
         {
-            for (auto primitiveNode : mRootNode[KEY_TYPEMAP][KEY_TYPE_PRIMITIVES])
+            for (auto primitiveNode : mRootNode[KEY_SECTION_TYPEMAP][KEY_TYPE_PRIMITIVES])
             {
                 if (primitiveNode.Type() == YAML::NodeType::Map)
                 {
@@ -66,9 +67,9 @@ void LangConfigParser::parseTypeMap()
                 }
             }
         }
-        if (checkNode(mRootNode[KEY_TYPEMAP], KEY_TYPE_CONTAINERS, YAML::NodeType::Sequence, true))
+        if (checkNode(mRootNode[KEY_SECTION_TYPEMAP], KEY_TYPE_CONTAINERS, YAML::NodeType::Sequence, true))
         {
-            for (auto containerNode : mRootNode[KEY_TYPEMAP][KEY_TYPE_CONTAINERS])
+            for (auto containerNode : mRootNode[KEY_SECTION_TYPEMAP][KEY_TYPE_CONTAINERS])
             {
                 if (containerNode.Type() == YAML::NodeType::Map)
                 {
@@ -110,98 +111,9 @@ string LangConfigParser::containerToLang(Api::Model::ContainerPtr container)
 }
 
 
-//string LangConfigParser::containerTypeToLang(Model::TypePtr type)
-//{
-//    if (Model::ResolvedTypePtr resolvedType = dynamic_pointer_cast<Model::ResolvedType>(type))
-//    {
-//        string output;
-
-//        if (Model::ContainerPtr container = dynamic_pointer_cast<Model::Container>(resolvedType->primary()))
-//        {
-//            output = containerToLang(container);
-
-//            vector<string> params;
-
-//            // resolve subtype strings
-//            for (Model::NamespaceMemberPtr param : resolvedType->params())
-//            {
-//                if (Model::PrimitivePtr primitive = dynamic_pointer_cast<Model::Primitive>(param))
-//                {
-//                    params.push_back(primitiveToLang(primitive));
-//                }
-//                else
-//                {
-//                    ///< @todo: how do we know if we need to add a namespace?
-//                    params.push_back(param->longName());
-//                }
-//            }
-
-//            // replace subtype placeholders
-//            size_t pos = 0;
-//            int paramCount = 0;
-
-//            while ((pos = output.find(TYPE_PLACEHOLDER, pos)) != string::npos)
-//            {
-//                output.replace(pos, 1, params.at(paramCount));
-//                ++paramCount;
-//            }
-
-//            if (paramCount != params.size())
-//            {
-//                throw runtime_error("LangConfigParser::containerTypeToLang(): subtype count in " +
-//                                    resolvedType->primary()->longName() +
-//                                    " definition does not match language-specific config!\n");
-//            }
-//            return output;
-//        }
-//        throw runtime_error("LangConfigParser::containerTypeToLang(): primary is not a container!\n");
-//    }
-//    throw runtime_error("LangConfigParser::containerTypeToLang(): bad type!\n");
-//}
-
-
-YAML::Node LangConfigParser::configValue(string key, Api::Model::IdentifiablePtr identifiable)
-{
-    return configValue(key, identifiableToStyleContext(identifiable));
-}
-
-
-YAML::Node LangConfigParser::configValue(string key, LangConfigParser::StyleContext styleContext)
-{
-    if (mRootNode[KEY_STYLE].IsDefined())
-    {
-        if (mRootNode[KEY_STYLE][styleContextKeys[styleContext]].IsDefined())
-        {
-            if (mRootNode[KEY_STYLE][styleContextKeys[styleContext]][key].IsScalar())
-            {
-                return mRootNode[KEY_STYLE][styleContextKeys[styleContext]][key];
-            }
-        }
-        if (mRootNode[KEY_STYLE][styleContextKeys[StyleContext::DEFAULT]].IsDefined())
-        {
-            if (mRootNode[KEY_STYLE][styleContextKeys[StyleContext::DEFAULT]][key].IsScalar())
-            {
-                // no specialized config found - using default
-                return mRootNode[KEY_STYLE][styleContextKeys[StyleContext::DEFAULT]][key];
-            }
-            throw runtime_error("key " + key + " neither found in style-context " + string(styleContextKeys[styleContext]) +
-                                " nor in context " + string(styleContextKeys[StyleContext::DEFAULT]));
-        }
-        throw runtime_error("style context " + string(styleContextKeys[styleContext]) + " not found in style config");
-    }
-    throw runtime_error("section " + string(KEY_STYLE) + " not found in language config");
-}
-
-
-LangConfigParser::NameStyle LangConfigParser::configNameStyle(Api::Model::IdentifiablePtr identifiable)
-{
-    return configNameStyle(identifiableToStyleContext(identifiable));
-}
-
-
 LangConfigParser::NameStyle LangConfigParser::configNameStyle(LangConfigParser::StyleContext styleContext)
 {
-    const YAML::Node &node = configValue(KEY_STYLE_NAMESTYLE, styleContext);
+    const YAML::Node &node = configValue(StyleAttribute::NAME_STYLE, styleContext);
 
     if (node.IsScalar())
     {
@@ -219,22 +131,51 @@ LangConfigParser::NameStyle LangConfigParser::configNameStyle(LangConfigParser::
 
 bool LangConfigParser::configUseShortNames(StyleContext styleContext)
 {
-    const YAML::Node &node = configValue(KEY_STYLE_NAMEUSESHORT, styleContext);
+    const YAML::Node &node = configValue(StyleAttribute::NAME_USE_SHORT, styleContext);
     return node.as<bool>();
 }
 
 
 string LangConfigParser::configNameDelimiter(LangConfigParser::StyleContext styleContext)
 {
-    const YAML::Node &node = configValue(KEY_STYLE_NAMEDELIMITER, styleContext);
+    const YAML::Node &node = configValue(StyleAttribute::NAME_DELIMITER, styleContext);
     return node.as<string>();
 }
 
 
 uint LangConfigParser::configIndent(LangConfigParser::StyleContext styleContext)
 {
-    const YAML::Node &node = configValue(KEY_STYLE_INDENT, styleContext);
+    const YAML::Node &node = configValue(StyleAttribute::INDENT, styleContext);
     return node.as<uint>();
+}
+
+
+YAML::Node LangConfigParser::configValue(LangConfigParser::StyleAttribute styleAttribute, LangConfigParser::StyleContext styleContext)
+{
+    string key(styleAttributeKeys[styleAttribute]);
+
+    if (mRootNode[KEY_SECTION_STYLE].IsDefined())
+    {
+        if (mRootNode[KEY_SECTION_STYLE][styleContextKeys[styleContext]].IsDefined())
+        {
+            if (mRootNode[KEY_SECTION_STYLE][styleContextKeys[styleContext]][key].IsScalar())
+            {
+                return mRootNode[KEY_SECTION_STYLE][styleContextKeys[styleContext]][key];
+            }
+        }
+        if (mRootNode[KEY_SECTION_STYLE][styleContextKeys[StyleContext::DEFAULT]].IsDefined())
+        {
+            if (mRootNode[KEY_SECTION_STYLE][styleContextKeys[StyleContext::DEFAULT]][key].IsScalar())
+            {
+                // no specialized config found - using default
+                return mRootNode[KEY_SECTION_STYLE][styleContextKeys[StyleContext::DEFAULT]][key];
+            }
+        }
+        throw runtime_error("key " + key + " neither found in style-context " + string(styleContextKeys[styleContext]) +
+                            " nor in context " + string(styleContextKeys[StyleContext::DEFAULT]) + "\n\n" +
+                            listKnownStyleAttributes() + "\n" + listKnownStyleContexts());
+    }
+    throw runtime_error("section " + string(KEY_SECTION_STYLE) + " not found in language config");
 }
 
 
@@ -287,4 +228,34 @@ LangConfigParser::StyleContext LangConfigParser::identifiableToStyleContext(Api:
         context = STRUCT;
     }
     return context;
+}
+
+
+std::string LangConfigParser::listKnownStyleContexts()
+{
+    stringstream out;
+    out << "--- REGISTERED STYLE CONTEXTS --" << endl;
+
+    for (int n = 0; n < _STYLE_CONTEXT_COUNT_; ++n)
+    {
+        out << styleContextKeys[n] << endl;
+    }
+
+    out << "--------------------------------" << endl;
+    return out.str();
+}
+
+
+std::string LangConfigParser::listKnownStyleAttributes()
+{
+    stringstream out;
+    out << "-- REGISTERED STYLE ATTRIBUTES -" << endl;
+
+    for (int n = 0; n < _STYLE_ATTRIB_COUNT_; ++n)
+    {
+        out << styleAttributeKeys[n] << endl;
+    }
+
+    out << "--------------------------------" << endl;
+    return out.str();
 }

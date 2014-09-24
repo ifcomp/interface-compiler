@@ -19,11 +19,11 @@ typemap:
         - set: 'std::set<@>'
 
 style:
-    default:
-        name-style: camelcase
-        name-delimiter: ''
-        name-use-short: false
-        indent: 4
+#    default:
+#        name-style: camelcase
+#        name-delimiter: ''
+#        name-use-short: false
+#        indent: 4
 
     namespace:
         name-delimiter: '::'
