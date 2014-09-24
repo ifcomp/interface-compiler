@@ -642,7 +642,13 @@ void NamespaceParser::resolveTypesInNamespace(NamespacePtr rootNamespace)
         NamespacePtr nestedNamespace = dynamic_pointer_cast<Namespace>(memberPair.second);
         if (nestedNamespace)
         {
-            resolveTypesInNamespace(nestedNamespace);
+            try {
+                resolveTypesInNamespace(nestedNamespace);
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addFQNameToException(nestedNamespace, ""));
+            }
         }
         else
         {
@@ -651,54 +657,72 @@ void NamespaceParser::resolveTypesInNamespace(NamespacePtr rootNamespace)
 
             if (classPtr)
             {
-                // resolve parent
-                if (classPtr->parent())
-                {
-                    const ResolvedTypePtr &parentType = resolveType(classPtr->parent());
+                try {
+                    // resolve parent
+                    if (classPtr->parent())
+                    {
+                        const ResolvedTypePtr &parentType = resolveType(classPtr->parent());
 
-                    if (dynamic_pointer_cast<Class>(parentType->primary()))
-                    {
-                        classPtr->setParent(parentType);
+                        if (dynamic_pointer_cast<Class>(parentType->primary()))
+                        {
+                            classPtr->setParent(parentType);
+                        }
+                        else
+                        {
+                            throw runtime_error("inherited element in " + classPtr->longName() + " must point to a class\n");
+                        }
                     }
-                    else
+
+                    for (auto operation : classPtr->operations())
                     {
-                        throw runtime_error("inherited element in " + classPtr->longName() + " must point to a class\n");
+                        try {
+                            for (auto parameter : operation.second->params())
+                            {
+                                resolveParameterType(parameter.second);
+                            }
+
+                            // resolve operation's return parameter
+                            const ParameterPtr &resultParamPtr = operation.second->result();
+                            if (resultParamPtr)
+                            {
+                                resolveParameterType(resultParamPtr);
+                            }
+                        }
+                        catch (const runtime_error &e)
+                        {
+                            throw runtime_error(addObjectNameToException(operation.second));
+                        }
+                    }
+
+                    for (auto event : classPtr->events())
+                    {
+                        for (auto result : event.second->results())
+                        {
+                            resolveParameterType(result.second);
+                        }
                     }
                 }
-
-                for (auto operation : classPtr->operations())
+                catch (const runtime_error &e)
                 {
-                    for (auto parameter : operation.second->params())
-                    {
-                        resolveParameterType(parameter.second);
-                    }
-
-                    // resolve operation's return parameter
-                    const ParameterPtr &resultParamPtr = operation.second->result();
-                    if (resultParamPtr)
-                    {
-                        resolveParameterType(resultParamPtr);
-                    }
-                }
-
-                for (auto event : classPtr->events())
-                {
-                    for (auto result : event.second->results())
-                    {
-                        resolveParameterType(result.second);
-                    }
+                    throw runtime_error(addFQNameToException(classPtr, "::"));
                 }
             }
             else
             {
                 // resolve structs
-                const StructPtr &structPtr = dynamic_pointer_cast<Struct>(memberPair.second);
-                if (structPtr)
-                {
-                    for (auto field : structPtr->fields())
+                try {
+                    const StructPtr &structPtr = dynamic_pointer_cast<Struct>(memberPair.second);
+                    if (structPtr)
                     {
-                        resolveParameterType(field.second);
+                        for (auto field : structPtr->fields())
+                        {
+                            resolveParameterType(field.second);
+                        }
                     }
+                }
+                catch (const runtime_error &e)
+                {
+                    throw runtime_error(addFQNameToException(memberPair.second, " "));
                 }
             }
         }

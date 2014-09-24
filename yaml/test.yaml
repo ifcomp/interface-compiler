@@ -50,7 +50,7 @@
         - name: GetMode
           return: { name: Mode, type: Everbase::PermissionMode }
 
-    - name: Metadata
+    - name: MetaData
       short: Meta
       nodetype: class
       doc: { brief: 'Key-value store', more: 'Maps strings to bytes' }
@@ -78,7 +78,7 @@
           return: { name: VersionedPaths, type: [ Everbase::List, Everbase::Path ] }
           doc: { brief: 'paths contain embedded version information' }
         - name: GetMetadata
-          return: { name: Metadata, type: Everbase::Metadata }
+          return: { name: Metadata, type: Everbase::MetaData }
 
     - name: Directory
       short: Dir

@@ -26,8 +26,15 @@ int main(int argc, char **argv)
             }
         }
 
-        parser.resolveTypesInNamespace(rootNamespace);
-        parser.listKnownTypes();
+        try {
+            parser.resolveTypesInNamespace(rootNamespace);
+            parser.listKnownTypes();
+        }
+        catch (const runtime_error &e)
+        {
+            cout << "[RESOLVER ERROR] " << e.what() << endl;
+            return 1;
+        }
 
         try {
             Gen::CppHeaders generator(rootNamespace, "");
@@ -35,7 +42,8 @@ int main(int argc, char **argv)
         }
         catch (const runtime_error &e)
         {
-            cout << "could not start generator: " << e.what() << endl;
+            cout << "[GENERATOR ERROR] " << e.what() << endl;
+            return 1;
         }
 
         cout << "done" << endl;
