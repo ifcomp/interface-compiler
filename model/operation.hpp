@@ -12,8 +12,18 @@ namespace Api { namespace Model {
 class Operation : public Identifiable
 {
 public:
+    static constexpr auto TYPE_NAME = "operation";
+
+private:
+    bool mIsStatic;
+    bool mIsSynchronous;
+    std::map<std::string, ParameterPtr> mParams;
+    ParameterPtr mResult;
+
+public:
     Operation();
     virtual ~Operation();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     bool isStatic();
     void setStatic(bool isStatic);
@@ -26,12 +36,6 @@ public:
 
     void setResult(ParameterPtr result);
     ParameterPtr result();
-
-private:
-    bool mIsStatic;
-    bool mIsSynchronous;
-    std::map<std::string, ParameterPtr> mParams;
-    ParameterPtr mResult;
 };
 
 typedef std::shared_ptr<Operation> OperationPtr;

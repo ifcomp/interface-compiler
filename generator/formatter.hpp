@@ -40,7 +40,7 @@ public:
      * @param identifiable Pointer to Identifiable object as source of name
      * @return Formatted name string
      */
-    virtual std::string name(Model::IdentifiablePtr identifiable);
+    virtual std::string name(DomainObjectPtr domainObject);
 
     /**
      * @brief Format a type token without indentation.
@@ -104,7 +104,7 @@ public:
      * @brief Start section with an additional indent as defined in identifiable's config.
      * @param identifiable Pointer to Identifiable to determine config section
      */
-    void beginIndent(Model::IdentifiablePtr identifiable);
+    void beginIndent(DomainObjectPtr styleContextObject);
 
     /**
      * @brief Decrement indentation by last incremented step.
@@ -139,15 +139,14 @@ protected:
      * @param styleContext Configuration context from which the config will be fetched
      * @return Styled output string
      */
-    virtual std::string styleToken(std::string name, Parser::LangConfigParser::StyleContext styleContext =
-                                                     Parser::LangConfigParser::StyleContext::DEFAULT);
+    virtual std::string styleToken(std::string name, DomainObjectPtr styleContextObject = nullptr);
 
     /**
      * @brief Resolve namespace of identifiable object by traversing parent pointers.
      * @param identifiable Pointer to Identifiable object
      * @return Namespace string
      */
-    virtual std::string objectNamespace(Model::IdentifiablePtr identifiable);
+    virtual std::string objectNamespace(DomainObjectPtr identifiable);
 
     /**
      * @brief Add newlines to text as defined in language-specific config
@@ -155,8 +154,7 @@ protected:
      * @param styleContext Configuration context from which the config will be fetched
      * @return Wrapped text
      */
-    std::string wrapText(std::string text, Parser::LangConfigParser::StyleContext styleContext =
-                                           Parser::LangConfigParser::StyleContext::DEFAULT,
+    std::string wrapText(std::string text, DomainObjectPtr styleContextObject = nullptr,
                          std::string linePrefix = "");
 
 protected:

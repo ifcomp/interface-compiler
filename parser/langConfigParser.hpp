@@ -11,25 +11,6 @@ namespace Api { namespace Parser {
 class LangConfigParser : public YamlParser
 {
 public:
-    enum StyleContext
-    {
-        DEFAULT,
-        CLASS,
-        CONSTANT,
-        CONTAINER,
-        DOC,
-        ENUM,
-        EVENT,
-        NAMESPACE,
-        OPERATION,
-        PARAMETER,
-        PRIMITIVE,
-        STRUCT,
-        TYPE,
-        VALUE,
-        _STYLE_CONTEXT_COUNT_
-    };
-
     enum StyleAttribute
     {
         NAME_STYLE,
@@ -48,14 +29,14 @@ public:
         _NAME_STYLE_COUNT_
     };
 
-    static const char* KEY_SECTION_TYPEMAP;
-    static const char* KEY_TYPE_PRIMITIVES;
-    static const char* KEY_TYPE_CONTAINERS;
-    static const char* KEY_SECTION_STYLE;
+    static const char *KEY_SECTION_TYPEMAP;
+    static const char *KEY_TYPE_PRIMITIVES;
+    static const char *KEY_TYPE_CONTAINERS;
+    static const char *KEY_SECTION_STYLE;
+    static const char *KEY_STYLE_CONTEXT_DEFAULT;
 
-    static const char* styleContextKeys[StyleContext::_STYLE_CONTEXT_COUNT_];
-    static const char* styleAttributeKeys[StyleAttribute::_STYLE_ATTRIB_COUNT_];
-    static const char* nameStyleKeys[NameStyle::_NAME_STYLE_COUNT_];
+    static const char *styleAttributeKeys[StyleAttribute::_STYLE_ATTRIB_COUNT_];
+    static const char *nameStyleKeys[NameStyle::_NAME_STYLE_COUNT_];
 
     static const char  TYPE_PLACEHOLDER;        ///< This placeholder is used for inner container types
 
@@ -96,20 +77,7 @@ public:
      * @param styleContext Style context enum entry to specify the config section
      * @return Configured NameStyle for styleContext
      */
-    NameStyle configNameStyle(LangConfigParser::StyleContext styleContext);
-
-    /**
-     * @brief Map Identifiable object to StyleContext
-     * @param identifiable Pointer to Identifiable object
-     * @return StyleContext of identifiable (DEFAULT if not found)
-     */
-    StyleContext identifiableToStyleContext(Model::IdentifiablePtr identifiable = nullptr);
-
-    /**
-     * @brief List all registered style contexts.
-     * @return List as string
-     */
-    std::string listKnownStyleContexts();
+    NameStyle configNameStyle(DomainObjectPtr styleContextObject);
 
     /**
      * @brief Print all registered style attributes to stdout.
@@ -124,9 +92,9 @@ public:
      * @return Attribute value
      */
     template <typename T> T configAttribute(StyleAttribute styleAttribute,
-                                            StyleContext styleContext)
+                                            DomainObjectPtr styleContextObject)
     {
-        const YAML::Node &node = configValue(styleAttribute, styleContext);
+        const YAML::Node &node = configValue(styleAttribute, styleContextObject);
         return node.as<T>();
     }
 
@@ -146,7 +114,7 @@ private:
      * @throw std::runtime_error if key was not found in styleContext or default context
      * @see styleContextKeys
      */
-    YAML::Node configValue(StyleAttribute styleAttribute, StyleContext styleContext);
+    YAML::Node configValue(StyleAttribute styleAttribute, DomainObjectPtr styleContextObject);
 
 private:
     YAML::Node mRootNode;

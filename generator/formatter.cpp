@@ -23,22 +23,24 @@ Formatter::Formatter(std::string configFilename)
 }
 
 
-string Formatter::name(IdentifiablePtr identifiable)
+string Formatter::name(DomainObjectPtr domainObject)
 {
-//    bool useShortName = mParser.configUseShortNames(mParser.identifiableToStyleContext(identifiable));
-    bool useShortName = mParser.configAttribute<bool>(LangConfigParser::StyleAttribute::NAME_USE_SHORT,
-                                                      mParser.identifiableToStyleContext(identifiable));
+    bool useShortName = mParser.configAttribute<bool>(LangConfigParser::StyleAttribute::NAME_USE_SHORT, domainObject);
     string name;
 
-    if (useShortName && identifiable->shortName().size())
+    if (IdentifiablePtr identifiable = dynamic_pointer_cast<Identifiable>(domainObject))
     {
-        name = identifiable->shortName();
+        if (useShortName && identifiable->shortName().size())
+        {
+            name = identifiable->shortName();
+        }
+        else
+        {
+            name = identifiable->longName();
+        }
+        return styleToken(name, domainObject);
     }
-    else
-    {
-        name = identifiable->longName();
-    }
-    return styleToken(name, mParser.identifiableToStyleContext(identifiable));
+    throw runtime_error("Formatter::name(): domainObject " + domainObject->objectTypeName() + "is not an Identifiable!");
 }
 
 
@@ -50,11 +52,11 @@ string Formatter::type(TypePtr type, bool fullyQualified)
 
         if (PrimitivePtr primitive = dynamic_pointer_cast<Primitive>(resolvedType->primary()))
         {
-            token = styleToken(mParser.primitiveToLang(primitive), LangConfigParser::StyleContext::PRIMITIVE);
+            token = styleToken(mParser.primitiveToLang(primitive), primitive);
         }
         else if (dynamic_pointer_cast<Container>(resolvedType->primary()))
         {
-            token = styleToken(containerTypeToLang(resolvedType, fullyQualified), LangConfigParser::StyleContext::CONTAINER);
+            token = styleToken(containerTypeToLang(resolvedType, fullyQualified), resolvedType);
         }
         else
         {
@@ -80,12 +82,12 @@ string Formatter::doc(DocumentationPtr doc)
     {
         output << indent() << endl;
         output << indent() << "/**" << endl;
-        output << indent() << " * @brief " << wrapText(doc->brief(), LangConfigParser::StyleContext::DOC, " * ") << endl;
+        output << indent() << " * @brief " << wrapText(doc->brief(), doc, " * ") << endl;
 
         if (doc->more().size())
         {
             output << indent() << " *" << endl;
-            output << indent() << " * " + wrapText(doc->more(), LangConfigParser::StyleContext::DOC, " * ") << endl;
+            output << indent() << " * " + wrapText(doc->more(), doc, " * ") << endl;
         }
 
         output << indent() << " */" << endl;
@@ -101,9 +103,9 @@ void Formatter::beginIndent(uint32_t indent)
 }
 
 
-void Formatter::beginIndent(IdentifiablePtr identifiable)
+void Formatter::beginIndent(DomainObjectPtr styleContextObject)
 {
-    beginIndent(mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::INDENT, mParser.identifiableToStyleContext(identifiable)));
+    beginIndent(mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::INDENT, styleContextObject));
 }
 
 
@@ -126,15 +128,15 @@ string Formatter::indent()
 }
 
 
-string Formatter::styleToken(string input, LangConfigParser::StyleContext styleContext)
+string Formatter::styleToken(string input, DomainObjectPtr styleContextObject)
 {
     string output;
 
-    if (styleContext != LangConfigParser::StyleContext::PRIMITIVE &&
-        styleContext != LangConfigParser::StyleContext::CONTAINER)
+    if (styleContextObject->objectTypeName() != Primitive::TYPE_NAME &&
+        styleContextObject->objectTypeName() != Container::TYPE_NAME)
     {
-        LangConfigParser::NameStyle nameStyle = mParser.configNameStyle(styleContext);
-        string delimiter = mParser.configAttribute<string>(LangConfigParser::StyleAttribute::NAME_DELIMITER, styleContext);
+        LangConfigParser::NameStyle nameStyle = mParser.configNameStyle(styleContextObject);
+        string delimiter = mParser.configAttribute<string>(LangConfigParser::StyleAttribute::NAME_DELIMITER, styleContextObject);
 
         boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
         string::const_iterator start = input.begin();
@@ -182,27 +184,34 @@ string Formatter::styleToken(string input, LangConfigParser::StyleContext styleC
 }
 
 
-string Formatter::objectNamespace(IdentifiablePtr identifiable)
+string Formatter::objectNamespace(DomainObjectPtr domainObject)
 {
-    IdentifiablePtr tempPtr = identifiable->parentIdentifiable();
+    DomainObjectPtr tempPtr = domainObject->parentObject();
     string namespaceName;
-    string delimiter = "::";            ///< @todo: retrieve delimiter from parser
+    string delimiter = mParser.configAttribute<string>(LangConfigParser::StyleAttribute::NAME_DELIMITER, domainObject);
 
     while (tempPtr)
     {
-        if (tempPtr->longName() != "::")        ///< @todo: fix this root namespace mess
+        if (IdentifiablePtr identifiable = dynamic_pointer_cast<Identifiable>(domainObject))
         {
-            namespaceName = tempPtr->longName() + delimiter + namespaceName;
+            if (identifiable->longName() != "::")        ///< @todo: fix this root namespace mess
+            {
+                namespaceName = identifiable->longName() + delimiter + namespaceName;
+            }
+            tempPtr = tempPtr->parentObject();
         }
-        tempPtr = tempPtr->parentIdentifiable();
+        else
+        {
+            throw runtime_error("objectNamespace(): object " + domainObject->objectTypeName() + " is no Identifiable!\n");
+        }
     }
     return namespaceName;
 }
 
 
-string Formatter::wrapText(string text, LangConfigParser::StyleContext styleContext, string linePrefix)
+string Formatter::wrapText(string text, DomainObjectPtr styleContextObject, string linePrefix)
 {
-    uint wrapLength = mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::TEXT_WRAP, styleContext);
+    uint wrapLength = mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::TEXT_WRAP, styleContextObject);
 
     size_t pos = wrapLength;
     char whitespace = ' ';

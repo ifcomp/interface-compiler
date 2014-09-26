@@ -3,21 +3,16 @@
 
 #include <string>
 #include <memory>
+#include "model/domainObject.hpp"
 #include "model/documentation.hpp"
 
 namespace Api { namespace Model {
 
-class Identifiable;
-typedef std::shared_ptr<Identifiable> IdentifiablePtr;
-
-class Identifiable
+class Identifiable : public DomainObject
 {
 public:
-    Identifiable(IdentifiablePtr parentIdentifiable = nullptr);
+    Identifiable(DomainObjectPtr parentObject = nullptr);
     virtual ~Identifiable();
-
-    IdentifiablePtr parentIdentifiable();
-    void setParentIdentifiable(IdentifiablePtr parentIdentifiable);
 
     std::string longName();
     void setLongName(std::string longName);
@@ -29,12 +24,12 @@ public:
     void setDoc(DocumentationPtr doc);
 
 private:
-    IdentifiablePtr mParentIdentifiable;
     std::string mLongName;
     std::string mShortName;
     DocumentationPtr mDoc;
 };
 
+typedef std::shared_ptr<Identifiable> IdentifiablePtr;
 
 } } // namespace Api::Model
 

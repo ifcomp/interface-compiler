@@ -2,23 +2,13 @@
 
 using namespace Api::Model;
 
-Identifiable::Identifiable(IdentifiablePtr parentIdentifiable)
-    : mParentIdentifiable(parentIdentifiable)
+Identifiable::Identifiable(DomainObjectPtr parentObject)
+    : DomainObject(parentObject)
 {
 }
 
 Identifiable::~Identifiable()
 {
-}
-
-IdentifiablePtr Identifiable::parentIdentifiable()
-{
-    return mParentIdentifiable;
-}
-
-void Identifiable::setParentIdentifiable(IdentifiablePtr parentIdentifiable)
-{
-    mParentIdentifiable = parentIdentifiable;
 }
 
 std::string Identifiable::longName()

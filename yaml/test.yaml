@@ -57,7 +57,8 @@
       operations:
         - name: SetValue
           params:
-            - { name: Key, type: Everbase::String }
+            - { doc: { brief: bla, more: blubb },
+                name: Key, type: Everbase::String }
             - { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
         - name: GetValue
           return: { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }

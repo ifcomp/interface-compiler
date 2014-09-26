@@ -9,6 +9,8 @@ namespace Api { namespace Model {
 class Container : public NamespaceMember
 {
 public:
+    static constexpr auto TYPE_NAME = "container";
+
     enum class ContainerType
     {
         UNDEFINED = -1,
@@ -29,6 +31,7 @@ private:
 public:
     Container();
     virtual ~Container();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     /**
      * @brief Get ContainerType

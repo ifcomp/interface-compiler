@@ -12,14 +12,18 @@ namespace Api { namespace Model {
 class Enum : public NamespaceMember
 {
 public:
-    Enum();
-    virtual ~Enum();
-
-    void addValue(ValuePtr value);
-    const std::map<std::string, ValuePtr>& values();
+    static constexpr auto TYPE_NAME = "enum";
 
 private:
     std::map<std::string, ValuePtr> mValues;
+
+public:
+    Enum();
+    virtual ~Enum();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
+
+    void addValue(ValuePtr value);
+    const std::map<std::string, ValuePtr>& values();
 };
 
 typedef std::shared_ptr<Enum> EnumPtr;

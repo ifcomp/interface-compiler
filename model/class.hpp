@@ -6,20 +6,25 @@
 #include "model/operation.hpp"
 #include "model/event.hpp"
 #include "model/type.hpp"
+#include <string>
 
 namespace Api { namespace Model {
 
 class Class : public NamespaceMember
 {
 public:
-    Class();
-    virtual ~Class();
+    static constexpr auto TYPE_NAME = "class";
 
     enum class ClassType
     {
         VALUE,
         ABSTRACT
     };
+
+public:
+    Class();
+    virtual ~Class();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     ClassType type();
     void setType(ClassType type);

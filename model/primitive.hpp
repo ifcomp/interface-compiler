@@ -10,6 +10,8 @@ class Primitive : public NamespaceMember
 {
 public:
 
+    static constexpr auto TYPE_NAME = "primitive";
+
     enum class PrimitiveType
     {
         UNDEFINED = -1,
@@ -37,6 +39,7 @@ private:
 public:
     Primitive();
     virtual ~Primitive();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     /**
      * @brief Get PrimitiveType

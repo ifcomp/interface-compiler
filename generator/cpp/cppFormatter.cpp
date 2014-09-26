@@ -34,7 +34,7 @@ string CppFormatter::operation(Api::Model::OperationPtr operation)
 
     output += doc(operation->doc());
     output += indent() + result(operation->result(), true) + " ";
-    output += name(operation->parentIdentifiable()) + delimiter + name(operation) + "(";
+    output += name(operation->parentObject()) + delimiter + name(operation) + "(";
 
     for (auto paramPair : operation->params())
     {

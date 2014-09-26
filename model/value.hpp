@@ -9,14 +9,18 @@ namespace Api { namespace Model {
 class Value : public Identifiable
 {
 public:
-    Value();
-    virtual ~Value();
-
-    int32_t value();
-    void setValue(int32_t value);
+    static constexpr auto TYPE_NAME = "value";
 
 private:
     int32_t mValue;
+
+public:
+    Value();
+    virtual ~Value();
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
+
+    int32_t value();
+    void setValue(int32_t value);
 };
 
 typedef std::shared_ptr<Value> ValuePtr;

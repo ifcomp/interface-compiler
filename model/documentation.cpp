@@ -27,5 +27,20 @@ std::string Documentation::more()
 
 void Documentation::setMore(std::string more)
 {
-	mMore = more;
+    mMore = more;
+}
+
+const std::vector<std::list<std::string> > &Documentation::docEntries()
+{
+
+}
+
+void Documentation::addDocEntry(std::string doxygenKey, std::list<std::string> elements)
+{
+
+}
+
+void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, std::string description)
+{
+
 }

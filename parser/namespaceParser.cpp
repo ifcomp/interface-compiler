@@ -97,7 +97,7 @@ void NamespaceParser::parseNamespaceMembers(const YAML::Node &node, NamespacePtr
             {
                 MemberFunc func = mParserMethods[nodeType];
                 NamespaceMemberPtr member = (this->*func)(sequenceNode);
-                member->setParentIdentifiable(rootNamespace);
+                member->setParentObject(rootNamespace);
                 rootNamespace->addMember(member);
             }
             else
@@ -168,7 +168,7 @@ NamespaceMemberPtr NamespaceParser::parseClass(const YAML::Node &node)
             for (auto operationNode : node[KEY_OPERATIONS])
             {
                 OperationPtr newOperation = parseOperation(operationNode);
-                newOperation->setParentIdentifiable(newClass);
+                newOperation->setParentObject(newClass);
                 newClass->addOperation(newOperation);
             }
         }
@@ -178,7 +178,7 @@ NamespaceMemberPtr NamespaceParser::parseClass(const YAML::Node &node)
             for (auto eventNode : node[KEY_EVENTS])
             {
                 EventPtr newEvent = parseEvent(eventNode);
-                newEvent->setParentIdentifiable(newClass);
+                newEvent->setParentObject(newClass);
                 newClass->addEvent(newEvent);
             }
         }
@@ -239,7 +239,7 @@ NamespaceMemberPtr NamespaceParser::parseEnum(const YAML::Node &node)
                 for (auto enumNode : node[KEY_VALUES])
                 {
                     ValuePtr newValue = parseValue(enumNode);
-                    newValue->setParentIdentifiable(newEnum);
+                    newValue->setParentObject(newEnum);
                     newEnum->addValue(newValue);
                 }
             }
@@ -272,7 +272,7 @@ NamespaceMemberPtr NamespaceParser::parseStruct(const YAML::Node &node)
                 for (auto fieldNode : node[KEY_FIELDS])
                 {
                     ParameterPtr newField = parseParameter(fieldNode);
-                    newField->setParentIdentifiable(newStruct);
+                    newField->setParentObject(newStruct);
                     newStruct->addField(newField);
                 }
             }
@@ -340,7 +340,7 @@ OperationPtr NamespaceParser::parseOperation(const YAML::Node &node)
                 for (auto param : node[KEY_PARAMS])
                 {
                     ParameterPtr newParam = parseParameter(param);
-                    newParam->setParentIdentifiable(newOperation);
+                    newParam->setParentObject(newOperation);
                     newOperation->addParam(newParam);
                 }
             }
@@ -353,7 +353,7 @@ OperationPtr NamespaceParser::parseOperation(const YAML::Node &node)
         if (checkNode(node, KEY_RESULT, YAML::NodeType::Map))
         {
             ParameterPtr newResult = parseParameter(node[KEY_RESULT]);
-            newResult->setParentIdentifiable(newOperation);
+            newResult->setParentObject(newOperation);
             newOperation->setResult(newResult);
         }
     }
@@ -382,7 +382,7 @@ EventPtr NamespaceParser::parseEvent(const YAML::Node &node)
             for (auto valueNode : node[KEY_VALUES])
             {
                 ParameterPtr newParam = parseParameter(valueNode);
-                newParam->setParentIdentifiable(newEvent);
+                newParam->setParentObject(newEvent);
                 newEvent->addResult(newParam);
             }
         }

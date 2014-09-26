@@ -1,13 +1,11 @@
 #ifndef TYPE_HPP
 #define TYPE_HPP
 
-#include <memory>
-#include <vector>
-#include "model/namespace_member.hpp"
+#include "model/domainObject.hpp"
 
 namespace Api { namespace Model {
 
-class Type
+class Type : public DomainObject
 {
 public:
     Type();
