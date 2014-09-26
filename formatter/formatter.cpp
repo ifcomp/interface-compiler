@@ -4,6 +4,8 @@
 #include "model/container.hpp"
 #include "model/primitive.hpp"
 #include "parser/langConfigParser.hpp"
+#include "formatter/stream/basicIndent.hpp"
+#include "formatter/stream/basicWrap.hpp"
 
 #include <boost/regex.hpp>
 #include <sstream>
@@ -11,40 +13,36 @@
 using namespace Api::Gen;
 using namespace Api::Model;
 using namespace Api::Parser;
+using namespace Api::Formatter::Stream;
 using namespace std;
 
 
 Formatter::Formatter(std::string configFilename)
     : mParser(configFilename)
-    , mCurrentIndent(0)
 {
     cout << "starting to parse configfile " << configFilename << endl;
     mParser.parseTypeMap();
 }
 
 
-string Formatter::name(DomainObjectPtr domainObject)
+void Formatter::name(ostream &stream, IdentifiablePtr identifiable)
 {
-    bool useShortName = mParser.configAttribute<bool>(LangConfigParser::StyleAttribute::NAME_USE_SHORT, domainObject);
+    bool useShortName = mParser.configAttribute<bool>(LangConfigParser::StyleAttribute::NAME_USE_SHORT, identifiable);
     string name;
 
-    if (IdentifiablePtr identifiable = dynamic_pointer_cast<Identifiable>(domainObject))
+    if (useShortName && identifiable->shortName().size())
     {
-        if (useShortName && identifiable->shortName().size())
-        {
-            name = identifiable->shortName();
-        }
-        else
-        {
-            name = identifiable->longName();
-        }
-        return styleToken(name, domainObject);
+        name = identifiable->shortName();
     }
-    throw runtime_error("Formatter::name(): domainObject " + domainObject->objectTypeName() + "is not an Identifiable!");
+    else
+    {
+        name = identifiable->longName();
+    }
+    styleToken(stream, name, identifiable);
 }
 
 
-string Formatter::type(TypePtr type, bool fullyQualified)
+void Formatter::type(ostream &stream, TypePtr type, bool fullyQualified)
 {
     if (ResolvedTypePtr resolvedType = dynamic_pointer_cast<ResolvedType>(type))
     {
@@ -52,86 +50,53 @@ string Formatter::type(TypePtr type, bool fullyQualified)
 
         if (PrimitivePtr primitive = dynamic_pointer_cast<Primitive>(resolvedType->primary()))
         {
-            token = styleToken(mParser.primitiveToLang(primitive), primitive);
+            styleToken(stream, mParser.primitiveToLang(primitive), primitive);
         }
         else if (dynamic_pointer_cast<Container>(resolvedType->primary()))
         {
-            token = styleToken(containerTypeToLang(resolvedType, fullyQualified), resolvedType);
+            styleToken(stream, containerTypeToLang(resolvedType, fullyQualified), resolvedType);
         }
         else
         {
-            token = name(resolvedType->primary());
-
             if (fullyQualified)
             {
-                token = objectNamespace(resolvedType->primary()) + token;
+                objectNamespace(stream, resolvedType->primary());
+            }
+            name(stream, resolvedType->primary());
+        }
+    }
+    else
+    {
+        throw runtime_error("Formatter::type() : type object is not of ResolvedType (objectTypeName = " + type->objectTypeName() + ")\n");
+    }
+}
+
+
+void Formatter::doc(ostream &stream, DocumentationPtr doc)
+{
+    if (doc)
+    {
+        stream << endl << "/**" << endl;
+
+        {
+            indent i(stream, " * ");
+            wrap w(stream, 80);
+
+            stream << "@brief " << doc->brief() << endl;
+
+            if (doc->more().size())
+            {
+                stream << doc->more() << endl;
             }
         }
 
-        return token;
+        stream << " */" << endl;
     }
-    throw runtime_error("Formatter::type() : type object is not of ResolvedType\n");
 }
 
 
-string Formatter::doc(DocumentationPtr doc)
+void Formatter::styleToken(ostream &stream, string input, DomainObjectPtr styleContextObject)
 {
-    stringstream output;
-
-    if (doc)
-    {
-        output << indent() << endl;
-        output << indent() << "/**" << endl;
-        output << indent() << " * @brief " << wrapText(doc->brief(), doc, " * ") << endl;
-
-        if (doc->more().size())
-        {
-            output << indent() << " *" << endl;
-            output << indent() << " * " + wrapText(doc->more(), doc, " * ") << endl;
-        }
-
-        output << indent() << " */" << endl;
-    }
-    return output.str();
-}
-
-
-void Formatter::beginIndent(uint32_t indent)
-{
-    mIndentStack.push(indent);
-    mCurrentIndent += indent;
-}
-
-
-void Formatter::beginIndent(DomainObjectPtr styleContextObject)
-{
-    beginIndent(mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::INDENT, styleContextObject));
-}
-
-
-void Formatter::endIndent()
-{
-    mCurrentIndent -= mIndentStack.top();
-    mIndentStack.pop();
-}
-
-
-uint32_t Formatter::indentCount()
-{
-    return mCurrentIndent;
-}
-
-
-string Formatter::indent()
-{
-    return string(mCurrentIndent, ' ');
-}
-
-
-string Formatter::styleToken(string input, DomainObjectPtr styleContextObject)
-{
-    string output;
-
     if (styleContextObject->objectTypeName() != Primitive::TYPE_NAME &&
         styleContextObject->objectTypeName() != Container::TYPE_NAME)
     {
@@ -168,7 +133,7 @@ string Formatter::styleToken(string input, DomainObjectPtr styleContextObject)
                 temp = delimiter + temp;
             }
 
-            output += temp;
+            stream << temp;
             ++elementCount;
 
             // update search position:
@@ -177,14 +142,12 @@ string Formatter::styleToken(string input, DomainObjectPtr styleContextObject)
     }
     else
     {
-        output = input;
+        stream << input;
     }
-
-    return output;
 }
 
 
-string Formatter::objectNamespace(DomainObjectPtr domainObject)
+void Formatter::objectNamespace(ostream &stream, DomainObjectPtr domainObject)
 {
     DomainObjectPtr tempPtr = domainObject->parentObject();
     string namespaceName;
@@ -205,33 +168,33 @@ string Formatter::objectNamespace(DomainObjectPtr domainObject)
             throw runtime_error("objectNamespace(): object " + domainObject->objectTypeName() + " is no Identifiable!\n");
         }
     }
-    return namespaceName;
+    stream << namespaceName;
 }
 
 
-string Formatter::wrapText(string text, DomainObjectPtr styleContextObject, string linePrefix)
-{
-    uint wrapLength = mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::TEXT_WRAP, styleContextObject);
+//string Formatter::wrapText(string text, DomainObjectPtr styleContextObject, string linePrefix)
+//{
+//    uint wrapLength = mParser.configAttribute<uint>(LangConfigParser::StyleAttribute::TEXT_WRAP, styleContextObject);
 
-    size_t pos = wrapLength;
-    char whitespace = ' ';
+//    size_t pos = wrapLength;
+//    char whitespace = ' ';
 
-    while (pos < text.size())
-    {
-        size_t foundPos = text.rfind(whitespace, pos);
+//    while (pos < text.size())
+//    {
+//        size_t foundPos = text.rfind(whitespace, pos);
 
-        if (foundPos != string::npos)
-        {
-            text.replace(foundPos, 1, "\n" + indent() + linePrefix);
-            pos = foundPos + wrapLength + 1;
-        }
-        else
-        {
-            break;
-        }
-    }
-    return text;
-}
+//        if (foundPos != string::npos)
+//        {
+//            text.replace(foundPos, 1, "\n" + indent() + linePrefix);
+//            pos = foundPos + wrapLength + 1;
+//        }
+//        else
+//        {
+//            break;
+//        }
+//    }
+//    return text;
+//}
 
 
 string Formatter::containerTypeToLang(Model::TypePtr type, bool fullyQualified)
@@ -260,14 +223,15 @@ string Formatter::containerTypeToLang(Model::TypePtr type, bool fullyQualified)
                 }
                 else
                 {
+                    stringstream tempStream;
+
                     if (fullyQualified)
                     {
-                        params.push_back(objectNamespace(param) + name(param));
+                        objectNamespace(tempStream, param);
                     }
-                    else
-                    {
-                        params.push_back(name(param));
-                    }
+
+                    name(tempStream, param);
+                    params.push_back(tempStream.str());
                 }
             }
 

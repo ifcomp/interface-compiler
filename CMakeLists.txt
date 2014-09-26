@@ -17,7 +17,9 @@ if(Boost_FOUND)
     include_directories(${PROJECT_SOURCE_DIR})
     add_subdirectory("${PROJECT_SOURCE_DIR}/model")
     add_subdirectory("${PROJECT_SOURCE_DIR}/parser")
-    add_subdirectory("${PROJECT_SOURCE_DIR}/generator")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/transformer")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/formatter")
+    add_subdirectory("${PROJECT_SOURCE_DIR}/compiler")
 
     add_executable(${PROJECT_NAME} ${HDR_LIST} ${SRC_LIST})
 

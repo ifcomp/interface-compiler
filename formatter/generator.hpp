@@ -1,7 +1,7 @@
 #ifndef GENERATOR_HPP
 #define GENERATOR_HPP
 
-#include "generator/formatter.hpp"
+#include "formatter/formatter.hpp"
 #include "model/namespace.hpp"
 #include "model/resolvedType.hpp"
 

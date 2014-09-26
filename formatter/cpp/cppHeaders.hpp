@@ -1,7 +1,7 @@
 #ifndef CPPHEADERS_HPP
 #define CPPHEADERS_HPP
 
-#include "generator/generator.hpp"
+#include "formatter/generator.hpp"
 
 namespace Api { namespace Gen {
 

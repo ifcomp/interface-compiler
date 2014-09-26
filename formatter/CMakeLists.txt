@@ -1,3 +1,4 @@
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/stream")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/cpp")
 
 set(SRC_LIST

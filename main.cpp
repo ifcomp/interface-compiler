@@ -1,6 +1,6 @@
 #include "model/namespace.hpp"
 #include "parser/namespaceParser.hpp"
-#include "generator/cpp/cppHeaders.hpp"
+#include "formatter/cpp/cppHeaders.hpp"
 
 using namespace std;
 using namespace Api;

@@ -1,7 +1,8 @@
 #ifndef FORMATTER_HPP
 #define FORMATTER_HPP
 
-#include <stack>
+#include <ostream>
+
 #include "model/identifiable.hpp"
 #include "model/namespace.hpp"
 #include "model/resolvedType.hpp"
@@ -20,19 +21,6 @@ namespace Api { namespace Gen {
  */
 class Formatter
 {
-//public:
-//    static const char* KEY_TYPEMAP;
-//    static const char* KEY_TYPE_PRIMITIVES;
-//    static const char* KEY_TYPE_CONTAINERS;
-
-//    static const char* KEY_STYLE;
-//    static const char* KEY_STYLE_CONTEXT;
-//    static const char* KEY_STYLE_NAMESTYLE;
-//    static const char* KEY_STYLE_NAMEDELIMITER;
-//    static const char* KEY_STYLE_NAMEUSESHORT;
-
-//    static const char* styleContextKeys[];
-
 public:
     /**
      * @brief Format a name token without indentation.
@@ -40,7 +28,7 @@ public:
      * @param identifiable Pointer to Identifiable object as source of name
      * @return Formatted name string
      */
-    virtual std::string name(DomainObjectPtr domainObject);
+    virtual void name(std::ostream &stream, Model::IdentifiablePtr identifiable);
 
     /**
      * @brief Format a type token without indentation.
@@ -50,14 +38,14 @@ public:
      * @return Formatted type string
      * @throw std::runtime_error in case of wrong type
      */
-    virtual std::string type(Model::TypePtr type, bool fullyQualified = false);
+    virtual void type(std::ostream &stream, Model::TypePtr type, bool fullyQualified = false);
 
     /**
      * @brief Format indented doxygen documentation entry including parameter documentation.
      * @param doc Pointer to Documentation object
      * @return Formatted documentation for doc
      */
-    virtual std::string doc(Model::DocumentationPtr doc);
+    virtual void doc(std::ostream &stream, Model::DocumentationPtr doc);
 
     /**
      * @brief Format parameter in a language-specific way without indentation.
@@ -66,7 +54,7 @@ public:
      * @param param Pointer to Parameter object
      * @return Formatted parameter
      */
-    virtual std::string param(Model::ParameterPtr param) = 0;
+    virtual void param(std::ostream &stream, Model::ParameterPtr param) = 0;
 
     /**
      * @brief Format result in a language-specific way without indentation.
@@ -75,7 +63,7 @@ public:
      * @param fullyQualified Add namespace if true
      * @return Formatted result string
      */
-    virtual std::string result(Model::ParameterPtr param, bool fullyQualified = false) = 0;
+    virtual void result(std::ostream &stream, Model::ParameterPtr param, bool fullyQualified = false) = 0;
 
     /**
      * @brief Format operation in a language-specific way including indentation.
@@ -83,8 +71,7 @@ public:
      * @param operation Pointer to Operation object
      * @return Formatted operation including documentation, result, function name & params.
      */
-    virtual std::string operation(Model::OperationPtr operation) = 0;
-
+    virtual void operation(std::ostream &stream, Model::OperationPtr operation) = 0;
 
     /**
      * @brief Format event in a language-specific way including indentation.
@@ -92,36 +79,7 @@ public:
      * @param event Pointer to Event object
      * @return Formatted event string
      */
-    virtual std::string event(Model::EventPtr event) = 0;
-
-    /**
-     * @brief Start section with incremented indent.
-     * @param indent Number of additional indent whitespaces
-     */
-    void beginIndent(uint32_t indentCount);
-
-    /**
-     * @brief Start section with an additional indent as defined in identifiable's config.
-     * @param identifiable Pointer to Identifiable to determine config section
-     */
-    void beginIndent(DomainObjectPtr styleContextObject);
-
-    /**
-     * @brief Decrement indentation by last incremented step.
-     */
-    void endIndent();
-
-    /**
-     * @brief Get current indent.
-     * @return Number of indentation chars
-     */
-    uint32_t indentCount();
-
-    /**
-     * @brief Return mCurrentIndent whitespaces
-     * @return Whitespace string
-     */
-    std::string indent();
+    virtual void event(std::ostream &stream, Model::EventPtr event) = 0;
 
     /**
      * @brief Resolve Parameter to language-specific output string
@@ -139,30 +97,17 @@ protected:
      * @param styleContext Configuration context from which the config will be fetched
      * @return Styled output string
      */
-    virtual std::string styleToken(std::string name, DomainObjectPtr styleContextObject = nullptr);
+    virtual void styleToken(std::ostream &stream, std::string name, DomainObjectPtr styleContextObject = nullptr);
 
     /**
      * @brief Resolve namespace of identifiable object by traversing parent pointers.
      * @param identifiable Pointer to Identifiable object
      * @return Namespace string
      */
-    virtual std::string objectNamespace(DomainObjectPtr identifiable);
-
-    /**
-     * @brief Add newlines to text as defined in language-specific config
-     * @param text Text
-     * @param styleContext Configuration context from which the config will be fetched
-     * @return Wrapped text
-     */
-    std::string wrapText(std::string text, DomainObjectPtr styleContextObject = nullptr,
-                         std::string linePrefix = "");
+    virtual void objectNamespace(std::ostream &stream, DomainObjectPtr identifiable);
 
 protected:
     Parser::LangConfigParser mParser;
-
-private:
-    uint32_t mCurrentIndent;
-    std::stack<uint32_t> mIndentStack;
 };
 
 typedef std::shared_ptr<Formatter>  FormatterPtr;
