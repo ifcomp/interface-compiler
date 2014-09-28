@@ -188,6 +188,12 @@ EverbaseInterfaceCompiler_BINARY_DIR:STATIC=/home/niklas/dev/everbase/orgs/everb
 //Value Computed by CMake
 EverbaseInterfaceCompiler_SOURCE_DIR:STATIC=/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop
 
+//The directory containing a CMake configuration file for LibYaml.
+LibYaml_DIR:PATH=LibYaml_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for Yaml.
+Yaml_DIR:PATH=Yaml_DIR-NOTFOUND
+
 
 ########################
 # INTERNAL cache entries

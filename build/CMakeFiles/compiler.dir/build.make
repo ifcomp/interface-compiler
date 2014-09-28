@@ -164,9 +164,101 @@ CMakeFiles/compiler.dir/main.cpp.o.provides: CMakeFiles/compiler.dir/main.cpp.o.
 
 CMakeFiles/compiler.dir/main.cpp.o.provides.build: CMakeFiles/compiler.dir/main.cpp.o
 
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o: ../Components/YamlReader.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_6)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Components/YamlReader.cpp.o"
+	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Components/YamlReader.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/YamlReader.cpp
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compiler.dir/Components/YamlReader.cpp.i"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/YamlReader.cpp > CMakeFiles/compiler.dir/Components/YamlReader.cpp.i
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Components/YamlReader.cpp.s"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/YamlReader.cpp -o CMakeFiles/compiler.dir/Components/YamlReader.cpp.s
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.requires:
+.PHONY : CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.requires
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.provides: CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.provides.build
+.PHONY : CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.provides
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.provides.build: CMakeFiles/compiler.dir/Components/YamlReader.cpp.o
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: ../Components/LangConfigReader.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o"
+	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/LangConfigReader.cpp
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.i"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/LangConfigReader.cpp > CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.i
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.s"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/LangConfigReader.cpp -o CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.s
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.requires:
+.PHONY : CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.requires
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.provides: CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.provides.build
+.PHONY : CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.provides
+
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.provides.build: CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: ../Components/NamespaceReader.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_8)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o"
+	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/NamespaceReader.cpp
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.i"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/NamespaceReader.cpp > CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.i
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.s"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/NamespaceReader.cpp -o CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.s
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.requires:
+.PHONY : CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.requires
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.provides: CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.provides.build
+.PHONY : CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.provides
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.provides.build: CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: CMakeFiles/compiler.dir/flags.make
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: ../Components/StandardParser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_9)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Components/StandardParser.cpp.o"
+	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Components/StandardParser.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/StandardParser.cpp
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/compiler.dir/Components/StandardParser.cpp.i"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/StandardParser.cpp > CMakeFiles/compiler.dir/Components/StandardParser.cpp.i
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/compiler.dir/Components/StandardParser.cpp.s"
+	/usr/bin/clang++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/StandardParser.cpp -o CMakeFiles/compiler.dir/Components/StandardParser.cpp.s
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.requires:
+.PHONY : CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.requires
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.provides: CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.provides.build
+.PHONY : CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.provides
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.provides.build: CMakeFiles/compiler.dir/Components/StandardParser.cpp.o
+
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: ../Components/TestFormatter.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/TestFormatter.cpp
 
@@ -189,7 +281,7 @@ CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o.provides.build: CMakeFile
 
 CMakeFiles/compiler.dir/Model/Class.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Class.cpp.o: ../Model/Class.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Class.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Class.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Class.cpp
 
@@ -212,7 +304,7 @@ CMakeFiles/compiler.dir/Model/Class.cpp.o.provides.build: CMakeFiles/compiler.di
 
 CMakeFiles/compiler.dir/Model/Constant.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Constant.cpp.o: ../Model/Constant.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Constant.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Constant.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Constant.cpp
 
@@ -235,7 +327,7 @@ CMakeFiles/compiler.dir/Model/Constant.cpp.o.provides.build: CMakeFiles/compiler
 
 CMakeFiles/compiler.dir/Model/Container.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Container.cpp.o: ../Model/Container.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Container.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Container.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Container.cpp
 
@@ -258,7 +350,7 @@ CMakeFiles/compiler.dir/Model/Container.cpp.o.provides.build: CMakeFiles/compile
 
 CMakeFiles/compiler.dir/Model/Documentation.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Documentation.cpp.o: ../Model/Documentation.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_14)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Documentation.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Documentation.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Documentation.cpp
 
@@ -281,7 +373,7 @@ CMakeFiles/compiler.dir/Model/Documentation.cpp.o.provides.build: CMakeFiles/com
 
 CMakeFiles/compiler.dir/Model/DomainObject.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/DomainObject.cpp.o: ../Model/DomainObject.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_11)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_15)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/DomainObject.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/DomainObject.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/DomainObject.cpp
 
@@ -304,7 +396,7 @@ CMakeFiles/compiler.dir/Model/DomainObject.cpp.o.provides.build: CMakeFiles/comp
 
 CMakeFiles/compiler.dir/Model/Enum.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Enum.cpp.o: ../Model/Enum.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_12)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_16)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Enum.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Enum.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Enum.cpp
 
@@ -327,7 +419,7 @@ CMakeFiles/compiler.dir/Model/Enum.cpp.o.provides.build: CMakeFiles/compiler.dir
 
 CMakeFiles/compiler.dir/Model/Event.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Event.cpp.o: ../Model/Event.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_13)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_17)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Event.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Event.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Event.cpp
 
@@ -350,7 +442,7 @@ CMakeFiles/compiler.dir/Model/Event.cpp.o.provides.build: CMakeFiles/compiler.di
 
 CMakeFiles/compiler.dir/Model/Identifiable.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Identifiable.cpp.o: ../Model/Identifiable.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_14)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_18)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Identifiable.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Identifiable.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Identifiable.cpp
 
@@ -373,7 +465,7 @@ CMakeFiles/compiler.dir/Model/Identifiable.cpp.o.provides.build: CMakeFiles/comp
 
 CMakeFiles/compiler.dir/Model/Namespace.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Namespace.cpp.o: ../Model/Namespace.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_15)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_19)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Namespace.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Namespace.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Namespace.cpp
 
@@ -396,7 +488,7 @@ CMakeFiles/compiler.dir/Model/Namespace.cpp.o.provides.build: CMakeFiles/compile
 
 CMakeFiles/compiler.dir/Model/NamespaceMember.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/NamespaceMember.cpp.o: ../Model/NamespaceMember.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_16)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_20)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/NamespaceMember.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/NamespaceMember.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/NamespaceMember.cpp
 
@@ -419,7 +511,7 @@ CMakeFiles/compiler.dir/Model/NamespaceMember.cpp.o.provides.build: CMakeFiles/c
 
 CMakeFiles/compiler.dir/Model/Operation.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Operation.cpp.o: ../Model/Operation.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_17)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_21)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Operation.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Operation.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Operation.cpp
 
@@ -442,7 +534,7 @@ CMakeFiles/compiler.dir/Model/Operation.cpp.o.provides.build: CMakeFiles/compile
 
 CMakeFiles/compiler.dir/Model/Parameter.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Parameter.cpp.o: ../Model/Parameter.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_18)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_22)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Parameter.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Parameter.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Parameter.cpp
 
@@ -465,7 +557,7 @@ CMakeFiles/compiler.dir/Model/Parameter.cpp.o.provides.build: CMakeFiles/compile
 
 CMakeFiles/compiler.dir/Model/Primitive.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Primitive.cpp.o: ../Model/Primitive.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_19)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_23)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Primitive.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Primitive.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Primitive.cpp
 
@@ -488,7 +580,7 @@ CMakeFiles/compiler.dir/Model/Primitive.cpp.o.provides.build: CMakeFiles/compile
 
 CMakeFiles/compiler.dir/Model/Struct.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Struct.cpp.o: ../Model/Struct.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_20)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_24)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Struct.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Struct.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Struct.cpp
 
@@ -511,7 +603,7 @@ CMakeFiles/compiler.dir/Model/Struct.cpp.o.provides.build: CMakeFiles/compiler.d
 
 CMakeFiles/compiler.dir/Model/TypeBase.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/TypeBase.cpp.o: ../Model/TypeBase.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_21)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_25)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/TypeBase.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/TypeBase.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/TypeBase.cpp
 
@@ -534,7 +626,7 @@ CMakeFiles/compiler.dir/Model/TypeBase.cpp.o.provides.build: CMakeFiles/compiler
 
 CMakeFiles/compiler.dir/Model/UnresolvedType.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/UnresolvedType.cpp.o: ../Model/UnresolvedType.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_22)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_26)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/UnresolvedType.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/UnresolvedType.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/UnresolvedType.cpp
 
@@ -557,7 +649,7 @@ CMakeFiles/compiler.dir/Model/UnresolvedType.cpp.o.provides.build: CMakeFiles/co
 
 CMakeFiles/compiler.dir/Model/Type.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Type.cpp.o: ../Model/Type.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_23)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_27)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Type.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Type.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Type.cpp
 
@@ -580,7 +672,7 @@ CMakeFiles/compiler.dir/Model/Type.cpp.o.provides.build: CMakeFiles/compiler.dir
 
 CMakeFiles/compiler.dir/Model/Value.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Value.cpp.o: ../Model/Value.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_24)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_28)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Value.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Value.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Value.cpp
 
@@ -603,7 +695,7 @@ CMakeFiles/compiler.dir/Model/Value.cpp.o.provides.build: CMakeFiles/compiler.di
 
 CMakeFiles/compiler.dir/Model/Root.cpp.o: CMakeFiles/compiler.dir/flags.make
 CMakeFiles/compiler.dir/Model/Root.cpp.o: ../Model/Root.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_25)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles $(CMAKE_PROGRESS_29)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/compiler.dir/Model/Root.cpp.o"
 	/usr/bin/clang++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/compiler.dir/Model/Root.cpp.o -c /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Root.cpp
 
@@ -631,6 +723,10 @@ compiler_OBJECTS = \
 "CMakeFiles/compiler.dir/Transformer.cpp.o" \
 "CMakeFiles/compiler.dir/Formatter.cpp.o" \
 "CMakeFiles/compiler.dir/main.cpp.o" \
+"CMakeFiles/compiler.dir/Components/YamlReader.cpp.o" \
+"CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o" \
+"CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o" \
+"CMakeFiles/compiler.dir/Components/StandardParser.cpp.o" \
 "CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o" \
 "CMakeFiles/compiler.dir/Model/Class.cpp.o" \
 "CMakeFiles/compiler.dir/Model/Constant.cpp.o" \
@@ -660,6 +756,10 @@ compiler: CMakeFiles/compiler.dir/Parser.cpp.o
 compiler: CMakeFiles/compiler.dir/Transformer.cpp.o
 compiler: CMakeFiles/compiler.dir/Formatter.cpp.o
 compiler: CMakeFiles/compiler.dir/main.cpp.o
+compiler: CMakeFiles/compiler.dir/Components/YamlReader.cpp.o
+compiler: CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o
+compiler: CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o
+compiler: CMakeFiles/compiler.dir/Components/StandardParser.cpp.o
 compiler: CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o
 compiler: CMakeFiles/compiler.dir/Model/Class.cpp.o
 compiler: CMakeFiles/compiler.dir/Model/Constant.cpp.o
@@ -697,6 +797,10 @@ CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Parser.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Transformer.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Formatter.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/main.cpp.o.requires
+CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Components/YamlReader.cpp.o.requires
+CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o.requires
+CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o.requires
+CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Components/StandardParser.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Model/Class.cpp.o.requires
 CMakeFiles/compiler.dir/requires: CMakeFiles/compiler.dir/Model/Constant.cpp.o.requires

@@ -34,6 +34,76 @@ CMakeFiles/compiler.dir/Compiler.cpp.o
  /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Parser.hpp
  /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/StreamFilter.hpp
  /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Transformer.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o
+ .././Components/LangConfigReader.hpp
+ .././Components/YamlReader.hpp
+ .././Model/Class.hpp
+ .././Model/Constant.hpp
+ .././Model/Container.hpp
+ .././Model/Documentation.hpp
+ .././Model/DomainObject.hpp
+ .././Model/Enum.hpp
+ .././Model/Event.hpp
+ .././Model/Identifiable.hpp
+ .././Model/Namespace.hpp
+ .././Model/NamespaceMember.hpp
+ .././Model/Operation.hpp
+ .././Model/Parameter.hpp
+ .././Model/Primitive.hpp
+ .././Model/Struct.hpp
+ .././Model/Type.hpp
+ .././Model/TypeBase.hpp
+ .././Model/Value.hpp
+ /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/LangConfigReader.cpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o
+ .././Components/NamespaceReader.hpp
+ .././Components/YamlReader.hpp
+ .././Model/Class.hpp
+ .././Model/Constant.hpp
+ .././Model/Container.hpp
+ .././Model/Documentation.hpp
+ .././Model/DomainObject.hpp
+ .././Model/Enum.hpp
+ .././Model/Event.hpp
+ .././Model/Identifiable.hpp
+ .././Model/Namespace.hpp
+ .././Model/NamespaceMember.hpp
+ .././Model/Operation.hpp
+ .././Model/Parameter.hpp
+ .././Model/Primitive.hpp
+ .././Model/Struct.hpp
+ .././Model/Type.hpp
+ .././Model/TypeBase.hpp
+ .././Model/UnresolvedType.hpp
+ .././Model/Value.hpp
+ /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/NamespaceReader.cpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o
+ .././Components/NamespaceReader.hpp
+ .././Components/StandardParser.hpp
+ .././Components/YamlReader.hpp
+ .././Config.hpp
+ .././ConfigProvider.hpp
+ .././Model/Class.hpp
+ .././Model/Constant.hpp
+ .././Model/Container.hpp
+ .././Model/Documentation.hpp
+ .././Model/DomainObject.hpp
+ .././Model/Enum.hpp
+ .././Model/Event.hpp
+ .././Model/Identifiable.hpp
+ .././Model/Namespace.hpp
+ .././Model/NamespaceMember.hpp
+ .././Model/Operation.hpp
+ .././Model/Parameter.hpp
+ .././Model/Primitive.hpp
+ .././Model/Root.hpp
+ .././Model/Struct.hpp
+ .././Model/Type.hpp
+ .././Model/TypeBase.hpp
+ .././Model/UnresolvedType.hpp
+ .././Model/Value.hpp
+ .././Parser.hpp
+ /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/StandardParser.cpp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o
  .././Components/TestFormatter.hpp
  .././Config.hpp
@@ -63,6 +133,9 @@ CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o
  .././Model/Value.hpp
  .././StreamFilter.hpp
  /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/TestFormatter.cpp
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o
+ .././Components/YamlReader.hpp
+ /home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/YamlReader.cpp
 CMakeFiles/compiler.dir/Formatter.cpp.o
  .././Model/Class.hpp
  .././Model/Constant.hpp

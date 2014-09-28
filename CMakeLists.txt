@@ -28,4 +28,4 @@ add_subdirectory(Components)
 add_subdirectory(Model)
 
 add_executable(compiler ${SRC})
-target_link_libraries(compiler ${Boost_LIBRARIES})
+target_link_libraries(compiler ${Boost_LIBRARIES} yaml-cpp)

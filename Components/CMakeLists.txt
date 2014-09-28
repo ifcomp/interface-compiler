@@ -1,3 +1,7 @@
 set(SRC ${SRC}
-   Components/TestFormatter.cpp
+	Components/YamlReader.cpp
+	Components/LangConfigReader.cpp
+	Components/NamespaceReader.cpp
+	Components/StandardParser.cpp
+	Components/TestFormatter.cpp
 PARENT_SCOPE)

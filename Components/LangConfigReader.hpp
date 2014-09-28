@@ -1,14 +1,12 @@
-#ifndef LANGCONFIGPARSER_HPP
-#define LANGCONFIGPARSER_HPP
+#pragma once
 
-#include "parser/yamlParser.hpp"
-#include "model/primitive.hpp"
-#include "model/container.hpp"
-#include "model/resolvedType.hpp"
+#include "Components/YamlReader.hpp"
+#include "Model/Primitive.hpp"
+#include "Model/Container.hpp"
 
-namespace Api { namespace Parser {
+namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
-class LangConfigParser : public YamlParser
+class LangConfigReader : public YamlReader
 {
 public:
     enum StyleAttribute
@@ -46,7 +44,7 @@ public:
      * @brief Constructor that directly loads config file
      * @param configFilename YAML file that contains language-specific config
      */
-    LangConfigParser(std::string configFilename);
+    LangConfigReader(std::string configFilename);
 
     /**
      * @brief Parse typemap-entries of config file into maps.
@@ -62,7 +60,7 @@ public:
      * @return language-specific keyword to represent Primitive
      * @throw std::runtime_error if primitive could not be translated
      */
-    std::string primitiveToLang(Model::PrimitivePtr primitive);
+    std::string primitiveToLang(Model::PrimitiveRef primitive);
 
     /**
      * @brief Find language-specific output string for Container
@@ -70,14 +68,14 @@ public:
      * @return language-specific keyword to represent Container
      * @throw std::runtime_error if container could not be translated
      */
-    std::string containerToLang(Model::ContainerPtr container);
+    std::string containerToLang(Model::ContainerRef container);
 
     /**
      * @brief Fetch NAME_STYLE config entry.
      * @param styleContext Style context enum entry to specify the config section
      * @return Configured NameStyle for styleContext
      */
-    NameStyle configNameStyle(DomainObjectPtr styleContextObject);
+    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject);
 
     /**
      * @brief Print all registered style attributes to stdout.
@@ -92,7 +90,7 @@ public:
      * @return Attribute value
      */
     template <typename T> T configAttribute(StyleAttribute styleAttribute,
-                                            DomainObjectPtr styleContextObject)
+                                            Model::DomainObjectRef styleContextObject)
     {
         const YAML::Node &node = configValue(styleAttribute, styleContextObject);
         return node.as<T>();
@@ -114,7 +112,7 @@ private:
      * @throw std::runtime_error if key was not found in styleContext or default context
      * @see styleContextKeys
      */
-    YAML::Node configValue(StyleAttribute styleAttribute, DomainObjectPtr styleContextObject);
+    YAML::Node configValue(StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject);
 
 private:
     YAML::Node mRootNode;
@@ -122,6 +120,4 @@ private:
     std::map<std::string, std::string> mContainerMap;
 };
 
-} } // namespace Api::Parser
-
-#endif // LANGCONFIGPARSER_HPP
+} } } // namespace: Everbase::InterfaceCompiler::Components

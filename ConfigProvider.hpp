@@ -8,7 +8,7 @@ namespace Everbase { namespace InterfaceCompiler {
 class ConfigProvider
 {
 public:
-	Config load(std::string name) const;
+	/*virtual*/ Config load(std::string name) const /*= 0*/;
 };
 
 } } // namespace: Everbase::InterfaceCompiler

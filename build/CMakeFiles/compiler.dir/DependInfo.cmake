@@ -5,7 +5,11 @@ SET(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
   "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Compiler.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Compiler.cpp.o"
+  "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/LangConfigReader.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o"
+  "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/NamespaceReader.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o"
+  "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/StandardParser.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Components/StandardParser.cpp.o"
   "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/TestFormatter.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o"
+  "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Components/YamlReader.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Components/YamlReader.cpp.o"
   "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Formatter.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Formatter.cpp.o"
   "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Class.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Model/Class.cpp.o"
   "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/Model/Constant.cpp" "/home/niklas/dev/everbase/orgs/everbase-backend/api-generator/develop/build/CMakeFiles/compiler.dir/Model/Constant.cpp.o"

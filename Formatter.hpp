@@ -13,7 +13,7 @@ namespace Everbase { namespace InterfaceCompiler {
 class Formatter
 {
 public:
-	void execute ( const ConfigProvider& cprov, std::shared_ptr<Model::Root> input, std::ostream& output ) const;
+	void execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const;
 
 protected:
 	FormatToken<Model::IdentifiableRef> formatName(Model::IdentifiableRef identifiable) const;

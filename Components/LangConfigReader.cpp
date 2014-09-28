@@ -1,51 +1,55 @@
-#include "parser/langConfigParser.hpp"
+#include "Components/LangConfigReader.hpp"
 
-#include "model/class.hpp"
-#include "model/constant.hpp"
-#include "model/container.hpp"
-#include "model/documentation.hpp"
-#include "model/enum.hpp"
-#include "model/event.hpp"
-#include "model/namespace.hpp"
-#include "model/operation.hpp"
-#include "model/parameter.hpp"
-#include "model/primitive.hpp"
-#include "model/struct.hpp"
+#include "Model/Class.hpp"
+#include "Model/Constant.hpp"
+#include "Model/Container.hpp"
+#include "Model/Documentation.hpp"
+#include "Model/Enum.hpp"
+#include "Model/Event.hpp"
+#include "Model/Namespace.hpp"
+#include "Model/Operation.hpp"
+#include "Model/Parameter.hpp"
+#include "Model/Primitive.hpp"
+#include "Model/Struct.hpp"
 
 #include <sstream>
+#include <fstream>
 
 using namespace std;
-using namespace Api::Parser;
 
 
-const char* LangConfigParser::KEY_SECTION_TYPEMAP       = "typemap";
-const char* LangConfigParser::KEY_TYPE_PRIMITIVES       = "primitives";
-const char* LangConfigParser::KEY_TYPE_CONTAINERS       = "containers";
-const char* LangConfigParser::KEY_SECTION_STYLE         = "style";
-const char* LangConfigParser::KEY_STYLE_CONTEXT_DEFAULT = "default";
-
-const char  LangConfigParser::TYPE_PLACEHOLDER          = '@';
+namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 
-const char* LangConfigParser::styleAttributeKeys[] =
+const char* LangConfigReader::KEY_SECTION_TYPEMAP       = "typemap";
+const char* LangConfigReader::KEY_TYPE_PRIMITIVES       = "primitives";
+const char* LangConfigReader::KEY_TYPE_CONTAINERS       = "containers";
+const char* LangConfigReader::KEY_SECTION_STYLE         = "style";
+const char* LangConfigReader::KEY_STYLE_CONTEXT_DEFAULT = "default";
+
+const char  LangConfigReader::TYPE_PLACEHOLDER          = '@';
+
+
+const char* LangConfigReader::styleAttributeKeys[] =
 {
     "name-style", "name-delimiter", "name-use-short", "indent", "text-wrap"
 };
 
 
-const char* LangConfigParser::nameStyleKeys[] =
+const char* LangConfigReader::nameStyleKeys[] =
 {
     "camelcase", "lowercase", "uppercase"
 };
 
 
-LangConfigParser::LangConfigParser(std::string configFilename)
+LangConfigReader::LangConfigReader(std::string configFilename)
 {
-    mRootNode = loadFile(configFilename);
+    std::ifstream file(configFilename);
+    mRootNode = loadFile(file);
 }
 
 
-void LangConfigParser::parseTypeMap()
+void LangConfigReader::parseTypeMap()
 {
     if (checkNode(mRootNode, KEY_SECTION_TYPEMAP, YAML::NodeType::Map, true))
     {
@@ -84,7 +88,7 @@ void LangConfigParser::parseTypeMap()
 }
 
 
-std::string LangConfigParser::primitiveToLang(Api::Model::PrimitivePtr primitive)
+std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive)
 {
     string typeName = primitive->typeName();
 
@@ -96,7 +100,7 @@ std::string LangConfigParser::primitiveToLang(Api::Model::PrimitivePtr primitive
 }
 
 
-string LangConfigParser::containerToLang(Api::Model::ContainerPtr container)
+string LangConfigReader::containerToLang(Model::ContainerRef container)
 {
     string typeName = container->typeName();
 
@@ -108,7 +112,7 @@ string LangConfigParser::containerToLang(Api::Model::ContainerPtr container)
 }
 
 
-LangConfigParser::NameStyle LangConfigParser::configNameStyle(DomainObjectPtr styleContextObject)
+LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject)
 {
     const YAML::Node &node = configValue(StyleAttribute::NAME_STYLE, styleContextObject);
 
@@ -126,7 +130,7 @@ LangConfigParser::NameStyle LangConfigParser::configNameStyle(DomainObjectPtr st
 }
 
 
-YAML::Node LangConfigParser::configValue(LangConfigParser::StyleAttribute styleAttribute, DomainObjectPtr styleContextObject)
+YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject)
 {
     string styleAttributekey(styleAttributeKeys[styleAttribute]);
     string styleContextKey = "default";
@@ -145,7 +149,7 @@ YAML::Node LangConfigParser::configValue(LangConfigParser::StyleAttribute styleA
                 return mRootNode[KEY_SECTION_STYLE][styleContextKey][styleAttributekey];
             }
         }
-        if (mRootNode[KEY_SECTION_STYLE][LangConfigParser::KEY_STYLE_CONTEXT_DEFAULT].IsDefined())
+        if (mRootNode[KEY_SECTION_STYLE][LangConfigReader::KEY_STYLE_CONTEXT_DEFAULT].IsDefined())
         {
             if (mRootNode[KEY_SECTION_STYLE][KEY_STYLE_CONTEXT_DEFAULT][styleAttributekey].IsScalar())
             {
@@ -161,7 +165,7 @@ YAML::Node LangConfigParser::configValue(LangConfigParser::StyleAttribute styleA
 }
 
 
-std::string LangConfigParser::listKnownStyleAttributes()
+std::string LangConfigReader::listKnownStyleAttributes()
 {
     stringstream out;
     out << "-- REGISTERED STYLE ATTRIBUTES -" << endl;
@@ -174,3 +178,5 @@ std::string LangConfigParser::listKnownStyleAttributes()
     out << "--------------------------------" << endl;
     return out.str();
 }
+
+} } } // namespace: Everbase::InterfaceCompiler::Components

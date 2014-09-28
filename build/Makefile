@@ -135,6 +135,78 @@ Compiler.cpp.s:
 	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Compiler.cpp.s
 .PHONY : Compiler.cpp.s
 
+Components/LangConfigReader.o: Components/LangConfigReader.cpp.o
+.PHONY : Components/LangConfigReader.o
+
+# target to build an object file
+Components/LangConfigReader.cpp.o:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o
+.PHONY : Components/LangConfigReader.cpp.o
+
+Components/LangConfigReader.i: Components/LangConfigReader.cpp.i
+.PHONY : Components/LangConfigReader.i
+
+# target to preprocess a source file
+Components/LangConfigReader.cpp.i:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.i
+.PHONY : Components/LangConfigReader.cpp.i
+
+Components/LangConfigReader.s: Components/LangConfigReader.cpp.s
+.PHONY : Components/LangConfigReader.s
+
+# target to generate assembly for a file
+Components/LangConfigReader.cpp.s:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.s
+.PHONY : Components/LangConfigReader.cpp.s
+
+Components/NamespaceReader.o: Components/NamespaceReader.cpp.o
+.PHONY : Components/NamespaceReader.o
+
+# target to build an object file
+Components/NamespaceReader.cpp.o:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o
+.PHONY : Components/NamespaceReader.cpp.o
+
+Components/NamespaceReader.i: Components/NamespaceReader.cpp.i
+.PHONY : Components/NamespaceReader.i
+
+# target to preprocess a source file
+Components/NamespaceReader.cpp.i:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.i
+.PHONY : Components/NamespaceReader.cpp.i
+
+Components/NamespaceReader.s: Components/NamespaceReader.cpp.s
+.PHONY : Components/NamespaceReader.s
+
+# target to generate assembly for a file
+Components/NamespaceReader.cpp.s:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.s
+.PHONY : Components/NamespaceReader.cpp.s
+
+Components/StandardParser.o: Components/StandardParser.cpp.o
+.PHONY : Components/StandardParser.o
+
+# target to build an object file
+Components/StandardParser.cpp.o:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/StandardParser.cpp.o
+.PHONY : Components/StandardParser.cpp.o
+
+Components/StandardParser.i: Components/StandardParser.cpp.i
+.PHONY : Components/StandardParser.i
+
+# target to preprocess a source file
+Components/StandardParser.cpp.i:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/StandardParser.cpp.i
+.PHONY : Components/StandardParser.cpp.i
+
+Components/StandardParser.s: Components/StandardParser.cpp.s
+.PHONY : Components/StandardParser.s
+
+# target to generate assembly for a file
+Components/StandardParser.cpp.s:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/StandardParser.cpp.s
+.PHONY : Components/StandardParser.cpp.s
+
 Components/TestFormatter.o: Components/TestFormatter.cpp.o
 .PHONY : Components/TestFormatter.o
 
@@ -158,6 +230,30 @@ Components/TestFormatter.s: Components/TestFormatter.cpp.s
 Components/TestFormatter.cpp.s:
 	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/TestFormatter.cpp.s
 .PHONY : Components/TestFormatter.cpp.s
+
+Components/YamlReader.o: Components/YamlReader.cpp.o
+.PHONY : Components/YamlReader.o
+
+# target to build an object file
+Components/YamlReader.cpp.o:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/YamlReader.cpp.o
+.PHONY : Components/YamlReader.cpp.o
+
+Components/YamlReader.i: Components/YamlReader.cpp.i
+.PHONY : Components/YamlReader.i
+
+# target to preprocess a source file
+Components/YamlReader.cpp.i:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/YamlReader.cpp.i
+.PHONY : Components/YamlReader.cpp.i
+
+Components/YamlReader.s: Components/YamlReader.cpp.s
+.PHONY : Components/YamlReader.s
+
+# target to generate assembly for a file
+Components/YamlReader.cpp.s:
+	$(MAKE) -f CMakeFiles/compiler.dir/build.make CMakeFiles/compiler.dir/Components/YamlReader.cpp.s
+.PHONY : Components/YamlReader.cpp.s
 
 Formatter.o: Formatter.cpp.o
 .PHONY : Formatter.o
@@ -723,9 +819,21 @@ help:
 	@echo "... Compiler.o"
 	@echo "... Compiler.i"
 	@echo "... Compiler.s"
+	@echo "... Components/LangConfigReader.o"
+	@echo "... Components/LangConfigReader.i"
+	@echo "... Components/LangConfigReader.s"
+	@echo "... Components/NamespaceReader.o"
+	@echo "... Components/NamespaceReader.i"
+	@echo "... Components/NamespaceReader.s"
+	@echo "... Components/StandardParser.o"
+	@echo "... Components/StandardParser.i"
+	@echo "... Components/StandardParser.s"
 	@echo "... Components/TestFormatter.o"
 	@echo "... Components/TestFormatter.i"
 	@echo "... Components/TestFormatter.s"
+	@echo "... Components/YamlReader.o"
+	@echo "... Components/YamlReader.i"
+	@echo "... Components/YamlReader.s"
 	@echo "... Formatter.o"
 	@echo "... Formatter.i"
 	@echo "... Formatter.s"

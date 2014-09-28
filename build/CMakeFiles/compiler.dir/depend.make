@@ -34,6 +34,76 @@ CMakeFiles/compiler.dir/Compiler.cpp.o: ../Parser.hpp
 CMakeFiles/compiler.dir/Compiler.cpp.o: ../StreamFilter.hpp
 CMakeFiles/compiler.dir/Compiler.cpp.o: ../Transformer.hpp
 
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Components/LangConfigReader.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Components/YamlReader.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Class.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Constant.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Container.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Documentation.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/DomainObject.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Enum.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Event.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Identifiable.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Namespace.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/NamespaceMember.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Operation.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Parameter.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Primitive.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Struct.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Type.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/TypeBase.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: .././Model/Value.hpp
+CMakeFiles/compiler.dir/Components/LangConfigReader.cpp.o: ../Components/LangConfigReader.cpp
+
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Components/NamespaceReader.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Components/YamlReader.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Class.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Constant.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Container.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Documentation.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/DomainObject.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Enum.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Event.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Identifiable.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Namespace.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/NamespaceMember.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Operation.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Parameter.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Primitive.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Struct.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Type.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/TypeBase.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/UnresolvedType.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: .././Model/Value.hpp
+CMakeFiles/compiler.dir/Components/NamespaceReader.cpp.o: ../Components/NamespaceReader.cpp
+
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Components/NamespaceReader.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Components/StandardParser.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Components/YamlReader.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Config.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././ConfigProvider.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Class.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Constant.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Container.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Documentation.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/DomainObject.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Enum.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Event.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Identifiable.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Namespace.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/NamespaceMember.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Operation.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Parameter.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Primitive.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Root.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Struct.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Type.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/TypeBase.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/UnresolvedType.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Model/Value.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: .././Parser.hpp
+CMakeFiles/compiler.dir/Components/StandardParser.cpp.o: ../Components/StandardParser.cpp
+
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././Components/TestFormatter.hpp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././Config.hpp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././ConfigProvider.hpp
@@ -62,6 +132,9 @@ CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././Model/UnresolvedTyp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././Model/Value.hpp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: .././StreamFilter.hpp
 CMakeFiles/compiler.dir/Components/TestFormatter.cpp.o: ../Components/TestFormatter.cpp
+
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o: .././Components/YamlReader.hpp
+CMakeFiles/compiler.dir/Components/YamlReader.cpp.o: ../Components/YamlReader.cpp
 
 CMakeFiles/compiler.dir/Formatter.cpp.o: .././Model/Class.hpp
 CMakeFiles/compiler.dir/Formatter.cpp.o: .././Model/Constant.hpp

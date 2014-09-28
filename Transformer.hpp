@@ -13,7 +13,7 @@ namespace Everbase { namespace InterfaceCompiler {
 class Transformer
 {
 public:
-	std::map<std::string, std::shared_ptr<Model::Root>> execute ( const ConfigProvider& cprov, std::shared_ptr<Model::Root> input ) const;
+	virtual std::map<std::string, Model::RootRef> execute ( const ConfigProvider& cprov, Model::RootRef input ) const = 0;
 };
 
 } } // namespace: Everbase::InterfaceCompiler

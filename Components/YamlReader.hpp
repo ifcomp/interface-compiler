@@ -1,18 +1,18 @@
-#ifndef YAMLPARSER_HPP
-#define YAMLPARSER_HPP
+#pragma once
 
 #include <yaml-cpp/yaml.h>
+#include <istream>
 
-namespace Api { namespace Parser {
+namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 /**
  * @brief Base class for building YAML parsers.
  * @author Gunther Lemm <lemm@silpion.de>
  */
-class YamlParser
+class YamlReader
 {    
 protected:
-    YamlParser();
+    YamlReader();
 
     /**
      * @brief YAML file
@@ -20,7 +20,7 @@ protected:
      * @return Root node
      * @throw std::runtime_error in case of YAML parser problems
      */
-    virtual YAML::Node loadFile(std::string fileName);
+    virtual YAML::Node loadFile(std::istream& stream);
 
     /**
      * @brief Check if node[key] has a specific type.
@@ -35,6 +35,4 @@ protected:
                    YAML::NodeType::value expectedType = YAML::NodeType::Scalar, bool mandatory = false);
 };
 
-} } // namespace Api::Parser
-
-#endif // YAMLPARSER_HPP
+} } } // namespace: Everbase::InterfaceCompiler::Components

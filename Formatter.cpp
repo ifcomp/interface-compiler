@@ -2,7 +2,7 @@
 
 namespace Everbase { namespace InterfaceCompiler {
 
-void Formatter::execute ( const ConfigProvider& cprov, std::shared_ptr<Model::Root> input, std::ostream& output ) const
+void Formatter::execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const
 {
 	output << format(input);
 }

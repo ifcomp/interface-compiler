@@ -11,7 +11,7 @@ namespace Everbase { namespace InterfaceCompiler {
 class Parser
 {
 public:
-	std::shared_ptr<Model::Root> execute ( const ConfigProvider& cprov, std::istream& input ) const;
+	virtual Model::RootRef execute ( const ConfigProvider& cprov, std::istream& input ) const = 0;
 };
 
 } } // namespace: Everbase::InterfaceCompiler
