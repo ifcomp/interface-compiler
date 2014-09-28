@@ -1,0 +1,21 @@
+set(SRC ${SRC}
+   Model/Class.cpp
+   Model/Constant.cpp
+   Model/Container.cpp
+   Model/Documentation.cpp
+   Model/DomainObject.cpp
+   Model/Enum.cpp
+   Model/Event.cpp
+   Model/Identifiable.cpp
+   Model/Namespace.cpp
+   Model/NamespaceMember.cpp
+   Model/Operation.cpp
+   Model/Parameter.cpp
+   Model/Primitive.cpp
+   Model/Struct.cpp
+   Model/TypeBase.cpp
+   Model/UnresolvedType.cpp
+   Model/Type.cpp
+   Model/Value.cpp
+   Model/Root.cpp
+PARENT_SCOPE)
