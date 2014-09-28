@@ -8,14 +8,29 @@ class TestFormatter : public Formatter
 {
 protected:
 	using Formatter::formatName;
-	using Formatter::format;
 	using Formatter::formatSig;
+	using Formatter::format;
 
 protected:
-	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const override;
 	virtual void format(std::ostream& stream, Model::RootRef root) const override;
+
+	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const override;
+	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const override;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const override;
+	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const override;
+
+	virtual void format(std::ostream& stream, Model::NamespaceMemberRef event) const override;
+	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const override;
+	virtual void format(std::ostream& stream, Model::ContainerRef container) const override;
+	virtual void format(std::ostream& stream, Model::ConstantRef constant) const override;
+	virtual void format(std::ostream& stream, Model::StructRef struct_) const override;
 	virtual void format(std::ostream& stream, Model::ClassRef class_) const override;
+	virtual void format(std::ostream& stream, Model::EventRef event) const override;
+	virtual void format(std::ostream& stream, Model::NamespaceRef namespace_) const override;
+
+	virtual void format(std::ostream& stream, Model::EnumRef enum_) const override;
+	virtual void format(std::ostream& stream, Model::ValueRef value) const override;
+
 	virtual void format(std::ostream& stream, Model::OperationRef operation) const override;
 	virtual void formatSig(std::ostream& stream, Model::OperationRef operation) const override;
 };

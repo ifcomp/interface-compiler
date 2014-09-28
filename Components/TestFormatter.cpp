@@ -4,41 +4,72 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
-void TestFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
-{
-	stream << "Name";
-}
-
 void TestFormatter::format(std::ostream& stream, Model::RootRef root) const
 {
-	stream << format(Model::ClassRef()) << std::endl;
+}
+
+void TestFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
+{
 }
 
 void TestFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
-	stream << "std::shared_ptr<Type>";
+}
+
+void TestFormatter::format(std::ostream& stream, Model::ParameterRef parameter) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::NamespaceMemberRef event) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::ContainerRef container) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::StructRef struct_) const
+{
 }
 
 void TestFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
-	stream << "class " << formatName(Model::IdentifiableRef()) << std::endl << "{" << std::endl;
+}
 
-	for( auto o : std::set<Model::OperationRef>{ Model::OperationRef(), Model::OperationRef(), Model::OperationRef() } )
-	{
-		stream << format(o) << std::endl;
-	}
+void TestFormatter::format(std::ostream& stream, Model::EventRef event) const
+{
+}
 
-	stream << "};" << std::endl;
+void TestFormatter::format(std::ostream& stream, Model::NamespaceRef namespace_) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
+{
+}
+
+void TestFormatter::format(std::ostream& stream, Model::ValueRef value) const
+{
 }
 
 void TestFormatter::format(std::ostream& stream, Model::OperationRef operation) const
 {
-	stream << formatSig(operation) << ";" << std::endl;
 }
 
 void TestFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
 {
-	stream << "void test(int a, float b)";
 }
 
 } } } // namespace: Everbase::InterfaceCompiler::Components
