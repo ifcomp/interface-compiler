@@ -4,6 +4,8 @@
 #include "Model/Primitive.hpp"
 #include "Model/Container.hpp"
 
+#include <istream>
+
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 class LangConfigReader : public YamlReader
@@ -44,7 +46,7 @@ public:
      * @brief Constructor that directly loads config file
      * @param configFilename YAML file that contains language-specific config
      */
-    LangConfigReader(std::string configFilename);
+    LangConfigReader(std::istream& stream);
 
     /**
      * @brief Parse typemap-entries of config file into maps.

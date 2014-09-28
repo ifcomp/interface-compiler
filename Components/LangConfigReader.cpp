@@ -42,10 +42,9 @@ const char* LangConfigReader::nameStyleKeys[] =
 };
 
 
-LangConfigReader::LangConfigReader(std::string configFilename)
+LangConfigReader::LangConfigReader(std::istream& stream)
 {
-    std::ifstream file(configFilename);
-    mRootNode = loadFile(file);
+    mRootNode = loadFile(stream);
 }
 
 
