@@ -15,9 +15,14 @@ Namespace::~Namespace()
 {
 }
 
-const std::map<std::string, NamespaceMemberRef>& Namespace::members()
+std::vector<NamespaceMemberRef> Namespace::members()
 {
-	return mMembers;
+	std::vector<NamespaceMemberRef> result;
+
+	for( auto m : mMembers )
+		result.push_back(m.second);
+
+	return result;
 }
 
 void Namespace::addMember(NamespaceMemberRef member)

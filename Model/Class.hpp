@@ -33,7 +33,7 @@ public:
     void setParent(TypeRef parent);
 
     void addOperation(OperationRef operation);
-    const std::map<std::string, OperationRef>& operations();
+    std::vector<OperationRef> operations();
 
     void addEvent(EventRef event);
     const std::map<std::string, EventRef>& events();

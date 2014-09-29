@@ -37,9 +37,16 @@ void Operation::addParam(ParameterRef param)
     mParams[param->longName()] = param;
 }
 
-const std::map<std::string, ParameterRef>& Operation::params()
+std::vector<ParameterRef> Operation::params()
 {
-	return mParams;
+	std::vector<ParameterRef> result;
+
+	for( auto param : mParams )
+	{
+		result.push_back(param.second);
+	}
+
+	return result;
 }
 
 void Operation::setResult(ParameterRef result)

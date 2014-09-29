@@ -5,12 +5,17 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 Model::RootRef StandardParser::execute ( const ConfigProvider& cprov, std::istream& input ) const
 {
-    Model::NamespaceRef ns = std::make_shared<Model::Namespace>("::");
-    NamespaceReader read(ns);
-    read.parseFile(input);
+	using namespace std;
+
+    Model::NamespaceRef rootNamespace = std::make_shared<Model::Namespace>("::");
+    NamespaceReader reader(rootNamespace);
+
+    reader.parseFile(input);
+    reader.resolveTypesInNamespace(rootNamespace);
+    reader.listKnownTypes();
 
     Model::RootRef root = std::make_shared<Model::Root>();
-    root->setNamespace(ns);
+    root->setNamespace(rootNamespace);
 
     return root;
 }

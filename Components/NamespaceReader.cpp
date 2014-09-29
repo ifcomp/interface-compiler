@@ -641,7 +641,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
     for (auto memberPair : rootNamespace->members())
     {
         // namespace
-        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(memberPair.second);
+        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(memberPair);
         if (nestedNamespace)
         {
             try {
@@ -655,7 +655,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
         else
         {
             // resolve events, operations & return
-            const ClassRef &classRef = dynamic_pointer_cast<Class>(memberPair.second);
+            const ClassRef &classRef = dynamic_pointer_cast<Class>(memberPair);
 
             if (classRef)
             {
@@ -678,13 +678,13 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                     for (auto operation : classRef->operations())
                     {
                         try {
-                            for (auto parameter : operation.second->params())
+                            for (auto parameter : operation->params())
                             {
-                                resolveParameterType(parameter.second);
+                                resolveParameterType(parameter);
                             }
 
                             // resolve operation's return parameter
-                            const ParameterRef &resultParamRef = operation.second->result();
+                            const ParameterRef &resultParamRef = operation->result();
                             if (resultParamRef)
                             {
                                 resolveParameterType(resultParamRef);
@@ -692,7 +692,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                         }
                         catch (const runtime_error &e)
                         {
-                            throw runtime_error(addObjectNameToException(operation.second));
+                            throw runtime_error(addObjectNameToException(operation));
                         }
                     }
 
@@ -713,7 +713,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
             {
                 // resolve structs
                 try {
-                    const StructRef &structRef = dynamic_pointer_cast<Struct>(memberPair.second);
+                    const StructRef &structRef = dynamic_pointer_cast<Struct>(memberPair);
                     if (structRef)
                     {
                         for (auto field : structRef->fields())
@@ -724,7 +724,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 }
                 catch (const runtime_error &e)
                 {
-                    throw runtime_error(addFQNameToException(memberPair.second, " "));
+                    throw runtime_error(addFQNameToException(memberPair, " "));
                 }
             }
         }

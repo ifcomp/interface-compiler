@@ -24,7 +24,12 @@ FormatToken<Model::DocumentationRef> Formatter::format(Model::DocumentationRef d
 
 FormatToken<Model::TypeRef> Formatter::format(Model::TypeBaseRef type) const
 {
-	return FormatToken<Model::TypeRef> { this, &Formatter::format, std::tuple<Model::TypeRef> { std::dynamic_pointer_cast<Model::Type>(type) } };
+	auto resolvedType = std::dynamic_pointer_cast<Model::Type>(type);
+
+	if(!resolvedType)
+		throw std::runtime_error("cannot format unresolved type");
+
+	return FormatToken<Model::TypeRef> { this, &Formatter::format, std::tuple<Model::TypeRef> { resolvedType } };
 }
 
 FormatToken<Model::ParameterRef> Formatter::format(Model::ParameterRef parameter) const
@@ -32,9 +37,9 @@ FormatToken<Model::ParameterRef> Formatter::format(Model::ParameterRef parameter
 	return FormatToken<Model::ParameterRef> { this, &Formatter::format, std::tuple<Model::ParameterRef> { parameter } };
 }
 
-FormatToken<Model::NamespaceMemberRef> Formatter::format(Model::NamespaceMemberRef event) const
+FormatToken<Model::NamespaceMemberRef> Formatter::format(Model::NamespaceMemberRef member) const
 {
-	return FormatToken<Model::NamespaceMemberRef> { this, &Formatter::format, std::tuple<Model::NamespaceMemberRef> { event } };
+	return FormatToken<Model::NamespaceMemberRef> { this, &Formatter::format, std::tuple<Model::NamespaceMemberRef> { member } };
 }
 
 FormatToken<Model::PrimitiveRef> Formatter::format(Model::PrimitiveRef primitive) const

@@ -5,6 +5,8 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 
+namespace Everbase { namespace InterfaceCompiler { namespace IndexList {
+
 // ********************************************
 
 template<typename ContainerT>
@@ -69,7 +71,7 @@ public:
 	bool last() const;
 
 private:
-	Index(const ContainerT& container, typename Traits::Position position, typename Traits::Iterator iterator);
+	Index(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator);
 
 	const ContainerT* _container;
 	typename Traits::Position _position;
@@ -77,8 +79,8 @@ private:
 };
 
 template<typename ContainerT>
-Index<ContainerT>::Index(const ContainerT& container, typename Traits::Position position, typename Traits::Iterator iterator)
-	: _container(&container), _position(position), _iterator(iterator)
+Index<ContainerT>::Index(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator)
+	: _container(container), _position(position), _iterator(iterator)
 {
 }
 
@@ -191,7 +193,7 @@ public:
 	IndexIterator();
 	IndexIterator(const IndexIterator& other);
 	IndexIterator(IndexIterator&& other);
-	IndexIterator(const ContainerT& container, typename Traits::Position position, typename Traits::Iterator iterator);
+	IndexIterator(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator);
 
 private:
 	friend class boost::iterator_core_access;
@@ -212,7 +214,7 @@ IndexIterator<ContainerT>::IndexIterator()
 
 template<typename ContainerT>
 IndexIterator<ContainerT>::IndexIterator(const IndexIterator& other)
-	: _index(new Index<ContainerT>(*other._index->_container, other._index->_position, other._index->_iterator))
+	: _index(new Index<ContainerT>(other._index->_container, other._index->_position, other._index->_iterator))
 {
 }
 
@@ -223,7 +225,7 @@ IndexIterator<ContainerT>::IndexIterator(IndexIterator&& other)
 }
 
 template<typename ContainerT>
-IndexIterator<ContainerT>::IndexIterator(const ContainerT& container, typename Traits::Position position, typename Traits::Iterator iterator)
+IndexIterator<ContainerT>::IndexIterator(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator)
 	: _index(new Index<ContainerT>(container, position, iterator))
 {
 }
@@ -276,14 +278,14 @@ template<typename ContainerT>
 IndexIterator<ContainerT>
 IndexList<ContainerT>::begin() const
 {
-	return IndexIterator<ContainerT>(_container, 0, _container.begin());
+	return IndexIterator<ContainerT>(&_container, 0, _container.begin());
 }
 
 template<typename ContainerT>
 IndexIterator<ContainerT>
 IndexList<ContainerT>::end() const
 {
-	return IndexIterator<ContainerT>(_container, _container.size(), _container.end());
+	return IndexIterator<ContainerT>(&_container, _container.size(), _container.end());
 }
 
 
@@ -292,3 +294,5 @@ IndexList<typename std::remove_const<ContainerT>::type> indices(const ContainerT
 {
 	return IndexList<typename std::remove_const<ContainerT>::type>(container);
 }
+
+} } } // namespace: Everbase::InterfaceCompiler::IndexList

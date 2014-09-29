@@ -23,7 +23,7 @@ public:
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     void addMember(NamespaceMemberRef member);
-    const std::map<std::string, NamespaceMemberRef>& members();
+    std::vector<NamespaceMemberRef> members();
 };
 
 typedef std::shared_ptr<Namespace> NamespaceRef;

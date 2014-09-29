@@ -3,6 +3,7 @@
 #include "Model/Model.hpp"
 #include "ConfigProvider.hpp"
 #include "FormatToken.hpp"
+#include "IndexList.hpp"
 #include "StreamFilter.hpp"
 
 #include <memory>
@@ -23,7 +24,7 @@ protected:
 	FormatToken<Model::TypeRef> format(Model::TypeBaseRef type) const;
 	FormatToken<Model::ParameterRef> format(Model::ParameterRef parameter) const;
 
-	FormatToken<Model::NamespaceMemberRef> format(Model::NamespaceMemberRef event) const;
+	FormatToken<Model::NamespaceMemberRef> format(Model::NamespaceMemberRef member) const;
 	FormatToken<Model::PrimitiveRef> format(Model::PrimitiveRef primitive) const;
 	FormatToken<Model::ContainerRef> format(Model::ContainerRef container) const;
 	FormatToken<Model::ConstantRef> format(Model::ConstantRef constant) const;
@@ -46,7 +47,7 @@ protected:
 	virtual void format(std::ostream& stream, Model::TypeRef type) const = 0;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const = 0;
 
-	virtual void format(std::ostream& stream, Model::NamespaceMemberRef event) const = 0;
+	virtual void format(std::ostream& stream, Model::NamespaceMemberRef member) const = 0;
 	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const = 0;
 	virtual void format(std::ostream& stream, Model::ContainerRef container) const = 0;
 	virtual void format(std::ostream& stream, Model::ConstantRef constant) const = 0;

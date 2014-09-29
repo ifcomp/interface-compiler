@@ -32,7 +32,7 @@ public:
     void setSynchronous(bool isSynchronous);
 
     void addParam(ParameterRef param);
-    const std::map<std::string, ParameterRef>& params();
+    std::vector<ParameterRef> params();
 
     void setResult(ParameterRef result);
     ParameterRef result();

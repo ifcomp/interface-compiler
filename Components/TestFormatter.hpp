@@ -19,7 +19,7 @@ protected:
 	virtual void format(std::ostream& stream, Model::TypeRef type) const override;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const override;
 
-	virtual void format(std::ostream& stream, Model::NamespaceMemberRef event) const override;
+	virtual void format(std::ostream& stream, Model::NamespaceMemberRef member) const override;
 	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const override;
 	virtual void format(std::ostream& stream, Model::ContainerRef container) const override;
 	virtual void format(std::ostream& stream, Model::ConstantRef constant) const override;

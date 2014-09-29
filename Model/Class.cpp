@@ -35,9 +35,14 @@ void Class::addOperation(OperationRef operation)
     mOperations[operation->longName()] = operation;
 }
 
-const std::map<std::string, OperationRef>& Class::operations()
+std::vector<OperationRef> Class::operations()
 {
-	return mOperations;
+	std::vector<OperationRef> result;
+
+	for(auto operation : mOperations)
+		{ result.push_back(operation.second); }
+
+	return result;
 }
 
 void Class::addEvent(EventRef event)
