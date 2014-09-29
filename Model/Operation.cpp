@@ -3,8 +3,8 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 Operation::Operation() :
-    mIsStatic(false),
-    mIsSynchronous(false)
+    _isStatic(false),
+    _isSynchronous(false)
 {
 }
 
@@ -14,34 +14,34 @@ Operation::~Operation()
 
 bool Operation::isStatic()
 {
-	return mIsStatic;
+	return _isStatic;
 }
 
 void Operation::setStatic(bool isStatic)
 {
-	mIsStatic = isStatic;
+	_isStatic = isStatic;
 }
 
 bool Operation::isSynchronous()
 {
-	return mIsSynchronous;
+	return _isSynchronous;
 }
 
 void Operation::setSynchronous(bool isSynchronous)
 {
-	mIsSynchronous = isSynchronous;
+	_isSynchronous = isSynchronous;
 }
 
 void Operation::addParam(ParameterRef param)
 {
-    mParams[param->longName()] = param;
+    _params[param->longName()] = param;
 }
 
 std::vector<ParameterRef> Operation::params()
 {
 	std::vector<ParameterRef> result;
 
-	for( auto param : mParams )
+	for( auto param : _params )
 	{
 		result.push_back(param.second);
 	}
@@ -51,12 +51,12 @@ std::vector<ParameterRef> Operation::params()
 
 void Operation::setResult(ParameterRef result)
 {
-	mResult = result;
+	_result = result;
 }
 
 ParameterRef Operation::result()
 {
-	return mResult;
+	return _result;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

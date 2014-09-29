@@ -18,7 +18,7 @@ const char *Primitive::primitiveNames[] =
 
 
 Primitive::Primitive()
-    : mType(PrimitiveType::UNDEFINED)
+    : _type(PrimitiveType::UNDEFINED)
 {
 }
 
@@ -30,27 +30,27 @@ Primitive::~Primitive()
 
 Primitive::PrimitiveType Primitive::type()
 {
-	return mType;
+	return _type;
 }
 
 
 void Primitive::setType(Primitive::PrimitiveType type)
 {
-    mType = type;
+    _type = type;
 }
 
 
 std::string Primitive::typeName()
 {
-    return primitiveNames[ int(mType) ];
+    return primitiveNames[ int(_type) ];
 }
 
 
 void Primitive::setType(std::string typeName)
 {
-    mType = decodeTypeName(typeName);
+    _type = decodeTypeName(typeName);
 
-    if (mType == PrimitiveType::UNDEFINED)
+    if (_type == PrimitiveType::UNDEFINED)
     {
         throw std::runtime_error("unknown primitive type " + typeName + "\n");
     }

@@ -12,12 +12,12 @@ Parameter::~Parameter()
 
 TypeBaseRef Parameter::type()
 {
-	return mType;
+	return _type;
 }
 
 void Parameter::setType(TypeBaseRef type)
 {
-	mType = type;
+	_type = type;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

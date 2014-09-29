@@ -15,7 +15,7 @@ public:
     static constexpr auto TYPE_NAME = "Struct";
 
 private:
-    std::map<std::string, ParameterRef> mFields;
+    std::map<std::string, ParameterRef> _fields;
 
 public:
     Struct();

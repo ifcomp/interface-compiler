@@ -26,7 +26,7 @@ public:
     static const char *containerNames[int(ContainerType::_CONTAINER_COUNT_)];
 
 private:
-    ContainerType mType;
+    ContainerType _type;
 
 public:
     Container();

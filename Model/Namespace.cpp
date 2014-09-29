@@ -19,7 +19,7 @@ std::vector<NamespaceMemberRef> Namespace::members()
 {
 	std::vector<NamespaceMemberRef> result;
 
-	for( auto m : mMembers )
+	for( auto m : _members )
 		result.push_back(m.second);
 
 	return result;
@@ -30,9 +30,9 @@ void Namespace::addMember(NamespaceMemberRef member)
     using namespace std;
 
     string key = member->longName();
-    if (mMembers.find(key) == mMembers.end())
+    if (_members.find(key) == _members.end())
     {
-        mMembers[key] = member;
+        _members[key] = member;
     }
 }
 

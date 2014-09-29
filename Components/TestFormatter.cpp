@@ -10,6 +10,12 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+TestFormatter::TestFormatter(std::istream &configStream)
+    : _langConfigReader(configStream)
+{
+    _langConfigReader.parseTypeMap();
+}
+
 void TestFormatter::format(std::ostream& stream, Model::RootRef root) const
 {
 	stream << format(root->getNamespace()) << endl;
@@ -17,7 +23,8 @@ void TestFormatter::format(std::ostream& stream, Model::RootRef root) const
 
 void TestFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
-	stream << identifiable->longName();
+    stream << _langConfigReader.styleToken(identifiable->longName(), identifiable);
+//    stream << identifiable->longName();
 }
 
 void TestFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const

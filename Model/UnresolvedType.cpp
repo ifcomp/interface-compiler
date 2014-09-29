@@ -12,22 +12,22 @@ UnresolvedType::~UnresolvedType()
 
 std::string UnresolvedType::primary()
 {
-    return mPrimary;
+    return _primary;
 }
 
 void UnresolvedType::setPrimary(std::string typeName)
 {
-    mPrimary = typeName;
+    _primary = typeName;
 }
 
 void UnresolvedType::addParam(std::string param)
 {
-    mParams.push_back(param);
+    _params.push_back(param);
 }
 
 const std::vector<std::string> &UnresolvedType::params()
 {
-    return mParams;
+    return _params;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

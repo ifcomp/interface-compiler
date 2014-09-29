@@ -15,7 +15,7 @@ public:
     static constexpr auto TYPE_NAME = "Enum";
 
 private:
-    std::map<std::string, ValueRef> mValues;
+    std::map<std::string, ValueRef> _values;
 
 public:
     Enum();

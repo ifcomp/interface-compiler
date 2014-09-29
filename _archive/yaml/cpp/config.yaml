@@ -21,14 +21,13 @@ typemap:
 
 style:
     default:
-        name-style: camelcase
+        name-style: upper-camelcase
         name-delimiter: ''
         name-use-short: false
         indent: 4
 
     namespace:
         name-delimiter: '::'
-        name-style: lowercase
         indent: 2
 
     parameter:
@@ -48,7 +47,7 @@ style:
         text-wrap: 80
 
     class:
-        name-style: uppercase
+        name-style: lower-camelcase
         name-delimiter: '+'
 
     operation:

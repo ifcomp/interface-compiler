@@ -3,7 +3,7 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 Event::Event() :
-    mIsStatic(false)
+    _isStatic(false)
 {
 }
 
@@ -13,22 +13,22 @@ Event::~Event()
 
 bool Event::isStatic()
 {
-    return mIsStatic;
+    return _isStatic;
 }
 
 void Event::setStatic(bool isStatic)
 {
-    mIsStatic = isStatic;
+    _isStatic = isStatic;
 }
 
 void Event::addResult(ParameterRef result)
 {
-    mResults[result->longName()] = result;
+    _results[result->longName()] = result;
 }
 
 const std::map<std::string, ParameterRef>& Event::results()
 {
-	return mResults;
+    return _results;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

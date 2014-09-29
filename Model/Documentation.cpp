@@ -14,7 +14,7 @@ Documentation::~Documentation()
 
 bool Documentation::keyExists(std::string doxygenKey)
 {
-    for (auto entry : _DocEntries)
+    for (auto entry : _docEntries)
     {
         if (entry.doxygenKey == doxygenKey)
         {
@@ -27,7 +27,7 @@ bool Documentation::keyExists(std::string doxygenKey)
 
 const std::vector<Documentation::DocEntry> &Documentation::docEntries()
 {
-    return _DocEntries;
+    return _docEntries;
 }
 
 
@@ -35,7 +35,7 @@ std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxyg
 {
     std::vector<DocEntry> entries;
 
-    for (auto entry : _DocEntries)
+    for (auto entry : _docEntries)
     {
         if (entry.doxygenKey == doxygenKey)
         {
@@ -49,7 +49,7 @@ std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxyg
 
 Documentation::DocEntry Documentation::docEntry(std::string doxygenKey)
 {
-    for (auto entry : _DocEntries)
+    for (auto entry : _docEntries)
     {
         if (entry.doxygenKey == doxygenKey)
         {
@@ -74,19 +74,19 @@ std::string Documentation::description(std::string doxygenKey)
 
 void Documentation::addDocEntry(DocEntry entry)
 {
-    _DocEntries.push_back(entry);
+    _docEntries.push_back(entry);
 }
 
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string description)
 {
-    _DocEntries.push_back(DocEntry{ doxygenKey, "", description });
+    _docEntries.push_back(DocEntry{ doxygenKey, "", description });
 }
 
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, std::string description)
 {
-    _DocEntries.push_back(DocEntry{ doxygenKey, paramName, description });
+    _docEntries.push_back(DocEntry{ doxygenKey, paramName, description });
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

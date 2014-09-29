@@ -24,9 +24,9 @@ public:
     void setDoc(DocumentationRef doc);
 
 private:
-    std::string mLongName;
-    std::string mShortName;
-    DocumentationRef mDoc;
+    std::string _longName;
+    std::string _shortName;
+    DocumentationRef _doc;
 };
 
 typedef std::shared_ptr<Identifiable> IdentifiableRef;

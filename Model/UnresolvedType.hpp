@@ -12,8 +12,8 @@ public:
     static constexpr auto TYPE_NAME = "UnresolvedType";
 
 private:
-    std::string mPrimary;
-    std::vector<std::string> mParams;
+    std::string _primary;
+    std::vector<std::string> _params;
 
 public:
     UnresolvedType();

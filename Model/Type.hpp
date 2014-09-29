@@ -13,8 +13,8 @@ public:
     static constexpr auto TYPE_NAME = "Type";
 
 private:
-    NamespaceMemberRef mPrimary;
-    std::vector<NamespaceMemberRef> mParams;
+    NamespaceMemberRef _primary;
+    std::vector<NamespaceMemberRef> _params;
 
 public:
     Type();
