@@ -191,13 +191,6 @@ void TestFormatter::formatSig(std::ostream& stream, Model::OperationRef operatio
 
 	stream << " " << formatName(operation) << "(";
 
-	/*
-	for( auto parameter : operation->params() )
-	{
-		stream << format(parameter) << ", ";
-	}
-	*/
-
 	for( auto parameter : indices(operation->params()) )
 	{
 		stream << format(parameter.value()) << (!parameter.last() ? ", " : "");
