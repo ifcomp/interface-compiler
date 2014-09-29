@@ -4,6 +4,8 @@
 #include <memory>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <iostream>
+
 
 namespace Everbase { namespace InterfaceCompiler { namespace IndexList {
 
@@ -62,13 +64,15 @@ class Index
 public:
 	using Traits = IndexTraits<ContainerT>;
 
-	typename Traits::Position pos() const;
-	typename Traits::Index idx() const;
-	const typename Traits::Value& val() const;
+	typename Traits::Position position() const;
+	typename Traits::Index key() const;
+	const typename Traits::Value& value() const;
 	typename Traits::Iterator base() const;
 
 	bool first() const;
 	bool last() const;
+
+	~Index();
 
 private:
 	Index(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator);
@@ -84,47 +88,52 @@ Index<ContainerT>::Index(const ContainerT* container, typename Traits::Position 
 {
 }
 
+template<typename ContainerT>
+Index<ContainerT>::~Index()
+{
+}
+
 
 template<typename ContainerT>
 typename IndexTraits<ContainerT>::Position
-Index<ContainerT>::pos() const
+Index<ContainerT>::position() const
 {
 	return _position;
 }
 
 
 template<typename ContainerT>
-struct IndexIndexFun;
+struct IndexKeyLookup;
 
 template<typename KeyT, typename ValueT>
-struct IndexIndexFun < std::map<KeyT, ValueT> >
+struct IndexKeyLookup < std::map<KeyT, ValueT> >
 {
-	const typename IndexTraits<std::map<KeyT, ValueT>>::Iterator& iterator;
-	const typename IndexTraits<std::map<KeyT, ValueT>>::Position& position;
-	typename IndexTraits<std::map<KeyT, ValueT>>::Index index() const { return iterator->first; }
+	typename IndexTraits<std::map<KeyT, ValueT>>::Iterator iterator;
+	typename IndexTraits<std::map<KeyT, ValueT>>::Position position;
+	typename IndexTraits<std::map<KeyT, ValueT>>::Index key() const { return iterator->first; }
 };
 
 template<typename ValueT>
-struct IndexIndexFun < std::vector<ValueT> >
+struct IndexKeyLookup < std::vector<ValueT> >
 {
-	const typename IndexTraits<std::vector<ValueT>>::Iterator& iterator;
-	const typename IndexTraits<std::vector<ValueT>>::Position& position;
-	typename IndexTraits<std::vector<ValueT>>::Index index() const { return position; }
+	typename IndexTraits<std::vector<ValueT>>::Iterator iterator;
+	typename IndexTraits<std::vector<ValueT>>::Position position;
+	typename IndexTraits<std::vector<ValueT>>::Index key() const { return position; }
 };
 
 template<typename ValueT>
-struct IndexIndexFun < std::set<ValueT> >
+struct IndexKeyLookup < std::set<ValueT> >
 {
-	const typename IndexTraits<std::set<ValueT>>::Iterator& iterator;
-	const typename IndexTraits<std::set<ValueT>>::Position& position;
-	typename IndexTraits<std::set<ValueT>>::Index index() const { return *iterator; }
+	typename IndexTraits<std::set<ValueT>>::Iterator iterator;
+	typename IndexTraits<std::set<ValueT>>::Position position;
+	typename IndexTraits<std::set<ValueT>>::Index key() const { return *iterator; }
 };
 
 template<typename ContainerT>
 typename IndexTraits<ContainerT>::Index
-Index<ContainerT>::idx() const
+Index<ContainerT>::key() const
 {
-	return IndexIndexFun<ContainerT>{_iterator, _position}.index();
+	return IndexKeyLookup<ContainerT>{_iterator, _position}.key();
 }
 
 
@@ -138,24 +147,24 @@ Index<ContainerT>::base() const
 
 
 template<typename ContainerT>
-struct IndexValueFun
+struct IndexValueLookup
 {
-	const typename IndexTraits<ContainerT>::Iterator& iterator;
+	typename IndexTraits<ContainerT>::Iterator iterator;
 	const typename IndexTraits<ContainerT>::Value& value() const { return *iterator; }
 };
 
 template<typename KeyT, typename ValueT>
-struct IndexValueFun < std::map<KeyT, ValueT> >
+struct IndexValueLookup < std::map<KeyT, ValueT> >
 {
-	const typename IndexTraits<std::map<KeyT, ValueT>>::Iterator& iterator;
+	typename IndexTraits<std::map<KeyT, ValueT>>::Iterator iterator;
 	const typename IndexTraits<std::map<KeyT, ValueT>>::Value& value() const { return iterator->second; }
 };
 
 template<typename ContainerT>
 const typename IndexTraits<ContainerT>::Value&
-Index<ContainerT>::val() const
+Index<ContainerT>::value() const
 {
-	return IndexValueFun<ContainerT>{_iterator}.value();
+	return IndexValueLookup<ContainerT>{_iterator}.value();
 }
 
 
@@ -195,6 +204,8 @@ public:
 	IndexIterator(IndexIterator&& other);
 	IndexIterator(const ContainerT* container, typename Traits::Position position, typename Traits::Iterator iterator);
 
+	~IndexIterator();
+
 private:
 	friend class boost::iterator_core_access;
 
@@ -231,6 +242,11 @@ IndexIterator<ContainerT>::IndexIterator(const ContainerT* container, typename T
 }
 
 template<typename ContainerT>
+IndexIterator<ContainerT>::~IndexIterator()
+{
+}
+
+template<typename ContainerT>
 void IndexIterator<ContainerT>::increment()
 {
 	++_index->_position;
@@ -240,6 +256,9 @@ void IndexIterator<ContainerT>::increment()
 template<typename ContainerT>
 bool IndexIterator<ContainerT>::equal(IndexIterator const& other) const
 {
+	if(_index->_container != other._index->_container)
+		throw std::invalid_argument("container mismatch");
+
     return _index->_iterator == other._index->_iterator;
 }
 
@@ -259,40 +278,74 @@ template<typename ContainerT>
 class IndexList
 {
 public:
-	IndexList(const ContainerT& container)
-		: _container(container)
-	{ }
+	IndexList(const ContainerT& container);
+	IndexList(ContainerT&& container);
+	IndexList(IndexList&& other);
 
-	IndexList(IndexList&& other)
-		: _container(other._container)
-	{ }
+	~IndexList();
 
 	IndexIterator<ContainerT> begin() const;
 	IndexIterator<ContainerT> end() const;
 
 private:
-	const ContainerT& _container;
+	const ContainerT* _container;
+	bool _ownership;
 };
+
+template<typename ContainerT>
+IndexList<ContainerT>::IndexList(const ContainerT& container)
+	: _container(&container), _ownership(false)
+{
+}
+
+template<typename ContainerT>
+IndexList<ContainerT>::IndexList(ContainerT&& container)
+	: _container(new ContainerT(container)), _ownership(true)
+{
+}
+
+template<typename ContainerT>
+IndexList<ContainerT>::IndexList(IndexList&& other)
+	: _container(std::move(other._container)), _ownership(std::move(other._ownership))
+{
+}
+
+template<typename ContainerT>
+IndexList<ContainerT>::~IndexList()
+{
+	if(_ownership)
+	{
+		delete _container;
+		_container = nullptr;
+		_ownership = false;
+	}
+}
 
 template<typename ContainerT>
 IndexIterator<ContainerT>
 IndexList<ContainerT>::begin() const
 {
-	return IndexIterator<ContainerT>(&_container, 0, _container.begin());
+	return IndexIterator<ContainerT>(_container, 0, _container->begin());
 }
 
 template<typename ContainerT>
 IndexIterator<ContainerT>
 IndexList<ContainerT>::end() const
 {
-	return IndexIterator<ContainerT>(&_container, _container.size(), _container.end());
+	return IndexIterator<ContainerT>(_container, _container->size(), _container->end());
 }
 
 
 template<typename ContainerT>
-IndexList<typename std::remove_const<ContainerT>::type> indices(const ContainerT& container)
+IndexList<ContainerT> indices(const ContainerT& container)
 {
-	return IndexList<typename std::remove_const<ContainerT>::type>(container);
+	return IndexList<ContainerT>(container);
+}
+
+template<typename ContainerT>
+IndexList<ContainerT> indices(ContainerT&& container)
+{
+	return IndexList<ContainerT>(std::move(container));
 }
 
 } } } // namespace: Everbase::InterfaceCompiler::IndexList
