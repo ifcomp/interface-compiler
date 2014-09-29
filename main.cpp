@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 	Components::StandardParser parser;
 	Components::TestFormatter format;
 
-	std::ifstream file("../_archive/yaml/test.yaml");
+    std::ifstream file("../api-generator/_archive/yaml/test.yaml");
 	file.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
 	Model::RootRef root = parser.execute(cprov, file);

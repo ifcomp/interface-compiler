@@ -7,6 +7,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
 using IndexList::indices;
+using namespace Model;
 using namespace StreamFilter;
 
 void TestFormatter::format(std::ostream& stream, Model::RootRef root) const
@@ -22,13 +23,16 @@ void TestFormatter::formatName(std::ostream& stream, Model::IdentifiableRef iden
 void TestFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
 {
 	stream << "/**" << endl;
-	
-	filter(stream).push<indent>(" * ").push<wrap>() << "@brief " << documentation->brief() << endl;
+	    
+    if (documentation->keyExists(Documentation::KEY_BRIEF))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
+    }
 
-	if(documentation->more().length() > 0)
-	{
-		filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->more() << endl;
-	}
+    if (documentation->keyExists(Documentation::KEY_MORE))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
+    }
 
 	stream << " */" << endl;
 }

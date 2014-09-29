@@ -137,6 +137,7 @@ YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleA
     if (styleContextObject)
     {
         styleContextKey = styleContextObject->objectTypeName();
+        transform(styleContextKey.begin(), styleContextKey.end(), styleContextKey.begin(), ::tolower);
     }
 
     if (mRootNode[KEY_SECTION_STYLE].IsDefined())

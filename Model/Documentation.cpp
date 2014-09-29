@@ -6,44 +6,87 @@ Documentation::Documentation()
 {
 }
 
+
 Documentation::~Documentation()
 {
 }
 
-std::string Documentation::brief()
+
+bool Documentation::keyExists(std::string doxygenKey)
 {
-	return mBrief;
+    for (auto entry : _DocEntries)
+    {
+        if (entry.doxygenKey == doxygenKey)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
-void Documentation::setBrief(std::string brief)
+
+const std::vector<Documentation::DocEntry> &Documentation::docEntries()
 {
-	mBrief = brief;
+    return _DocEntries;
 }
 
-std::string Documentation::more()
+
+std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxygenKey)
 {
-	return mMore;
+    std::vector<DocEntry> entries;
+
+    for (auto entry : _DocEntries)
+    {
+        if (entry.doxygenKey == doxygenKey)
+        {
+            entries.push_back(entry);
+        }
+    }
+
+    return entries;
 }
 
-void Documentation::setMore(std::string more)
+
+Documentation::DocEntry Documentation::docEntry(std::string doxygenKey)
 {
-    mMore = more;
+    for (auto entry : _DocEntries)
+    {
+        if (entry.doxygenKey == doxygenKey)
+        {
+            return entry;
+        }
+    }
+    throw std::runtime_error("doxygenKey " + doxygenKey + " not set");
 }
 
-const std::vector<std::list<std::string> > &Documentation::docEntries()
+
+std::string Documentation::description(std::string doxygenKey)
 {
-	return mDocEntries;
+    try {
+        return docEntry(doxygenKey).description;
+    }
+    catch (const std::runtime_error &e)
+    {
+        throw;
+    }
 }
 
-void Documentation::addDocEntry(std::string doxygenKey, std::list<std::string> elements)
+
+void Documentation::addDocEntry(DocEntry entry)
 {
-	elements.insert(elements.begin(), doxygenKey);
-	mDocEntries.push_back(elements);
+    _DocEntries.push_back(entry);
 }
+
+
+void Documentation::addDocEntry(std::string doxygenKey, std::string description)
+{
+    _DocEntries.push_back(DocEntry{ doxygenKey, "", description });
+}
+
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, std::string description)
 {
-	mDocEntries.push_back(std::list<std::string>{ doxygenKey, paramName, description });
+    _DocEntries.push_back(DocEntry{ doxygenKey, paramName, description });
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

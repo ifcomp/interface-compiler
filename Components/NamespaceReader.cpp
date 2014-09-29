@@ -525,23 +525,31 @@ void NamespaceReader::parseDoc(const YAML::Node &node, IdentifiableRef identifia
 {
     if (checkNode(node, KEY_DOC, YAML::NodeType::Map))
     {
-        const YAML::Node &docNode = node[KEY_DOC];
         DocumentationRef newDoc = std::shared_ptr<Documentation>(new Documentation);
 
-        if (checkNode(docNode, KEY_BRIEF))
+        for (auto mapEntry : node[KEY_DOC])
         {
-            newDoc->setBrief(docNode[KEY_BRIEF].Scalar());
+//            cout << "DOC: f:" << mapEntry.first.Scalar() << " s:" << mapEntry.second.Scalar() << endl;
+            newDoc->addDocEntry(mapEntry.first.Scalar(), mapEntry.second.Scalar());
+        }
+        identifiable->setDoc(newDoc);
 
-            if (checkNode(docNode, KEY_MORE))
-            {
-                newDoc->setMore(docNode[KEY_MORE].Scalar());
-            }
-            identifiable->setDoc(newDoc);
-        }
-        else
-        {
-            throw runtime_error("documentation of " + identifiable->longName() + " is missing a brief description\n");
-        }
+//        const YAML::Node &docNode = node[KEY_DOC];
+
+//        if (checkNode(docNode, KEY_BRIEF))
+//        {
+//            newDoc->addDocEntry(Documentation::KEY_BRIEF, docNode[KEY_BRIEF].Scalar());
+
+//            if (checkNode(docNode, KEY_MORE))
+//            {
+//                newDoc->addDocEntry(Documentation::KEY_MORE, docNode[KEY_MORE].Scalar());
+//            }
+//            identifiable->setDoc(newDoc);
+//        }
+//        else
+//        {
+//            throw runtime_error("documentation of " + identifiable->longName() + " is missing a brief description\n");
+//        }
     }
 }
 

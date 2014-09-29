@@ -10,6 +10,14 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost COMPONENTS regex filesystem system)
 
 set(SRC
+    StreamFilter.hpp
+    Meta.hpp
+    MultiStream.hpp
+    IndexList.hpp
+    CompilerSetup.hpp
+    Config.hpp
+    FormatToken.hpp
+
     Compiler.cpp
     Parser.cpp
     Transformer.cpp
