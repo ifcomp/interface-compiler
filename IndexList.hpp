@@ -4,12 +4,11 @@
 #include <memory>
 #include <boost/iterator/iterator_facade.hpp>
 
-#include <iostream>
-
 
 namespace Everbase { namespace InterfaceCompiler { namespace IndexList {
 
-// ********************************************
+
+// IndexTraits
 
 template<typename ContainerT>
 struct IndexTraits;
@@ -71,13 +70,10 @@ struct IndexTraits<ContainerT&> : public IndexTraits<ContainerT>
 };
 
 
-// ********************************************
-
-
+// Index
 
 template<typename ContainerT>
 class IndexIterator;
-
 
 template<typename ContainerT>
 class Index
@@ -171,14 +167,10 @@ bool Index<ContainerT>::last() const
 }
 
 
-
-
-// ********************************************
-
+// IndexIterator
 
 template<typename ContainerT>
 class IndexList;
-
 
 template<typename ContainerT>
 class IndexIterator
@@ -244,8 +236,7 @@ IndexIterator<ContainerT>::dereference() const
 }
 
 
-
-// ********************************************
+// IndexList
 
 template<typename ContainerT>
 class IndexList
@@ -292,5 +283,6 @@ IndexList<ContainerT> indices(ContainerT&& container)
 {
 	return IndexList<ContainerT>(std::forward<ContainerT>(container));
 }
+
 
 } } } // namespace: Everbase::InterfaceCompiler::IndexList
