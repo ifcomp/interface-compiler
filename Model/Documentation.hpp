@@ -27,7 +27,7 @@ public:
     };
 
 private:
-    std::vector<DocEntry> _DocEntries;
+    std::vector<DocEntry> _docEntries;
 
 public:
     Documentation();

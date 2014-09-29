@@ -8,12 +8,12 @@ DomainObject::DomainObject(DomainObjectRef parentObject)
 
 DomainObjectRef DomainObject::parentObject()
 {
-    return mParentObject;
+    return _parentObject;
 }
 
 void DomainObject::setParentObject(DomainObjectRef parentObject)
 {
-    mParentObject = parentObject;
+    _parentObject = parentObject;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -12,22 +12,22 @@ Type::~Type()
 
 NamespaceMemberRef Type::primary()
 {
-    return mPrimary;
+    return _primary;
 }
 
 void Type::setPrimary(NamespaceMemberRef primary)
 {
-    mPrimary = primary;
+    _primary = primary;
 }
 
 void Type::addParam(NamespaceMemberRef param)
 {
-    mParams.push_back(param);
+    _params.push_back(param);
 }
 
 const std::vector<NamespaceMemberRef>& Type::params()
 {
-    return mParams;
+    return _params;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

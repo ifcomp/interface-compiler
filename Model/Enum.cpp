@@ -12,12 +12,12 @@ Enum::~Enum()
 
 void Enum::addValue(ValueRef value)
 {
-    mValues[value->longName()] = value;
+    _values[value->longName()] = value;
 }
 
 const std::map<std::string, ValueRef>& Enum::values()
 {
-	return mValues;
+	return _values;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

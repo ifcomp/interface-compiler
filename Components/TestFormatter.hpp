@@ -1,11 +1,20 @@
 #pragma once
 
 #include "Formatter.hpp"
+#include "Components/LangConfigReader.hpp"
+
+#include <fstream>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 class TestFormatter : public Formatter
 {
+private:
+    LangConfigReader _langConfigReader;
+
+public:
+    TestFormatter(std::istream& configStream);
+
 protected:
 	using Formatter::formatName;
 	using Formatter::formatSig;
@@ -14,7 +23,7 @@ protected:
 protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const override;
 
-	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const override;
+    virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const override;
 	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const override;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const override;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const override;

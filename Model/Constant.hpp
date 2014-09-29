@@ -11,8 +11,8 @@ public:
     static constexpr auto TYPE_NAME = "Constant";
 
 private:
-    TypeRef mType;
-    std::string mValue;
+    TypeRef _Type;
+    std::string _value;
 
 public:
     Constant();

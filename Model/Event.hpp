@@ -14,8 +14,8 @@ public:
     static constexpr auto TYPE_NAME = "Event";
 
 private:
-    bool mIsStatic;
-    std::map<std::string, ParameterRef> mResults;
+    bool _isStatic;
+    std::map<std::string, ParameterRef> _results;
 
 public:
     Event();

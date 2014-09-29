@@ -36,7 +36,7 @@ public:
     virtual std::string objectTypeName() = 0;
 
 private:
-    DomainObjectRef mParentObject;
+    DomainObjectRef _parentObject;
 };
 
 } } } // namespace Everbase::InterfaceCompiler::Model

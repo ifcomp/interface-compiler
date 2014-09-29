@@ -12,7 +12,7 @@ public:
     static constexpr auto TYPE_NAME = "Value";
 
 private:
-    int32_t mValue;
+    int32_t _value;
 
 public:
     Value();

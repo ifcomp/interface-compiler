@@ -13,22 +13,22 @@ Constant::~Constant()
 
 TypeRef Constant::type()
 {
-    return mType;
+    return _Type;
 }
 
 void Constant::setType(TypeRef type)
 {
-    mType = type;
+    _Type = type;
 }
 
 std::string Constant::value()
 {
-    return mValue;
+    return _value;
 }
 
 void Constant::setValue(std::string value)
 {
-    mValue = value;
+    _value = value;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

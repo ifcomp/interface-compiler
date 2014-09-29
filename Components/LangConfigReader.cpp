@@ -12,6 +12,7 @@
 #include "Model/Primitive.hpp"
 #include "Model/Struct.hpp"
 
+#include <boost/regex.hpp>
 #include <sstream>
 #include <fstream>
 
@@ -38,7 +39,7 @@ const char* LangConfigReader::styleAttributeKeys[] =
 
 const char* LangConfigReader::nameStyleKeys[] =
 {
-    "camelcase", "lowercase", "uppercase"
+    "lower-camelcase", "upper-camelcase", "lowercase", "uppercase"
 };
 
 
@@ -111,7 +112,72 @@ string LangConfigReader::containerToLang(Model::ContainerRef container)
 }
 
 
-LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject)
+string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified)
+{
+    if (Model::TypeRef resolvedType = dynamic_pointer_cast<Model::Type>(type))
+    {
+        string output;
+
+        if (Model::ContainerRef container = dynamic_pointer_cast<Model::Container>(resolvedType->primary()))
+        {
+            output = containerToLang(container);
+
+            vector<string> params;
+
+            // resolve subtype strings
+            for (Model::NamespaceMemberRef param : resolvedType->params())
+            {
+                if (Model::PrimitiveRef primitive = dynamic_pointer_cast<Model::Primitive>(param))
+                {
+                    // primitives are directly translated to string from language config
+                    params.push_back(primitiveToLang(primitive));
+                }
+                else if (dynamic_pointer_cast<Model::Container>(param))
+                {
+                    throw runtime_error("Sorry, nested containers art not supported!\n");
+                }
+                else
+                {
+                    stringstream tempStream;
+
+                    if (fullyQualified)
+                    {
+                        ///< @todo resolve namespace
+//                        objectNamespace(tempStream, param);
+                    }
+
+                    ///< @todo clean up this mess!
+                    tempStream << styleToken(param->longName(), param);
+//                    name(tempStream, param);
+                    params.push_back(tempStream.str());
+                }
+            }
+
+            // replace subtype placeholders
+            size_t pos = 0;
+            int paramCount = 0;
+
+            while ((pos = output.find(TYPE_PLACEHOLDER, pos)) != string::npos)
+            {
+                output.replace(pos, 1, params.at(paramCount));
+                ++paramCount;
+            }
+
+            if (paramCount != params.size())
+            {
+                throw runtime_error("LangConfigParser::containerTypeToLang(): subtype count in " +
+                                    resolvedType->primary()->longName() +
+                                    " definition does not match language-specific config!\n");
+            }
+            return output;
+        }
+        throw runtime_error("LangConfigParser::containerTypeToLang(): primary is not a container!\n");
+    }
+    throw runtime_error("LangConfigParser::containerTypeToLang(): bad type!\n");
+}
+
+
+LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject) const
 {
     const YAML::Node &node = configValue(StyleAttribute::NAME_STYLE, styleContextObject);
 
@@ -125,11 +191,11 @@ LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjec
             }
         }
     }
-    return CAMELCASE;
+    throw runtime_error("name style " + node.Scalar() + " not supported");
 }
 
 
-YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject)
+YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject) const
 {
     string styleAttributekey(styleAttributeKeys[styleAttribute]);
     string styleContextKey = "default";
@@ -165,7 +231,7 @@ YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleA
 }
 
 
-std::string LangConfigReader::listKnownStyleAttributes()
+std::string LangConfigReader::listKnownStyleAttributes() const
 {
     stringstream out;
     out << "-- REGISTERED STYLE ATTRIBUTES -" << endl;
@@ -178,5 +244,72 @@ std::string LangConfigReader::listKnownStyleAttributes()
     out << "--------------------------------" << endl;
     return out.str();
 }
+
+
+string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleContextObject) const
+{
+    string output;
+
+    if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME &&
+        styleContextObject->objectTypeName() != Model::Container::TYPE_NAME)
+    {
+        NameStyle nameStyle = configNameStyle(styleContextObject);
+        string delimiter = configAttribute<string>(StyleAttribute::NAME_DELIMITER, styleContextObject);
+
+        boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
+        string::const_iterator start = input.begin();
+        string::const_iterator end = input.end();
+        boost::smatch matches;
+        int elementCount = 0;
+
+        while(regex_search(start, end, matches, regularExpression))
+        {
+            string temp(matches[0]);
+
+            switch (nameStyle)
+            {
+                case NameStyle::LOWER_CAMELCASE:
+                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+
+                    if (elementCount > 0)
+                    {
+                        // only first word starts lowercase
+                        transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
+                    }
+                    break;
+
+                case NameStyle::UPPER_CAMELCASE:
+                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+                    transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
+                    break;
+
+                case NameStyle::UPPERCASE:
+                    transform(temp.begin(), temp.end(), temp.begin(), ::toupper);
+                    break;
+
+                case NameStyle::LOWERCASE:
+                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+                    break;
+            }
+
+            if (elementCount)
+            {
+                temp = delimiter + temp;
+            }
+
+            output += temp;
+            ++elementCount;
+
+            // update search position:
+            start = matches[0].second;
+        }
+    }
+    else
+    {
+        output = input;
+    }
+    return output;
+}
+
 
 } } } // namespace: Everbase::InterfaceCompiler::Components

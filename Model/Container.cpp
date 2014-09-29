@@ -11,7 +11,7 @@ const char *Container::containerNames[] =
 
 
 Container::Container()
-    : mType(ContainerType::UNDEFINED)
+    : _type(ContainerType::UNDEFINED)
 {
 }
 
@@ -23,27 +23,27 @@ Container::~Container()
 
 Container::ContainerType Container::type()
 {
-	return mType;
+    return _type;
 }
 
 
 void Container::setType(Container::ContainerType type)
 {
-    mType = type;
+    _type = type;
 }
 
 
 std::string Container::typeName()
 {
-    return containerNames[ int(mType) ];
+    return containerNames[ int(_type) ];
 }
 
 
 void Container::setType(std::string typeName)
 {
-    mType = decodeTypeName(typeName);
+    _type = decodeTypeName(typeName);
 
-    if (mType == ContainerType::UNDEFINED)
+    if (_type == ContainerType::UNDEFINED)
     {
         throw std::runtime_error("unknown container type " + typeName + "\n");
     }

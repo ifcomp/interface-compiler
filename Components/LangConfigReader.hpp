@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Components/YamlReader.hpp"
+#include "Model/DomainObject.hpp"
+#include "Model/Type.hpp"
 #include "Model/Primitive.hpp"
 #include "Model/Container.hpp"
 
 #include <istream>
+#include <ostream>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
@@ -23,7 +26,8 @@ public:
 
     enum NameStyle
     {
-        CAMELCASE,
+        LOWER_CAMELCASE,
+        UPPER_CAMELCASE,
         LOWERCASE,
         UPPERCASE,
         _NAME_STYLE_COUNT_
@@ -73,17 +77,25 @@ public:
     std::string containerToLang(Model::ContainerRef container);
 
     /**
+     * @brief Resolve container type to language-specific string.
+     * @param type Container
+     * @param fullyQualified If true, add fully qualified namespace
+     * @return language-specific string
+     */
+    std::string containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified);
+
+    /**
      * @brief Fetch NAME_STYLE config entry.
      * @param styleContext Style context enum entry to specify the config section
      * @return Configured NameStyle for styleContext
      */
-    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject);
+    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject) const;
 
     /**
      * @brief Print all registered style attributes to stdout.
      * @return List as string
      */
-    std::string listKnownStyleAttributes();
+    std::string listKnownStyleAttributes() const;
 
     /**
      * Fetch style attribute from config.
@@ -92,11 +104,15 @@ public:
      * @return Attribute value
      */
     template <typename T> T configAttribute(StyleAttribute styleAttribute,
-                                            Model::DomainObjectRef styleContextObject)
+                                            Model::DomainObjectRef styleContextObject) const
     {
         const YAML::Node &node = configValue(styleAttribute, styleContextObject);
         return node.as<T>();
     }
+
+    std::string styleToken(std::string input, Model::DomainObjectRef styleContextObject) const;
+
+
 
 private:
     /**
@@ -114,7 +130,7 @@ private:
      * @throw std::runtime_error if key was not found in styleContext or default context
      * @see styleContextKeys
      */
-    YAML::Node configValue(StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject);
+    YAML::Node configValue(StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject) const;
 
 private:
     YAML::Node mRootNode;

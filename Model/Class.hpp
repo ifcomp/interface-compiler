@@ -39,10 +39,10 @@ public:
     const std::map<std::string, EventRef>& events();
 
 private:
-    ClassType mType;
-    TypeRef mParent;
-    std::map<std::string, OperationRef> mOperations;
-    std::map<std::string, EventRef> mEvents;
+    ClassType _Type;
+    TypeRef _Parent;
+    std::map<std::string, OperationRef> _operations;
+    std::map<std::string, EventRef> _events;
 };
 
 typedef std::shared_ptr<Class> ClassRef;

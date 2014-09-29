@@ -13,32 +13,32 @@ Identifiable::~Identifiable()
 
 std::string Identifiable::longName()
 {
-    return mLongName;
+    return _longName;
 }
 
 void Identifiable::setLongName(std::string longName)
 {
-    mLongName = longName;
+    _longName = longName;
 }
 
 std::string Identifiable::shortName()
 {
-    return mShortName;
+    return _shortName;
 }
 
 void Identifiable::setShortName(std::string shortName)
 {
-    mShortName = shortName;
+    _shortName = shortName;
 }
 
 DocumentationRef Identifiable::doc()
 {
-	return mDoc;
+	return _doc;
 }
 
 void Identifiable::setDoc(DocumentationRef doc)
 {
-	mDoc = doc;
+	_doc = doc;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

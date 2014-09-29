@@ -15,10 +15,10 @@ public:
     static constexpr auto TYPE_NAME = "Operation";
 
 private:
-    bool mIsStatic;
-    bool mIsSynchronous;
-    std::map<std::string, ParameterRef> mParams;
-    ParameterRef mResult;
+    bool _isStatic;
+    bool _isSynchronous;
+    std::map<std::string, ParameterRef> _params;
+    ParameterRef _result;
 
 public:
     Operation();

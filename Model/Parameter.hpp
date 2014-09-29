@@ -14,7 +14,7 @@ public:
     static constexpr auto TYPE_NAME = "Parameter";
 
 private:
-    TypeBaseRef mType;
+    TypeBaseRef _type;
 
 public:
     Parameter();

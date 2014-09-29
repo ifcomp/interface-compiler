@@ -12,34 +12,34 @@ Class::~Class()
 
 Class::ClassType Class::type()
 {
-	return mType;
+	return _Type;
 }
 
 void Class::setType(Class::ClassType type)
 {
-    mType = type;
+    _Type = type;
 }
 
 TypeRef Class::parent()
 {
-    return mParent;
+    return _Parent;
 }
 
 void Class::setParent(TypeRef parent)
 {
-	mParent = parent;
+	_Parent = parent;
 }
 
 void Class::addOperation(OperationRef operation)
 {
-    mOperations[operation->longName()] = operation;
+    _operations[operation->longName()] = operation;
 }
 
 std::vector<OperationRef> Class::operations()
 {
 	std::vector<OperationRef> result;
 
-	for(auto operation : mOperations)
+	for(auto operation : _operations)
 		{ result.push_back(operation.second); }
 
 	return result;
@@ -47,12 +47,12 @@ std::vector<OperationRef> Class::operations()
 
 void Class::addEvent(EventRef event)
 {
-    mEvents[event->longName()] = event;
+    _events[event->longName()] = event;
 }
 
 const std::map<std::string, EventRef>& Class::events()
 {
-	return mEvents;
+	return _events;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

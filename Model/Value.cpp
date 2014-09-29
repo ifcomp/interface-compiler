@@ -12,12 +12,12 @@ Value::~Value()
 
 int32_t Value::value()
 {
-	return mValue;
+	return _value;
 }
 
 void Value::setValue(int32_t value)
 {
-	mValue = value;
+	_value = value;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

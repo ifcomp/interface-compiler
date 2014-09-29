@@ -34,7 +34,7 @@ public:
     static const char *primitiveNames[int(PrimitiveType::_PRIMITIVE_COUNT_)];
 
 private:
-    PrimitiveType mType;
+    PrimitiveType _type;
 
 public:
     Primitive();

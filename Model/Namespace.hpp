@@ -14,7 +14,7 @@ public:
     static constexpr auto TYPE_NAME = "Namespace";
 
 private:
-    std::map<std::string, NamespaceMemberRef> mMembers;
+    std::map<std::string, NamespaceMemberRef> _members;
 
 public:
     Namespace();
