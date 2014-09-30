@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Constant::TYPE_NAME = "Constant";
+
 Constant::Constant()
 {
 }

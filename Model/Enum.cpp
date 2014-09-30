@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Enum::TYPE_NAME = "Enum";
+
 Enum::Enum()
 {
 }

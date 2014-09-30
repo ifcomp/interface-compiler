@@ -3,8 +3,6 @@
 #include <set>
 #include <iostream>
 
-typedef std::uint16_t uint;
-
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
@@ -29,7 +27,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::DocumentationRef d
 
     filter f(stream);
     f.push<indent>(" * ");
-    f.push<wrap>(_langConfig.configAttribute<uint>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
+    f.push<wrap>(_langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
 
     if (documentation->keyExists(Documentation::KEY_BRIEF))
     {
@@ -94,7 +92,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
            << "{" << endl;
 
     filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<uint>(LangConfigReader::StyleAttribute::INDENT, struct_));
+    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, struct_));
 
     for (auto field : struct_->fields())
     {
@@ -110,7 +108,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
     stream << "class " << formatName(class_) << endl << "{" << endl;
 
     filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<uint>(LangConfigReader::StyleAttribute::INDENT, class_));
+    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, class_));
 
     for( auto operation : class_->operations() )
     {
@@ -159,7 +157,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
     stream << "{" << endl;
 
     filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<uint>(LangConfigReader::StyleAttribute::INDENT, enum_));
+    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, enum_));
 
     for (auto value : enum_->values())
     {

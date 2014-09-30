@@ -2,7 +2,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-const char* Event::TYPE_NAME = "Enum";
+const char* Event::TYPE_NAME = "Event";
 
 
 Event::Event() :

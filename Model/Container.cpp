@@ -2,6 +2,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Container::TYPE_NAME = "Container";
 
 const char *Container::containerNames[] =
 {
@@ -9,8 +10,6 @@ const char *Container::containerNames[] =
     "list",
     "set"
 };
-
-const char* Container::TYPE_NAME = "Constant";
 
 Container::Container()
     : _type(ContainerType::UNDEFINED)
