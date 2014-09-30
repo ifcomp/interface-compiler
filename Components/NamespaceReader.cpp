@@ -444,7 +444,7 @@ TypeRef NamespaceReader::parseType(const YAML::Node &node)
             // this is a type with at least one subtype
             if (typeNode.size() >= 2)
             {
-                for (int n = 0; n < typeNode.size(); ++n)
+                for (size_t n = 0; n < typeNode.size(); ++n)
                 {
                     if (typeNode[n].IsScalar())
                     {

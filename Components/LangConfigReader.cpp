@@ -146,7 +146,7 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
 
             // replace subtype placeholders
             size_t pos = 0;
-            int paramCount = 0;
+            size_t paramCount = 0;
 
             while ((pos = output.find(TYPE_PLACEHOLDER, pos)) != string::npos)
             {

@@ -146,8 +146,8 @@ class BasicIndentBuffer : public BasicFilterBuffer<CharT, Traits>
 public:
     BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::basic_string<CharT, Traits> data )
         : BasicFilterBuffer<CharT, Traits>( dest )
-        , _bol( true )
         , _data( data )
+        , _bol( true )
     {
     }
 
