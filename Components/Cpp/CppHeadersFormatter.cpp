@@ -3,6 +3,8 @@
 #include <set>
 #include <iostream>
 
+typedef std::uint16_t uint;
+
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;

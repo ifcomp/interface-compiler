@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Type::TYPE_NAME;
+
 Type::Type()
 {
 }

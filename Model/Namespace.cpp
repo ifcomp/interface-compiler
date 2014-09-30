@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Namespace::TYPE_NAME = "Namespace";
+
 Namespace::Namespace()
 {
 }

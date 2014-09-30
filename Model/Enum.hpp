@@ -12,7 +12,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Enum : public NamespaceMember
 {
 public:
-    static constexpr auto TYPE_NAME = "Enum";
+    static const char* TYPE_NAME;
 
 private:
     std::map<std::string, ValueRef> _values;

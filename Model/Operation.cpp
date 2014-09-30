@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Operation::TYPE_NAME = "Operation";
+
 Operation::Operation() :
     _isStatic(false),
     _isSynchronous(false)

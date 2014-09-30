@@ -18,4 +18,24 @@ set(SRC ${SRC}
    Model/Type.cpp
    Model/Value.cpp
    Model/Root.cpp
+
+   Model/Class.hpp
+   Model/Constant.hpp
+   Model/Container.hpp
+   Model/Documentation.hpp
+   Model/DomainObject.hpp
+   Model/Enum.hpp
+   Model/Event.hpp
+   Model/Identifiable.hpp
+   Model/Namespace.hpp
+   Model/NamespaceMember.hpp
+   Model/Operation.hpp
+   Model/Parameter.hpp
+   Model/Primitive.hpp
+   Model/Struct.hpp
+   Model/TypeBase.hpp
+   Model/UnresolvedType.hpp
+   Model/Type.hpp
+   Model/Value.hpp
+   Model/Root.hpp
 PARENT_SCOPE)

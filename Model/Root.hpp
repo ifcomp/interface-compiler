@@ -7,7 +7,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Root : public DomainObject
 {
 public:
-    static constexpr auto TYPE_NAME = "Root";
+    static const char* TYPE_NAME;
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
 public:

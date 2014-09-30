@@ -9,7 +9,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Value : public Identifiable
 {
 public:
-    static constexpr auto TYPE_NAME = "Value";
+    static const char* TYPE_NAME;
 
 private:
     int32_t _value;

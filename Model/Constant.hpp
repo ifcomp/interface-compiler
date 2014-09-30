@@ -8,7 +8,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Constant : public NamespaceMember
 {
 public:
-    static constexpr auto TYPE_NAME = "Constant";
+    static const char* TYPE_NAME;
 
 private:
     TypeRef _Type;

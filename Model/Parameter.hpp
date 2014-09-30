@@ -11,7 +11,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Parameter : public Identifiable
 {
 public:
-    static constexpr auto TYPE_NAME = "Parameter";
+    static const char* TYPE_NAME;
 
 private:
     TypeBaseRef _type;
