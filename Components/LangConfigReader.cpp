@@ -298,6 +298,10 @@ string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleCo
                 case NameStyle::LOWERCASE:
                     transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
                     break;
+
+                case NameStyle::_NAME_STYLE_COUNT_:
+                default:
+                    throw std::runtime_error("invalid name style");
             }
 
             if (elementCount)
