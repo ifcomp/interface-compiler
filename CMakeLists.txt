@@ -18,6 +18,12 @@ set(SRC
     Config.hpp
     FormatToken.hpp
 
+    Compiler.hpp
+    ConfigProvider.hpp
+    Formatter.hpp
+    Parser.hpp
+    Transformer.hpp
+
     Compiler.cpp
     Parser.cpp
     Transformer.cpp

@@ -12,7 +12,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Struct : public NamespaceMember
 {
 public:
-    static constexpr auto TYPE_NAME = "Struct";
+    static const char* TYPE_NAME;
 
 private:
     std::map<std::string, ParameterRef> _fields;

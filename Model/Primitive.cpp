@@ -2,7 +2,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-const char *Primitive::primitiveNames[] =
+const char* Primitive::primitiveNames[] =
 {
     "byte",
     "uint32",
@@ -16,6 +16,7 @@ const char *Primitive::primitiveNames[] =
     "const-buffer"
 };
 
+const char* Primitive::TYPE_NAME = "Primitive";
 
 Primitive::Primitive()
     : _type(PrimitiveType::UNDEFINED)

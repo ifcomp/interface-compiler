@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Root::TYPE_NAME = "Root";
+
 Root::Root()
 {
 }

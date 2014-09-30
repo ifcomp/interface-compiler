@@ -9,7 +9,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Container : public NamespaceMember
 {
 public:
-    static constexpr auto TYPE_NAME = "Container";
+    static const char* TYPE_NAME;
 
     enum class ContainerType
     {

@@ -10,7 +10,7 @@ class Primitive : public NamespaceMember
 {
 public:
 
-    static constexpr auto TYPE_NAME = "Primitive";
+    static const char* TYPE_NAME;
 
     enum class PrimitiveType
     {

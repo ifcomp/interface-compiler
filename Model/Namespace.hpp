@@ -11,7 +11,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Namespace : public NamespaceMember
 {
 public:
-    static constexpr auto TYPE_NAME = "Namespace";
+    static const char* TYPE_NAME;
 
 private:
     std::map<std::string, NamespaceMemberRef> _members;

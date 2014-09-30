@@ -10,7 +10,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Type : public TypeBase
 {
 public:
-    static constexpr auto TYPE_NAME = "Type";
+    static const char* TYPE_NAME;
 
 private:
     NamespaceMemberRef _primary;

@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* UnresolvedType::TYPE_NAME = "UnresolvedType";
+
 UnresolvedType::UnresolvedType()
 {
 }

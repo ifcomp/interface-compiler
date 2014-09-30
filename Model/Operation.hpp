@@ -12,7 +12,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Operation : public Identifiable
 {
 public:
-    static constexpr auto TYPE_NAME = "Operation";
+    static const char* TYPE_NAME;
 
 private:
     bool _isStatic;

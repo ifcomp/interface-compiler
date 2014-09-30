@@ -88,10 +88,10 @@ private:
 
 public:
     BasicFilterStream(std::basic_ostream<CharT, Traits>& dest)
-        : std::basic_ostream<CharT, Traits>()
+		: std::basic_ostream<CharT, Traits>(new FilterBuffer(*(dest.rdbuf())))
     {
         // add non-filtering buffer
-        _buffers.push_back(FilterBufferRef(new FilterBuffer(*(dest.rdbuf()))));
+		_buffers.push_back(FilterBufferRef(static_cast<FilterBuffer*>(this->rdbuf())));
         this->rdbuf(_buffers.back().get());
     }
 

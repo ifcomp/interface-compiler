@@ -12,12 +12,12 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Documentation : public DomainObject
 {
 public:
-    static constexpr auto TYPE_NAME     = "Documentation";
+    static const char* TYPE_NAME;
 
-    static constexpr auto KEY_BRIEF     = "brief";
-    static constexpr auto KEY_MORE      = "more";
-    static constexpr auto KEY_PARAM     = "param";
-    static constexpr auto KEY_RETURN    = "return";
+    static const char* KEY_BRIEF;
+    static const char* KEY_MORE;
+    static const char* KEY_PARAM;
+    static const char* KEY_RETURN;
 
     struct DocEntry
     {

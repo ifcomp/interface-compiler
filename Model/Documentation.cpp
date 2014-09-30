@@ -2,6 +2,13 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Documentation::TYPE_NAME     = "Documentation";
+
+const char* Documentation::KEY_BRIEF     = "brief";
+const char* Documentation::KEY_MORE      = "more";
+const char* Documentation::KEY_PARAM     = "param";
+const char* Documentation::KEY_RETURN    = "return";
+
 Documentation::Documentation()
 {
 }

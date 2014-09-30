@@ -11,7 +11,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Event : public Identifiable
 {
 public:
-    static constexpr auto TYPE_NAME = "Event";
+    static const char* TYPE_NAME;
 
 private:
     bool _isStatic;

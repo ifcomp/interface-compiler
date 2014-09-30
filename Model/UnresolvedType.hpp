@@ -9,7 +9,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class UnresolvedType : public Type
 {
 public:
-    static constexpr auto TYPE_NAME = "UnresolvedType";
+    static const char* TYPE_NAME;
 
 private:
     std::string _primary;

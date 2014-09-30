@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Value::TYPE_NAME = "Value";
+
 Value::Value()
 {
 }

@@ -2,6 +2,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
+const char* Parameter::TYPE_NAME = "Parameter";
+
 Parameter::Parameter()
 {
 }
