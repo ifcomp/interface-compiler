@@ -191,18 +191,10 @@ void TestFormatter::formatSig(std::ostream& stream, Model::OperationRef operatio
 
 	stream << " " << formatName(operation) << "(";
 
-	for( auto parameter : operation->params() )
-	{
-		stream << format(parameter) << ", ";
-	}
-
-	/*
 	for( auto parameter : indices(operation->params()) )
 	{
-		if(parameter.val() && parameter.val()->type() && std::dynamic_pointer_cast<Model::Type>(parameter.val()->type()) && std::dynamic_pointer_cast<Model::Type>(parameter.val()->type())->primary())
-			stream << format(parameter.val()) << (!parameter.last() ? ", " : "");
+		stream << format(parameter.value()) << (!parameter.last() ? ", " : "");
 	}
-	*/
 
 	stream << ")";
 }
