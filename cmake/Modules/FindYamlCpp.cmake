@@ -4,9 +4,8 @@
 #    YamlCpp_INCLUDE_DIRS
 #    YamlCpp_LIBRARIES
 
-FIND_PATH(YamlCpp_INCLUDE_DIRS NAMES yaml-cpp/yaml.h)
-FIND_LIBRARY(YamlCpp_LIBRARIES NAMES yaml-cpp libyaml-cpp libyaml-cppmdd)
+find_path(YamlCpp_INCLUDE_DIRS NAMES yaml-cpp/yaml.h PATHS $ENV{YamlCpp_ROOT}/include)
+find_library(YamlCpp_LIBRARIES NAMES yaml-cpp libyaml-cpp libyaml-cppmdd PATHS $ENV{YamlCpp_ROOT}/build/Debug)
 
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(YamlCpp DEFAULT_MSG YamlCpp_LIBRARIES YamlCpp_INCLUDE_DIRS)
-MARK_AS_ADVANCED(YamlCpp_INCLUDE_DIRS YamlCpp_LIBRARIES)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(YamlCpp DEFAULT_MSG YamlCpp_LIBRARIES YamlCpp_INCLUDE_DIRS)
