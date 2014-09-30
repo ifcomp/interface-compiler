@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 project(EverbaseInterfaceCompiler)
 
@@ -21,6 +22,8 @@ set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost COMPONENTS regex filesystem system)
+
+find_package(YamlCpp REQUIRED)
 
 set(SRC
     StreamFilter.hpp
@@ -46,6 +49,7 @@ set(SRC
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
+    ${YamlCpp_INCLUDE_DIRS}
     Components/Cpp
     Components
     Model
@@ -56,4 +60,4 @@ add_subdirectory(Components)
 add_subdirectory(Model)
 
 add_executable(compiler ${SRC})
-target_link_libraries(compiler ${Boost_LIBRARIES} yaml-cpp)
+target_link_libraries(compiler ${Boost_LIBRARIES} ${YamlCpp_LIBRARIES})
