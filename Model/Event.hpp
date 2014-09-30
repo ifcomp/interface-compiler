@@ -26,7 +26,7 @@ public:
     void setStatic(bool isStatic);
 
     void addResult(ParameterRef result);
-    const std::map<std::string, ParameterRef>& results();
+    std::vector<ParameterRef> results();
 };
 
 typedef std::shared_ptr<Event> EventRef;

@@ -88,7 +88,7 @@ void LangConfigReader::parseTypeMap()
 }
 
 
-std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive)
+std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive) const
 {
     string typeName = primitive->typeName();
 
@@ -96,11 +96,12 @@ std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive)
     {
         throw runtime_error("primitive type " + typeName + " not declared in language config!\n");
     }
-    return mPrimitiveMap[typeName];
+
+    return mPrimitiveMap.at(typeName);
 }
 
 
-string LangConfigReader::containerToLang(Model::ContainerRef container)
+string LangConfigReader::containerToLang(Model::ContainerRef container) const
 {
     string typeName = container->typeName();
 
@@ -108,11 +109,11 @@ string LangConfigReader::containerToLang(Model::ContainerRef container)
     {
         throw runtime_error("container type " + typeName + " not declared in language config!\n");
     }
-    return mContainerMap[typeName];
+    return mContainerMap.at(typeName);
 }
 
 
-string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified)
+string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified) const
 {
     if (Model::TypeRef resolvedType = dynamic_pointer_cast<Model::Type>(type))
     {
@@ -138,18 +139,7 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
                 }
                 else
                 {
-                    stringstream tempStream;
-
-                    if (fullyQualified)
-                    {
-                        ///< @todo resolve namespace
-//                        objectNamespace(tempStream, param);
-                    }
-
-                    ///< @todo clean up this mess!
-                    tempStream << styleToken(param->longName(), param);
-//                    name(tempStream, param);
-                    params.push_back(tempStream.str());
+                    params.push_back((fullyQualified ? objectNamespace(param) : "") + styleToken(param->longName(), param));
                 }
             }
 
@@ -174,6 +164,24 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
         throw runtime_error("LangConfigParser::containerTypeToLang(): primary is not a container!\n");
     }
     throw runtime_error("LangConfigParser::containerTypeToLang(): bad type!\n");
+}
+
+
+string LangConfigReader::objectNamespace(Model::IdentifiableRef identifiable) const
+{
+    using namespace Model;
+    NamespaceRef dummyNamespace = make_shared<Namespace>();     ///< @todo: ugly! clean this up!
+
+    string namespaceName;
+    string delimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAME_DELIMITER, dummyNamespace);
+    IdentifiableRef parentRef = dynamic_pointer_cast<Identifiable>(identifiable->parentObject());
+
+    while (parentRef && parentRef->longName() != "::")
+    {
+        namespaceName = parentRef->longName() + delimiter + namespaceName;
+        parentRef = dynamic_pointer_cast<Identifiable>(parentRef->parentObject());
+    }
+    return namespaceName;
 }
 
 

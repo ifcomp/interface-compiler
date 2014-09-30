@@ -50,9 +50,9 @@ void Class::addEvent(EventRef event)
     _events[event->longName()] = event;
 }
 
-const std::map<std::string, EventRef>& Class::events()
+std::vector<EventRef> Class::events()
 {
-	return _events;
+    return mapToVector(_events);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

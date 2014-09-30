@@ -23,7 +23,7 @@ public:
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     void addField(ParameterRef field);
-    const std::map<std::string, ParameterRef>& fields();
+    std::vector<ParameterRef> fields();
 };
 
 typedef std::shared_ptr<Struct> StructRef;

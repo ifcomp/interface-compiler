@@ -529,27 +529,13 @@ void NamespaceReader::parseDoc(const YAML::Node &node, IdentifiableRef identifia
 
         for (auto mapEntry : node[KEY_DOC])
         {
-//            cout << "DOC: f:" << mapEntry.first.Scalar() << " s:" << mapEntry.second.Scalar() << endl;
             newDoc->addDocEntry(mapEntry.first.Scalar(), mapEntry.second.Scalar());
         }
-        identifiable->setDoc(newDoc);
 
-//        const YAML::Node &docNode = node[KEY_DOC];
-
-//        if (checkNode(docNode, KEY_BRIEF))
-//        {
-//            newDoc->addDocEntry(Documentation::KEY_BRIEF, docNode[KEY_BRIEF].Scalar());
-
-//            if (checkNode(docNode, KEY_MORE))
-//            {
-//                newDoc->addDocEntry(Documentation::KEY_MORE, docNode[KEY_MORE].Scalar());
-//            }
-//            identifiable->setDoc(newDoc);
-//        }
-//        else
-//        {
-//            throw runtime_error("documentation of " + identifiable->longName() + " is missing a brief description\n");
-//        }
+        if (newDoc->docEntries().size())
+        {
+            identifiable->setDoc(newDoc);
+        }
     }
 }
 
@@ -613,14 +599,17 @@ TypeRef NamespaceReader::resolveType(TypeBaseRef type)
 
             return resolvedType;
         }
-
-        throw runtime_error("could not resolve primary type " + unresolvedType->primary() + "\n");
+        else
+        {
+            throw runtime_error("could not resolve primary type " + unresolvedType->primary() + "\n");
+        }
     }
     else
     {
         const TypeRef &resolvedType = dynamic_pointer_cast<Type>(type);
         if (resolvedType)
         {
+            cout << "resolved to existing type" << endl;
             return resolvedType;
         }
         else
@@ -646,10 +635,10 @@ void NamespaceReader::resolveParameterType(ParameterRef parameter)
 
 void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
 {
-    for (auto memberPair : rootNamespace->members())
+    for (auto namespaceMember : rootNamespace->members())
     {
         // namespace
-        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(memberPair);
+        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(namespaceMember);
         if (nestedNamespace)
         {
             try {
@@ -660,80 +649,88 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 throw runtime_error(addFQNameToException(nestedNamespace, ""));
             }
         }
-        else
+        else if (const ClassRef &classRef = dynamic_pointer_cast<Class>(namespaceMember))
         {
             // resolve events, operations & return
-            const ClassRef &classRef = dynamic_pointer_cast<Class>(memberPair);
+            try {
+                // resolve parent
+                if (classRef->parent())
+                {
+                    const TypeRef &parentType = resolveType(classRef->parent());
 
-            if (classRef)
-            {
-                try {
-                    // resolve parent
-                    if (classRef->parent())
+                    if (dynamic_pointer_cast<Class>(parentType->primary()))
                     {
-                        const TypeRef &parentType = resolveType(classRef->parent());
-
-                        if (dynamic_pointer_cast<Class>(parentType->primary()))
-                        {
-                            classRef->setParent(parentType);
-                        }
-                        else
-                        {
-                            throw runtime_error("inherited element in " + classRef->longName() + " must point to a class\n");
-                        }
+                        classRef->setParent(parentType);
                     }
-
-                    for (auto operation : classRef->operations())
+                    else
                     {
-                        try {
-                            for (auto parameter : operation->params())
-                            {
-                                resolveParameterType(parameter);
-                            }
-
-                            // resolve operation's return parameter
-                            const ParameterRef &resultParamRef = operation->result();
-                            if (resultParamRef)
-                            {
-                                resolveParameterType(resultParamRef);
-                            }
-                        }
-                        catch (const runtime_error &e)
-                        {
-                            throw runtime_error(addObjectNameToException(operation));
-                        }
-                    }
-
-                    for (auto event : classRef->events())
-                    {
-                        for (auto result : event.second->results())
-                        {
-                            resolveParameterType(result.second);
-                        }
+                        throw runtime_error("inherited element in " + classRef->longName() + " must point to a class\n");
                     }
                 }
-                catch (const runtime_error &e)
+
+                for (auto operation : classRef->operations())
                 {
-                    throw runtime_error(addFQNameToException(classRef, "::"));
+                    try {
+                        for (auto parameter : operation->params())
+                        {
+                            resolveParameterType(parameter);
+                        }
+
+                        // resolve operation's return parameter
+                        const ParameterRef &resultParamRef = operation->result();
+
+                        if (resultParamRef)
+                        {
+                            resolveParameterType(resultParamRef);
+                        }
+                    }
+                    catch (const runtime_error &e)
+                    {
+                        throw runtime_error(addObjectNameToException(operation));
+                    }
+                }
+
+                for (auto event : classRef->events())
+                {
+                    for (auto result : event->results())
+                    {
+                        resolveParameterType(result);
+                    }
                 }
             }
-            else
+            catch (const runtime_error &e)
             {
-                // resolve structs
-                try {
-                    const StructRef &structRef = dynamic_pointer_cast<Struct>(memberPair);
-                    if (structRef)
-                    {
-                        for (auto field : structRef->fields())
-                        {
-                            resolveParameterType(field.second);
-                        }
-                    }
-                }
-                catch (const runtime_error &e)
+                throw runtime_error(addFQNameToException(classRef, "::"));
+            }
+        }
+        else if (const StructRef &structRef = dynamic_pointer_cast<Struct>(namespaceMember))
+        {
+            // resolve structs
+            try {
+                for (auto field : structRef->fields())
                 {
-                    throw runtime_error(addFQNameToException(memberPair, " "));
+                    resolveParameterType(field);
                 }
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addFQNameToException(namespaceMember, " "));
+            }
+        }
+        else if (const ConstantRef &constantRef = dynamic_pointer_cast<Constant>(namespaceMember))
+        {
+            // resolve constants
+            try {
+                const TypeRef &resolvedType = resolveType(constantRef->type());
+
+                if (resolvedType)
+                {
+                    constantRef->setType(resolvedType);
+                }
+            }
+            catch (const runtime_error &e)
+            {
+                throw runtime_error(addFQNameToException(namespaceMember, " "));
             }
         }
     }

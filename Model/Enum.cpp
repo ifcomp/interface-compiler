@@ -15,9 +15,9 @@ void Enum::addValue(ValueRef value)
     _values[value->longName()] = value;
 }
 
-const std::map<std::string, ValueRef>& Enum::values()
+std::vector<ValueRef> Enum::values()
 {
-	return _values;
+    return mapToVector<ValueRef>(_values);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

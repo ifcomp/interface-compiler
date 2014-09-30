@@ -26,9 +26,9 @@ void Event::addResult(ParameterRef result)
     _results[result->longName()] = result;
 }
 
-const std::map<std::string, ParameterRef>& Event::results()
+std::vector<ParameterRef> Event::results()
 {
-    return _results;
+    return mapToVector<ParameterRef>(_results);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

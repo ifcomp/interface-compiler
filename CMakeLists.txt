@@ -27,6 +27,7 @@ set(SRC
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
+    Components/Cpp
     Components
     Model
     .

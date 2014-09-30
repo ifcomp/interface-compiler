@@ -23,7 +23,7 @@ public:
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     void addValue(ValueRef value);
-    const std::map<std::string, ValueRef>& values();
+    std::vector<ValueRef> values();
 };
 
 typedef std::shared_ptr<Enum> EnumRef;

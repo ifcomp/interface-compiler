@@ -1,5 +1,5 @@
 #include "Components/StandardParser.hpp"
-#include "Components/TestFormatter.hpp"
+#include "Components/Cpp/CppHeadersFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -27,7 +27,7 @@ int main(int argc, char** argv)
                 std::ifstream configFile(argv[2]);
                 configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
-                Components::TestFormatter format(configFile);
+                Components::CppHeadersFormatter format(configFile);
                 format.execute(cprov, root, std::cout);
             }
             catch (const ios_base::failure &e)
@@ -37,11 +37,11 @@ int main(int argc, char** argv)
         }
         catch (const ios_base::failure &e)
         {
-            cout << "could not read from file " << argv[1] << " (" << e.what() << ")" << endl;
+            cout << "[ERROR] could not read from file " << argv[1] << " (" << e.what() << ")" << endl;
         }
         catch (const std::runtime_error &e)
         {
-            cout << "[PARSE ERROR] " << e.what() << "please check your yaml file " << argv[1] << endl;
+            cout << "[ERROR] " << e.what() << "please check your yaml file " << argv[1] << endl;
             return 1;
         }
     }

@@ -36,7 +36,7 @@ public:
     std::vector<OperationRef> operations();
 
     void addEvent(EventRef event);
-    const std::map<std::string, EventRef>& events();
+    std::vector<EventRef> events();
 
 private:
     ClassType _Type;

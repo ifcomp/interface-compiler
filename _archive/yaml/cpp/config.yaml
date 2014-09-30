@@ -31,20 +31,25 @@ style:
         indent: 2
 
     parameter:
-        name-style: lowercase
-        name-delimiter: '_'
-        name-use-short: true
+        name-style: lower-camelcase
+#        name-delimiter: '_'
+#        name-use-short: true
 
     enum:
+        name-style: upper-camelcase
+        indent: 2
+
+    value:
         name-style: uppercase
+        name-delimiter: '_'
   
     struct:
         indent: 6
         name-style: lowercase
         name-delimiter: '_'
 
-    doc:
-        text-wrap: 80
+    documentation:
+        text-wrap: 40
 
     class:
         name-style: lower-camelcase

@@ -26,8 +26,10 @@ FormatToken<Model::TypeRef> Formatter::format(Model::TypeBaseRef type) const
 {
 	auto resolvedType = std::dynamic_pointer_cast<Model::Type>(type);
 
-	if(!resolvedType)
+    if (!resolvedType)
+    {
 		throw std::runtime_error("cannot format unresolved type");
+    }
 
 	return FormatToken<Model::TypeRef> { this, &Formatter::format, std::tuple<Model::TypeRef> { resolvedType } };
 }

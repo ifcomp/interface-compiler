@@ -15,9 +15,9 @@ void Struct::addField(ParameterRef field)
     _fields[field->longName()] = field;
 }
 
-const std::map<std::string, ParameterRef>& Struct::fields()
+std::vector<ParameterRef> Struct::fields()
 {
-	return _fields;
+    return mapToVector<ParameterRef>(_fields);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -39,14 +39,7 @@ void Operation::addParam(ParameterRef param)
 
 std::vector<ParameterRef> Operation::params()
 {
-	std::vector<ParameterRef> result;
-
-	for( auto param : _params )
-	{
-		result.push_back(param.second);
-	}
-
-	return result;
+    return mapToVector<ParameterRef>(_params);
 }
 
 void Operation::setResult(ParameterRef result)

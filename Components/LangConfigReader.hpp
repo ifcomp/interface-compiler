@@ -66,7 +66,7 @@ public:
      * @return language-specific keyword to represent Primitive
      * @throw std::runtime_error if primitive could not be translated
      */
-    std::string primitiveToLang(Model::PrimitiveRef primitive);
+    std::string primitiveToLang(Model::PrimitiveRef primitive) const;
 
     /**
      * @brief Find language-specific output string for Container
@@ -74,7 +74,7 @@ public:
      * @return language-specific keyword to represent Container
      * @throw std::runtime_error if container could not be translated
      */
-    std::string containerToLang(Model::ContainerRef container);
+    std::string containerToLang(Model::ContainerRef container) const;
 
     /**
      * @brief Resolve container type to language-specific string.
@@ -82,7 +82,11 @@ public:
      * @param fullyQualified If true, add fully qualified namespace
      * @return language-specific string
      */
-    std::string containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified);
+    std::string containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified) const;
+
+
+    std::string objectNamespace(Model::IdentifiableRef identifiable) const;
+
 
     /**
      * @brief Fetch NAME_STYLE config entry.

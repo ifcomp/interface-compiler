@@ -17,12 +17,7 @@ Namespace::~Namespace()
 
 std::vector<NamespaceMemberRef> Namespace::members()
 {
-	std::vector<NamespaceMemberRef> result;
-
-	for( auto m : _members )
-		result.push_back(m.second);
-
-	return result;
+    return mapToVector<NamespaceMemberRef>(_members);
 }
 
 void Namespace::addMember(NamespaceMemberRef member)
