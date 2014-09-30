@@ -204,18 +204,11 @@ void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef op
 
     stream << " " << formatName(operation) << "(";
 
-    for ( auto parameter : operation->params() )
+    for (auto parameter : indices(operation->params()))
     {
-        stream << format(parameter) << ", ";
+        stream << format(parameter.value()) << (!parameter.last() ? ", " : "");
     }
 
-    /*
-    for( auto parameter : indices(operation->params()) )
-    {
-        if(parameter.val() && parameter.val()->type() && std::dynamic_pointer_cast<Model::Type>(parameter.val()->type()) && std::dynamic_pointer_cast<Model::Type>(parameter.val()->type())->primary())
-            stream << format(parameter.val()) << (!parameter.last() ? ", " : "");
-    }
-    */
     stream << ")";
 }
 
