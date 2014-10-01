@@ -27,30 +27,28 @@ style:
         indent: 0
 
     namespace:
+        name-style: upper-camelcase
         name-delimiter: '.'
-        indent: 0
 
     parameter:
         name-style: lower-camelcase
 
     enum:
-        name-style: lower-camelcase
-        indent: 0
+        name-style: upper-camelcase
 
     value:
-        name-style: lower-camelcase
-        name-delimiter: '.'
+        name-style: uppercase
+        name-delimiter: '_'
   
     struct:
         indent: 0
-        name-style: lower-camelcase
-        name-delimiter: '.'
+        name-style: upper-camelcase
 
     documentation:
         text-wrap: 75
 
     class:
-        name-style: lower-camelcase
+        name-style: upper-camelcase
 
     operation:
         name-style: lower-camelcase

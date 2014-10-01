@@ -86,6 +86,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
+	stream << "// struct " << formatName(struct_) << endl << "// {" << endl << endl;
 	stream << "~namespace~" << formatName(struct_) << "= function() {  }" << endl << endl;
 
 	for (auto field : struct_->fields())
@@ -94,16 +95,18 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) c
 			"', {get: function() { /*impl*/ }, set: function(new" << field->longName() << 
 			") { /*impl*/ }}); /*" << format(field->type()) << "*/" << endl << endl;
 	}
+
+	stream << "// }" << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
-	string resolvedClassName = "~namespace~";
+	stream << "// class " << formatName(class_) << endl << "// {" << endl << endl;
 
-	stream << resolvedClassName << "." << formatName(class_) << " = function() { };";
+	stream << "~namespace~" << "." << formatName(class_) << " = function() { };";
 
 	if( auto parent = std::dynamic_pointer_cast<Model::Class>(class_->parent()) ) {
-		stream << resolvedClassName << "." << "prototype" << "Object.create(" << "~parent_namespace~" << formatName(parent) << ".prototype);";
+		stream << "~namespace~" << "." << "prototype" << "Object.create(" << "~parent_namespace~" << formatName(parent) << ".prototype);";
 	}
 
 	stream << endl << endl;
@@ -120,8 +123,10 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 	for (auto event : class_->events())
 	{
-		stream << format(event) << endl;
+		stream << format(event);
 	}
+
+	stream << "// }" << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) const
@@ -153,6 +158,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespa
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
+	stream << "// enum " << formatName(enum_) << endl << "// {" << endl << endl;
+
 	if (enum_->doc())
 	{
 		stream << format(enum_->doc());
@@ -168,6 +175,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 		}
 		stream << "~namespace~" << formatName(enum_) << "." << formatName(value) << " = " << format(value) << "," << endl << endl;
 	} 
+
+	stream << "// }" << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ValueRef value) const
@@ -187,18 +196,29 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		stream << format(operation->doc());
 	}
 
-	bool has_type = false;
 	if(operation->result())
 	{
 		if (!operation->isSynchronous())
 		{
 			stream << "/*Promise[" << format(operation->result()->type()) << " " << formatName(operation->result()) << "]*/";
 		}
-		else {
+		else 
+		{
 			stream << format(operation->result()->type()) <<  " " << formatName(operation->result());
 		}
-		has_type = true;
 	}
+	else 
+	{
+		if (!operation->isSynchronous())
+		{
+			stream << "/*Promise[ ]*/";
+		}
+		else
+		{
+			stream << "/*void*/";
+		}
+	}
+	
 
 	string prototype;
 	if (operation->isStatic())
