@@ -1,6 +1,6 @@
 #include "Components/StandardParser.hpp"
 #include "Components/Cpp/CppHeadersFormatter.hpp"
-#include "Components\JavaScript\JSHeaderFormatter.hpp"
+#include "Components/JavaScript/JSHeaderFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
