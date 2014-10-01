@@ -108,7 +108,7 @@ public:
     }
 
     template<template<typename, typename> class BufferT, typename... ArgsT>
-    BasicFilterStream<CharT, Traits>& push(ArgsT... args)
+    BasicFilterStream<CharT, Traits>& push(ArgsT&&... args)
     {
         _buffers.push_back(FilterBufferRef(new BufferT<CharT, Traits>(*(_buffers.back().get()), std::forward<ArgsT>(args)...)));
         this->rdbuf(_buffers.back().get());
@@ -269,5 +269,42 @@ public:
 
 template<class CharT, class Traits = std::char_traits<CharT>>
 using reset = BasicResetBuffer < CharT, Traits > ;
+
+
+/**
+ * @brief Counter
+ */
+
+template<class CharT, class Traits = std::char_traits<CharT>>
+class BasicCounterBuffer : public BasicFilterBuffer<CharT, Traits>
+{
+public:
+    BasicCounterBuffer( std::basic_streambuf<CharT, Traits>& dest, std::size_t& count )
+        : BasicFilterBuffer<CharT, Traits>( dest )
+        , _count( count )
+    {
+    }
+
+    virtual ~BasicCounterBuffer()
+    {
+    }
+
+protected:
+    using Base = BasicFilterBuffer<CharT, Traits>;
+    using typename Base::int_type;
+    using typename Base::char_type;
+
+    virtual int_type output( std::basic_streambuf<CharT, Traits>& dest, char_type ch ) override
+    {
+        _count += 1;
+        return dest.sputc( ch );
+    }
+
+private:
+    std::size_t& _count;
+};
+
+template<class CharT, class Traits = std::char_traits<CharT>>
+using counter = BasicCounterBuffer < CharT, Traits > ;
 
 } } } // namespace: Everbase::InterfaceCompiler::StreamFilter

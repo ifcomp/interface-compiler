@@ -6,6 +6,7 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
+using std::flush;
 using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
@@ -71,13 +72,11 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ParameterRef param
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
 {
-    stream << "~primitive-definition:" << formatName(primitive) << "~" << endl;
 }
 
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef container) const
 {
-    stream << "~container-definition:" << formatName(container) << "~" << endl;
 }
 
 
@@ -150,7 +149,8 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
 
     for ( auto member : namespace_->members() )
     {
-        filter(stream).push<indent>() << format(member) << endl;
+        std::size_t count = 0;
+        filter(stream).push<indent>().push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "}" << endl;
