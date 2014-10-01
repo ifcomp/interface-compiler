@@ -1,5 +1,6 @@
 #include "Components/StandardParser.hpp"
 #include "Components/Cpp/CppHeadersFormatter.hpp"
+#include "Components\JavaScript\JSHeaderFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -11,7 +12,6 @@ int main(int argc, char** argv)
 
 	ConfigProvider cprov;
 	Components::StandardParser parser;
-
 
     if (argc == 3)
     {
@@ -27,7 +27,8 @@ int main(int argc, char** argv)
                 std::ifstream configFile(argv[2]);
                 configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
-                Components::CppHeadersFormatter format(configFile);
+				//Components::CppHeadersFormatter format(configFile);
+				Components::JSHeaderFormatter format(configFile);
                 format.execute(cprov, root, std::cout);
             }
             catch (const ios_base::failure &e)
@@ -47,9 +48,11 @@ int main(int argc, char** argv)
     }
     else
     {
-        std::cout << "need an objects.yalm and a config.yaml file" << endl;
+        std::cout << "need an objects.yaml and a config.yaml file" << endl;
         return 1;
     }
 
+	char vla;
+	cin >> vla;
 	return 0;
 }

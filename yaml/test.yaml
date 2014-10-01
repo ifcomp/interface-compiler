@@ -8,10 +8,11 @@
           static: true
           return: { name: SyncStatus, type: Everbase::SyncStatus }
       events:
-        - name: SyncStatus
+        - name: EventConflictsResolved
           id: b8fcafcd-05ca-4229-b12e-fb356649243b
           values:
-            - { name: SyncStatus, type: Everbase::SyncStatus }
+            - { name: Conflicts, type: Everbase::Conflicts }
+            - { name: ConflictsTheSec, type: Everbase::ConflictsTheSec }
 
     - name: Path
       nodetype: class
@@ -45,6 +46,7 @@
       nodetype: class
       operations:
         - name: SetMode
+          synchronous: false
           params:
             - { name: Mode, type: Everbase::PermissionMode }
         - name: GetMode
@@ -56,6 +58,7 @@
       doc: { brief: 'Key-value store', more: 'Maps strings to bytes' }
       operations:
         - name: SetValue
+          synchronous: false
           params:
             - { doc: { brief: bla, more: blubb },
                 name: Key, type: Everbase::String }
@@ -139,6 +142,18 @@
         - { name: UploadSpeed, type: Everbase::UInt32 }   # bytes per second
         - { name: DownloadSpeed, type: Everbase::UInt32 } # bytes per second
         - { name: Conflicts, type: Everbase::UInt32 }
+
+    - name: Conflicts
+      nodetype: struct
+      fields:
+        - { name: Good, type: Everbase::SyncMode }
+        - { name: Bad, type: Everbase::UInt32 }
+
+    - name: ConflictsTheSec
+      nodetype: struct
+      fields:
+        - { name: GoodII, type: Everbase::SyncMode }
+        - { name: BadII, type: Everbase::UInt32 }
 
     #enums
 

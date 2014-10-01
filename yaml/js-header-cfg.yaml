@@ -1,0 +1,56 @@
+# language-specific config
+
+typemap:
+    primitives:
+        - byte: Byte
+        - uint32: Number
+        - uint64: Number
+        - float: Number
+        - bool: Boolean
+        - timestamp: Timestamp
+        - string: String
+        - uuid: Uuid
+        - buffer: Buffer
+        - const-buffer: ConstBuffer
+
+    containers:
+        - vector: 'Vector<@>'
+        - list: 'List<@>'
+        - set: 'Set<@>'
+        - map: 'Map<@, @>'
+
+style:
+    default:
+        name-style: lower-camelcase
+        name-delimiter: ''
+        name-use-short: false
+        indent: 0
+
+    namespace:
+        name-delimiter: '.'
+        indent: 0
+
+    parameter:
+        name-style: lower-camelcase
+
+    enum:
+        name-style: lower-camelcase
+        indent: 0
+
+    value:
+        name-style: lower-camelcase
+        name-delimiter: '.'
+  
+    struct:
+        indent: 0
+        name-style: lower-camelcase
+        name-delimiter: '.'
+
+    documentation:
+        text-wrap: 75
+
+    class:
+        name-style: lower-camelcase
+
+    operation:
+        name-style: lower-camelcase

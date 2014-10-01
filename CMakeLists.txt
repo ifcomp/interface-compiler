@@ -51,6 +51,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${YamlCpp_INCLUDE_DIRS}
     Components/Cpp
+    Components/JavaScript
     Components
     Model
     .
