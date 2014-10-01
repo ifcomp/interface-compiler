@@ -18,7 +18,7 @@ public:
     enum class ClassType
     {
         VALUE,
-        ABSTRACT
+        INTERFACE
     };
 
 public:
@@ -39,8 +39,8 @@ public:
     std::vector<EventRef> events();
 
 private:
-    ClassType _Type;
-    TypeRef _Parent;
+    ClassType _type;
+    TypeRef _parent;
     std::map<std::string, OperationRef> _operations;
     std::map<std::string, EventRef> _events;
 };

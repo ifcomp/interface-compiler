@@ -3,6 +3,8 @@
 #include "Model/NamespaceMember.hpp"
 #include "Model/Type.hpp"
 
+#include <boost/any.hpp>
+
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 class Constant : public NamespaceMember
@@ -11,8 +13,8 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    TypeRef _Type;
-    std::string _value;
+    TypeRef _type;
+    boost::any _value;
 
 public:
     Constant();
@@ -22,8 +24,8 @@ public:
     TypeRef type();
     void setType(TypeRef type);
 
-    std::string value();
-    void setValue(std::string value);
+    boost::any value();
+    void setValue(boost::any value);
 };
 
 typedef std::shared_ptr<Constant> ConstantRef;

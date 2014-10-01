@@ -11,6 +11,7 @@ using std::string;
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
+using std::flush;
 using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
@@ -81,7 +82,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ContainerRef contain
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
-	stream << "~namespace~" << formatName(constant) << ".TYPE_ID =  " << " " << boost::lexical_cast<std::string>(constant->value()) << ";" << endl << endl;
+	stream << "~namespace~" << formatName(constant) << ".TYPE_ID =  " << " " << boost::any_cast<std::string>(constant->value()) << ";" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
@@ -152,7 +153,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespa
 	
 	for ( auto member : namespace_->members() )
 	{
-		stream << format(member) << endl << endl;
+        std::size_t count = 0;
+		filter(stream).push<counter>(count) << format(member) << (count > 0 ? "\n\n" : "") << flush;
 	}
 }
 
