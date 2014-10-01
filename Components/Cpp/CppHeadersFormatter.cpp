@@ -25,19 +25,21 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::DocumentationRef d
 {
     stream << "/**" << endl;
 
-    filter f(stream);
-    f.push<indent>(" * ");
-    f.push<wrap>(_langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
-
-    if (documentation->keyExists(Documentation::KEY_BRIEF))
     {
-        f << "@" << Documentation::KEY_BRIEF << " ";
-        f << documentation->description(Documentation::KEY_BRIEF) << endl;
-    }
+        filter f(stream);
+        f.push<indent>(" * ");
+        f.push<wrap>(_langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
 
-    if (documentation->keyExists(Documentation::KEY_MORE))
-    {
-        f << endl << documentation->description(Documentation::KEY_MORE) << endl;
+        if (documentation->keyExists(Documentation::KEY_BRIEF))
+        {
+            f << "@" << Documentation::KEY_BRIEF << " ";
+            f << documentation->description(Documentation::KEY_BRIEF) << endl;
+        }
+
+        if (documentation->keyExists(Documentation::KEY_MORE))
+        {
+            f << endl << documentation->description(Documentation::KEY_MORE) << endl;
+        }
     }
 
     stream << " */" << endl;
@@ -46,7 +48,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::DocumentationRef d
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
-    if (PrimitiveRef primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
+    if (auto primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
     {
         stream << _langConfig.primitiveToLang(primitive);
     }
@@ -91,12 +93,14 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
     stream << "struct " << formatName(struct_) << endl
            << "{" << endl;
 
-    filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, struct_));
-
-    for (auto field : struct_->fields())
     {
-        f << format(field) << ";" << endl;
+        filter f(stream);
+        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, struct_));
+
+        for (auto field : struct_->fields())
+        {
+            f << format(field) << ";" << endl;
+        }
     }
 
     stream << "}" << endl;
@@ -107,22 +111,24 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
 {
     stream << "class " << formatName(class_) << endl << "{" << endl;
 
-    filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, class_));
-
-    for( auto operation : class_->operations() )
     {
-        f << format(operation);
-    }
+        filter f(stream);
+        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, class_));
 
-    if (class_->events().size())
-    {
-        f << endl << "// ----- Events: -----" << endl;
-    }
+        for( auto operation : class_->operations() )
+        {
+            f << format(operation);
+        }
 
-    for ( auto event : class_->events() )
-    {
-        f << format(event) << endl;
+        if (class_->events().size())
+        {
+            f << endl << "// ----- Events: -----" << endl;
+        }
+
+        for ( auto event : class_->events() )
+        {
+            f << format(event) << endl;
+        }   
     }
 
     stream << "}" << endl;
@@ -156,12 +162,14 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
     stream << "enum " << formatName(enum_) << endl;
     stream << "{" << endl;
 
-    filter f(stream);
-    f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, enum_));
-
-    for (auto value : enum_->values())
     {
-        f << formatName(value) << " = " << format(value) << endl;
+        filter f(stream);
+        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, enum_));
+
+        for (auto value : enum_->values())
+        {
+            f << formatName(value) << " = " << format(value) << endl;
+        }   
     }
 
     stream << "}" << endl;
@@ -176,6 +184,11 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ValueRef value) co
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef operation) const
 {
+    if (operation->doc())
+    {
+        stream << format(operation->doc());
+    }
+
     stream << formatSig(operation) << ";" << endl;
 }
 
@@ -188,11 +201,6 @@ void CppHeadersFormatter::formatName(std::ostream& stream, Model::IdentifiableRe
 
 void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
 {
-    if (operation->doc())
-    {
-        stream << format(operation->doc());
-    }
-
     if (operation->result())
     {
         stream << format(operation->result()->type());
