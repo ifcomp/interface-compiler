@@ -9,7 +9,7 @@
           return: { name: SyncStatus, type: Everbase::SyncStatus }
       events:
         - name: SyncStatus
-          static: true
+          id: b8fcafcd-05ca-4229-b12e-fb356649243b
           values:
             - { name: SyncStatus, type: Everbase::SyncStatus }
 

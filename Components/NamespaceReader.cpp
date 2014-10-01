@@ -1,5 +1,8 @@
 #include "Components/NamespaceReader.hpp"
 
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
+
 #define addFQNameToException(member, delimiter)     getCurrentNamespace() + "::" + member->longName() + delimiter + e.what()
 #define addObjectNameToException(member)            member->longName() + " " + e.what()
 #define addSectionToException(key)                  "in section " + string(key) + " : " + e.what()
@@ -42,6 +45,8 @@ const char *NamespaceReader::FLAG_STATIC             = "static";
 const char *NamespaceReader::FLAG_SYNCHRONOUS        = "synchronous";
 const char *NamespaceReader::FLAG_VALUETYPE          = "valueType";
 const char *NamespaceReader::KEY_INHERITS            = "inherits";
+
+const char *NamespaceReader::KEY_ID                  = "id";
 
 
 NamespaceReader::NamespaceReader(Model::NamespaceRef rootNamespace) :
@@ -374,24 +379,24 @@ EventRef NamespaceReader::parseEvent(const YAML::Node &node)
 
     try
     {
-        if (checkNode(node, FLAG_STATIC))
-        {
-            newEvent->setStatic(node[FLAG_STATIC].as<bool>());
-        }
-
         if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
         {
             for (auto valueNode : node[KEY_VALUES])
             {
                 ParameterRef newParam = parseParameter(valueNode);
                 newParam->setParentObject(newEvent);
-                newEvent->addResult(newParam);
+                newEvent->addValue(newParam);
             }
         }
 
-        if (newEvent->results().size() == 0)
+        if (checkNode(node, KEY_ID, YAML::NodeType::Scalar, true))
         {
-            throw runtime_error("event " + newEvent->longName() + " has no result values\n");
+            newEvent->setTypeId(boost::lexical_cast<boost::uuids::uuid>(node[KEY_ID].Scalar()));
+        }
+
+        if (newEvent->values().size() == 0)
+        {
+            throw runtime_error("event " + newEvent->longName() + " has no values\n");
         }
     }
     catch (const runtime_error &e)
@@ -692,9 +697,9 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
 
                 for (auto event : classRef->events())
                 {
-                    for (auto result : event->results())
+                    for (auto value : event->values())
                     {
-                        resolveParameterType(result);
+                        resolveParameterType(value);
                     }
                 }
             }

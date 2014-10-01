@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <memory>
+#include <boost/uuid/uuid.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
@@ -14,19 +15,19 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    bool _isStatic;
-    std::map<std::string, ParameterRef> _results;
+    std::map<std::string, ParameterRef> _values;
+    boost::uuids::uuid _typeId;
 
 public:
     Event();
     virtual ~Event();
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
-    bool isStatic();
-    void setStatic(bool isStatic);
+    void addValue(ParameterRef value);
+    std::vector<ParameterRef> values();
 
-    void addResult(ParameterRef result);
-    std::vector<ParameterRef> results();
+    void setTypeId(boost::uuids::uuid typeId);
+    boost::uuids::uuid typeId();
 };
 
 typedef std::shared_ptr<Event> EventRef;

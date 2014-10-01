@@ -4,9 +4,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 const char* Event::TYPE_NAME = "Event";
 
-
-Event::Event() :
-    _isStatic(false)
+Event::Event()
 {
 }
 
@@ -14,24 +12,24 @@ Event::~Event()
 {
 }
 
-bool Event::isStatic()
+void Event::addValue(ParameterRef value)
 {
-    return _isStatic;
+    _values[value->longName()] = value;
 }
 
-void Event::setStatic(bool isStatic)
+std::vector<ParameterRef> Event::values()
 {
-    _isStatic = isStatic;
+    return mapToVector<ParameterRef>(_values);
 }
 
-void Event::addResult(ParameterRef result)
+void Event::setTypeId(boost::uuids::uuid typeId)
 {
-    _results[result->longName()] = result;
+	_typeId = typeId;
 }
 
-std::vector<ParameterRef> Event::results()
+boost::uuids::uuid Event::typeId()
 {
-    return mapToVector<ParameterRef>(_results);
+	return _typeId;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

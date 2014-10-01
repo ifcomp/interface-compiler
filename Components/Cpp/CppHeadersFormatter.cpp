@@ -130,15 +130,15 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
         }   
     }
 
-    stream << "}" << endl;
+    stream << "};" << endl;
 }
 
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EventRef event) const
 {
-    for (auto result : event->results())
+    for (auto value : event->values())
     {
-        stream << format(result->type()) << " " << formatName(event) << "();" << endl;
+        stream << format(value->type()) << " " << formatName(event) << "();" << endl;
     }
 }
 
@@ -159,8 +159,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
-    stream << "enum " << formatName(enum_) << endl;
-    stream << "{" << endl;
+    stream << "enum class " << formatName(enum_) << endl << "{" << endl;
 
     {
         filter f(stream);
@@ -172,7 +171,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
         }   
     }
 
-    stream << "}" << endl;
+    stream << "};" << endl;
 }
 
 

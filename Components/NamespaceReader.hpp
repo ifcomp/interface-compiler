@@ -73,6 +73,8 @@ public:
     static const char *KEY_VALUES;
     static const char *KEY_OPERATIONS;
     static const char *KEY_EVENTS;
+
+    static const char *KEY_ID;
     /** @} */
 
     /**
