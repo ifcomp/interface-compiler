@@ -6,6 +6,7 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
+using std::flush;
 using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
@@ -71,13 +72,11 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ParameterRef param
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
 {
-    stream << "~primitive-definition:" << formatName(primitive) << "~" << endl;
 }
 
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef container) const
 {
-    stream << "~container-definition:" << formatName(container) << "~" << endl;
 }
 
 
@@ -131,7 +130,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
         }   
     }
 
-    stream << "}" << endl;
+    stream << "};" << endl;
 }
 
 
@@ -150,7 +149,8 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
 
     for ( auto member : namespace_->members() )
     {
-        filter(stream).push<indent>() << format(member) << endl;
+        std::size_t count = 0;
+        filter(stream).push<indent>().push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "}" << endl;
@@ -159,8 +159,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
-    stream << "enum " << formatName(enum_) << endl;
-    stream << "{" << endl;
+    stream << "enum class " << formatName(enum_) << endl << "{" << endl;
 
     {
         filter f(stream);
@@ -172,7 +171,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
         }   
     }
 
-    stream << "}" << endl;
+    stream << "};" << endl;
 }
 
 
