@@ -83,7 +83,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef conta
 void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
     ///< @todo value needs more formatting
-    stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << constant->value() << ";" << endl;
+    stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << boost::any_cast<std::string>(constant->value()) << ";" << endl;
 }
 
 

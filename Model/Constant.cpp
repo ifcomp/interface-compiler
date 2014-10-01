@@ -15,20 +15,20 @@ Constant::~Constant()
 
 TypeRef Constant::type()
 {
-    return _Type;
+    return _type;
 }
 
 void Constant::setType(TypeRef type)
 {
-    _Type = type;
+    _type = type;
 }
 
-std::string Constant::value()
+boost::any Constant::value()
 {
     return _value;
 }
 
-void Constant::setValue(std::string value)
+void Constant::setValue(boost::any value)
 {
     _value = value;
 }

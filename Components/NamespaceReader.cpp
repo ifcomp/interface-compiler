@@ -160,7 +160,7 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
         }
         else
         {
-            newClass->setType(Class::ClassType::ABSTRACT);
+            newClass->setType(Class::ClassType::INTERFACE);
         }
 
         if (checkNode(node, KEY_INHERITS))
