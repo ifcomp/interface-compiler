@@ -309,3 +309,9 @@
       nodetype: constant
       type: Gu::String
       value: "Deutsche Wurst - Alles andere ist Käse"
+
+    - name: PestUndPocken
+      nodetype: constant
+      type: Everbase::UInt32
+      value: 42
+

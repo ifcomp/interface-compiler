@@ -87,7 +87,13 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ContainerRef contain
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
-	stream << formatNamespace(constant) << formatName(constant) << ".TYPE_ID =  " << " " << boost::any_cast<std::string>(constant->value()) << ";" << endl << endl;
+	string tuedelchen;
+	if (constant->value().type() == typeid(std::string) || constant->value().type() == typeid(boost::uuids::uuid))
+	{
+		tuedelchen = "\'";
+	}
+	stream << formatNamespace(constant) << formatName(constant) << ".TYPE_ID = " << 
+		tuedelchen << boost::any_cast<std::string>(constant->value()) << tuedelchen << ";" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
@@ -102,7 +108,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) c
 			") { /*impl*/ }}); /*" << format(field->type()) << "*/" << endl << endl;
 	}
 
-	stream << "// }" << endl;
+	stream << "// }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) const
@@ -132,7 +138,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 		stream << format(event);
 	}
 
-	stream << "// }" << endl;
+	stream << "// }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) const
@@ -142,12 +148,13 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 	stream << formatNamespace(event) << formatName(event) << ".prototype" << " = Object.create(" <<
 		"evb.Event.prototype);" << endl << endl;
 
-	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID =  " << " " <<
-		boost::lexical_cast<std::string>(event->typeId()) << ";" << endl << endl << endl;
+	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID =  " << " \'" <<
+		boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl << endl;
 
 		for (auto value : event->values()) {
-			stream << "Object.defineProperty(" << formatNamespace(value) << formatName(event) << ".prototype, '" << formatName(value) <<
-				"', {get: function() { /*impl*/ }, set: function(new" << value->longName() <<
+			stream << "Object.defineProperty(" << formatNamespace(value) << formatName(event) << ".prototype, '" 
+				<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function(" << 
+				_langConfigReader.styleToken("New" + value->longName(), LangConfigReader::NameStyle::LOWER_CAMELCASE, "") <<
 				") { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
 		}
 }
@@ -183,7 +190,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 		stream << formatNamespace(enum_) << formatName(enum_) << "." << formatName(value) << " = " << format(value) << "," << endl << endl;
 	} 
 
-	stream << "// }" << endl;
+	stream << "// }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ValueRef value) const

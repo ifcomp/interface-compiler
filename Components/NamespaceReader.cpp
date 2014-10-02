@@ -493,7 +493,16 @@ NamespaceMemberRef NamespaceReader::parseConstant(const YAML::Node &node)
 
         if (checkNode(node, KEY_VALUE, YAML::NodeType::Scalar, true))
         {
-            newConstant->setValue(node[KEY_VALUE].Scalar());
+            string value = node[KEY_VALUE].Scalar();
+            try
+            {
+                int number = boost::lexical_cast<int>(value);
+                newConstant->setValue(number);
+            }
+            catch(boost::bad_lexical_cast& e)
+            {
+                newConstant->setValue(value);
+            }
         }
     }
     catch (const runtime_error &e)
