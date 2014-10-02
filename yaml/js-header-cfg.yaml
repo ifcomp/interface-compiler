@@ -24,6 +24,8 @@ style:
         name-style: lower-camelcase
         name-delimiter: ''
         name-use-short: false
+        namespace-delimiter: '.'
+        namespace-style: lower-camelcase
         indent: 0
 
     namespace:
@@ -35,6 +37,7 @@ style:
 
     enum:
         name-style: upper-camelcase
+        namespace-style: upper-camelcase
 
     value:
         name-style: uppercase
@@ -49,6 +52,7 @@ style:
 
     class:
         name-style: upper-camelcase
+        namespace-style: upper-camelcase
 
     operation:
         name-style: lower-camelcase

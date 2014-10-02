@@ -72,12 +72,12 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ParameterRef paramet
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
 {
-	stream << "~primitive~" << formatName(primitive);
+    stream << "~primitive~" << formatName(primitive) << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ContainerRef container) const
 {
-	stream << "~container~" << formatName(container);
+    stream << "~container~" << formatName(container) << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
@@ -88,7 +88,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct " << formatName(struct_) << endl << "// {" << endl << endl;
-	stream << "~namespace~" << formatName(struct_) << "= function() {  }" << endl << endl;
+    stream << _langConfigReader.formatNamespace(struct_) << formatName(struct_) << "= function() {  }" << endl << endl;
 
 	for (auto field : struct_->fields())
 	{
@@ -232,7 +232,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		prototype = "";
 	}
 
-	stream << " " << "~namespace~" << "." << prototype <<  formatName(operation) <<  " = function" << "(";
+    stream << " " << _langConfigReader.formatNamespace(operation) << prototype <<  formatName(operation) <<  " = function" << "(";
 
 	for( auto parameter : indices(operation->params()) )
 	{

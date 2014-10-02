@@ -34,7 +34,7 @@ const char  LangConfigReader::TYPE_PLACEHOLDER          = '@';
 
 const char* LangConfigReader::styleAttributeKeys[] =
 {
-    "name-style", "name-delimiter", "name-use-short", "indent", "text-wrap"
+    "name-style", "name-delimiter", "name-use-short", "namespace-delimiter", "namespace-style", "indent", "text-wrap"
 };
 
 
@@ -140,7 +140,7 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
                 }
                 else
                 {
-                    params.push_back((fullyQualified ? objectNamespace(param) : "") + styleToken(param->longName(), param));
+                    params.push_back((fullyQualified ? formatNamespace(param) : "") + styleToken(param->longName(), param));
                 }
             }
 
@@ -168,27 +168,29 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
 }
 
 
-string LangConfigReader::objectNamespace(Model::IdentifiableRef identifiable) const
+string LangConfigReader::formatNamespace(Model::IdentifiableRef identifiable) const
 {
     using namespace Model;
-    NamespaceRef dummyNamespace = make_shared<Namespace>();     ///< @todo: ugly! clean this up!
 
+    NameStyle nameStyle;
     string namespaceName;
-    string delimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAME_DELIMITER, dummyNamespace);
+    string delimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAMESPACE_DELIMITER, identifiable);
+
     IdentifiableRef parentRef = dynamic_pointer_cast<Identifiable>(identifiable->parentObject());
 
     while (parentRef && parentRef->longName() != "::")
     {
-        namespaceName = parentRef->longName() + delimiter + namespaceName;
+        nameStyle = configNameStyle(parentRef, StyleAttribute::NAMESPACE_STYLE);
+        namespaceName = styleToken(parentRef->longName(), nameStyle, delimiter) + delimiter + namespaceName;
         parentRef = dynamic_pointer_cast<Identifiable>(parentRef->parentObject());
     }
     return namespaceName;
 }
 
 
-LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject) const
+LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject, StyleAttribute styleAttribute) const
 {
-    const YAML::Node &node = configValue(StyleAttribute::NAME_STYLE, styleContextObject);
+    const YAML::Node &node = configValue(styleAttribute, styleContextObject);
 
     if (node.IsScalar())
     {
@@ -257,69 +259,71 @@ std::string LangConfigReader::listKnownStyleAttributes() const
 
 string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleContextObject) const
 {
-    string output;
-
     if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME &&
         styleContextObject->objectTypeName() != Model::Container::TYPE_NAME)
     {
         NameStyle nameStyle = configNameStyle(styleContextObject);
         string delimiter = configAttribute<string>(StyleAttribute::NAME_DELIMITER, styleContextObject);
 
-        boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
-        string::const_iterator start = input.begin();
-        string::const_iterator end = input.end();
-        boost::smatch matches;
-        int elementCount = 0;
-
-        while(regex_search(start, end, matches, regularExpression))
-        {
-            string temp(matches[0]);
-
-            switch (nameStyle)
-            {
-                case NameStyle::LOWER_CAMELCASE:
-                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-
-                    if (elementCount > 0)
-                    {
-                        // only first word starts lowercase
-                        transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
-                    }
-                    break;
-
-                case NameStyle::UPPER_CAMELCASE:
-                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-                    transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
-                    break;
-
-                case NameStyle::UPPERCASE:
-                    transform(temp.begin(), temp.end(), temp.begin(), ::toupper);
-                    break;
-
-                case NameStyle::LOWERCASE:
-                    transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
-                    break;
-
-                case NameStyle::_NAME_STYLE_COUNT_:
-                default:
-                    throw std::runtime_error("invalid name style");
-            }
-
-            if (elementCount)
-            {
-                temp = delimiter + temp;
-            }
-
-            output += temp;
-            ++elementCount;
-
-            // update search position:
-            start = matches[0].second;
-        }
+        return styleToken(input, nameStyle, delimiter);
     }
-    else
+    return input;
+}
+
+
+string LangConfigReader::styleToken(string input, LangConfigReader::NameStyle nameStyle, string delimiter) const
+{
+    boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
+    string::const_iterator start = input.begin();
+    string::const_iterator end = input.end();
+    boost::smatch matches;
+    int elementCount = 0;
+    string output;
+
+    while(regex_search(start, end, matches, regularExpression))
     {
-        output = input;
+        string temp(matches[0]);
+
+        switch (nameStyle)
+        {
+            case NameStyle::LOWER_CAMELCASE:
+                transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+
+                if (elementCount > 0)
+                {
+                    // only first word starts lowercase
+                    transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
+                }
+                break;
+
+            case NameStyle::UPPER_CAMELCASE:
+                transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+                transform(temp.begin(), temp.begin() + 1, temp.begin(), ::toupper);
+                break;
+
+            case NameStyle::UPPERCASE:
+                transform(temp.begin(), temp.end(), temp.begin(), ::toupper);
+                break;
+
+            case NameStyle::LOWERCASE:
+                transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+                break;
+
+            case NameStyle::_NAME_STYLE_COUNT_:
+            default:
+                throw std::runtime_error("invalid name style");
+        }
+
+        if (elementCount)
+        {
+            temp = delimiter + temp;
+        }
+
+        output += temp;
+        ++elementCount;
+
+        // update search position:
+        start = matches[0].second;
     }
     return output;
 }

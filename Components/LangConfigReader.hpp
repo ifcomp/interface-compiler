@@ -19,6 +19,8 @@ public:
         NAME_STYLE,
         NAME_DELIMITER,
         NAME_USE_SHORT,
+        NAMESPACE_DELIMITER,
+        NAMESPACE_STYLE,
         INDENT,
         TEXT_WRAP,
         _STYLE_ATTRIB_COUNT_
@@ -84,16 +86,19 @@ public:
      */
     std::string containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified) const;
 
-
-    std::string objectNamespace(Model::IdentifiableRef identifiable) const;
-
+    /**
+     * @brief Get formatted namespace string for identifiable.
+     * @param identifiable Pointer to Identifiable object
+     * @return Namespace string
+     */
+    std::string formatNamespace(Model::IdentifiableRef identifiable) const;
 
     /**
      * @brief Fetch NAME_STYLE config entry.
      * @param styleContext Style context enum entry to specify the config section
      * @return Configured NameStyle for styleContext
      */
-    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject) const;
+    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject, StyleAttribute styleAttribute = StyleAttribute::NAME_STYLE) const;
 
     /**
      * @brief Print all registered style attributes to stdout.
@@ -108,7 +113,7 @@ public:
      * @return Attribute value
      */
     template <typename T> T configAttribute(StyleAttribute styleAttribute,
-                                            Model::DomainObjectRef styleContextObject) const
+                                            Model::DomainObjectRef styleContextObject = nullptr) const
     {
         const YAML::Node &node = configValue(styleAttribute, styleContextObject);
         return node.as<T>();
@@ -116,6 +121,7 @@ public:
 
     std::string styleToken(std::string input, Model::DomainObjectRef styleContextObject) const;
 
+    std::string styleToken(std::string input, NameStyle nameStyle, std::string delimiter) const;
 
 
 private:
