@@ -2,6 +2,8 @@
 
 #include <set>
 #include <iostream>
+#include <sstream>
+#include <boost/lexical_cast.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
@@ -59,7 +61,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) cons
     }
     else
     {
-        stream << formatName(type->primary());
+        stream << _langConfig.formatNamespace(type->primary()) << formatName(type->primary());
     }
 }
 
@@ -82,8 +84,26 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef conta
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
-    ///< @todo value needs more formatting
-    stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << boost::any_cast<std::string>(constant->value()) << ";" << endl;
+    int number = 0;
+    std::string valueString;
+    boost::uuids::uuid uuid;
+
+    if (constant->value().type() == typeid(int))
+    {
+        number = boost::any_cast<int>(constant->value());
+        valueString = boost::lexical_cast<std::string>(number);
+    }
+    else if (constant->value().type() == typeid(std::string))
+    {
+        valueString = "\"" + boost::any_cast<std::string>(constant->value()) + "\"";
+    }
+    else if (constant->value().type() == typeid(boost::uuids::uuid))
+    {
+        uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+        valueString = boost::lexical_cast<std::string>(uuid);
+    }
+
+    stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << valueString << ";" << endl;
 }
 
 
@@ -102,7 +122,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
         }
     }
 
-    stream << "}" << endl;
+    stream << "};" << endl;
 }
 
 

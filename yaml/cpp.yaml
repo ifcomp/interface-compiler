@@ -21,6 +21,8 @@ typemap:
 
 style:
     default:
+        namespace-delimiter: '::'
+        namespace-style: upper-camelcase
         name-style: upper-camelcase
         name-delimiter: ''
         name-use-short: false
