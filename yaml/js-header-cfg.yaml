@@ -29,7 +29,7 @@ style:
         indent: 0
 
     namespace:
-        name-style: upper-camelcase
+        name-style: lower-camelcase
         name-delimiter: '.'
 
     parameter:

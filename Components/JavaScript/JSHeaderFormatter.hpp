@@ -23,6 +23,7 @@ protected:
 protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const override;
 
+	std::string formatNamespace(Model::IdentifiableRef identifiable) const;
     virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const override;
 	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const override;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const override;

@@ -102,7 +102,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
         }
     }
 
-    stream << "}" << endl;
+    stream << "}" << endl << endl << endl;
 }
 
 
@@ -153,7 +153,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
         filter(stream).push<indent>().push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
     }
 
-    stream << "}" << endl;
+    stream << "}" << endl << endl << endl;
 }
 
 
