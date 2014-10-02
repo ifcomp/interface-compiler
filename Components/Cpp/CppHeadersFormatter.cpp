@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
@@ -121,12 +122,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
             f << format(field) << ";" << endl;
         }
     }
-
-<<<<<<< HEAD
-    stream << "}" << endl << endl << endl;
-=======
     stream << "};" << endl;
->>>>>>> e5b081860975cda2b4738502679ca669855138c8
 }
 
 

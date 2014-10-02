@@ -87,13 +87,26 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ContainerRef contain
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
-	string tuedelchen;
-	if (constant->value().type() == typeid(std::string) || constant->value().type() == typeid(boost::uuids::uuid))
+	int number = 0;
+	std::string valueString;
+	boost::uuids::uuid uuid;
+
+	if (constant->value().type() == typeid(int))
 	{
-		tuedelchen = "\'";
+		number = boost::any_cast<int>(constant->value());
+		valueString = boost::lexical_cast<std::string>(number);
+	}
+	else if (constant->value().type() == typeid(std::string))
+	{
+		valueString = "\'" + boost::any_cast<std::string>(constant->value()) + "\'";
+	}
+	else if (constant->value().type() == typeid(boost::uuids::uuid))
+	{
+    	uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+		valueString = boost::lexical_cast<std::string>(uuid);
 	}
 	stream << formatNamespace(constant) << formatName(constant) << ".TYPE_ID = " << 
-		tuedelchen << boost::any_cast<std::string>(constant->value()) << tuedelchen << ";" << endl << endl;
+		valueString << ";" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
@@ -115,10 +128,10 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 {
 	stream << "// class " << formatName(class_) << endl << "// {" << endl << endl;
 
-	stream << formatNamespace(class_) << "." << formatName(class_) << " = function() { };";
+	stream << formatNamespace(class_) << formatName(class_) << " = function() { };";
 
 	if( auto parent = std::dynamic_pointer_cast<Model::Class>(class_->parent()) ) {
-		stream << formatNamespace(parent) << "." << "prototype" << "Object.create(" << "~parent_namespace~" << formatName(parent) << ".prototype);";
+		stream << formatNamespace(parent) << "prototype" << "Object.create(" << "~parent_namespace~" << formatName(parent) << ".prototype);";
 	}
 
 	stream << endl << endl;
@@ -148,7 +161,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 	stream << formatNamespace(event) << formatName(event) << ".prototype" << " = Object.create(" <<
 		"evb.Event.prototype);" << endl << endl;
 
-	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID =  " << " \'" <<
+	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID = " << endl;
+	stream << formatNamespace(event) << formatName(event) << ".prototype.TYPE_ID =" << " \'" <<
 		boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl << endl;
 
 		for (auto value : event->values()) {
@@ -218,7 +232,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		}
 		else 
 		{
-			stream << format(operation->result()->type()) <<  " " << formatName(operation->result());
+			stream << "/*" << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
 		}
 	}
 	else 

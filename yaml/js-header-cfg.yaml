@@ -25,34 +25,33 @@ style:
         name-delimiter: ''
         name-use-short: false
         namespace-delimiter: '.'
-        namespace-style: lower-camelcase
         indent: 0
 
     namespace:
-        name-style: lower-camelcase
-        name-delimiter: '.'
+        name-style: upper-camelcase
+        name-delimiter: ''
 
     parameter:
         name-style: lower-camelcase
 
     enum:
         name-style: upper-camelcase
-        namespace-style: upper-camelcase
 
     value:
         name-style: uppercase
         name-delimiter: '_'
-  
+
+    event:
+        name-style: upper-camelcase    
+
     struct:
         indent: 0
-        name-style: upper-camelcase
 
     documentation:
         text-wrap: 75
 
     class:
         name-style: upper-camelcase
-        namespace-style: upper-camelcase
 
     operation:
         name-style: lower-camelcase

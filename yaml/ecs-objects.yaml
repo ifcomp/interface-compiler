@@ -1,0 +1,97 @@
+- name: Everbase
+  nodetype: namespace
+  members:
+    - name: CoreSystem
+      nodetype: namespace
+      members:
+        - name: Profile
+          nodetype: class
+          doc: { brief: 'Is an device local element for managing the users credentials for an arbitrary set of domains.' }
+          operations: 
+            - name: Erase
+              doc: { brief: 'Erases the profile.', more: 'Once the profile is erased, all subsequent calls to that object fail. In case this is the primary profile, the operation will fail.' }
+            - name: GetId
+              doc: { brief: 'Returns the identifier of the profile.' }
+              return: { name: Id, type: Everbase::Uuid }
+              synchronous: true
+
+    #primitives
+
+    - name: Byte
+      nodetype: primitive
+      primitivetype: byte
+
+    - name: UInt32
+      nodetype: primitive
+      primitivetype: uint32
+
+    - name: UInt64
+      nodetype: primitive
+      primitivetype: uint64
+
+    - name: Float
+      nodetype: primitive
+      primitivetype: float
+
+    - name: Boolean
+      nodetype: primitive
+      primitivetype: bool
+
+    - name: Timestamp
+      nodetype: primitive
+      primitivetype: timestamp
+
+    - name: String
+      nodetype: primitive
+      primitivetype: string
+
+    - name: Uuid
+      nodetype: primitive
+      primitivetype: uuid
+
+    - name: Buffer
+      nodetype: primitive
+      primitivetype: buffer
+
+    - name: ConstBuffer
+      nodetype: primitive
+      primitivetype: const-buffer
+
+    # containers
+
+    - name: Vector
+      nodetype: container
+      containertype: vector
+
+    - name: List
+      nodetype: container
+      containertype: list
+
+    - name: Set
+      nodetype: container
+      containertype: set
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

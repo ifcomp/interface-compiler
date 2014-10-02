@@ -34,7 +34,7 @@ const char  LangConfigReader::TYPE_PLACEHOLDER          = '@';
 
 const char* LangConfigReader::styleAttributeKeys[] =
 {
-    "name-style", "name-delimiter", "name-use-short", "namespace-delimiter", "namespace-style", "indent", "text-wrap"
+    "name-style", "name-delimiter", "name-use-short", "namespace-delimiter", "indent", "text-wrap"
 };
 
 
@@ -180,8 +180,9 @@ string LangConfigReader::formatNamespace(Model::IdentifiableRef identifiable) co
 
     while (parentRef && parentRef->longName() != "::")
     {
-        nameStyle = configNameStyle(parentRef, StyleAttribute::NAMESPACE_STYLE);
-        namespaceName = styleToken(parentRef->longName(), nameStyle, delimiter) + delimiter + namespaceName;
+		string nameDelimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAME_DELIMITER, parentRef);
+        nameStyle = configNameStyle(parentRef, StyleAttribute::NAME_STYLE);
+        namespaceName = styleToken(parentRef->longName(), nameStyle, nameDelimiter) + delimiter + namespaceName;
         parentRef = dynamic_pointer_cast<Identifiable>(parentRef->parentObject());
     }
     return namespaceName;
