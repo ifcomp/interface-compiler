@@ -13,7 +13,7 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+template <typename T> using NameConfig = FormatterConfig::TypeNameConfig<T>;
 using Naming = FormatterConfig::Naming;
 
 TestFormatter::TestFormatter(std::istream &configStream)

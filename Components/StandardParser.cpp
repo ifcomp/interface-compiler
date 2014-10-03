@@ -7,7 +7,7 @@ Model::RootRef StandardParser::execute ( const ConfigProvider& cprov, std::istre
 {
 	using namespace std;
 
-    Model::NamespaceRef rootNamespace = std::make_shared<Model::Namespace>("::");
+    Model::NamespaceRef rootNamespace = std::make_shared<Model::Namespace>("Root");
     NamespaceReader reader(rootNamespace);
 
     reader.parseFile(input);

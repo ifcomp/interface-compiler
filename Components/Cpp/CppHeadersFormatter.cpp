@@ -17,7 +17,7 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+template <typename T> using NameConfig = FormatterConfig::TypeNameConfig<T>;
 using Naming = FormatterConfig::Naming;
 
 CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
@@ -43,7 +43,7 @@ CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::RootRef root) const
 {
-    stream << format(root->getNamespace()) << endl;
+    stream << format(root->getNamespace());
 }
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) const
@@ -117,17 +117,14 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
 
     for( auto operation : class_->operations() )
     {
-        filter(stream).push<indent>() << format(operation);
-    }
-
-    if (class_->events().size())
-    {
-        filter(stream).push<indent>() << endl << "// ----- Events: -----" << endl;
+        std::size_t count = 0;
+        filter(stream).push<indent>().push<counter>(count) << format(operation) << (count > 0 ? "\n" : "") << flush;
     }
 
     for ( auto event : class_->events() )
     {
-        filter(stream).push<indent>() << format(event) << endl;
+        std::size_t count = 0;
+        filter(stream).push<indent>().push<counter>(count) << format(event) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "};" << endl;
@@ -151,16 +148,16 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
         filter(stream).push<indent>().push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
     }
 
-    stream << "}" << endl << endl << endl;
+    stream << "}" << endl;
 }
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
     stream << "enum class " << formatName(enum_) << endl << "{" << endl;
 
-    for (auto value : enum_->values())
+    for (auto value : indices(enum_->values()))
     {
-        filter(stream).push<indent>() << formatName(value) << " = " << format(value) << endl;
+        filter(stream).push<indent>() << format(value.value()) << (!value.last() ? "," : "") << endl;
     }
 
     stream << "};" << endl;
@@ -168,7 +165,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ValueRef value) const
 {
-    stream << value->value();
+    stream << formatName(value) << " = " << value->value();
 }
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef operation) const
@@ -179,11 +176,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef opera
     }
 
     stream << formatSig(operation) << ";" << endl;
-}
-
-void CppHeadersFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
-{
-    stream << _langConfig.styleToken(identifiable->longName(), identifiable);
 }
 
 void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const

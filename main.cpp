@@ -27,8 +27,8 @@ int main(int argc, char** argv)
                 std::ifstream configFile(argv[2]);
                 configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
-				//Components::CppHeadersFormatter format(configFile);
-				Components::JSHeaderFormatter format(configFile);
+				Components::CppHeadersFormatter format(configFile);
+				//Components::JSHeaderFormatter format(configFile);
                 format.execute(cprov, root, std::cout);
             }
             catch (const ios_base::failure &e)
@@ -52,7 +52,5 @@ int main(int argc, char** argv)
         return 1;
     }
 
-	char vla;
-	cin >> vla;
 	return 0;
 }

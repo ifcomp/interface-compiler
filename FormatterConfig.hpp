@@ -23,7 +23,7 @@ namespace TupleHelper
 	};
 
 	template<class T, class... Types>
-	T get(std::tuple<Types...> tuple)
+	T& get(std::tuple<Types...> tuple)
 	{
 	    return std::get<get_internal<0,T,Types...>::type::index>(tuple);
 	}
@@ -39,24 +39,43 @@ struct FormatterConfig
         UPPERCASE
     };
 
-	template<typename T>
 	struct NameConfig
 	{
 		NameStyle style;
 		std::string delimiter;
 		bool useShort;
+
+		NameConfig(NameStyle style, std::string delimiter, bool useShort)
+			: style(style), delimiter(delimiter), useShort(useShort)
+		{ }
+
+		NameConfig(const NameConfig& other)
+			: style(other.style), delimiter(other.delimiter), useShort(other.useShort)
+		{ }
+
+		NameConfig(NameConfig&& other)
+			: style(std::move(other.style))
+			, delimiter(std::move(other.delimiter))
+			, useShort(std::move(other.useShort))
+		{ }
+	};
+
+	template<typename T>
+	struct TypeNameConfig : public NameConfig
+	{
+		using NameConfig::NameConfig;
 	};
 
 	typedef std::tuple<
-		NameConfig<Model::Namespace>,
-		NameConfig<Model::Parameter>,
-		NameConfig<Model::Enum>,
-		NameConfig<Model::Value>,
-		NameConfig<Model::Event>,
-		NameConfig<Model::Struct>,
-		NameConfig<Model::Class>,
-		NameConfig<Model::Operation>,
-		NameConfig<Model::Constant>
+		TypeNameConfig<Model::Namespace>,
+		TypeNameConfig<Model::Parameter>,
+		TypeNameConfig<Model::Enum>,
+		TypeNameConfig<Model::Value>,
+		TypeNameConfig<Model::Event>,
+		TypeNameConfig<Model::Struct>,
+		TypeNameConfig<Model::Class>,
+		TypeNameConfig<Model::Operation>,
+		TypeNameConfig<Model::Constant>
 	> Naming;
 
 	std::string indent;
@@ -82,9 +101,9 @@ struct FormatterConfig
 	{ }
 
 	template<typename T>
-	const NameConfig<T>& nameConfig()
+	TypeNameConfig<T> nameConfig() const
 	{
-		TupleHelper::get<T>(naming);
+		return TupleHelper::get<TypeNameConfig<T>>(naming);
 	}
 };
 

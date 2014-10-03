@@ -19,7 +19,7 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+template <typename T> using NameConfig = FormatterConfig::TypeNameConfig<T>;
 using Naming = FormatterConfig::Naming;
 
 JSHeaderFormatter::JSHeaderFormatter(std::istream &configStream)
@@ -51,11 +51,6 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::RootRef root) const
 std::string inline JSHeaderFormatter::formatNamespace(Model::IdentifiableRef identifiable) const
 {
 	return _langConfigReader.formatNamespace(identifiable);
-}
-
-void JSHeaderFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
-{
-    stream << _langConfigReader.styleToken(identifiable->longName(), identifiable);
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
@@ -175,9 +170,9 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 
 		for (auto value : event->values()) {
 			stream << "Object.defineProperty(" << formatNamespace(value) << formatName(event) << ".prototype, '" 
-				<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function(" << 
-				_langConfigReader.styleToken("New" + value->longName(), LangConfigReader::NameStyle::LOWER_CAMELCASE, "") <<
-				") { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
+				<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function("
+				<< formatName("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
+				<< ") { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
 		}
 }
 

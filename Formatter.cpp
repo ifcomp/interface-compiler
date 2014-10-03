@@ -1,5 +1,8 @@
 #include "Formatter.hpp"
 
+#include <boost/regex.hpp>
+#include <iostream>
+
 namespace Everbase { namespace InterfaceCompiler {
 
 Formatter::Formatter(FormatterConfig config)
@@ -20,6 +23,11 @@ FormatToken<Model::RootRef> Formatter::format(Model::RootRef root) const
 FormatToken<Model::IdentifiableRef> Formatter::formatName(Model::IdentifiableRef identifiable) const
 {
 	return FormatToken<Model::IdentifiableRef> { this, &Formatter::formatName, std::tuple<Model::IdentifiableRef> { identifiable } };
+}
+
+FormatToken<std::string, std::string, FormatterConfig::NameConfig> Formatter::formatName(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+{
+    return FormatToken<std::string, std::string, FormatterConfig::NameConfig> { this, &Formatter::formatName, std::tuple<std::string, std::string, FormatterConfig::NameConfig> { longName, shortName, config } };
 }
 
 FormatToken<Model::DocumentationRef> Formatter::format(Model::DocumentationRef documentation) const
@@ -102,6 +110,107 @@ FormatToken<Model::OperationRef> Formatter::format(Model::OperationRef operation
 FormatToken<Model::OperationRef> Formatter::formatSig(Model::OperationRef operation) const
 {
 	return FormatToken<Model::OperationRef> { this, &Formatter::formatSig, std::tuple<Model::OperationRef> { operation } };
+}
+
+void Formatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
+{
+    if( std::dynamic_pointer_cast<Model::Namespace>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Namespace>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Parameter>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Parameter>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Enum>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Enum>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Value>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Value>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Event>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Event>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Struct>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Struct>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Class>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Class>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Operation>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Operation>());
+    }
+    else
+    if( std::dynamic_pointer_cast<Model::Constant>(identifiable) )
+    {
+        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Constant>());
+    }
+    else
+    {
+        throw std::runtime_error("unknown identifiable type " + identifiable->objectTypeName());
+    }
+}
+
+void Formatter::formatName(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+{
+    boost::regex regex("[A-Z]?[a-z]+|[A-Z]?[0-9]+|[A-Z]");
+
+    std::string name = config.useShort ? shortName : longName;
+    
+    std::string::const_iterator start = name.begin();
+    std::string::const_iterator end = name.end();
+
+    boost::smatch match;
+    for(size_t count = 0; boost::regex_search(start, end, match, regex); ++count)
+    {
+        if (count > 0)
+            { stream << config.delimiter; }
+
+        std::string part = match[0];
+
+        switch (config.style)
+        {
+            case FormatterConfig::NameStyle::LOWER_CAMELCASE:
+                transform(part.begin(), part.end(), part.begin(), ::tolower);
+                if (count > 0)
+                {
+                    transform(part.begin(), part.begin() + 1, part.begin(), ::toupper);
+                }
+                break;
+
+            case FormatterConfig::NameStyle::UPPER_CAMELCASE:
+                transform(part.begin(), part.end(), part.begin(), ::tolower);
+                transform(part.begin(), part.begin() + 1, part.begin(), ::toupper);
+                break;
+
+            case FormatterConfig::NameStyle::UPPERCASE:
+                transform(part.begin(), part.end(), part.begin(), ::toupper);
+                break;
+
+            case FormatterConfig::NameStyle::LOWERCASE:
+                transform(part.begin(), part.end(), part.begin(), ::tolower);
+                break;
+
+            default:
+                throw std::runtime_error("invalid name style");
+        }
+
+        stream << part;
+        start = match[0].second;
+    }
 }
 
 void Formatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
