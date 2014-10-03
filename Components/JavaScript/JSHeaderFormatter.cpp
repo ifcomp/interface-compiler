@@ -274,7 +274,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 	
 
 	string prototype;
-	if (operation->isStatic())
+	if (!operation->isStatic())
 	{
 		prototype = "prototype.";
 	}
