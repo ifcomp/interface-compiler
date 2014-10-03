@@ -274,7 +274,8 @@ string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleCo
 
 string LangConfigReader::styleToken(string input, LangConfigReader::NameStyle nameStyle, string delimiter) const
 {
-    boost::regex regularExpression("[A-Z][a-z]*|(?:::)");
+    boost::regex regularExpression("[A-Z]*[a-z]+|[A-Z]*[0-9]+|[A-Z]+$");
+	
     string::const_iterator start = input.begin();
     string::const_iterator end = input.end();
     boost::smatch matches;

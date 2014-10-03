@@ -175,7 +175,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
-	stream << endl << "var " << formatNamespace(namespace_) << formatName(namespace_) << " = " << formatName(namespace_) << " || {  }" << endl << endl;
+	stream << endl << "var " << formatNamespace(namespace_) << formatName(namespace_) << " = " 
+		<< formatNamespace(namespace_) << formatName(namespace_) << " || {  }" << endl << endl;
 	
 	for ( auto member : namespace_->members() )
 	{

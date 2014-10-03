@@ -7,7 +7,25 @@
         - name: Profile
           nodetype: class
           doc: { brief: 'Is an device local element for managing the users credentials for an arbitrary set of domains.' }
-          operations: 
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new profile.' }
+              static: true
+              return: { name: Profile, type: Everbase::CoreSystem::Profile }
+            - name: Open
+              doc: { brief: 'Opens an existing profile.' }
+              static: true
+              return: { name: Profile, type: Everbase::CoreSystem::Profile }
+              params:
+                - { name: ProfileId, type: Everbase::Uuid }
+            - name: GetPrimary
+              doc: { brief: 'Returns the primary profile, which can be used e.g. for desktop applications.' }
+              static: true
+              return: { name: Profile, type: Everbase::CoreSystem::Profile }
+            - name: GetAll
+              doc: { brief: 'Returns a set of profile identifiers of the local device.' }
+              static: true
+              return: { name: Ids, type: [ Everbase::Set, Everbase::CoreSystem::Profile ] }
             - name: Erase
               doc: { brief: 'Erases the profile.', more: 'Once the profile is erased, all subsequent calls to that object fail. In case this is the primary profile, the operation will fail.' }
             - name: GetId
@@ -15,7 +33,341 @@
               return: { name: Id, type: Everbase::Uuid }
               synchronous: true
 
-    #primitives
+        - name: Session
+          nodetype: class
+          doc: { brief: 'A session defines the current environment, e.g. the currently active profile. A session is a lightweight object with minimal initialization cost. Session follows a stack semantic. The most recent session is the current session for all operations.', more: 'Per default a session using the primary profile is on top of the stack.' }
+          operations:
+            - name: Begin
+              doc: { brief: 'Starts a new session using the provided profile. The session will be pushed on top of the session stack.' }
+              static: true
+              synchronous: true
+              return: { name: Profile, type: Everbase::CoreSystem::Session }
+              params:
+                - { name: Profile, type: Everbase::CoreSystem::Profile }
+            - name: End
+              doc: { brief: 'Ends the current session. In case the session is not on the top of the session stack, all sessions stacked on top of this session will be closed too.', more: 'Once the session is invalidated, all subsequent calls to that object fail.' }
+              synchronous: true
+
+        - name: Credential
+          nodetype: class
+          doc: { brief: 'Identifies a user or device.', more: 'Supported credential formats are passwords, X.509 certificates, public keys and OAuth authentication token.' }
+          operations:
+            - name: FromPassword
+              short: Password
+              doc: { brief: 'Returns a username/password credential.' }
+              static: true
+              synchronous: true
+              return: { name: Credential, type: Everbase::CoreSystem::Credential, doc: { brief: 'The credential derived from username and password.' } }
+              params:
+                - { name: Password, type: Everbase::String, doc: { brief: 'The password.' } }
+                - { name: Username, type: Everbase::String, doc: { brief: 'The username.' } }
+            - name: FromX509
+              short: X509
+              doc: { brief: 'Returns a X.509 credential.' }
+              static: true
+              synchronous: true
+              return: { name: Credential, type: Everbase::CoreSystem::Credential, doc: { brief: 'The credential derived from a X.509 certificate.' } }
+              params:
+                - { name: Certificate, type: Everbase::String, doc: { brief: 'The X.509 certificate, formatted as PEM.' } }
+              errors:
+                - InvalidArgument/InvalidFormat
+
+        - name: Domain
+          nodetype: class
+          doc: { brief: 'Enables an organization to manage a set of users, devices, groups and data.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new domain and an initial administrative user object.' }
+              static: true
+              return: { name: Domain, type: Everbase::CoreSystem::Domain }
+              params:
+                - { name: DomainName, type: Everbase::String }
+                - { name: AdminVCard, type: Everbase::String }
+                - { name: AdminCredential, type: Everbase::CoreSystem::Credential }
+            - name: Open
+              doc: { brief: 'Opens an existing and authenticated domain.' }
+              static: true
+              return: { name: Domain, type: Everbase::CoreSystem::Domain }
+              params:
+                - { name: DomainName, type: Everbase::String }
+            - name: Authenticate
+              doc: { brief: 'Authenticate against an existing domain.' }
+              static: true
+              return: { name: Domain, type: Everbase::CoreSystem::Domain }
+              params:
+                - { name: DomainName, type: Everbase::String }
+                - { name: Credential, type: Everbase::CoreSystem::Credential }
+            - name: GetAuthenticated
+              doc: { brief: 'Retrieves all authenticated domains.' }
+              static: true
+              return: { name: Domain, type: [ Everbase::Set, Everbase::CoreSystem::Domain ] }
+            - name: Deauthenticate
+              doc: { brief: 'Invalidates the authentication.', more: 'Once the authentication of the domain is invalidated, all subsequent calls to that object fail.' }
+            - name: GetName
+              doc: { brief: 'Returns the domain name.' }
+              return: { name: DomainName, type: Everbase::String }
+            - name: AddRoot
+              doc: { brief: 'Adds an object root identifier to the domain.' }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+                - { name: Root, type: Everbase::Uuid }
+            - name: RemoveRoot
+              doc: { brief: 'Removes an object root identifier from the domain.' }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+            - name: GetRoot
+              doc: { brief: 'Retrieves an object root identifier of the domain by type.' }
+              return: { name: Root, type: Everbase::Uuid }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+            - name: HasRoot
+              doc: { brief: 'Returns true if an object root identifier with the provided type exists on the domain.' }
+              return: { name: RootStatus, type: Everbase::Boolean }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+
+        - name: UserEntity
+          nodetype: class
+          doc: { brief: 'Is either a user or a user group.' }
+        #  abstractType: true
+          operations:
+            - name: GetName
+              doc: { brief: 'Returns the display name of the user entity.' }
+              return: { name: Name, type: Everbase::String }
+
+        - name: User
+          nodetype: class
+        #  inherits: UserEntity
+          doc: { brief: 'Is a person who uses the EFS.' }
+          operations:
+            - name: CreateJoinRequest
+              doc: { brief: 'Creates a new user for a specific domain.' }
+              static: true
+              return: { name: User, type: Everbase::CoreSystem::User }
+              params:
+                - { name: VCard, type: Everbase::String }
+                - { name: Credential, type: Everbase::CoreSystem::Credential }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+              errors:
+                - InvalidArgument/InvalidVCardFormat
+                - InvalidArgument/InvalidCredential
+            - name: GetAll
+              doc: { brief: 'Returns all users of a domain.' }
+              static: true
+              return: { name: User, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            #    - { name: MembershipMode, type: Elements::MembershipMode }
+            - name: GetAuthenticated
+              doc: { brief: 'Returns the authenticated user of a domain.' }
+              static: true
+              return: { name: User, type: Everbase::CoreSystem::User }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: Open
+              doc: { brief: 'Opens an existing user by id.' }
+              static: true
+              return: { name: User, type: Everbase::CoreSystem::User }
+              params:
+                - { name: UserId, type: Everbase::Uuid }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetId
+              doc: { brief: 'Returns the identifier of the user.' }
+              return: { name: Id, type: Everbase::Uuid }
+              synchronous: true
+            - name: Erase
+              doc: { brief: 'Erases the user.', more: 'Once the user is erased, all subsequent calls to that object fail.' }
+            - name: GetName
+              doc: { brief: 'Returns the display name of the user.' }
+              return: { name: Name, type: Everbase::String }
+            - name: SetVCard
+              doc: { brief: 'Sets the vcard of the user.' }
+              params:
+                - { name: VCard, type: Everbase::String }
+              errors:
+                - InvalidArgument/InvalidVCardFormat
+            - name: GetVCard
+              doc: { brief: 'Returns the vcard of the user.' }
+              return: { name: VCard, type: Everbase::String }
+            - name: SetCredential
+              doc: { brief: 'Sets the credential of the user.' }
+              params:
+                - { name: Credential, type: Everbase::CoreSystem::Credential }
+                - { name: OldCredential, type: Everbase::CoreSystem::Credential }
+              errors:
+                - InvalidArgument/InvalidCredential
+            - name: GetCredential
+              doc: { brief: 'Returns the credential of the user.' }
+              return: { name: Credential, type: Everbase::CoreSystem::Credential }
+            - name: GetMembershipMode
+              doc: { brief: 'Returns the current membership mode.' }
+            #  return: { name: MembershipMode, type: Elements::MembershipMode }
+            - name: Join
+              doc: { brief: 'Performs a join.' }
+            - name: GetFingerprint
+              doc: { brief: 'Returns the fingerprint.' }
+              return: { name: Fingerprint, type: Everbase::String }
+
+        - name: UserGroup
+          nodetype: class
+          short: Group
+       #   inherits: UserEntity
+          doc: { brief: 'Specifies a set of users for permission handling and other purposes.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new user group for a specific domain.' }
+              static: true
+              return: { name: Group, type: Everbase::CoreSystem::UserGroup }
+              params:
+                - { name: Name, type: Everbase::String }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetAll
+              doc: { brief: 'Returns all user group of a specific domain.' }
+              static: true
+              return: { name: Groups, type: [ Everbase::Set, Everbase::CoreSystem::UserGroup ] }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: Open
+              doc: { brief: 'Opens an existing usergroup by id.' }
+              static: true
+              return: { name: UserGroup, type: Everbase::CoreSystem::UserGroup }
+              params:
+                - { name: UserGroupId, type: Everbase::Uuid }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetId
+              doc: { brief: 'Returns the identifier of the user group.' }
+              return: { name: Id, type: Everbase::Uuid }
+              synchronous: true
+            - name: Erase
+              doc: { brief: 'Erases the user group.', more: 'Once the user group is erased, all subsequent calls to that object fail.' }
+            - name: SetName
+              doc: { brief: 'Sets the display name of the user group.' }
+              params:
+                - { name: Name, type: Everbase::String }
+            - name: GetName
+              doc: { brief: 'Returns the display name of the user group.' }
+              return: { name: Name, type: Everbase::String }
+            - name: AddUser
+              doc: { brief: 'Adds a user to the user group.' }
+              params:
+                - { name: User, type: Everbase::CoreSystem::User }
+            - name: RemoveUser
+              doc: { brief: 'Removes a user from the user group.' }
+              params:
+                - { name: User, type: Everbase::CoreSystem::User }
+            - name: GetUsers
+              doc: { brief: 'Returns all users of the user group.' }
+              return: { name: Users, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
+
+        - name: DeviceEntity
+          nodetype: class
+          doc: { brief: 'Is either a device or a device group.' }
+          abstractType: true
+          operations:
+            - name: GetName
+              doc: { brief: 'Returns the display name of the device entity.' }
+              return: { name: Name, type: Everbase::String }
+
+        - name: Device
+          nodetype: class
+      #    inherits: DeviceEntity
+          doc: { brief: 'Is a system which provides or consumes services within the EFS.' }
+          operations:
+            - name: GetAll
+              doc: { brief: 'Returns all device Everbase::CoreSystem of a domain.' }
+              static: true
+              return: { name: Device, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+         #       - { name: MembershipMode, type: Elements::MembershipMode }
+            - name: Open
+              doc: { brief: 'Opens an existing device by id.' }
+              static: true
+              return: { name: Device, type: Everbase::CoreSystem::Device }
+              params:
+                - { name: DeviceId, type: Everbase::Uuid }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetId
+              doc: { brief: 'Returns the identifier of the device.' }
+              return: { name: Id, type: Everbase::Uuid }
+              synchronous: true
+            - name: Erase
+              doc: { brief: 'Erases the device object.', more: 'Once the device object is erased, all subsequent calls to that object fail.' }
+            - name: SetName
+              doc: { brief: 'Sets the display name of the device object.' }
+              params:
+                - { name: Name, type: Everbase::String }
+            - name: GetName
+              doc: { brief: 'Returns the display name of the device object.' }
+              return: { name: Name, type: Everbase::String }
+            - name: SetRole
+              doc: { brief: 'Sets the role of the device object.' }
+       #       params:
+       #         - { name: Role, type: Elements::DeviceRole }
+            - name: GetRole
+              doc: { brief: 'Returns the role of the device object.' }
+       #       return: { name: Role, type: Elements::DeviceRole }
+            - name: GetMembershipMode
+              doc: { brief: 'Returns the current membership mode.' }
+       #       return: { name: MembershipMode, type: Elements::MembershipMode }
+            - name: Join
+              doc: { brief: 'Performs a join.' }
+            - name: GetFingerprint
+              doc: { brief: 'Returns the fingerprint.' }
+              return: { name: Fingerprint, type: Everbase::String }
+
+        - name: DeviceGroup
+          nodetype: class
+          short: DevGroup
+       #   inherits: DeviceEntity
+          doc: { brief: 'Specifies a set of devices for grid management and other purposes.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a device group for a domain.' }
+              static: true
+              return: { name: Group, type: Everbase::CoreSystem::DeviceGroup }
+              params:
+                - { name: Name, type: Everbase::String }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetAll
+              doc: { brief: 'Returns all device groups of a domain.' }
+              static: true
+              return: { name: Groups, type: [ Everbase::Set, Everbase::CoreSystem::DeviceGroup ] }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: Open
+              doc: { brief: 'Opens an existing devicegroup by id.' }
+              static: true
+              return: { name: DeviceGroup, type: Everbase::CoreSystem::DeviceGroup }
+              params:
+                - { name: DeviceGroupId, type: Everbase::Uuid }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: GetId
+              doc: { brief: 'Returns the identifier of the device group.' }
+              return: { name: Id, type: Everbase::Uuid }
+              synchronous: true
+            - name: Erase
+              doc: { brief: 'Erases the device group.', more: 'Once the device group is erased, all subsequent calls to that object fail.' }
+            - name: SetName
+              doc: { brief: 'Sets the display name of the device group.' }
+              params:
+                - { name: Name, type: Everbase::String }
+            - name: GetName
+              doc: { brief: 'Returns the display name of the device group.' }
+              return: { name: Name, type: Everbase::String }
+            - name: AddDevice
+              doc: { brief: 'Adds a device object to the device group.' }
+              params:
+                - { name: Device, type: Everbase::CoreSystem::Device }
+            - name: RemoveDevice
+              doc: { brief: 'Removes a device object of the device group.' }
+              params:
+                - { name: Device, type: Everbase::CoreSystem::Device }
+            - name: GetDevices
+              doc: { brief: 'Returns all device Everbase::CoreSystem of the device group.' }
+              return: { name: Devices, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
+
+    #Everbase
 
     - name: Byte
       nodetype: primitive
