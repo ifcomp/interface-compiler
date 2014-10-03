@@ -2,6 +2,11 @@
 
 namespace Everbase { namespace InterfaceCompiler {
 
+Formatter::Formatter(FormatterConfig config)
+    : config(config)
+{
+}
+
 void Formatter::execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const
 {
 	output << format(input);

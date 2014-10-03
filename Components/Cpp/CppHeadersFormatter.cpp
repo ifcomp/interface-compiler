@@ -10,12 +10,33 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
 using std::flush;
+
 using IndexList::indices;
+
 using namespace Model;
 using namespace StreamFilter;
 
+using NameStyle = FormatterConfig::NameStyle;
+template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+using Naming = FormatterConfig::Naming;
+
 CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
-    : _langConfig(configStream)
+    : Formatter(FormatterConfig
+        {
+            std::string(' ', 4), 85,
+            Naming {
+                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Enum>      { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Value>     { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Struct>    { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Constant>  { NameStyle::UPPERCASE, "", false }
+            }
+        })
+    , _langConfig(configStream)
 {
     _langConfig.parseTypeMap();
 }
@@ -80,18 +101,13 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef consta
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
-    stream << "struct " << formatName(struct_) << endl
-           << "{" << endl;
+    stream << "struct " << formatName(struct_) << endl << "{" << endl;
 
+    for (auto field : struct_->fields())
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, struct_));
-
-        for (auto field : struct_->fields())
-        {
-            f << format(field) << ";" << endl;
-        }
+        filter(stream).push<indent>() << format(field) << ";" << endl;
     }
+
     stream << "};" << endl;
 }
 
@@ -99,24 +115,19 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
 {
     stream << "class " << formatName(class_) << endl << "{" << endl;
 
+    for( auto operation : class_->operations() )
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, class_));
+        filter(stream).push<indent>() << format(operation);
+    }
 
-        for( auto operation : class_->operations() )
-        {
-            f << format(operation);
-        }
+    if (class_->events().size())
+    {
+        filter(stream).push<indent>() << endl << "// ----- Events: -----" << endl;
+    }
 
-        if (class_->events().size())
-        {
-            f << endl << "// ----- Events: -----" << endl;
-        }
-
-        for ( auto event : class_->events() )
-        {
-            f << format(event) << endl;
-        }   
+    for ( auto event : class_->events() )
+    {
+        filter(stream).push<indent>() << format(event) << endl;
     }
 
     stream << "};" << endl;
@@ -147,14 +158,9 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
 {
     stream << "enum class " << formatName(enum_) << endl << "{" << endl;
 
+    for (auto value : enum_->values())
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, enum_));
-
-        for (auto value : enum_->values())
-        {
-            f << formatName(value) << " = " << format(value) << endl;
-        }   
+        filter(stream).push<indent>() << formatName(value) << " = " << format(value) << endl;
     }
 
     stream << "};" << endl;

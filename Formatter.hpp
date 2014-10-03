@@ -5,6 +5,7 @@
 #include "FormatToken.hpp"
 #include "IndexList.hpp"
 #include "StreamFilter.hpp"
+#include "FormatterConfig.hpp"
 
 #include <memory>
 #include <ostream>
@@ -14,7 +15,11 @@ namespace Everbase { namespace InterfaceCompiler {
 class Formatter
 {
 public:
+	Formatter(FormatterConfig config);
 	void execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const;
+
+protected:
+	const FormatterConfig config;
 
 protected:
 	FormatToken<Model::RootRef> format(Model::RootRef root) const;

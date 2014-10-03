@@ -20,7 +20,6 @@ public:
         NAME_DELIMITER,
         NAME_USE_SHORT,
         NAMESPACE_DELIMITER,
-        INDENT,
         TEXT_WRAP,
         _STYLE_ATTRIB_COUNT_
     };

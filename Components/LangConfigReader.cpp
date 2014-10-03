@@ -34,7 +34,7 @@ const char  LangConfigReader::TYPE_PLACEHOLDER          = '@';
 
 const char* LangConfigReader::styleAttributeKeys[] =
 {
-    "name-style", "name-delimiter", "name-use-short", "namespace-delimiter", "indent", "text-wrap"
+    "name-style", "name-delimiter", "name-use-short", "namespace-delimiter", "text-wrap"
 };
 
 
