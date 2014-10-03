@@ -13,12 +13,12 @@ Constant::~Constant()
 
 }
 
-TypeRef Constant::type()
+TypeBaseRef Constant::type()
 {
     return _type;
 }
 
-void Constant::setType(TypeRef type)
+void Constant::setType(TypeBaseRef type)
 {
     _type = type;
 }

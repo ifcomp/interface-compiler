@@ -23,12 +23,12 @@ void Class::setType(Class::ClassType type)
     _type = type;
 }
 
-TypeRef Class::parent()
+TypeBaseRef Class::parent()
 {
     return _parent;
 }
 
-void Class::setParent(TypeRef parent)
+void Class::setParent(TypeBaseRef parent)
 {
 	_parent = parent;
 }

@@ -13,7 +13,7 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    TypeRef _type;
+    TypeBaseRef _type;
     boost::any _value;
 
 public:
@@ -21,8 +21,8 @@ public:
     virtual ~Constant();
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
-    TypeRef type();
-    void setType(TypeRef type);
+    TypeBaseRef type();
+    void setType(TypeBaseRef type);
 
     boost::any value();
     void setValue(boost::any value);

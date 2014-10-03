@@ -432,7 +432,7 @@ ParameterRef NamespaceReader::parseParameter(const YAML::Node &node)
 }
 
 
-TypeRef NamespaceReader::parseType(const YAML::Node &node)
+TypeBaseRef NamespaceReader::parseType(const YAML::Node &node)
 {
     UnresolvedTypeRef newType = make_shared<UnresolvedType>();
 

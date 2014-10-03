@@ -29,8 +29,8 @@ public:
     ClassType type();
     void setType(ClassType type);
 
-    TypeRef parent();
-    void setParent(TypeRef parent);
+    TypeBaseRef parent();
+    void setParent(TypeBaseRef parent);
 
     void addOperation(OperationRef operation);
     std::vector<OperationRef> operations();
@@ -40,7 +40,7 @@ public:
 
 private:
     ClassType _type;
-    TypeRef _parent;
+    TypeBaseRef _parent;
     std::vector<OperationRef> _operations;
     std::vector<EventRef> _events;
 };

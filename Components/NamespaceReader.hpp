@@ -231,7 +231,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::TypeRef parseType(const YAML::Node &node);
+    Model::TypeBaseRef parseType(const YAML::Node &node);
 
     /**
      * @brief Parse long and short name from node into identifiable.

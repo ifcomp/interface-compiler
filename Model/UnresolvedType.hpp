@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Model/Type.hpp"
+#include "Model/TypeBase.hpp"
 
 #include <vector>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class UnresolvedType : public Type
+class UnresolvedType : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
