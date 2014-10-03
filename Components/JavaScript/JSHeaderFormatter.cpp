@@ -130,8 +130,12 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 	stream << formatNamespace(class_) << formatName(class_) << " = function() { };";
 
-	if( auto parent = std::dynamic_pointer_cast<Model::Class>(class_->parent()) ) {
-		stream << formatNamespace(parent) << "prototype" << "Object.create(" << "~parent_namespace~" << formatName(parent) << ".prototype);";
+	if( auto parent = std::dynamic_pointer_cast<Model::Type>(class_->parent()) )
+	{
+		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
+		{
+			stream << endl << endl << formatNamespace(class_) << "prototype" << "Object.create(" << formatNamespace(parentClass) << formatName(parentClass) << ".prototype);";
+		}
 	}
 
 	stream << endl << endl;
@@ -188,11 +192,6 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespa
 void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
 	stream << "// enum " << formatName(enum_) << endl << "// {" << endl << endl;
-
-	if (enum_->doc())
-	{
-		stream << format(enum_->doc());
-	}
 
 	stream << formatNamespace(enum_) << formatName(enum_) << "= {  };" << endl << endl;
 

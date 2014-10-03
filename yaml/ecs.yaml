@@ -129,7 +129,7 @@
         - name: UserEntity
           nodetype: class
           doc: { brief: 'Is either a user or a user group.' }
-        #  abstractType: true
+          abstractType: true
           operations:
             - name: GetName
               doc: { brief: 'Returns the display name of the user entity.' }
@@ -137,7 +137,7 @@
 
         - name: User
           nodetype: class
-        #  inherits: UserEntity
+          inherits: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Is a person who uses the EFS.' }
           operations:
             - name: CreateJoinRequest
@@ -157,7 +157,7 @@
               return: { name: User, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
-            #    - { name: MembershipMode, type: Elements::MembershipMode }
+                - { name: MembershipMode, type: Everbase::MembershipMode }
             - name: GetAuthenticated
               doc: { brief: 'Returns the authenticated user of a domain.' }
               static: true
@@ -201,7 +201,7 @@
               return: { name: Credential, type: Everbase::CoreSystem::Credential }
             - name: GetMembershipMode
               doc: { brief: 'Returns the current membership mode.' }
-            #  return: { name: MembershipMode, type: Elements::MembershipMode }
+              return: { name: MembershipMode, type: Everbase::MembershipMode }
             - name: Join
               doc: { brief: 'Performs a join.' }
             - name: GetFingerprint
@@ -211,7 +211,7 @@
         - name: UserGroup
           nodetype: class
           short: Group
-       #   inherits: UserEntity
+          inherits: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Specifies a set of users for permission handling and other purposes.' }
           operations:
             - name: Create
@@ -270,7 +270,7 @@
 
         - name: Device
           nodetype: class
-      #    inherits: DeviceEntity
+          inherits: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Is a system which provides or consumes services within the EFS.' }
           operations:
             - name: GetAll
@@ -279,7 +279,7 @@
               return: { name: Device, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
-         #       - { name: MembershipMode, type: Elements::MembershipMode }
+                - { name: MembershipMode, type: Everbase::MembershipMode }
             - name: Open
               doc: { brief: 'Opens an existing device by id.' }
               static: true
@@ -302,14 +302,14 @@
               return: { name: Name, type: Everbase::String }
             - name: SetRole
               doc: { brief: 'Sets the role of the device object.' }
-       #       params:
-       #         - { name: Role, type: Elements::DeviceRole }
+              params:
+                - { name: Role, type: Everbase::DeviceRole }
             - name: GetRole
               doc: { brief: 'Returns the role of the device object.' }
-       #       return: { name: Role, type: Elements::DeviceRole }
+              return: { name: Role, type: Everbase::DeviceRole }
             - name: GetMembershipMode
               doc: { brief: 'Returns the current membership mode.' }
-       #       return: { name: MembershipMode, type: Elements::MembershipMode }
+              return: { name: MembershipMode, type: Everbase::MembershipMode }
             - name: Join
               doc: { brief: 'Performs a join.' }
             - name: GetFingerprint
@@ -319,7 +319,7 @@
         - name: DeviceGroup
           nodetype: class
           short: DevGroup
-       #   inherits: DeviceEntity
+          inherits: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Specifies a set of devices for grid management and other purposes.' }
           operations:
             - name: Create
@@ -367,7 +367,22 @@
               doc: { brief: 'Returns all device Everbase::CoreSystem of the device group.' }
               return: { name: Devices, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
 
-    #Everbase
+    - name: DeviceRole
+      nodetype: enum
+      doc: { brief: 'Specifies the behaviour of a device within a domain.', more: 'Can be used as flag, but not as a bit mask.' }
+      values:
+        - { name: Grid, value: 0x1, doc: { brief: 'Grid members are steady members and guarantee availability of data. The grid is entirely trusted by a domain provider.' } }
+        - { name: Peer, value: 0x2, doc: { brief: 'Peers are volatile members.' } }
+
+    - name: MembershipMode
+      nodetype: enum
+      doc: { brief: 'Specifies the membership mode of an user or device.', more: 'Can be used as a bit mask.' }
+      values:
+        - { name: JoinRequest, value: 0x1 }
+        - { name: Member, value: 0x2 }
+
+
+    #Primitives
 
     - name: Byte
       nodetype: primitive
@@ -422,28 +437,3 @@
     - name: Set
       nodetype: container
       containertype: set
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
