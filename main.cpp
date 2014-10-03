@@ -23,7 +23,8 @@ int main(int argc, char** argv)
 
             Model::RootRef root = parser.execute(cprov, file);
 
-            try {
+            try
+            {
                 std::ifstream configFile(argv[2]);
                 configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 

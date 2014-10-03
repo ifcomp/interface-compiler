@@ -24,8 +24,10 @@ protected:
 protected:
 	FormatToken<Model::RootRef> format(Model::RootRef root) const;
 
+	FormatToken<Model::IdentifiableRef> formatQualifiedName(Model::IdentifiableRef identifiable) const;
 	FormatToken<Model::IdentifiableRef> formatName(Model::IdentifiableRef identifiable) const;
 	FormatToken<std::string, std::string, FormatterConfig::NameConfig> formatName(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const;
+
 	FormatToken<Model::DocumentationRef> format(Model::DocumentationRef documentation) const;
 	FormatToken<Model::TypeRef> format(Model::TypeBaseRef type) const;
 	FormatToken<Model::ParameterRef> format(Model::ParameterRef parameter) const;
@@ -48,8 +50,10 @@ protected:
 protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const = 0;
 
+	virtual void formatQualifiedName(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void formatName(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const;
+
 	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const = 0;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const = 0;

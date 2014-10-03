@@ -23,7 +23,7 @@ using Naming = FormatterConfig::Naming;
 CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
     : Formatter(FormatterConfig
         {
-            std::string(' ', 4), 85,
+            std::string("::"), std::string(4, ' '), 85,
             Naming {
                 NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
@@ -58,7 +58,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) cons
     }
     else
     {
-        stream << _langConfig.formatNamespace(type->primary()) << formatName(type->primary());
+        stream << formatQualifiedName(type->primary());
     }
 }
 
@@ -105,7 +105,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
 
     for (auto field : struct_->fields())
     {
-        filter(stream).push<indent>() << format(field) << ";" << endl;
+        filter(stream).push<indent>(config.indent) << format(field) << ";" << endl;
     }
 
     stream << "};" << endl;
@@ -118,13 +118,13 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
     for( auto operation : class_->operations() )
     {
         std::size_t count = 0;
-        filter(stream).push<indent>().push<counter>(count) << format(operation) << (count > 0 ? "\n" : "") << flush;
+        filter(stream).push<indent>(config.indent).push<counter>(count) << format(operation) << (count > 0 ? "\n" : "") << flush;
     }
 
     for ( auto event : class_->events() )
     {
         std::size_t count = 0;
-        filter(stream).push<indent>().push<counter>(count) << format(event) << (count > 0 ? "\n" : "") << flush;
+        filter(stream).push<indent>(config.indent).push<counter>(count) << format(event) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "};" << endl;
@@ -145,7 +145,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
     for ( auto member : namespace_->members() )
     {
         std::size_t count = 0;
-        filter(stream).push<indent>().push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
+        filter(stream).push<indent>(config.indent).push<counter>(count) << format(member) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "}" << endl;
@@ -157,7 +157,7 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
 
     for (auto value : indices(enum_->values()))
     {
-        filter(stream).push<indent>() << format(value.value()) << (!value.last() ? "," : "") << endl;
+        filter(stream).push<indent>(config.indent) << format(value.value()) << (!value.last() ? "," : "") << endl;
     }
 
     stream << "};" << endl;

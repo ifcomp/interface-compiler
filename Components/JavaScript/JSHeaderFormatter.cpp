@@ -26,7 +26,7 @@ using Naming = FormatterConfig::Naming;
 JSHeaderFormatter::JSHeaderFormatter(std::istream &configStream)
     : Formatter(FormatterConfig
         {
-            std::string(' ', 4), 85,
+            std::string("."), std::string(4, ' '), 85,
             Naming {
                 NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
@@ -49,11 +49,6 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::RootRef root) const
 	stream << format(root->getNamespace()) << endl;
 }
 
-std::string inline JSHeaderFormatter::formatNamespace(Model::IdentifiableRef identifiable) const
-{
-	return _langConfigReader.formatNamespace(identifiable);
-}
-
 void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
     if (PrimitiveRef primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
@@ -66,7 +61,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
     }
     else
     {
-        stream << formatNamespace(type->primary()) << formatName(type->primary());
+        stream << formatQualifiedName(type->primary());
     }
 }
 
@@ -105,18 +100,18 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant
     	uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 		valueString = boost::lexical_cast<std::string>(uuid);
 	}
-	stream << formatNamespace(constant) << formatName(constant) << ".TYPE_ID = " << 
+	stream << formatQualifiedName(constant) << ".TYPE_ID = " << 
 		valueString << ";" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct " << formatName(struct_) << endl << "// {" << endl << endl;
-    stream << formatNamespace(struct_) << formatName(struct_) << "= function() {  }" << endl << endl;
+    stream << formatQualifiedName(struct_) << "= function() {  }" << endl << endl;
 
 	for (auto field : struct_->fields())
 	{
-		stream << "Object.defineProperty(" << formatNamespace(struct_) << formatName(struct_) << ".prototype, '" << formatName(field) <<
+		stream << "Object.defineProperty(" << formatQualifiedName(struct_) << ".prototype, '" << formatName(field) <<
 			"', {get: function() { /*impl*/ }, set: function(new" << field->longName() << 
 			") { /*impl*/ }}); /*" << format(field->type()) << "*/" << endl << endl;
 	}
@@ -134,7 +129,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 	{
 		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
 		{
-			stream << formatNamespace(parentClass) << formatName(parentClass);
+			stream << formatQualifiedName(parentClass);
 		}
 	}
 	else
@@ -144,18 +139,18 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 		
 	stream << endl << "// {" << endl << endl;
 
-	stream << formatNamespace(class_) << formatName(class_) << " = function() { };";
+	stream << formatQualifiedName(class_) << " = function() { };";
 
 	if( auto parent = std::dynamic_pointer_cast<Model::Type>(class_->parent()) )
 	{
 		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
 		{
-			stream << endl << endl << formatNamespace(class_) << formatName(class_) << ".prototype" << " = " << "Object.create(" << formatNamespace(parentClass) << formatName(parentClass) << ".prototype);";
+			stream << endl << endl << formatQualifiedName(class_) << ".prototype" << " = " << "Object.create(" << formatQualifiedName(parentClass) << ".prototype);";
 		}
 	}
 	else
 	{
-		stream << endl << endl << formatNamespace(class_) << formatName(class_) << ".prototype" << " = " << "Object.create(Everbase.Observable.prototype);";
+		stream << endl << endl << formatQualifiedName(class_) << ".prototype" << " = " << "Object.create(Everbase.Observable.prototype);";
 	}
 
 	stream << endl << endl;
@@ -167,7 +162,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 	for (auto event : class_->events())
 	{
-		stream << "// event " << formatNamespace(event) << formatName(event) << endl << "// {";
+		stream << "// event " << formatQualifiedName(event) << endl << "// {";
 
 		stream << format(event);
 
@@ -179,19 +174,19 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) const
 {
-	stream << formatNamespace(event) << formatName(event) << " = function() { };" << endl << endl;
+	stream << formatQualifiedName(event) << " = function() { };" << endl << endl;
 
-	stream << formatNamespace(event) << formatName(event) << ".prototype" << " = Object.create(" <<
+	stream << formatQualifiedName(event) << ".prototype" << " = Object.create(" <<
 		"evb.Event.prototype);" << endl << endl;
 
-	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID = " << endl;
+	stream << formatQualifiedName(event) << ".TYPE_ID = " << endl;
 
-	stream << formatNamespace(event) << formatName(event) << ".prototype.TYPE_ID =" << " \'" <<
+	stream << formatQualifiedName(event) << ".prototype.TYPE_ID =" << " \'" <<
 		boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl << endl;
 
 		for (auto value : event->values())
 		{
-			stream << "Object.defineProperty( " << formatNamespace(value) << "prototype, '" 
+			stream << "Object.defineProperty( " << formatQualifiedName(event) << ".prototype, '" 
 				<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function("
 				<< formatName("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
 				<< " ) { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
@@ -200,8 +195,8 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
-	stream << endl << "var " << formatNamespace(namespace_) << formatName(namespace_) << " = " 
-		<< formatNamespace(namespace_) << formatName(namespace_) << " || {  }" << endl << endl;
+	stream << endl << "var " << formatQualifiedName(namespace_) << " = " 
+		<< formatQualifiedName(namespace_) << " || {  }" << endl << endl;
 	
 	for ( auto member : namespace_->members() )
 	{
@@ -214,7 +209,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
 	stream << "// enum " << formatName(enum_) << endl << "// {" << endl << endl;
 
-	stream << formatNamespace(enum_) << formatName(enum_) << "= {  };" << endl << endl;
+	stream << formatQualifiedName(enum_) << "= {  };" << endl << endl;
 
 	for (auto value : enum_->values())
 	{
@@ -222,7 +217,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 		{
 			stream << format(value->doc());
 		}
-		stream << formatNamespace(enum_) << formatName(enum_) << "." << formatName(value) << " = " << format(value) << "," << endl << endl;
+		stream << formatQualifiedName(enum_) << "." << formatName(value) << " = " << format(value) << "," << endl << endl;
 	} 
 
 	stream << "// }" << endl << endl;
@@ -253,7 +248,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		}
 		else 
 		{
-			stream << "/*" << formatNamespace(operation->result()) << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
+			stream << "/*" << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
 		}
 	}
 	else 
@@ -268,18 +263,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		}
 	}
 	
-
-	string prototype;
-	if (!operation->isStatic())
-	{
-		prototype = "prototype.";
-	}
-	else
-	{
-		prototype = "";
-	}
-
-    stream << " " << formatNamespace(operation) << prototype <<  formatName(operation) <<  " = function" << "(";
+    stream << " " << formatQualifiedName(std::dynamic_pointer_cast<Model::Identifiable>(operation->parentObject())) << (!operation->isStatic() ? ".prototype." : ".") <<  formatName(operation) <<  " = function" << "(";
 
 	for( auto parameter : indices(operation->params()) )
 	{

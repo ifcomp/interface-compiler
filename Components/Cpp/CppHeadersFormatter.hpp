@@ -16,6 +16,7 @@ public:
     CppHeadersFormatter(std::istream& configStream);
 
 protected:
+    using Formatter::formatQualifiedName;
     using Formatter::formatName;
     using Formatter::formatSig;
     using Formatter::format;

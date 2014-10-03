@@ -20,6 +20,11 @@ FormatToken<Model::RootRef> Formatter::format(Model::RootRef root) const
 	return FormatToken<Model::RootRef> { this, &Formatter::format, std::tuple<Model::RootRef> { root } };
 }
 
+FormatToken<Model::IdentifiableRef> Formatter::formatQualifiedName(Model::IdentifiableRef identifiable) const
+{
+    return FormatToken<Model::IdentifiableRef> { this, &Formatter::formatQualifiedName, std::tuple<Model::IdentifiableRef> { identifiable } };
+}
+
 FormatToken<Model::IdentifiableRef> Formatter::formatName(Model::IdentifiableRef identifiable) const
 {
 	return FormatToken<Model::IdentifiableRef> { this, &Formatter::formatName, std::tuple<Model::IdentifiableRef> { identifiable } };
@@ -110,6 +115,16 @@ FormatToken<Model::OperationRef> Formatter::format(Model::OperationRef operation
 FormatToken<Model::OperationRef> Formatter::formatSig(Model::OperationRef operation) const
 {
 	return FormatToken<Model::OperationRef> { this, &Formatter::formatSig, std::tuple<Model::OperationRef> { operation } };
+}
+
+void Formatter::formatQualifiedName(std::ostream& stream, Model::IdentifiableRef identifiable) const
+{
+    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parentObject()) )
+    {
+        stream << formatQualifiedName(parent) << config.nssep;
+    }
+
+    stream << formatName(identifiable);
 }
 
 void Formatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const

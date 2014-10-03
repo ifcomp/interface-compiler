@@ -78,24 +78,28 @@ struct FormatterConfig
 		TypeNameConfig<Model::Constant>
 	> Naming;
 
+	std::string nssep;
 	std::string indent;
 	std::uint8_t docWrap;
 	Naming naming;
 
-	FormatterConfig(std::string indent, std::uint8_t docWrap, Naming naming)
-		: indent(indent)
+	FormatterConfig(std::string nssep, std::string indent, std::uint8_t docWrap, Naming naming)
+		: nssep(nssep)
+		, indent(indent)
 		, docWrap(docWrap)
 		, naming(naming)
 	{ }
 
 	FormatterConfig(const FormatterConfig& other)
-		: indent(other.indent)
+		: nssep(other.nssep)
+		, indent(other.indent)
 		, docWrap(other.docWrap)
 		, naming(other.naming)
 	{ }
 
 	FormatterConfig(FormatterConfig&& other)
-		: indent(std::move(other.indent))
+		: nssep(std::move(other.nssep))
+		, indent(std::move(other.indent))
 		, docWrap(std::move(other.docWrap))
 		, naming(std::move(other.naming))
 	{ }

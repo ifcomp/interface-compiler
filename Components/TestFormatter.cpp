@@ -19,7 +19,7 @@ using Naming = FormatterConfig::Naming;
 TestFormatter::TestFormatter(std::istream &configStream)
     : Formatter(FormatterConfig
         {
-            std::string(' ', 4), 85,
+            std::string("::"), std::string(4, ' '), 85,
             Naming {
                 NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },

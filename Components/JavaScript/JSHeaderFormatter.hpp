@@ -16,6 +16,7 @@ public:
     JSHeaderFormatter(std::istream& configStream);
 
 protected:
+    using Formatter::formatQualifiedName;
 	using Formatter::formatName;
 	using Formatter::formatSig;
 	using Formatter::format;
@@ -23,7 +24,6 @@ protected:
 protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const override;
 
-	std::string formatNamespace(Model::IdentifiableRef identifiable) const;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const override;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const override;
 
