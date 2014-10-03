@@ -32,7 +32,7 @@ bool Documentation::keyExists(std::string doxygenKey)
 }
 
 
-const std::vector<Documentation::DocEntry> &Documentation::docEntries()
+std::vector<Documentation::DocEntry> Documentation::docEntries()
 {
     return _docEntries;
 }

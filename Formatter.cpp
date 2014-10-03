@@ -2,6 +2,11 @@
 
 namespace Everbase { namespace InterfaceCompiler {
 
+Formatter::Formatter(FormatterConfig config)
+    : config(config)
+{
+}
+
 void Formatter::execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const
 {
 	output << format(input);
@@ -97,6 +102,84 @@ FormatToken<Model::OperationRef> Formatter::format(Model::OperationRef operation
 FormatToken<Model::OperationRef> Formatter::formatSig(Model::OperationRef operation) const
 {
 	return FormatToken<Model::OperationRef> { this, &Formatter::formatSig, std::tuple<Model::OperationRef> { operation } };
+}
+
+void Formatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
+{
+	using namespace std;
+	using namespace Model;
+	using namespace StreamFilter;
+
+	stream << "/**" << endl;
+	    
+    if (documentation->keyExists(Documentation::KEY_BRIEF))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
+    }
+
+    if (documentation->keyExists(Documentation::KEY_MORE))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
+    }
+
+	stream << " */" << endl;
+}
+
+void Formatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const
+{
+    if ( auto doc = member->doc() )
+    {
+        stream << format(doc);
+    }
+
+    if ( auto primitive = std::dynamic_pointer_cast<Model::Primitive>(member) )
+    {
+        stream << format(primitive);
+    }
+    else
+    if ( auto container = std::dynamic_pointer_cast<Model::Container>(member) )
+    {
+        stream << format(container);
+    }
+    else
+    if ( auto constant = std::dynamic_pointer_cast<Model::Constant>(member) )
+    {
+        stream << format(constant);
+    }
+    else
+    if ( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(member) )
+    {
+        stream << format(struct_);
+    }
+    else
+    if ( auto class_ = std::dynamic_pointer_cast<Model::Class>(member) )
+    {
+        stream << format(class_);
+    }
+    else
+    if ( auto event = std::dynamic_pointer_cast<Model::Event>(member) )
+    {
+        stream << format(event);
+    }
+    else
+    if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member) )
+    {
+        stream << format(namespace_);
+    }
+    else
+    if ( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(member) )
+    {
+        stream << format(enum_);
+    }
+    else
+    if ( auto operation = std::dynamic_pointer_cast<Model::Operation>(member) )
+    {
+        stream << format(operation);
+    }
+    else
+    {
+        throw std::runtime_error("unknown namespace member type " + member->objectTypeName());
+    }
 }
 
 } } // namespace: Everbase::InterfaceCompiler

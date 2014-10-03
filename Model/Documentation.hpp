@@ -35,7 +35,7 @@ public:
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     bool keyExists(std::string doxygenKey);
-    const std::vector<DocEntry> &docEntries();
+    std::vector<DocEntry> docEntries();
     std::vector<DocEntry> docEntries(std::string doxygenKey);
     DocEntry docEntry(std::string doxygenKey);
     std::string description(std::string doxygenKey);

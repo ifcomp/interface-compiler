@@ -13,12 +13,33 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
 using std::flush;
+
 using IndexList::indices;
+
 using namespace Model;
 using namespace StreamFilter;
 
+using NameStyle = FormatterConfig::NameStyle;
+template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+using Naming = FormatterConfig::Naming;
+
 JSHeaderFormatter::JSHeaderFormatter(std::istream &configStream)
-    : _langConfigReader(configStream)
+    : Formatter(FormatterConfig
+        {
+            std::string(' ', 4), 85,
+            Naming {
+                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Enum> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Value> { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Event> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Struct> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Constant> { NameStyle::UPPERCASE, "", false }
+            }
+        })
+    , _langConfigReader(configStream)
 {
     _langConfigReader.parseTypeMap();
 }
@@ -36,23 +57,6 @@ std::string inline JSHeaderFormatter::formatNamespace(Model::IdentifiableRef ide
 void JSHeaderFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     stream << _langConfigReader.styleToken(identifiable->longName(), identifiable);
-}
-
-void JSHeaderFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
-{
-	stream << "/**" << endl;
-	    
-    if (documentation->keyExists(Documentation::KEY_BRIEF))
-    {
-        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
-    }
-
-    if (documentation->keyExists(Documentation::KEY_MORE))
-    {
-        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
-    }
-
-	stream << " */" << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
@@ -168,7 +172,11 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 	for (auto event : class_->events())
 	{
+		stream << "// event " << formatNamespace(event) << formatName(event) << endl << "// {";
+
 		stream << format(event);
+
+		stream << "// }";
 	}
 
 	stream << "// }" << endl << endl;
@@ -284,61 +292,5 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 
 	stream << ")  { /* impl */ }";
 }
-
-void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const
-{
-	if (auto doc = member->doc())
-	{
-		stream << format(doc);
-	}
-
-	if (auto primitive = std::dynamic_pointer_cast<Model::Primitive>(member))
-	{
-		stream << format(primitive);
-	}
-	else
-	if (auto container = std::dynamic_pointer_cast<Model::Container>(member))
-	{
-		stream << format(container);
-	}
-	else
-	if (auto constant = std::dynamic_pointer_cast<Model::Constant>(member))
-	{
-		stream << format(constant);
-	}
-	else
-	if (auto struct_ = std::dynamic_pointer_cast<Model::Struct>(member))
-	{
-		stream << format(struct_);
-	}
-	else
-	if (auto class_ = std::dynamic_pointer_cast<Model::Class>(member))
-	{
-		stream << format(class_);
-	}
-	else
-	if (auto event = std::dynamic_pointer_cast<Model::Event>(member))
-	{
-		stream << format(event);
-	}
-	else
-	if (auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member))
-	{
-		stream << format(namespace_);
-	}
-	else
-	if (auto enum_ = std::dynamic_pointer_cast<Model::Enum>(member))
-	{
-		stream << format(enum_);
-	}
-	else
-	if (auto operation = std::dynamic_pointer_cast<Model::Operation>(member))
-	{
-		stream << format(operation);
-	}
-	else
-		throw std::runtime_error("unknown namespace member type");
-}
-
 
 } } } // namespace: Everbase::InterfaceCompiler::Components

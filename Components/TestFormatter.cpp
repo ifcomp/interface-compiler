@@ -6,12 +6,33 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
+
 using IndexList::indices;
+
 using namespace Model;
 using namespace StreamFilter;
 
+using NameStyle = FormatterConfig::NameStyle;
+template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+using Naming = FormatterConfig::Naming;
+
 TestFormatter::TestFormatter(std::istream &configStream)
-    : _langConfigReader(configStream)
+    : Formatter(FormatterConfig
+        {
+            std::string(' ', 4), 85,
+            Naming {
+                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Enum>      { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Value>     { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Struct>    { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Constant>  { NameStyle::UPPERCASE, "", false }
+            }
+        })
+    , _langConfigReader(configStream)
 {
     _langConfigReader.parseTypeMap();
 }

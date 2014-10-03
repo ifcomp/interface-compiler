@@ -5,6 +5,7 @@
 #include "FormatToken.hpp"
 #include "IndexList.hpp"
 #include "StreamFilter.hpp"
+#include "FormatterConfig.hpp"
 
 #include <memory>
 #include <ostream>
@@ -14,7 +15,11 @@ namespace Everbase { namespace InterfaceCompiler {
 class Formatter
 {
 public:
+	Formatter(FormatterConfig config);
 	void execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const;
+
+protected:
+	const FormatterConfig config;
 
 protected:
 	FormatToken<Model::RootRef> format(Model::RootRef root) const;
@@ -43,11 +48,11 @@ protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const = 0;
 
 	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const = 0;
-	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const = 0;
+	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const = 0;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const = 0;
 
-	virtual void format(std::ostream& stream, Model::NamespaceMemberRef member) const = 0;
+	virtual void format(std::ostream& stream, Model::NamespaceMemberRef member) const;
 	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const = 0;
 	virtual void format(std::ostream& stream, Model::ContainerRef container) const = 0;
 	virtual void format(std::ostream& stream, Model::ConstantRef constant) const = 0;

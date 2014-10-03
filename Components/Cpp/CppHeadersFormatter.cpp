@@ -10,12 +10,33 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 using std::endl;
 using std::flush;
+
 using IndexList::indices;
+
 using namespace Model;
 using namespace StreamFilter;
 
+using NameStyle = FormatterConfig::NameStyle;
+template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+using Naming = FormatterConfig::Naming;
+
 CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
-    : _langConfig(configStream)
+    : Formatter(FormatterConfig
+        {
+            std::string(' ', 4), 85,
+            Naming {
+                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Enum>      { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Value>     { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Struct>    { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Constant>  { NameStyle::UPPERCASE, "", false }
+            }
+        })
+    , _langConfig(configStream)
 {
     _langConfig.parseTypeMap();
 }
@@ -24,31 +45,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::RootRef root) cons
 {
     stream << format(root->getNamespace()) << endl;
 }
-
-void CppHeadersFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
-{
-    stream << "/**" << endl;
-
-    {
-        filter f(stream);
-        f.push<indent>(" * ");
-        f.push<wrap>(_langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
-
-        if (documentation->keyExists(Documentation::KEY_BRIEF))
-        {
-            f << "@" << Documentation::KEY_BRIEF << " ";
-            f << documentation->description(Documentation::KEY_BRIEF) << endl;
-        }
-
-        if (documentation->keyExists(Documentation::KEY_MORE))
-        {
-            f << endl << documentation->description(Documentation::KEY_MORE) << endl;
-        }
-    }
-
-    stream << " */" << endl;
-}
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
@@ -66,22 +62,18 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) cons
     }
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << format(parameter->type()) << " " << formatName(parameter);
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
 {
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef container) const
 {
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
@@ -107,47 +99,39 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef consta
     stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << valueString << ";" << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
-    stream << "struct " << formatName(struct_) << endl
-           << "{" << endl;
+    stream << "struct " << formatName(struct_) << endl << "{" << endl;
 
+    for (auto field : struct_->fields())
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, struct_));
-
-        for (auto field : struct_->fields())
-        {
-            f << format(field) << ";" << endl;
-        }
+        filter(stream).push<indent>() << format(field) << ";" << endl;
     }
+
     stream << "};" << endl;
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
     stream << "class " << formatName(class_) << endl << "{" << endl;
 
+    for( auto operation : class_->operations() )
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, class_));
+        filter(stream).push<indent>() << format(operation);
+    }
 
-        for( auto operation : class_->operations() )
-        {
-            f << format(operation);
-        }
+    if (class_->events().size())
+    {
+        filter(stream).push<indent>() << endl << "// ----- Events: -----" << endl;
+    }
 
-        for ( auto event : class_->events() )
-        {
-            f << format(event) << endl;
-        }   
+    for ( auto event : class_->events() )
+    {
+        filter(stream).push<indent>() << format(event) << endl;
     }
 
     stream << "};" << endl;
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EventRef event) const
 {
@@ -156,7 +140,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EventRef event) co
         stream << format(value->type()) << " " << formatName(event) << "();" << endl;
     }
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
@@ -171,30 +154,22 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
     stream << "}" << endl << endl << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
     stream << "enum class " << formatName(enum_) << endl << "{" << endl;
 
+    for (auto value : enum_->values())
     {
-        filter f(stream);
-        f.push<indent>(' ', _langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::INDENT, enum_));
-
-        for (auto value : enum_->values())
-        {
-            f << formatName(value) << " = " << format(value) << endl;
-        }   
+        filter(stream).push<indent>() << formatName(value) << " = " << format(value) << endl;
     }
 
     stream << "};" << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ValueRef value) const
 {
     stream << value->value();
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef operation) const
 {
@@ -206,12 +181,10 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef opera
     stream << formatSig(operation) << ";" << endl;
 }
 
-
 void CppHeadersFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     stream << _langConfig.styleToken(identifiable->longName(), identifiable);
 }
-
 
 void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
 {
@@ -232,64 +205,6 @@ void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef op
     }
 
     stream << ")";
-}
-
-
-void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const
-{
-    if ( auto doc = member->doc() )
-    {
-        stream << format(doc);
-    }
-
-    if ( auto primitive = std::dynamic_pointer_cast<Model::Primitive>(member) )
-    {
-        stream << format(primitive);
-    }
-    else
-    if ( auto container = std::dynamic_pointer_cast<Model::Container>(member) )
-    {
-        stream << format(container);
-    }
-    else
-    if ( auto constant = std::dynamic_pointer_cast<Model::Constant>(member) )
-    {
-        stream << format(constant);
-    }
-    else
-    if ( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(member) )
-    {
-        stream << format(struct_);
-    }
-    else
-    if ( auto class_ = std::dynamic_pointer_cast<Model::Class>(member) )
-    {
-        stream << format(class_);
-    }
-    else
-    if ( auto event = std::dynamic_pointer_cast<Model::Event>(member) )
-    {
-        stream << format(event);
-    }
-    else
-    if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member) )
-    {
-        stream << format(namespace_);
-    }
-    else
-    if ( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(member) )
-    {
-        stream << format(enum_);
-    }
-    else
-    if ( auto operation = std::dynamic_pointer_cast<Model::Operation>(member) )
-    {
-        stream << format(operation);
-    }
-    else
-    {
-        throw std::runtime_error("unknown namespace member type " + member->objectTypeName());
-    }
 }
 
 
