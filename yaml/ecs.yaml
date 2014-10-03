@@ -1,6 +1,9 @@
 - name: Everbase
   nodetype: namespace
   members:
+
+#--END EVERBASE CORESYSTEM BEGIN ----------------------------------------
+
     - name: CoreSystem
       nodetype: namespace
       members:
@@ -367,6 +370,8 @@
               doc: { brief: 'Returns all device Everbase::CoreSystem of the device group.' }
               return: { name: Devices, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
 
+#---Elements...
+
     - name: DeviceRole
       nodetype: enum
       doc: { brief: 'Specifies the behaviour of a device within a domain.', more: 'Can be used as flag, but not as a bit mask.' }
@@ -381,6 +386,992 @@
         - { name: JoinRequest, value: 0x1 }
         - { name: Member, value: 0x2 }
 
+#---END EVERBASE CORESYSTEM END ---------------------------------------------
+#
+#
+#---BEGIN EVERBASE OBJECTSTORE BEGIN ---------------------------------------------
+
+
+    - name: ObjectStore
+      nodetype: namespace
+      members:
+        - name: Policy
+          nodetype: class
+          doc: { brief: 'Is a set of permissions and rules.', more: 'A policy can be either specific to a set of objects (unnamed policy) or a domain (named policy).' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new named policy for a domain.' }
+              static: true
+              return: { name: Policy, type: Everbase::ObjectStore::Policy, doc: { brief: 'The policy object.' } }
+              params:
+                - { name: Name, type: Everbase::String }
+                - { name: Domain, type: Everbase::CoreSystem::Domain, doc: { brief: '.' } }
+              errors:
+                - InvalidArgument/InvalidName
+            - name: GetAll
+              doc: { brief: 'Returns all policies of a domain.' }
+              static: true
+              return: { name: Policies, type: [Everbase::Set, Everbase::ObjectStore::Policy ] }
+              params:
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: Erase
+              doc: { brief: 'Erases the policy.', more: 'Once the policy is erased, all subsequent calls to that object fail.' }
+            - name: SetName
+              doc: { brief: 'Sets the name of the policy.' }
+              params:
+                - { name: Name, type: Everbase::String }
+              errors:
+                - InvalidArgument/InvalidName
+            - name: GetName
+              doc: { brief: 'Returns the name of the policy.' }
+              return: { name: Name, type: Everbase::String }
+            - name: AddPermission
+              doc: { brief: 'Adds a new permission object to the policy.' }
+              return: { name: Permission, type: Everbase::ObjectStore::Permission }
+              params:
+                - { name: Entity, type: Everbase::CoreSystem::UserEntity }
+                - { name: Mode, type: Everbase::PermissionMode }
+            - name: RemovePermission
+              doc: { brief: 'Removes a permission object from the policy.' }
+              params:
+                - { name: Permission, type: Everbase::ObjectStore::Permission }
+            - name: GetPermissions
+              doc: { brief: 'Returns all permission Everbase::ObjectStore:: of the policy.' }
+              return: { name: Permissions, type: [Everbase::Set, Everbase::ObjectStore::Permission ] }
+            - name: AddRule
+              doc: { brief: 'Adds a rule object to the policy.' }
+              params:
+                - { name: Rule, type: Everbase::ObjectStore::Rule }
+            - name: RemoveRule
+              doc: { brief: 'Removes a rule object from the policy.' }
+              params:
+                - { name: Rule, type: Everbase::ObjectStore::Rule }
+            - name: GetRules
+              doc: { brief: 'Returns all rule Everbase::ObjectStore:: of the policy.' }
+              return: { name: Rules, type: [ Everbase::Set, Everbase::ObjectStore::Rule ] }
+
+        - name: Permission
+          nodetype: class
+          doc: { brief: 'Specifies the access mode of an user entity. These control the ability of a user entity to perform operations on the content of a filesystem node.' }
+          operations:
+            - name: SetEntity
+              doc: { brief: 'Sets the user entity which is subject of this permission object.' }
+              params:
+                - { name: Entity, type: Everbase::CoreSystem::UserEntity }
+            - name: GetEntity
+              doc: { brief: 'Returns the user entity which is subject of this permission object.' }
+              return: { name: Entity, type: Everbase::CoreSystem::UserEntity }
+            - name: SetMode
+              doc: { brief: 'Sets the permission mode.' }
+              params:
+                - { name: Mode, type: Everbase::PermissionMode }
+              errors:
+                - InvalidArgument/InvalidMode
+            - name: GetMode
+              doc: { brief: 'Returns the permission mode.' }
+              return: { name: Mode, type: Everbase::PermissionMode }
+
+        - name: Rule
+          nodetype: class
+          doc: { brief: 'Influences the data handling performed by the system.', more: 'There are various data handling rules, e.g. geographical restrictions, encryption requirements and more.' }
+          abstractType: true
+
+        - name: Object
+          nodetype: class
+          doc: { brief: 'A versioned object which can be used to store arbitrary data.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new object.', more: 'Requires a commit to persist that object.' }
+              static: true
+              return: { name: Object, type: Everbase::ObjectStore::Object }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+                - { name: Domain, type: Everbase::CoreSystem::Domain }
+            - name: Clone
+              doc: { brief: 'Clones a specific version of an existing object.', more: 'Requires a commit to persist that object.' }
+              static: true
+              return: { name: Object, type: Everbase::ObjectStore::Object }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+                - { name: CopyHistory, type: Everbase::Boolean }
+            - name: OpenHead
+              doc: { brief: 'Opens head version of an existing object.', more: 'Throws exception in case there are multiple head versions.' }
+              static: true
+              return: { name: Object, type: Everbase::ObjectStore::Object }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+            - name: OpenHeads
+              doc: { brief: 'Opens head versions of an existing object.' }
+              static: true
+              return: { name: Object, type: [ Everbase::Set, Everbase::ObjectStore::Object ] }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+            - name: OpenVersion
+              doc: { brief: 'Opens a specific version of an existing object.' }
+              static: true
+              return: { name: Object, type: Everbase::ObjectStore::Object }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+            - name: SetPinning
+              doc: { brief: 'Sets the pinning status of the object.' }
+              static: true
+              params:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Pinning, type: Everbase::Boolean }
+            - name: GetPinning
+              doc: { brief: 'Gets the pinning status of the object.' }
+              static: true
+              return: { name: Pinning, type: Everbase::Boolean }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+            - name: GetStatus
+              doc: { brief: 'Returns status information of an object.' }
+              static: true
+              return: { name: Status, type: Everbase::Status }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+            - name: GetVersionStatus
+              doc: { brief: 'Returns status information of an object.' }
+              static: true
+              return: { name: Status, type: Everbase::Status }
+              params:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+            - name: GetId
+              doc: { brief: 'Returns object id.' }
+              return: { name: Id, type: Everbase::Uuid }
+            - name: GetVersion
+              doc: { brief: 'Returns current version id.' }
+              return: { name: Version, type: Everbase::Uuid }
+            - name: GetParentVersions
+              doc: { brief: 'Returns version ids of predecessors.' }
+              return: { name: Version, type: [ Everbase::Set, Everbase::Uuid ] }
+            - name: GetType
+              doc: { brief: 'Returns type of the object.' }
+              return: { name: Type, type: Everbase::Uuid }
+            - name: SetType
+              doc: { brief: 'Updates the type of the object.' }
+              params:
+                - { name: Type, type: Everbase::Uuid }
+            - name: AttachPolicy
+              doc: { brief: 'Attaches a policy to the object.' }
+              params:
+                - { name: Policy, type: Everbase::ObjectStore::Policy }
+                - { name: After, type: Everbase::ObjectStore::Policy }
+            - name: DetachPolicy
+              doc: { brief: 'Detaches a policy from the object.' }
+              params:
+                - { name: Policy, type: Everbase::ObjectStore::Policy }
+            - name: GetPolicies
+              doc: { brief: 'Returns all attached policies of the object.' }
+              return: { name: Policies, type: [ Everbase::Set, Everbase::ObjectStore::Policy ] }
+            - name: GetEffectivePolicy
+              doc: { brief: 'Returns the effective policy of the object.', more: 'The effective policy is a computed object derived from all applicable attached and inherited policies.' }
+              return: { name: Policy, type: Everbase::ObjectStore::Policy }
+            - name: GetPolicyInheritance
+              doc: { brief: 'Returns true if policy inheritance is activated (default).' }
+              return: { name: Inheritance, type: Everbase::Boolean }
+            - name: SetPolicyInheritance
+              doc: { brief: 'Enables or disables policy inheritance.' }
+              params:
+                - { name: Inheritance, type: Everbase::Boolean }
+            - name: GetParentObject
+              doc: { brief: 'Returns the current parent object.' }
+              return: { name: ParentObjectId, type: Everbase::Uuid }
+            - name: SetParentObject
+              doc: { brief: 'Sets the parent object.' }
+              params:
+                - { name: ParentObjectId, type: Everbase::Uuid }
+            - name: Write
+              doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
+              params:
+                - { name: SourceBuffer, type: Everbase::ConstBuffer }
+                - { name: Position, type: Everbase::UInt64 }
+                - { name: Section, type: Everbase::Byte }
+            - name: Read
+              doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
+              return: { name: BytesRead, type: Everbase::UInt32 }
+              params:
+                - { name: TargetBuffer, type: Everbase::Buffer }
+                - { name: FillBuffer, type: Everbase::Boolean }
+                - { name: Position, type: Everbase::UInt64 }
+                - { name: Section, type: Everbase::Byte }
+            - name: Truncate
+              doc: { brief: 'Truncates the object to a specified length in bytes.' }
+              params:
+                - { name: NewContentSize, type: Everbase::UInt64 }
+                - { name: Section, type: Everbase::Byte }
+            - name: GetSize
+              doc: { brief: 'Returns the current object size in bytes.' }
+              return: { name: CurContentSize, type: Everbase::UInt64 }
+              params:
+                - { name: Section, type: Everbase::Byte }
+            - name: Commit
+              doc: { brief: 'Commits the current state of the object as a new version.' }
+              return: { name: NewVersion, type: Everbase::Uuid }
+              params:
+                - { name: AdditionalParentVersions, type: [ Everbase::Set, Everbase::Uuid ] }
+            - name: Rollback
+              doc: { brief: 'Discards all changes since the last commit or open operation.' }
+            - name: Erase
+              doc: { brief: 'Erases the object.', more: 'Once the object is erased, all subsequent calls to that object fail.' }
+            - name: Close
+              doc: { brief: 'Closes the object.', more: 'Once the object is closed, all subsequent calls to that object fail.' }
+          events:
+            - name: Created
+              doc: { brief: 'An object had been created.' }
+              id: 1a961e2a-004c-4e11-80f0-e5236f6eded6
+              values:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Uuid }
+            - name: Erased
+              doc: { brief: 'An object had been removed.' }
+              id: 29135c66-a515-453f-877e-01e1861ecfc5
+              values:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Uuid }
+            - name: NewVersion
+              doc: { brief: 'A new version of an object had been created.' }
+              id: f8294c6e-af1e-4238-be7f-e05661d16b08
+              values:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Uuid }
+            - name: StatusUpdate
+              doc: { brief: 'A status update of an object occured.' }
+              id: 80d70515-14ba-4cff-9bb4-add71fb32d4f
+              values:
+                - { name: Id, type: Everbase::Uuid }
+                - { name: Status, type: Everbase::Status }
+
+        - name: Conflict
+          nodetype: class
+          doc: { brief: 'Describes a conflict which occured during a concurrent update of Everbase::ObjectStore::.' }
+          operations:
+            - name: GetAll
+              doc: { brief: 'Returns all currently known conflicts.' }
+              static: true
+              return: { name: Conflicts, type: [ Everbase::Set, Everbase::ObjectStore::Conflict ] }
+            - name: Open
+              doc: { brief: 'Opens a conflict.' }
+              static: true
+              params:
+                - { name: Id, type: Everbase::Uuid }
+              return: { name: Conflict, type: Everbase::ObjectStore::Conflict }
+            - name: GetId
+              doc: { brief: 'Returns the conflict id.' }
+              return: { name: Id, type: Everbase::Uuid }
+            - name: GetObjectId
+              doc: { brief: 'Returns the object id of the conflict-prone object.' }
+              return: { name: ObjectId, type: Everbase::Uuid }
+            - name: GetVersion1
+              doc: { brief: 'Returns the version id of the first version.' }
+              return: { name: Version1, type: Everbase::Uuid }
+            - name: GetVersion2
+              doc: { brief: 'Returns the version id of the second version.' }
+              return: { name: Version2, type: Everbase::Uuid }
+            - name: KeepSingle
+              doc: { brief: 'Resolves the conflict by keeping one of the two conflicting versions.' }
+              params:
+                - { name: Version, type: Everbase::Uuid }
+            - name: KeepBoth
+              doc: { brief: 'Resolves the conflict by keeping both of the two conflicting versions. Returns the new object id of the second version.' }
+              return: { name: NewObjectId, type: Everbase::Uuid }
+            - name: UpdateTo
+              doc: { brief: 'Resolves the conflict by creating a new version. Returns a writable object which is successor of both conflicting version.' }
+              params:
+                - { name: ObjectId, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Uuid }
+            - name: IsResolved
+              doc: { brief: 'Returns true if the conflict is resolved.' }
+              return: { name: Status, type: Everbase::Boolean }
+          events:
+            - name: Occured
+              doc: { brief: 'New file version conflicts had been detected.' }
+              id: 09c75fc8-02c2-4158-ad4e-f50fd72529e7
+              values:
+                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+            - name: Resolved
+              doc: { brief: 'File version conflicts had been resolved.' }
+              id: 1399b73f-b327-4f63-8547-abfa1cbc423e
+              values:
+                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+
+        - name: SyncProcess
+          nodetype: class
+          doc: { brief: 'Describes a sync process of an object.' }
+          operations:
+            - name: GetAll
+              doc: { brief: 'Returns all active or paused sync processes.' }
+              static: true
+              return: { name: SyncProcesses, type: [ Everbase::Set, Everbase::ObjectStore::SyncProcess ] }
+            - name: Open
+              doc: { brief: 'Opens a sync process.' }
+              static: true
+              params:
+                - { name: Id, type: Everbase::Uuid }
+              return: { name: SyncProcesses, type: Everbase::ObjectStore::SyncProcess }
+            - name: GetId
+              doc: { brief: 'Returns the sync process id.' }
+              return: { name: Id, type: Everbase::Uuid }
+            - name: GetObjectId
+              doc: { brief: 'Returns the object id.' }
+              return: { name: ObjectId, type: Everbase::Uuid }
+            - name: GetVersion
+              doc: { brief: 'Returns the version id.' }
+              return: { name: Version, type: Everbase::Uuid }
+            - name: IsPaused
+              doc: { brief: 'Returns true if the sync process is currently paused.' }
+              return: { name: Paused, type: Everbase::Boolean }
+            - name: GetStatus
+              doc: { brief: 'Returns the current sync status.' }
+              return: { name: SyncStatus, type: Everbase::SyncStatus }
+            - name: Pause
+              doc: { brief: 'Pauses the sync process.' }
+            - name: Resume
+              doc: { brief: 'Resumes the sync process.' }
+            - name: Cancel
+              doc: { brief: 'Cancels the sync process.', more: 'In case the sync process was triggered by an operation on an object which requires the data to be synchronized, this operation may fail.' }
+          events:
+            - name: Started
+              doc: { brief: 'A new sync process started.' }
+              id: 14dd4e11-f267-49b2-9815-6476f17544c9
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Completed
+              doc: { brief: 'An existing sync process completed.' }
+              id: 926aefd8-ca5a-448f-a41e-2635d8539426
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Paused
+              doc: { brief: 'An existing sync process had been paused.' }
+              id: 08468046-b18f-4af7-a8b1-cc89585ad555
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Resumed
+              doc: { brief: 'An existing sync process had been resumed.' }
+              id: b077a28f-bfdb-4ad7-b14f-16129cd922d1
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Progress
+              doc: { brief: 'An existing sync process made progress.' }
+              id: 518438d3-a650-4a91-a736-c2ac43f2ebcf
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+
+#---Elements...
+
+    - name: PermissionMode
+      nodetype: enum
+      doc: { brief: 'Defines a set of potentially controllable operations on objects.', more: 'Can be used as a bit mask.' }
+      values:
+        - { name: Read, value: 0x1, doc: { brief: 'Read operation.' } }
+        - { name: Write, value: 0x2, doc: { brief: 'Write operation.' }  }
+        - { name: Manage, value: 0x4, doc: { brief: 'Manage operation, includes management of permissions and rules.' }  }
+
+    - name: SyncMode
+      nodetype: enum
+      doc: { brief: 'Describes directions of data transfers or idle behaviour.', more: 'Can be used as a bit mask.' }
+      values:
+        - { name: Idle, value: 0x1, doc: { brief: 'No current or scheduled data transfer.' } }
+        - { name: Waiting, value: 0x2, doc: { brief: 'Data transfer scheduled.' } }
+        - { name: Paused, value: 0x4, doc: { brief: 'Current data transfer paused.' } }
+        - { name: Uploading, value: 0x8, doc: { brief: 'Current data transfer is an upload.' } }
+        - { name: Downloading, value: 0x10, doc: { brief: 'Current data transfer is a download.' } }
+
+    - name: SyncStatus
+      nodetype: struct
+      doc: { brief: 'Describes a data transfer process.' }
+      fields:
+        - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current direction of data transfer.' } }
+        - { name: TotalBytesToTransfer, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to transfer.' } }
+        - { name: CurrentBytesTransferred, type: Everbase::UInt64, doc: { brief: 'Number of current bytes transferred.' } }
+
+    - name: CumulatedSyncStatus
+      nodetype: struct
+      doc: { brief: 'Describes the cumulated status of multiple data transfer processes.' }
+      fields:
+        - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current directions of data transfer.' } }
+        - { name: TotalBytesToDownload, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to download.' } }
+        - { name: CurrentBytesDownloaded, type: Everbase::UInt64, doc: { brief: 'Number of bytes downloaded.' } }
+        - { name: TotalBytesToUpload, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to upload.' } }
+        - { name: CurrentBytesUploaded, type: Everbase::UInt64, doc: { brief: 'Number of bytes uploaded.' } }
+
+    - name: Timestamps
+      nodetype: struct
+      doc: { brief: 'Describes a set of timestamps.' }
+      fields:
+        - { name: Creation, type: Everbase::Timestamp, doc: { brief: 'Time of object creation.' } }
+        - { name: LastModification, type: Everbase::Timestamp, doc: { brief: 'Time of last modification.' } }
+        - { name: LastLocalAccess, type: Everbase::Timestamp, doc: { brief: 'Time of last access on local device.' } }
+
+    - name: Size
+      nodetype: struct
+      doc: { brief: 'Describes the various size attributes of a object.' }
+      fields:
+        - { name: ContentBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for content data.' } }
+        - { name: MetaBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for meta data.' } }
+        - { name: InternalBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for internal data.' } }
+        - { name: TotalBytes, type: Everbase::UInt64, doc: { brief: 'Number of total bytes including internal data, meta data and content data.' } }
+
+    - name: Caching
+      nodetype: struct
+      doc: { brief: 'Describes where the data of a object is located.' }
+      fields:
+        - { name: UniqueBytesOnGrid, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the grid.' } }
+        - { name: UniqueBytesOnPeers, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the peer overlay network.' } }
+        - { name: UniqueBytesOnLocal, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the local device.' } }
+        - { name: TotalUniqueBytes, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the entire distributed system.' } }
+        - { name: UniqueBytesMissingOnGrid, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the grid.' } }
+        - { name: UniqueBytesMissingOnPeer, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the peer.' } }
+        - { name: UniqueBytesMissingOnLocal, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the local device.' } }
+        - { name: TotalUniqueBytesMissing, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the entire distributed system.' } }
+
+    - name: Status
+      nodetype: struct
+      doc: { brief: 'Describes the status of a object including version information, timestamps, size, caching, sync status and conflicts.' }
+      fields:
+        - { name: Version, type: Everbase::Uuid, doc: { brief: 'Version of object reflected within the status information.' } }
+        - { name: Author, type: Everbase::Uuid, doc: { brief: 'User id of the author of this version.' } }
+        - { name: Type, type: Everbase::Uuid, doc: { brief: 'Type of object.' } }
+        - { name: Timestamps, type: Everbase::Timestamps, doc: { brief: 'Various timestamps of object.' } }
+        - { name: Size, type: Everbase::Size, doc: { brief: 'Various size attributes of object.' } }
+        - { name: Caching, type: Everbase::Caching, doc: { brief: 'Caching status of object.' } }
+        - { name: SyncStatus, type: Everbase::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
+        - { name: Conflicts, type: Everbase::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
+        - { name: Pinned, type: Everbase::Boolean, doc: { brief: 'Pinning status.' } }
+        - { name: Permission, type: Everbase::PermissionMode, doc: { brief: 'Effective permission mode of the authenticated user.' } }
+
+    - name: CumulatedStatus
+      nodetype: struct
+      doc: { brief: 'Describes the status of multiple object including size, caching, sync status and conflicts.' }
+      fields:
+        - { name: Size, type: Everbase::Size, doc: { brief: 'Various size attributes of object.' } }
+        - { name: Caching, type: Everbase::Caching, doc: { brief: 'Caching status of object.' } }
+        - { name: SyncStatus, type: Everbase::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
+        - { name: Conflicts, type: Everbase::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
+
+
+#---END EVERBASE OBJECTSTORE END ---------------------------------------------
+#
+#
+#---BEGIN EVERBASE FILESYSTEM BEGIN ---------------------------------------------
+
+    - name: FileSystem
+      nodetype: namespace
+      members:
+        - name: Path
+          nodetype: class
+          doc: { brief: 'Specifies a unique location of a directory or file within the EFS.', more: 'A path is a sequence of names. A name can be any valid unicode string. Each name can be associated with a version identifier.' }
+          valueType: true
+          operations:
+            - name: FromSysPath
+              doc: { brief: 'Converts a system path to a canonical path object.', more: 'The elements of a system path are either seperated by slashes or backslashes. Conversion depends on device local information, e.g. system user local mount point of EFS.' }
+              static: true
+              return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
+              params:
+                - { name: SystemPath, type: Everbase::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
+              errors:
+                - InvalidArgument/InvalidPath
+            - name: FromWebUrl
+              doc: { brief: 'Converts a web url, to a canonical path object.', more: 'The elements of a web url are seperated by slashes. Elements of a web url can be annotated with version information. Version information is separated by a colon. Conversion depends on domain local information, e.g. url of web interface.' }
+              static: true
+              return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
+              params:
+                - { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
+              errors:
+                - InvalidArgument/InvalidPath
+            - name: FromEverbaseUrl
+              doc: { brief: 'Converts a canonical URL to a canonical path object.', more: 'The protocol of an EFS URL is everbase. The elements of an URL are seperated by slashes. Elements of an URL can be annotated with version information. Version information is separated by a colon. No additional information required for conversion.' }
+              static: true
+              synchronous: true
+              return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
+              params:
+                - { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
+              errors:
+                - InvalidArgument/InvalidUrl
+            - name: ToSysPath
+              doc: { brief: 'Converts a canonical path object to a system path. See FromSysPath.' }
+              return: { name: SysPath, type: Everbase::String, doc: { brief: 'The system path.' } }
+              errors:
+                - RuntimeError/MountpointMissing
+            - name: ToWebUrl
+              doc: { brief: 'Converts a canonical path object to a web url. See FromWebUrl.' }
+              return: { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path.' } }
+              errors:
+                - RuntimeError/WebInterfaceMissing
+            - name: ToEverbaseUrl
+              doc: { brief: 'Converts a canonical path object to a canonical URL. See FromEverbaseUrl.' }
+              synchronous: true
+              return: { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL.' } }
+            - name: IsValidSysPath
+              doc: { brief: 'Returns true if provided string is a valid system path. See FromSysPath.' }
+              static: true
+              return: { name: ValidSysPath, type: Everbase::Boolean, doc: { brief: 'True if it is a valid system path.' } }
+              params:
+                - { name: SysPath, type: Everbase::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
+            - name: IsValidWebUrl
+              doc: { brief: 'Returns true if provided string is a valid web url. See FromWebUrl.' }
+              static: true
+              return: { name: ValidWebUrl, type: Everbase::Boolean, doc: { brief: 'True if it is a valid web url.' } }
+              params:
+                - { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
+            - name: IsValidEverbaseUrl
+              doc: { brief: 'Returns true if provided string is a valid everbase url. See FromEverbaseUrl.' }
+              static: true
+              return: { name: ValidEverbaseUrl, type: Everbase::Boolean, doc: { brief: 'True if it is a valid everbase url.' } }
+              params:
+                - { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
+            - name: IsRoot
+              doc: { brief: 'Returns true in case we have a root path.' }
+              synchronous: true
+              return: { name: Root, type: Everbase::Boolean, doc: { brief: 'True if it is a root path.' } }
+            - name: GetParent
+              doc: { brief: 'Returns the parent path.' }
+              synchronous: true
+              return: { name: Parent, type: Everbase::FileSystem::Path, doc: { brief: 'The parent path object.' } }
+              errors:
+                - OutOfRange/IsRootPath
+            - name: GetChild
+              doc: { brief: 'Returns a child path.' }
+              synchronous: true
+              return: { name: Child, type: Everbase::FileSystem::Path, doc: { brief: 'The child path object.' } }
+              params:
+                - { name: ChildName, type: Everbase::String, doc: { brief: 'The childs name.' } }
+            - name: GetVersionedChild
+              doc: { brief: 'Returns a versioned child path.' }
+              synchronous: true
+              return: { name: Child, type: Everbase::FileSystem::Path, doc: { brief: 'The versioned child path object.' } }
+              params:
+                - { name: ChildName, type: Everbase::String, doc: { brief: 'The childs name.' } }
+                - { name: ChildVersion, type: Everbase::Uuid, doc: { brief: 'The childs version.' } }
+            - name: GetName
+              doc: { brief: 'Returns the name of the specified location.' }
+              synchronous: true
+              return: { name: Name, type: Everbase::String, doc: { brief: 'The name of the filesystem node.' } }
+              errors:
+                - OutOfRange/IsRootPath
+            - name: GetVersion
+              doc: { brief: 'Returns the version of the specified location.' }
+              synchronous: true
+              return: { name: Version, type: Everbase::Uuid, doc: { brief: 'The version of the filesystem node.' } }
+              errors:
+                - OutOfRange/IsRootPath
+                - OutOfRange/NoVersion
+            - name: HasVersion
+              doc: { brief: 'Returns true if the the specified location has version information.' }
+              synchronous: true
+              return: { name: VersionStatus, type: Everbase::Boolean }
+
+        - name: Metadata
+          nodetype: class
+          short: Meta
+          doc: { brief: 'Is a key value store.', more: 'The key value store can be used by the application developers to save small pieces of data with arbitrary type.' }
+          operations:
+            - name: SetValue
+              doc: { brief: 'Associates the specified value with the specified key in the key value store.', more: 'If the store previously contained the key, the old value is replaced by the specified value.' }
+              params:
+                - { name: Key, type: Everbase::String }
+                - { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+            - name: GetValue
+              doc: { brief: 'Returns the value to which the specified key is associated.', more: 'Failes in case the store does not contain the specified key.' }
+              return: { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+              params:
+                - { name: Key, type: Everbase::String }
+            - name: Has
+              doc: { brief: 'Returns true if this key value store contains the specified key.' }
+              return: { name: Exists, type: Everbase::Boolean }
+              params:
+                - { name: Key, type: Everbase::String }
+            - name: Erase
+              doc: { brief: 'Erases the specified key.' }
+              params:
+                - { name: Key, type: Everbase::String }
+            - name: GetKeys
+              doc: { brief: 'Returns all keys of the key value store.' }
+              return: { name: Keys, type: [ Everbase::Set, Everbase::String ] }
+
+        - name: Node
+          nodetype: class
+          doc: { brief: 'Is a filesystem node, which can be one of various things including a file or directory.' }
+          operations:
+            - name: Move
+              doc: { brief: 'Moves a specified filesystem node to a new location, providing the option to specify a new file name.' }
+              static: true
+              params:
+                - { name: SourcePath, type: Everbase::FileSystem::Path }
+                - { name: TargetPath, type: Everbase::FileSystem::Path }
+            - name: Copy
+              doc: { brief: 'Copies an existing filesystem node to a new node. Overwriting a node of the same name is not allowed.' }
+              static: true
+              params:
+                - { name: SourcePath, type: Everbase::FileSystem::Path }
+                - { name: TargetPath, type: Everbase::FileSystem::Path }
+                - { name: CopyHistory, type: Everbase::Boolean }
+            - name: Remove
+              doc: { brief: 'Deletes the specified filesystem node.' }
+              static: true
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: GetStatus
+              doc: { brief: 'Returns status information of a filesystem node.' }
+              static: true
+              return: { name: Status, type: Everbase::Status }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: GetTreeStatus
+              doc: { brief: 'Returns status information of filesystem nodes recursively.' }
+              static: true
+              return: { name: Status, type: Everbase::CumulatedStatus }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: SetPinning
+              doc: { brief: 'Sets the pinning status of the path.' }
+              static: true
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Pinning, type: Everbase::Boolean }
+            - name: GetPinning
+              doc: { brief: 'Gets the pinning status of the path.' }
+              static: true
+              return: { name: Pinning, type: Everbase::Boolean }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: Close
+              doc: { brief: 'Closed the filesystem node.', more: 'Once the filesystem node is closed, all subsequent calls to that object fail.' }
+            - name: Commit
+              doc: { brief: 'Commits the current state of the node as a new version.', more: 'Do not commit for no reason.' }
+              return: { name: NewVersionedPath, type: Everbase::FileSystem::Path }
+            - name: Rollback
+              doc: { brief: 'Discards all changes since the last commit or open operation.' }
+            - name: GetMetadata
+              doc: { brief: 'Returns the metadata object of the filesystem node.' }
+              return: { name: Metadata, type: Everbase::FileSystem::Metadata }
+            - name: GetPath
+              doc: { brief: 'Returns the unversioned path of the filesystem node.' }
+              synchronous: true
+              return: { name: Path, type: Everbase::FileSystem::Path }
+            - name: GetVersionedPath
+              doc: { brief: 'Returns the fully versioned path of this specific filesystem node version.', more: 'Some Directories may be unversioned.' }
+              synchronous: true
+              return: { name: VersionedPath, type: Everbase::FileSystem::Path }
+            - name: GetParentVersions
+              doc: { brief: 'Returns the versioned paths of the parent versions.' }
+              return: { name: VersionedPaths, type: [ Everbase::Set, Everbase::FileSystem::Path ] }
+            - name: AttachPolicy
+              doc: { brief: 'Attaches a policy to the filesystem node.' }
+              params:
+                - { name: Policy, type: Everbase::ObjectStore::Policy }
+                - { name: After, type: Everbase::ObjectStore::Policy }
+            - name: DetachPolicy
+              doc: { brief: 'Detaches a policy from the filesystem node.' }
+              params:
+                - { name: Policy, type: Everbase::ObjectStore::Policy }
+            - name: GetPolicies
+              doc: { brief: 'Returns all attached policies of the filesystem node.' }
+              return: { name: Policies, type: [ Everbase::Set, Everbase::ObjectStore::Policy ] }
+            - name: GetEffectivePolicy
+              doc: { brief: 'Returns the effective policy of the filesystem node.', more: 'The effective policy is a computed object derived from all applicable attached and inherited policies.' }
+              return: { name: Policy, type: Everbase::ObjectStore::Policy }
+            - name: GetPolicyInheritance
+              doc: { brief: 'Returns true if policy inheritance is activated (default).' }
+              return: { name: Inheritance, type: Everbase::Boolean }
+            - name: SetPolicyInheritance
+              doc: { brief: 'Enables or disables policy inheritance.' }
+              params:
+                - { name: Inheritance, type: Everbase::Boolean }
+          events:
+            - name: Created
+              doc: { brief: 'A filesystem node had been created.' }
+              id: e679cf7e-28a2-44b8-9883-cd6529c622b5
+              values:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: Moved
+              doc: { brief: 'A filesystem node had been moved or renamed.' }
+              id: 683833f9-8faa-4ed0-829e-c30517126b9d
+              values:
+                - { name: SourcePath, type: Everbase::FileSystem::Path }
+                - { name: TargetPath, type: Everbase::FileSystem::Path }
+            - name: Copied
+              doc: { brief: 'A filesystem node had been copied.' }
+              id: f3235967-ae29-420d-9622-a5f6c8f80d02
+              values:
+                - { name: SourcePath, type: Everbase::FileSystem::Path }
+                - { name: TargetPath, type: Everbase::FileSystem::Path }
+            - name: Removed
+              doc: { brief: 'A filesystem node had been removed.' }
+              id: 24387094-7a51-4284-83b6-d7b28e2038ed
+              values:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: NewVersion
+              doc: { brief: 'A new version of a filesystem node had been created.' }
+              id: b5310949-fbb2-46fd-8bb7-379740965f92
+              values:
+                - { name: VersionedPath, type: Everbase::FileSystem::Path }
+            - name: StatusUpdate
+              doc: { brief: 'A status update of a filesystem node occured.' }
+              id: 800018fa-5b1f-4946-86ae-af6657f1ec10
+              values:
+                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Status, type: Everbase::Status }
+
+        - name: Directory
+          nodetype: class
+          short: Dir
+          inherits: Everbase::FileSystem::Node
+          doc: { brief: 'Is a file system cataloging structure which contains references to other files and directories.', more: 'Each entry of an directory is associated with an arbitrary name. User space filesystem implementation have to handle the translation of these names to operating system compatible names.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new directory.' }
+              static: true
+              return: { name: Directory, type: Everbase::FileSystem::Directory }
+              params:
+                - { name: Name, type: Everbase::String }
+                - { name: Parent, type: Everbase::FileSystem::Path }
+            - name: Open
+              doc: { brief: 'Opens an existing directory.' }
+              static: true
+              return: { name: Directory, type: Everbase::FileSystem::Directory }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: GetEntries
+              doc: { brief: 'Returns all directory entries presented as a set of paths.' }
+              return: { name: Entries, type: [ Everbase::Set, Everbase::FileSystem::Path ] }
+            - name: GetEntryCount
+              doc: { brief: 'Returns the count of directory entries.' }
+              return: { name: EntryCount, type: Everbase::UInt64 }
+          constants:
+            - name: TypeId
+              doc: { brief: 'Object type identifier for directories.' }
+              type: Everbase::Uuid
+              value: 5f58a908-6fcf-4bf2-aaf3-a06c7572fec5
+
+        - name: ProfileRoot
+          nodetype: class
+          inherits: Everbase::FileSystem::Directory
+          doc: { brief: 'Represents the root directory of a profile.' }
+          operations:
+            - name: Open
+              doc: { brief: 'Opens the root of the current profile.' }
+              static: true
+              return: { name: ProfileRoot, type: Everbase::FileSystem::ProfileRoot }
+            - name: GetProfile
+              doc: { brief: 'Returns the associated profile.' }
+              return: { name: Profile, type: Everbase::CoreSystem::Profile }
+          constants:
+            - name: TypeId
+              doc: { brief: 'Profile root type identifier for directories.' }
+              type: Everbase::Uuid
+              value: c4c391c4-e530-4feb-aab7-9a12d3715f6e
+
+        - name: DomainRoot
+          nodetype: class
+          inherits: Everbase::FileSystem::Directory
+          doc: { brief: 'Represents the root directory of a domain.' }
+          operations:
+            - name: Open
+              doc: { brief: 'Opens the root of an domain. We have to be authenticated to that domain.' }
+              static: true
+              return: { name: DomainRoot, type: Everbase::FileSystem::DomainRoot }
+              params:
+                - { name: DomainName, type: Everbase::String }
+            - name: GetDomain
+              doc: { brief: 'Returns the associated domain.' }
+              return: { name: Domain, type: Everbase::CoreSystem::Domain }
+          constants:
+            - name: TypeId
+              doc: { brief: 'Domain root type identifier for directories.' }
+              type: Everbase::Uuid
+              value: 7dd69fdd-9bc9-4322-babc-62d6143fd752
+
+        - name: File
+          nodetype: class
+          inherits: Everbase::FileSystem::Node
+          doc: { brief: 'Is a file system storage structure which can be used to store arbitrary data.' }
+          operations:
+            - name: Create
+              doc: { brief: 'Creates a new file.' }
+              static: true
+              return: { name: File, type: Everbase::FileSystem::File }
+              params:
+                - { name: Name, type: Everbase::String }
+                - { name: Parent, type: Everbase::FileSystem::Path }
+            - name: Open
+              doc: { brief: 'Opens an existing file.' }
+              static: true
+              return: { name: File, type: Everbase::FileSystem::File }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: BeginUserView
+              doc: { brief: 'Informs the system about the fact that the local user is viewing the file.' }
+              static: true
+              return: { name: UserViewId, type: Everbase::UInt32 }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: EndUserView
+              doc: { brief: 'Informs the system about the fact that the local user stopped viewing the file.' }
+              static: true
+              params:
+                - { name: UserViewId, type: Everbase::UInt32 }
+            - name: BeginUserEdit
+              doc: { brief: 'Informs the system about the fact that the local user is editing the file.' }
+              static: true
+              return: { name: UserEditId, type: Everbase::UInt32 }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: EndUserEdit
+              doc: { brief: 'Informs the system about the fact that the local user stopped editing the file.' }
+              static: true
+              params:
+                - { name: UserEditId, type: Everbase::UInt32 }
+            - name: Write
+              doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
+              params:
+                - { name: SourceBuffer, type: Everbase::ConstBuffer }
+                - { name: Position, type: Everbase::UInt64 }
+            - name: Read
+              doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
+              return: { name: BytesRead, type: Everbase::UInt32 }
+              params:
+                - { name: TargetBuffer, type: Everbase::Buffer }
+                - { name: FillBuffer, type: Everbase::Boolean }
+                - { name: Position, type: Everbase::UInt64 }
+            - name: Truncate
+              doc: { brief: 'Truncates a file to a specified length in bytes.' }
+              params:
+                - { name: NewFileSize, type: Everbase::UInt64 }
+            - name: GetSize
+              doc: { brief: 'Returns the current file size in bytes.' }
+              return: { name: CurFileSize, type: Everbase::UInt64 }
+          constants:
+            - name: TypeId
+              doc: { brief: 'File type identifier for directories.' }
+              type: Everbase::Uuid
+              value: bf869264-1888-4516-a6f6-890075f7f657
+
+        - name: Conflict
+          nodetype: class
+          doc: { brief: 'Describes a conflict which occured during a concurrent update of files.' }
+          operations:
+            - name: GetAll
+              doc: { brief: 'Returns all currently known conflicts for a provided path.' }
+              static: true
+              return: { name: Conflicts, type: [ Everbase::Set, Everbase::FileSystem::Conflict ] }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Recursive, type: Everbase::Boolean }
+            - name: Open
+              doc: { brief: 'Opens a conflict.' }
+              static: true
+              params:
+                - { name: Id, type: Everbase::Uuid }
+              return: { name: Conflict, type: Everbase::FileSystem::Conflict }
+            - name: GetId
+              doc: { brief: 'Returns the conflict id.' }
+              return: { name: Id, type: Everbase::Uuid }
+            - name: GetPath1
+              doc: { brief: 'Returns the first path of the conflicting versions.' }
+              return: { name: VersionedPath1, type: Everbase::FileSystem::Path }
+            - name: GetPath2
+              doc: { brief: 'Returns the second path of the conflicting versions.' }
+              return: { name: VersionedPath2, type: Everbase::FileSystem::Path }
+            - name: KeepSingle
+              doc: { brief: 'Resolves the conflict by keeping one of the two conflicting versions.' }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: KeepBoth
+              doc: { brief: 'Resolves the conflict by keeping both of the two conflicting versions.' }
+              params:
+                - { name: Path1, type: Everbase::FileSystem::Path }
+                - { name: Path2, type: Everbase::FileSystem::Path }
+            - name: UpdateTo
+              doc: { brief: 'Resolves the conflict by updating to a new version.' }
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+            - name: IsResolved
+              doc: { brief: 'Returns true if the conflict is resolved.' }
+              return: { name: Resolved, type: Everbase::Boolean }
+          events:
+            - name: Occured
+              doc: { brief: 'New file version conflicts had been detected.' }
+              id: 3c2ea1bf-a594-4102-92ce-9205c7266a58
+              values:
+                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+            - name: Resolved
+              doc: { brief: 'File version conflicts had been resolved.' }
+              id: 6c3ea618-4e26-4bb0-9a1d-ea214b917938
+              values:
+                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+
+        - name: SyncProcess
+          nodetype: class
+          doc: { brief: 'Describes a sync process of a file or folder.' }
+          operations:
+            - name: GetAll
+              doc: { brief: 'Returns all active or paused sync processes for a path.' }
+              static: true
+              params:
+                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Recursive, type: Everbase::Boolean }
+              return: { name: SyncProcesses, type: [ Everbase::Set, Everbase::FileSystem::SyncProcess ] }
+            - name: Open
+              doc: { brief: 'Opens a sync process.' }
+              static: true
+              params:
+                - { name: Id, type: Everbase::Uuid }
+              return: { name: SyncProcesses, type: Everbase::FileSystem::SyncProcess }
+            - name: GetId
+              doc: { brief: 'Returns the sync process id.' }
+              return: { name: Id, type: Everbase::Uuid }
+            - name: GetPath
+              doc: { brief: 'Returns the versioned path of the file or folder.' }
+              return: { name: Path, type: Everbase::FileSystem::Path }
+            - name: IsPaused
+              doc: { brief: 'Returns true if the sync process is currently paused.' }
+              return: { name: Paused, type: Everbase::Boolean }
+            - name: GetStatus
+              doc: { brief: 'Returns the current sync status.' }
+              return: { name: SyncStatus, type: Everbase::SyncStatus }
+            - name: Pause
+              doc: { brief: 'Pauses the sync process.' }
+            - name: Resume
+              doc: { brief: 'Resumes the sync process.' }
+            - name: Cancel
+              doc: { brief: 'Cancels the sync process.', more: 'In case the sync process was triggered by a filesystem operation which requires the data to be synchronized, this operation may fail.' }
+          events:
+            - name: Started
+              doc: { brief: 'A new sync process started.' }
+              id: 91321309-43e3-4150-affc-0c0645aa8188
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Completed
+              doc: { brief: 'An existing sync process is completed.' }
+              id: 40211d2a-e50f-4bb3-9e5a-9c899c9da9f7
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Paused
+              doc: { brief: 'An existing sync process had been paused.' }
+              id: 5dd45b84-0687-4fde-b922-c321b2945116
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Resumed
+              doc: { brief: 'An existing sync process had been resumed.' }
+              id: 54442669-fad1-4641-8f57-436771e9ab0a
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+            - name: Progress
+              doc: { brief: 'An existing sync process made progress.' }
+              id: 64463672-5be6-444f-b434-80f80b96d2a2
+              values:
+                - { name: SyncProcessId, type: Everbase::Uuid }
+
+
+#---END EVERBASE FILESYSTEM END ---------------------------------------------
+        
 
     #Primitives
 

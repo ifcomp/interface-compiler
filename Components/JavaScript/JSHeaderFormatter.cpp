@@ -2,6 +2,7 @@
 
 #include <set>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
@@ -66,7 +67,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
     }
     else
     {
-        stream << formatName(type->primary());
+        stream << formatNamespace(type->primary()) << formatName(type->primary());
     }
 }
 
@@ -126,7 +127,23 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) c
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
-	stream << "// class " << formatName(class_) << endl << "// {" << endl << endl;
+	std::string inherits;
+
+	stream << "// class " << formatName(class_) << " : ";
+		
+	if( auto parent = std::dynamic_pointer_cast<Model::Type>(class_->parent()) )
+	{
+		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
+		{
+			stream << formatNamespace(parentClass) << formatName(parentClass);
+		}
+	}
+	else
+	{
+		stream  << "Everbase.Observable";
+	}		
+		
+	stream << endl << "// {" << endl << endl;
 
 	stream << formatNamespace(class_) << formatName(class_) << " = function() { };";
 
@@ -134,8 +151,12 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 	{
 		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
 		{
-			stream << endl << endl << formatNamespace(class_) << "prototype" << "Object.create(" << formatNamespace(parentClass) << formatName(parentClass) << ".prototype);";
+			stream << endl << endl << formatNamespace(class_) << formatName(class_) << ".prototype" << " = " << "Object.create(" << formatNamespace(parentClass) << formatName(parentClass) << ".prototype);";
 		}
+	}
+	else
+	{
+		stream << endl << endl << formatNamespace(class_) << formatName(class_) << ".prototype" << " = " << "Object.create(Everbase.Observable.prototype);";
 	}
 
 	stream << endl << endl;
@@ -143,11 +164,6 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 	for (auto operation : class_->operations())
 	{
 		stream << format(operation);
-	}
-
-	if (class_->events().size())
-	{
-		stream << endl << "// ----- Events: -----" << endl;
 	}
 
 	for (auto event : class_->events())
@@ -166,14 +182,15 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 		"evb.Event.prototype);" << endl << endl;
 
 	stream << formatNamespace(event) << formatName(event) << ".TYPE_ID = " << endl;
+
 	stream << formatNamespace(event) << formatName(event) << ".prototype.TYPE_ID =" << " \'" <<
 		boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl << endl;
 
 		for (auto value : event->values()) {
-			stream << "Object.defineProperty(" << formatNamespace(value) << formatName(event) << ".prototype, '" 
+			stream << "Object.defineProperty( " << formatNamespace(value) << "prototype, '" 
 				<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function(" << 
 				_langConfigReader.styleToken("New" + value->longName(), LangConfigReader::NameStyle::LOWER_CAMELCASE, "") <<
-				") { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
+				" ) { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
 		}
 }
 
@@ -228,18 +245,18 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 	{
 		if (!operation->isSynchronous())
 		{
-			stream << "/*Promise[" << format(operation->result()->type()) << " " << formatName(operation->result()) << "]*/";
+			stream << "/*Promise [" << format(operation->result()->type()) << " " << formatName(operation->result()) << "]*/";
 		}
 		else 
 		{
-			stream << "/*" << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
+			stream << "/*" << formatNamespace(operation->result()) << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
 		}
 	}
 	else 
 	{
 		if (!operation->isSynchronous())
 		{
-			stream << "/*Promise[ ]*/";
+			stream << "/*Promise []*/";
 		}
 		else
 		{
@@ -265,7 +282,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		stream << format(parameter.value()) << (!parameter.last() ? ", " : "");
 	}
 
-	stream << ")";
+	stream << ")  { /* impl */ }";
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const

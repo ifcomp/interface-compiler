@@ -139,11 +139,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
             f << format(operation);
         }
 
-        if (class_->events().size())
-        {
-            f << endl << "// ----- Events: -----" << endl;
-        }
-
         for ( auto event : class_->events() )
         {
             f << format(event) << endl;

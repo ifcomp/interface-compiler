@@ -29,7 +29,10 @@ int main(int argc, char** argv)
 
 				//Components::CppHeadersFormatter format(configFile);
 				Components::JSHeaderFormatter format(configFile);
-                format.execute(cprov, root, std::cout);
+				remove("output.txt");
+				ofstream file("output.js");
+                format.execute(cprov, root, file);
+				file.close();
             }
             catch (const ios_base::failure &e)
             {
@@ -52,7 +55,5 @@ int main(int argc, char** argv)
         return 1;
     }
 
-	char vla;
-	cin >> vla;
 	return 0;
 }
