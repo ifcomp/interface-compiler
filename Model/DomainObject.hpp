@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <vector>
-#include <map>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
@@ -36,24 +35,6 @@ public:
      * @return Indentifier string
      */
     virtual std::string objectTypeName() = 0;
-
-protected:
-
-    /**
-     * @brief Return map as vector
-     */
-    template <typename T> std::vector<T> mapToVector(const std::map<std::string, T> &map)
-    {
-        std::vector<T> result;
-
-        for (auto value : map)
-        {
-            result.push_back(value.second);
-        }
-
-        return result;
-    }
-
 
 private:
     DomainObjectRef _parentObject;

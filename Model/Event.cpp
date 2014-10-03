@@ -14,12 +14,12 @@ Event::~Event()
 
 void Event::addValue(ParameterRef value)
 {
-    _values[value->longName()] = value;
+    _values.push_back(value);
 }
 
 std::vector<ParameterRef> Event::values()
 {
-    return mapToVector<ParameterRef>(_values);
+    return _values;
 }
 
 void Event::setTypeId(boost::uuids::uuid typeId)

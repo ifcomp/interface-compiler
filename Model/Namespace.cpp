@@ -19,18 +19,12 @@ Namespace::~Namespace()
 
 std::vector<NamespaceMemberRef> Namespace::members()
 {
-    return mapToVector<NamespaceMemberRef>(_members);
+    return _members;
 }
 
 void Namespace::addMember(NamespaceMemberRef member)
 {
-    using namespace std;
-
-    string key = member->longName();
-    if (_members.find(key) == _members.end())
-    {
-        _members[key] = member;
-    }
+	_members.push_back(member);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

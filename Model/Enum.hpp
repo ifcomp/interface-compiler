@@ -4,7 +4,6 @@
 #include "Model/Value.hpp"
 
 #include <string>
-#include <map>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
@@ -15,7 +14,7 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    std::map<std::string, ValueRef> _values;
+    std::vector<ValueRef> _values;
 
 public:
     Enum();

@@ -3,7 +3,6 @@
 #include "Model/NamespaceMember.hpp"
 
 #include <string>
-#include <map>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
@@ -14,7 +13,7 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    std::map<std::string, NamespaceMemberRef> _members;
+    std::vector<NamespaceMemberRef> _members;
 
 public:
     Namespace();

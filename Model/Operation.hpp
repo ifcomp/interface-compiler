@@ -4,7 +4,6 @@
 #include "Model/Parameter.hpp"
 
 #include <string>
-#include <map>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
@@ -17,7 +16,7 @@ public:
 private:
     bool _isStatic;
     bool _isSynchronous;
-    std::map<std::string, ParameterRef> _params;
+    std::vector<ParameterRef> _params;
     ParameterRef _result;
 
 public:

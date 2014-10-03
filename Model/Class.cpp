@@ -35,27 +35,22 @@ void Class::setParent(TypeRef parent)
 
 void Class::addOperation(OperationRef operation)
 {
-    _operations[operation->longName()] = operation;
+    _operations.push_back(operation);
 }
 
 std::vector<OperationRef> Class::operations()
 {
-	std::vector<OperationRef> result;
-
-	for(auto operation : _operations)
-		{ result.push_back(operation.second); }
-
-	return result;
+	return _operations;
 }
 
 void Class::addEvent(EventRef event)
 {
-    _events[event->longName()] = event;
+    _events.push_back(event);
 }
 
 std::vector<EventRef> Class::events()
 {
-    return mapToVector(_events);
+    return _events;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -41,8 +41,8 @@ public:
 private:
     ClassType _type;
     TypeRef _parent;
-    std::map<std::string, OperationRef> _operations;
-    std::map<std::string, EventRef> _events;
+    std::vector<OperationRef> _operations;
+    std::vector<EventRef> _events;
 };
 
 typedef std::shared_ptr<Class> ClassRef;

@@ -3,7 +3,6 @@
 #include "Model/Parameter.hpp"
 
 #include <string>
-#include <map>
 #include <memory>
 #include <boost/uuid/uuid.hpp>
 
@@ -15,7 +14,7 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    std::map<std::string, ParameterRef> _values;
+    std::vector<ParameterRef> _values;
     boost::uuids::uuid _typeId;
 
 public:

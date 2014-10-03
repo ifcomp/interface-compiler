@@ -4,7 +4,6 @@
 #include "Model/Parameter.hpp"
 
 #include <string>
-#include <map>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
@@ -15,7 +14,7 @@ public:
     static const char* TYPE_NAME;
 
 private:
-    std::map<std::string, ParameterRef> _fields;
+    std::vector<ParameterRef> _fields;
 
 public:
     Struct();

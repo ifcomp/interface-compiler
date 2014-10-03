@@ -14,12 +14,12 @@ Enum::~Enum()
 
 void Enum::addValue(ValueRef value)
 {
-    _values[value->longName()] = value;
+    _values.push_back(value);
 }
 
 std::vector<ValueRef> Enum::values()
 {
-    return mapToVector<ValueRef>(_values);
+    return _values;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

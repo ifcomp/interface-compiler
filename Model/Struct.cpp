@@ -14,12 +14,12 @@ Struct::~Struct()
 
 void Struct::addField(ParameterRef field)
 {
-    _fields[field->longName()] = field;
+    _fields.push_back(field);
 }
 
 std::vector<ParameterRef> Struct::fields()
 {
-    return mapToVector<ParameterRef>(_fields);
+    return _fields;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

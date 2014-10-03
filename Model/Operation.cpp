@@ -36,12 +36,12 @@ void Operation::setSynchronous(bool isSynchronous)
 
 void Operation::addParam(ParameterRef param)
 {
-    _params[param->longName()] = param;
+    _params.push_back(param);
 }
 
 std::vector<ParameterRef> Operation::params()
 {
-    return mapToVector<ParameterRef>(_params);
+    return _params;
 }
 
 void Operation::setResult(ParameterRef result)
