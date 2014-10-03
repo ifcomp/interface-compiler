@@ -37,23 +37,6 @@ void JSHeaderFormatter::formatName(std::ostream& stream, Model::IdentifiableRef 
     stream << _langConfigReader.styleToken(identifiable->longName(), identifiable);
 }
 
-void JSHeaderFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
-{
-	stream << "/**" << endl;
-	    
-    if (documentation->keyExists(Documentation::KEY_BRIEF))
-    {
-        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
-    }
-
-    if (documentation->keyExists(Documentation::KEY_MORE))
-    {
-        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
-    }
-
-	stream << " */" << endl;
-}
-
 void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
     if (PrimitiveRef primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))

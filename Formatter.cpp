@@ -99,4 +99,25 @@ FormatToken<Model::OperationRef> Formatter::formatSig(Model::OperationRef operat
 	return FormatToken<Model::OperationRef> { this, &Formatter::formatSig, std::tuple<Model::OperationRef> { operation } };
 }
 
+void Formatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
+{
+	using namespace std;
+	using namespace Model;
+	using namespace StreamFilter;
+
+	stream << "/**" << endl;
+	    
+    if (documentation->keyExists(Documentation::KEY_BRIEF))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
+    }
+
+    if (documentation->keyExists(Documentation::KEY_MORE))
+    {
+        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
+    }
+
+	stream << " */" << endl;
+}
+
 } } // namespace: Everbase::InterfaceCompiler

@@ -25,31 +25,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::RootRef root) cons
     stream << format(root->getNamespace()) << endl;
 }
 
-void CppHeadersFormatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
-{
-    stream << "/**" << endl;
-
-    {
-        filter f(stream);
-        f.push<indent>(" * ");
-        f.push<wrap>(_langConfig.configAttribute<std::uint16_t>(LangConfigReader::StyleAttribute::TEXT_WRAP, documentation));
-
-        if (documentation->keyExists(Documentation::KEY_BRIEF))
-        {
-            f << "@" << Documentation::KEY_BRIEF << " ";
-            f << documentation->description(Documentation::KEY_BRIEF) << endl;
-        }
-
-        if (documentation->keyExists(Documentation::KEY_MORE))
-        {
-            f << endl << documentation->description(Documentation::KEY_MORE) << endl;
-        }
-    }
-
-    stream << " */" << endl;
-}
-
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) const
 {
     if (auto primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
@@ -66,22 +41,18 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::TypeRef type) cons
     }
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << format(parameter->type()) << " " << formatName(parameter);
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
 {
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef container) const
 {
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
@@ -107,7 +78,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef consta
     stream << "static constexpr " << format(constant->type()) << " " << formatName(constant) << " = " << valueString << ";" << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
     stream << "struct " << formatName(struct_) << endl
@@ -124,7 +94,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::StructRef struct_)
     }
     stream << "};" << endl;
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
@@ -153,7 +122,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ClassRef class_) c
     stream << "};" << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::EventRef event) const
 {
     for (auto value : event->values())
@@ -161,7 +129,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EventRef event) co
         stream << format(value->type()) << " " << formatName(event) << "();" << endl;
     }
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
@@ -175,7 +142,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceRef names
 
     stream << "}" << endl << endl << endl;
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
@@ -194,12 +160,10 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::EnumRef enum_) con
     stream << "};" << endl;
 }
 
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ValueRef value) const
 {
     stream << value->value();
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef operation) const
 {
@@ -211,12 +175,10 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::OperationRef opera
     stream << formatSig(operation) << ";" << endl;
 }
 
-
 void CppHeadersFormatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     stream << _langConfig.styleToken(identifiable->longName(), identifiable);
 }
-
 
 void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
 {
@@ -238,7 +200,6 @@ void CppHeadersFormatter::formatSig(std::ostream& stream, Model::OperationRef op
 
     stream << ")";
 }
-
 
 void CppHeadersFormatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const
 {

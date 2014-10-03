@@ -43,7 +43,7 @@ protected:
 	virtual void format(std::ostream& stream, Model::RootRef root) const = 0;
 
 	virtual void formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const = 0;
-	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const = 0;
+	virtual void format(std::ostream& stream, Model::DocumentationRef documentation) const;
 	virtual void format(std::ostream& stream, Model::TypeRef type) const = 0;
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const = 0;
 
