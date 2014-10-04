@@ -306,4 +306,12 @@ void Formatter::format(std::ostream& stream, Model::NamespaceMemberRef member) c
     }
 }
 
+void Formatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
+{
+}
+
+void Formatter::format(std::ostream& stream, Model::ContainerRef container) const
+{
+}
+
 } } // namespace: Everbase::InterfaceCompiler

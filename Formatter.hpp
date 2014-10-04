@@ -59,8 +59,8 @@ protected:
 	virtual void format(std::ostream& stream, Model::ParameterRef parameter) const = 0;
 
 	virtual void format(std::ostream& stream, Model::NamespaceMemberRef member) const;
-	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const = 0;
-	virtual void format(std::ostream& stream, Model::ContainerRef container) const = 0;
+	virtual void format(std::ostream& stream, Model::PrimitiveRef primitive) const;
+	virtual void format(std::ostream& stream, Model::ContainerRef container) const;
 	virtual void format(std::ostream& stream, Model::ConstantRef constant) const = 0;
 	virtual void format(std::ostream& stream, Model::StructRef struct_) const = 0;
 	virtual void format(std::ostream& stream, Model::ClassRef class_) const = 0;

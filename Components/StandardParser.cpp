@@ -7,12 +7,15 @@ Model::RootRef StandardParser::execute ( const ConfigProvider& cprov, std::istre
 {
 	using namespace std;
 
-    Model::NamespaceRef rootNamespace = std::make_shared<Model::Namespace>("Root");
-    NamespaceReader reader(rootNamespace);
+    auto tmpNamespace = std::make_shared<Model::Namespace>("Root");
+    NamespaceReader reader(tmpNamespace);
 
     reader.parseFile(input);
-    reader.resolveTypesInNamespace(rootNamespace);
+    reader.resolveTypesInNamespace(tmpNamespace);
     reader.listKnownTypes();
+
+    auto rootNamespace = std::dynamic_pointer_cast<Model::Namespace>(tmpNamespace->members()[0]);
+    rootNamespace->setParentObject(nullptr);
 
     Model::RootRef root = std::make_shared<Model::Root>();
     root->setNamespace(rootNamespace);

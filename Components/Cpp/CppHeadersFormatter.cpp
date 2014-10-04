@@ -67,14 +67,6 @@ void CppHeadersFormatter::format(std::ostream& stream, Model::ParameterRef param
     stream << format(parameter->type()) << " " << formatName(parameter);
 }
 
-void CppHeadersFormatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
-{
-}
-
-void CppHeadersFormatter::format(std::ostream& stream, Model::ContainerRef container) const
-{
-}
-
 void CppHeadersFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
 {
     int number = 0;
