@@ -16,9 +16,9 @@ public:
     {
         UNDEFINED = -1,
         BYTE,
+        UINT16,
         UINT32,
         UINT64,
-        FLOAT,
         BOOLEAN,
         TIMESTAMP,
         STRING,

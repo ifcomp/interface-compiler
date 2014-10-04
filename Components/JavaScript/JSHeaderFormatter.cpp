@@ -67,7 +67,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::TypeRef type) const
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ParameterRef parameter) const
 {
-	stream << "/*" << format(parameter->type()) << "*/" << " " << formatName(parameter);
+	stream << "/* " << format(parameter->type()) << " */" << " " << formatName(parameter);
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant) const
@@ -96,22 +96,22 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ConstantRef constant
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::StructRef struct_) const
 {
-	stream << "// struct " << formatQualifiedName(struct_) << " {" << endl << endl;
+	stream << "// struct: " << formatQualifiedName(struct_) << " {" << endl << endl;
     stream << formatQualifiedName(struct_) << "= function() {  }" << endl << endl;
 
 	for (auto field : struct_->fields())
 	{
-		stream << "Object.defineProperty(" << formatQualifiedName(struct_) << ".prototype, '" << formatName(field) <<
-			"', {get: function() { /*impl*/ }, set: function(new" << field->longName() << 
-			") { /*impl*/ }}); /*" << format(field->type()) << "*/" << endl << endl;
+		stream << "Object.defineProperty(" << formatQualifiedName(struct_) << ".prototype, '" << formatName(field) << "', "
+		       << "{get: function() { throw new Error(\"not implemented\"); }, set: function(new" << field->longName() << ") { throw new Error(\"not implemented\"); }}); "
+		       << "/* " << format(field->type()) << " */" << endl << endl;
 	}
 
-	stream << "// } struct" << endl << endl;
+	stream << "// struct: }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) const
 {
-	stream << "// class " << formatQualifiedName(class_) << " {" << endl << endl;
+	stream << "// class: " << formatQualifiedName(class_) << " {" << endl << endl;
 
 	stream << formatQualifiedName(class_) << " = function() { };" << endl << endl;
 
@@ -134,14 +134,14 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ClassRef class_) con
 
 	for (auto event : class_->events())
 	{
-		stream << "// event " << formatQualifiedName(event) << " {" << endl << endl;
+		stream << "// event: " << formatQualifiedName(event) << " {" << endl << endl;
 
 		stream << format(event);
 
-		stream << "// } event" << endl << endl;
+		stream << "// event: }" << endl << endl;
 	}
 
-	stream << "// } class" << endl << endl;
+	stream << "// class: }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) const
@@ -156,9 +156,9 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EventRef event) cons
 	for (auto value : event->values())
 	{
 		stream << "Object.defineProperty( " << formatQualifiedName(event) << ".prototype, '" 
-			<< formatName(value) <<	"', {get: function() { /*impl*/ }, set: function("
+			<< formatName(value) <<	"', {get: function() { throw new Error(\"not implemented\"); }, set: function("
 			<< formatName("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
-			<< " ) { /*impl*/ }}); /*" << format(value->type()) << "*/" << endl << endl;
+			<< " ) { throw new Error(\"not implemented\"); }}); /* " << format(value->type()) << " */" << endl << endl;
 	}
 }
 
@@ -174,7 +174,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::NamespaceRef namespa
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 {
-	stream << "// enum " << formatQualifiedName(enum_) << " {" << endl << endl;
+	stream << "// enum: " << formatQualifiedName(enum_) << " {" << endl << endl;
 
 	stream << formatQualifiedName(enum_) << "= {  };" << endl << endl;
 
@@ -183,7 +183,7 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::EnumRef enum_) const
 		stream << format(value);
 	} 
 
-	stream << "// } enum" << endl << endl;
+	stream << "// enum: }" << endl << endl;
 }
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::ValueRef value) const
@@ -198,36 +198,36 @@ void JSHeaderFormatter::format(std::ostream& stream, Model::ValueRef value) cons
 
 void JSHeaderFormatter::format(std::ostream& stream, Model::OperationRef operation) const
 {
-	stream << formatSig(operation) << ";" << endl << endl;
-}
-
-void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
-{
 	if(operation->doc())
 	{
 		stream << format(operation->doc());
 	}
 
+	stream << formatSig(operation) << " { throw new Error(\"not implemented\"); }" << endl << endl;
+}
+
+void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef operation) const
+{
 	if(operation->result())
 	{
 		if (!operation->isSynchronous())
 		{
-			stream << "/*Promise [" << format(operation->result()->type()) << " " << formatName(operation->result()) << "]*/";
+			stream << "/* Promise [" << format(operation->result()->type()) << " " << formatName(operation->result()) << "] */";
 		}
 		else 
 		{
-			stream << "/*" << format(operation->result()->type()) <<  " " << formatName(operation->result()) << "*/";
+			stream << "/* " << format(operation->result()->type()) <<  " " << formatName(operation->result()) << " */";
 		}
 	}
 	else 
 	{
 		if (!operation->isSynchronous())
 		{
-			stream << "/*Promise []*/";
+			stream << "/* Promise [] */";
 		}
 		else
 		{
-			stream << "/*void*/";
+			stream << "/* void */";
 		}
 	}
 	
@@ -238,7 +238,7 @@ void JSHeaderFormatter::formatSig(std::ostream& stream, Model::OperationRef oper
 		stream << format(parameter.value()) << (!parameter.last() ? ", " : "");
 	}
 
-	stream << ")  { /* impl */ }";
+	stream << ")";
 }
 
 } } } // namespace: Everbase::InterfaceCompiler::Components

@@ -2,22 +2,22 @@
 
 typemap:
     primitives:
-        - byte: Byte
-        - uint32: Number
-        - uint64: Number
-        - float: Number
-        - bool: Boolean
-        - timestamp: Timestamp
-        - string: String
-        - uuid: Uuid
-        - buffer: Buffer
-        - const-buffer: ConstBuffer
+        - Byte: Byte
+        - UInt16: Number
+        - UInt32: Number
+        - UInt64: Number
+        - Boolean: Boolean
+        - Timestamp: Timestamp
+        - String: String
+        - Uuid: Uuid
+        - Buffer: Buffer
+        - ConstBuffer: ConstBuffer
 
     containers:
-        - vector: 'Vector<@>'
-        - list: 'List<@>'
-        - set: 'Set<@>'
-        - map: 'Map<@, @>'
+        - Vector: 'Vector<@>'
+        - List: 'List<@>'
+        - Set: 'Set<@>'
+        - Map: 'Map<@, @>'
 
 style:
     default:

@@ -6,16 +6,16 @@ const char* Primitive::TYPE_NAME = "Primitive";
 
 const char* Primitive::primitiveNames[] =
 {
-    "byte",
-    "uint32",
-    "uint64",
-    "float",
-    "bool",
-    "timestamp",
-    "string",
-    "uuid",
-    "buffer",
-    "const-buffer"
+    "Byte",
+    "UInt16",
+    "UInt32",
+    "UInt64",
+    "Boolean",
+    "Timestamp",
+    "String",
+    "Uuid",
+    "Buffer",
+    "ConstBuffer"
 };
 
 Primitive::Primitive()

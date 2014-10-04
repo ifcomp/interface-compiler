@@ -387,10 +387,9 @@
         - { name: Member, value: 0x2 }
 
 #---END EVERBASE CORESYSTEM END ---------------------------------------------
-#
-#
-#---BEGIN EVERBASE OBJECTSTORE BEGIN ---------------------------------------------
 
+
+#---BEGIN EVERBASE OBJECTSTORE BEGIN ---------------------------------------------
 
     - name: ObjectStore
       nodetype: namespace
@@ -855,10 +854,9 @@
         - { name: SyncStatus, type: Everbase::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
         - { name: Conflicts, type: Everbase::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
 
-
 #---END EVERBASE OBJECTSTORE END ---------------------------------------------
-#
-#
+
+
 #---BEGIN EVERBASE FILESYSTEM BEGIN ---------------------------------------------
 
     - name: FileSystem
@@ -1369,62 +1367,61 @@
               values:
                 - { name: SyncProcessId, type: Everbase::Uuid }
 
-
 #---END EVERBASE FILESYSTEM END ---------------------------------------------
-        
+
 
     #Primitives
 
     - name: Byte
       nodetype: primitive
-      primitivetype: byte
+      primitivetype: Byte
+
+    - name: UInt16
+      nodetype: primitive
+      primitivetype: UInt16
 
     - name: UInt32
       nodetype: primitive
-      primitivetype: uint32
+      primitivetype: UInt32
 
     - name: UInt64
       nodetype: primitive
-      primitivetype: uint64
-
-    - name: Float
-      nodetype: primitive
-      primitivetype: float
+      primitivetype: UInt64
 
     - name: Boolean
       nodetype: primitive
-      primitivetype: bool
+      primitivetype: Boolean
 
     - name: Timestamp
       nodetype: primitive
-      primitivetype: timestamp
+      primitivetype: Timestamp
 
     - name: String
       nodetype: primitive
-      primitivetype: string
+      primitivetype: String
 
     - name: Uuid
       nodetype: primitive
-      primitivetype: uuid
+      primitivetype: Uuid
 
     - name: Buffer
       nodetype: primitive
-      primitivetype: buffer
+      primitivetype: Buffer
 
     - name: ConstBuffer
       nodetype: primitive
-      primitivetype: const-buffer
+      primitivetype: ConstBuffer
 
     # containers
 
     - name: Vector
       nodetype: container
-      containertype: vector
+      containertype: Vector
 
     - name: List
       nodetype: container
-      containertype: list
+      containertype: List
 
     - name: Set
       nodetype: container
-      containertype: set
+      containertype: Set

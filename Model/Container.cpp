@@ -6,9 +6,9 @@ const char* Container::TYPE_NAME = "Container";
 
 const char *Container::containerNames[] =
 {
-    "vector",
-    "list",
-    "set"
+    "Vector",
+    "List",
+    "Set"
 };
 
 Container::Container()
