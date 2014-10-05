@@ -71,30 +71,6 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::NamespaceRef nam
 	}
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::ConstantRef constant) const
-{
-	int number = 0;
-	std::string valueString;
-	boost::uuids::uuid uuid;
-
-	if (constant->value().type() == typeid(int))
-	{
-		number = boost::any_cast<int>(constant->value());
-		valueString = boost::lexical_cast<std::string>(number);
-	}
-	else if (constant->value().type() == typeid(std::string))
-	{
-		valueString = "\'" + boost::any_cast<std::string>(constant->value()) + "\'";
-	}
-	else if (constant->value().type() == typeid(boost::uuids::uuid))
-	{
-    	uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-		valueString = boost::lexical_cast<std::string>(uuid);
-	}
-	stream << qname(constant) << ".TYPE_ID = " << 
-		valueString << ";" << endl << endl;
-}
-
 void JSHeaderFormatter::definition(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
@@ -135,18 +111,45 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ClassRef class_)
 
 	for (auto event : class_->events())
 	{
-		stream << "// event: " << qname(event) << " {" << endl << endl;
-
 		stream << definition(event);
+	}
 
-		stream << "// event: }" << endl << endl;
+	for (auto constant : class_->constants())
+	{
+		stream << definition(constant);
 	}
 
 	stream << "// class: }" << endl << endl;
 }
 
+void JSHeaderFormatter::definition(std::ostream& stream, Model::ConstantRef constant) const
+{
+	int number = 0;
+	std::string valueString;
+	boost::uuids::uuid uuid;
+
+	if (constant->value().type() == typeid(int))
+	{
+		number = boost::any_cast<int>(constant->value());
+		valueString = boost::lexical_cast<std::string>(number);
+	}
+	else if (constant->value().type() == typeid(std::string))
+	{
+		valueString = "\'" + boost::any_cast<std::string>(constant->value()) + "\'";
+	}
+	else if (constant->value().type() == typeid(boost::uuids::uuid))
+	{
+    	uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+		valueString = boost::lexical_cast<std::string>(uuid);
+	}
+	stream << qname(constant) << ".TYPE_ID = " << 
+		valueString << ";" << endl << endl;
+}
+
 void JSHeaderFormatter::definition(std::ostream& stream, Model::EventRef event) const
 {
+	stream << "// event: " << qname(event) << " {" << endl << endl;
+
 	stream << qname(event) << " = function() { };" << endl << endl;
 
 	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
@@ -161,6 +164,8 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::EventRef event) 
 			<< name("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
 			<< " ) { throw new Error(\"not implemented\"); }}); /* " << type(value->type()) << " */" << endl << endl;
 	}
+
+	stream << "// event: }" << endl << endl;
 }
 
 void JSHeaderFormatter::definition(std::ostream& stream, Model::OperationRef operation) const

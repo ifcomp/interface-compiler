@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Model/NamespaceMember.hpp"
+#include "Model/Identifiable.hpp"
 #include "Model/Type.hpp"
 
 #include <boost/any.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Constant : public NamespaceMember
+class Constant : public Identifiable
 {
 public:
     static const char* TYPE_NAME;

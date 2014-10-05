@@ -67,11 +67,6 @@ FormatToken<Model::NamespaceMemberRef> Formatter::definition(Model::NamespaceMem
 	return FormatToken<Model::NamespaceMemberRef> { this, &Formatter::definition, std::tuple<Model::NamespaceMemberRef> { member } };
 }
 
-FormatToken<Model::ConstantRef> Formatter::definition(Model::ConstantRef constant) const
-{
-	return FormatToken<Model::ConstantRef> { this, &Formatter::definition, std::tuple<Model::ConstantRef> { constant } };
-}
-
 FormatToken<Model::StructRef> Formatter::definition(Model::StructRef struct_) const
 {
 	return FormatToken<Model::StructRef> { this, &Formatter::definition, std::tuple<Model::StructRef> { struct_ } };
@@ -80,6 +75,11 @@ FormatToken<Model::StructRef> Formatter::definition(Model::StructRef struct_) co
 FormatToken<Model::ClassRef> Formatter::definition(Model::ClassRef class_) const
 {
 	return FormatToken<Model::ClassRef> { this, &Formatter::definition, std::tuple<Model::ClassRef> { class_ } };
+}
+
+FormatToken<Model::ConstantRef> Formatter::definition(Model::ConstantRef constant) const
+{
+    return FormatToken<Model::ConstantRef> { this, &Formatter::definition, std::tuple<Model::ConstantRef> { constant } };
 }
 
 FormatToken<Model::EventRef> Formatter::definition(Model::EventRef event) const
@@ -246,19 +246,14 @@ void Formatter::definition(std::ostream& stream, Model::RootRef root) const
 
 void Formatter::definition(std::ostream& stream, Model::NamespaceMemberRef member) const
 {
-    if ( auto docobj = member->doc() )
+    if ( member->doc() )
     {
-        stream << doc(docobj);
+        stream << doc(member->doc());
     }
 
-    if ( auto primitive = std::dynamic_pointer_cast<Model::Primitive>(member) )
+    if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member) )
     {
-        stream << definition(primitive);
-    }
-    else
-    if ( auto constant = std::dynamic_pointer_cast<Model::Constant>(member) )
-    {
-        stream << definition(constant);
+        stream << definition(namespace_);
     }
     else
     if ( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(member) )
@@ -266,29 +261,19 @@ void Formatter::definition(std::ostream& stream, Model::NamespaceMemberRef membe
         stream << definition(struct_);
     }
     else
-    if ( auto class_ = std::dynamic_pointer_cast<Model::Class>(member) )
-    {
-        stream << definition(class_);
-    }
-    else
-    if ( auto event = std::dynamic_pointer_cast<Model::Event>(member) )
-    {
-        stream << definition(event);
-    }
-    else
-    if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member) )
-    {
-        stream << definition(namespace_);
-    }
-    else
     if ( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(member) )
     {
         stream << definition(enum_);
     }
     else
-    if ( auto operation = std::dynamic_pointer_cast<Model::Operation>(member) )
+    if ( auto class_ = std::dynamic_pointer_cast<Model::Class>(member) )
     {
-        stream << definition(operation);
+        stream << definition(class_);
+    }
+    else
+    if ( std::dynamic_pointer_cast<Model::Primitive>(member) )
+    {
+        // primitives do not have definitions
     }
     else
     {

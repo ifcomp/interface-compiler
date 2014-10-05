@@ -53,4 +53,14 @@ std::vector<EventRef> Class::events()
     return _events;
 }
 
+void Class::addConstant(ConstantRef constant)
+{
+	_constants.push_back(constant);
+}
+
+std::vector<ConstantRef> Class::constants()
+{
+	return _constants;
+}
+
 } } } // namespace Everbase::InterfaceCompiler::Model

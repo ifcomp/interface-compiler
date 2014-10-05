@@ -1369,9 +1369,6 @@
 
 #---END EVERBASE FILESYSTEM END ---------------------------------------------
 
-
-    #Primitives
-
     - name: Byte
       type: primitive
       underlying: Byte

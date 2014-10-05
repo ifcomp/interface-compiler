@@ -36,10 +36,10 @@ protected:
 	FormatToken<Model::NamespaceRef> definition(Model::NamespaceRef namespace_) const;
 	FormatToken<Model::NamespaceMemberRef> definition(Model::NamespaceMemberRef member) const;
 
-	FormatToken<Model::ConstantRef> definition(Model::ConstantRef constant) const;
 	FormatToken<Model::StructRef> definition(Model::StructRef struct_) const;
 
 	FormatToken<Model::ClassRef> definition(Model::ClassRef class_) const;
+	FormatToken<Model::ConstantRef> definition(Model::ConstantRef constant) const;
 	FormatToken<Model::EventRef> definition(Model::EventRef event) const;
 	FormatToken<Model::OperationRef> definition(Model::OperationRef operation) const;
 	FormatToken<Model::OperationRef> signature(Model::OperationRef operation) const;
@@ -62,10 +62,10 @@ protected:
 	virtual void definition(std::ostream& stream, Model::NamespaceRef namespace_) const = 0;
 	virtual void definition(std::ostream& stream, Model::NamespaceMemberRef member) const;
 
-	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const = 0;
 	virtual void definition(std::ostream& stream, Model::StructRef struct_) const = 0;
 
 	virtual void definition(std::ostream& stream, Model::ClassRef class_) const = 0;
+	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const = 0;
 	virtual void definition(std::ostream& stream, Model::EventRef event) const = 0;
 	virtual void definition(std::ostream& stream, Model::OperationRef operation) const = 0;
 	virtual void signature(std::ostream& stream, Model::OperationRef operation) const = 0;

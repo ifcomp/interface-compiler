@@ -14,11 +14,10 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 
 const char *NamespaceReader::TYPE_NAMESPACE          = "namespace";
-const char *NamespaceReader::TYPE_CLASS              = "class";
 const char *NamespaceReader::TYPE_PRIMITIVE          = "primitive";
 const char *NamespaceReader::TYPE_ENUM               = "enum";
 const char *NamespaceReader::TYPE_STRUCT             = "struct";
-const char *NamespaceReader::TYPE_CONSTANT           = "constant";
+const char *NamespaceReader::TYPE_CLASS              = "class";
 
 const char *NamespaceReader::KEY_NAME                = "name";
 const char *NamespaceReader::KEY_SHORTNAME           = "short";
@@ -37,6 +36,7 @@ const char *NamespaceReader::KEY_FIELDS              = "fields";
 const char *NamespaceReader::KEY_VALUES              = "values";
 const char *NamespaceReader::KEY_OPERATIONS          = "operations";
 const char *NamespaceReader::KEY_EVENTS              = "events";
+const char *NamespaceReader::KEY_CONSTANTS           = "constants";
 
 const char *NamespaceReader::FLAG_STATIC             = "static";
 const char *NamespaceReader::FLAG_SYNCHRONOUS        = "synchronous";
@@ -57,7 +57,6 @@ NamespaceReader::NamespaceReader(Model::NamespaceRef rootNamespace) :
     mParserMethods[TYPE_PRIMITIVE]  = &NamespaceReader::parsePrimitive;
     mParserMethods[TYPE_ENUM]       = &NamespaceReader::parseEnum;
     mParserMethods[TYPE_STRUCT]     = &NamespaceReader::parseStruct;
-    mParserMethods[TYPE_CONSTANT]   = &NamespaceReader::parseConstant;
 }
 
 
@@ -186,10 +185,14 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
             }
         }
 
-        if (newClass->operations().size() == 0 &&
-            newClass->events().size() == 0)
+        if (checkNode(node, KEY_CONSTANTS, YAML::NodeType::Sequence))
         {
-            cout << "WARNING: no operations or events defined in class " << newClass->longName() << endl;
+            for (auto constantNode : node[KEY_CONSTANTS])
+            {
+                ConstantRef newConstant = parseConstant(constantNode);
+                newConstant->setParentObject(newClass);
+                newClass->addConstant(newConstant);
+            }
         }
     }
     catch (const runtime_error &e)
@@ -446,10 +449,9 @@ TypeBaseRef NamespaceReader::parseType(const YAML::Node &node)
 }
 
 
-NamespaceMemberRef NamespaceReader::parseConstant(const YAML::Node &node)
+ConstantRef NamespaceReader::parseConstant(const YAML::Node &node)
 {
     ConstantRef newConstant = newIdentifiable<Constant>(node);
-    registerType(newConstant);
 
     try
     {
@@ -589,7 +591,7 @@ TypeRef NamespaceReader::resolveType(TypeBaseRef type)
     }
     else
     {
-        const TypeRef &resolvedType = dynamic_pointer_cast<Type>(type);
+        TypeRef resolvedType = dynamic_pointer_cast<Type>(type);
         if (resolvedType)
         {
             cout << "resolved to existing type" << endl;
@@ -639,7 +641,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 // resolve parent
                 if (classRef->parent())
                 {
-                    const TypeRef &parentType = resolveType(classRef->parent());
+                    TypeRef parentType = resolveType(classRef->parent());
 
                     if (dynamic_pointer_cast<Class>(parentType->primary()))
                     {
@@ -680,6 +682,23 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                         resolveParameterType(value);
                     }
                 }
+
+                for (auto constant : classRef->constants())
+                {
+                    // resolve constants
+                    try {
+                        TypeRef resolvedType = resolveType(constant->type());
+
+                        if (resolvedType)
+                        {
+                            constant->setType(resolvedType);
+                        }
+                    }
+                    catch (const runtime_error &e)
+                    {
+                        throw runtime_error(addFQNameToException(namespaceMember, " "));
+                    }
+                }
             }
             catch (const runtime_error &e)
             {
@@ -693,22 +712,6 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 for (auto field : structRef->fields())
                 {
                     resolveParameterType(field);
-                }
-            }
-            catch (const runtime_error &e)
-            {
-                throw runtime_error(addFQNameToException(namespaceMember, " "));
-            }
-        }
-        else if (const ConstantRef &constantRef = dynamic_pointer_cast<Constant>(namespaceMember))
-        {
-            // resolve constants
-            try {
-                const TypeRef &resolvedType = resolveType(constantRef->type());
-
-                if (resolvedType)
-                {
-                    constantRef->setType(resolvedType);
                 }
             }
             catch (const runtime_error &e)

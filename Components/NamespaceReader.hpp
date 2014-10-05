@@ -40,11 +40,11 @@ public:
      * @{
      */
     static const char *TYPE_NAMESPACE;
-    static const char *TYPE_CLASS;
     static const char *TYPE_PRIMITIVE;
     static const char *TYPE_ENUM;
     static const char *TYPE_STRUCT;
-    static const char *TYPE_CONSTANT;
+    static const char *TYPE_CLASS;
+
     /** @} */
 
     /**
@@ -70,6 +70,7 @@ public:
     static const char *KEY_VALUES;
     static const char *KEY_OPERATIONS;
     static const char *KEY_EVENTS;
+    static const char *KEY_CONSTANTS;
 
     static const char *KEY_ID;
     /** @} */
@@ -180,7 +181,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parseConstant(const YAML::Node &node);
+    Model::ConstantRef parseConstant(const YAML::Node &node);
 
     /**
      * @brief Parse operation definition (entries of KEY_OPERATIONS inside TYPE_CLASS section);

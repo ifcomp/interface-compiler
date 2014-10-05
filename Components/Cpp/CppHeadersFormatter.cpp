@@ -71,6 +71,40 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::NamespaceRef n
     stream << "}" << endl;
 }
 
+void CppHeadersFormatter::definition(std::ostream& stream, Model::StructRef struct_) const
+{
+    stream << "struct " << name(struct_) << endl << "{" << endl;
+
+    for (auto field : struct_->fields())
+    {
+        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl;
+    }
+
+    stream << "};" << endl;
+}
+
+void CppHeadersFormatter::definition(std::ostream& stream, Model::ClassRef class_) const
+{
+    stream << "class " << name(class_) << endl << "{" << endl;
+
+    for( auto operation : class_->operations() )
+    {
+        filter(stream).push<indent>(config.indentData) << definition(operation) << endl;
+    }
+
+    for ( auto event : class_->events() )
+    {
+        filter(stream).push<indent>(config.indentData) << definition(event) << endl;
+    }
+
+    for ( auto constant : class_->constants() )
+    {
+        filter(stream).push<indent>(config.indentData) << definition(constant) << endl;
+    }
+
+    stream << "};" << endl;
+}
+
 void CppHeadersFormatter::definition(std::ostream& stream, Model::ConstantRef constant) const
 {
     int number = 0;
@@ -93,37 +127,6 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::ConstantRef co
     }
 
     stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = " << valueString << ";" << endl;
-}
-
-void CppHeadersFormatter::definition(std::ostream& stream, Model::StructRef struct_) const
-{
-    stream << "struct " << name(struct_) << endl << "{" << endl;
-
-    for (auto field : struct_->fields())
-    {
-        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl;
-    }
-
-    stream << "};" << endl;
-}
-
-void CppHeadersFormatter::definition(std::ostream& stream, Model::ClassRef class_) const
-{
-    stream << "class " << name(class_) << endl << "{" << endl;
-
-    for( auto operation : class_->operations() )
-    {
-        std::size_t count = 0;
-        filter(stream).push<indent>(config.indentData).push<counter>(count) << definition(operation) << (count > 0 ? "\n" : "") << flush;
-    }
-
-    for ( auto event : class_->events() )
-    {
-        std::size_t count = 0;
-        filter(stream).push<indent>(config.indentData).push<counter>(count) << definition(event) << (count > 0 ? "\n" : "") << flush;
-    }
-
-    stream << "};" << endl;
 }
 
 void CppHeadersFormatter::definition(std::ostream& stream, Model::EventRef event) const

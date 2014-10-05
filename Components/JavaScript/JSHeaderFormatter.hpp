@@ -29,10 +29,10 @@ protected:
 	virtual void type(std::ostream& stream, Model::TypeRef type) const override;
 
 	virtual void definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
-	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const override;
 	virtual void definition(std::ostream& stream, Model::StructRef struct_) const override;
 
 	virtual void definition(std::ostream& stream, Model::ClassRef class_) const override;
+	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const override;
 	virtual void definition(std::ostream& stream, Model::EventRef event) const override;
 	virtual void definition(std::ostream& stream, Model::OperationRef operation) const override;
 	virtual void signature(std::ostream& stream, Model::OperationRef operation) const override;

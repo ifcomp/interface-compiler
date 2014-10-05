@@ -3,6 +3,7 @@
 #include "Model/NamespaceMember.hpp"
 #include "Model/Operation.hpp"
 #include "Model/Event.hpp"
+#include "Model/Constant.hpp"
 #include "Model/Type.hpp"
 
 #include <memory>
@@ -38,11 +39,15 @@ public:
     void addEvent(EventRef event);
     std::vector<EventRef> events();
 
+    void addConstant(ConstantRef constant);
+    std::vector<ConstantRef> constants();
+
 private:
     Behavior _behavior;
     TypeBaseRef _parent;
     std::vector<OperationRef> _operations;
     std::vector<EventRef> _events;
+    std::vector<ConstantRef> _constants;
 };
 
 typedef std::shared_ptr<Class> ClassRef;
