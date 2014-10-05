@@ -11,21 +11,22 @@ class Type : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
-
-private:
-    ElementRef _primary;
-    std::vector<ElementRef> _params;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Type();
     virtual ~Type();
 
+public:
     ElementRef primary();
     void setPrimary(ElementRef primary);
 
     void addParam(ElementRef param);
     const std::vector<ElementRef>& params();
+
+private:
+    ElementRef _primary;
+    std::vector<ElementRef> _params;
 };
 
 typedef std::shared_ptr<Type> TypeRef;

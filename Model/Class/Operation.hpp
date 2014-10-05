@@ -13,18 +13,13 @@ class Class::Operation : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-
-private:
-    bool _isStatic;
-    bool _isSynchronous;
-    std::vector<ParameterRef> _params;
-    ParameterRef _result;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Operation();
     virtual ~Operation();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     bool isStatic();
     void setStatic(bool isStatic);
 
@@ -36,6 +31,12 @@ public:
 
     void setResult(ParameterRef result);
     ParameterRef result();
+
+private:
+    bool _isStatic;
+    bool _isSynchronous;
+    std::vector<ParameterRef> _params;
+    ParameterRef _result;
 };
 
 } } } // namespace Everbase::InterfaceCompiler::Model

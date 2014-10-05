@@ -34,7 +34,7 @@ public:
      * @brief Get Class identifier
      * @return Indentifier string
      */
-    virtual std::string objectTypeName() = 0;
+    virtual std::string typeName() = 0;
 
 private:
     ObjectRef _parent;

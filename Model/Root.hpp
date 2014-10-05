@@ -9,12 +9,13 @@ class Root : public Object
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Root();
     virtual ~Root();
 
+public:
 	NamespaceRef getNamespace();
 	void setNamespace(NamespaceRef ns);
 

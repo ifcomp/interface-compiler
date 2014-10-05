@@ -14,6 +14,7 @@ public:
     Identifiable();
     virtual ~Identifiable();
 
+public:
     std::string longName();
     void setLongName(std::string longName);
 

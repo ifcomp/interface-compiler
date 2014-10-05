@@ -11,7 +11,7 @@ class Enum : public Element
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
 	class Value;
@@ -21,6 +21,7 @@ public:
     Enum();
     virtual ~Enum();
 
+public:
     void addValue(ValueRef value);
     std::vector<ValueRef> values();
 

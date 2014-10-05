@@ -11,18 +11,19 @@ class Namespace : public Element
 {
 public:
     static const char* TYPE_NAME;
-
-private:
-    std::vector<ElementRef> _elements;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Namespace();
     Namespace(std::string longName);
     virtual ~Namespace();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     void addElement(ElementRef element);
     std::vector<ElementRef> elements();
+
+private:
+    std::vector<ElementRef> _elements;
 };
 
 typedef std::shared_ptr<Namespace> NamespaceRef;

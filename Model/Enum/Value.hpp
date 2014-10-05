@@ -11,17 +11,18 @@ class Enum::Value : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-
-private:
-    int32_t _value;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Value();
     virtual ~Value();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     int32_t value();
     void setValue(int32_t value);
+
+private:
+    int32_t _value;
 };
 
 } } } // namespace Everbase::InterfaceCompiler::Model

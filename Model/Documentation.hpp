@@ -13,7 +13,7 @@ class Documentation : public Object
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     static const char* KEY_BRIEF;
@@ -28,13 +28,11 @@ public:
         std::string description;
     };
 
-private:
-    std::vector<DocEntry> _docEntries;
-
 public:
     Documentation();
     virtual ~Documentation();
 
+public:
     bool keyExists(std::string doxygenKey);
     std::vector<DocEntry> docEntries();
     std::vector<DocEntry> docEntries(std::string doxygenKey);
@@ -44,6 +42,9 @@ public:
     void addDocEntry(DocEntry entry);
     void addDocEntry(std::string doxygenKey, std::string description);
     void addDocEntry(std::string doxygenKey, std::string paramName, std::string description);
+
+private:
+    std::vector<DocEntry> _docEntries;
 };
 
 typedef std::shared_ptr<Documentation> DocumentationRef;

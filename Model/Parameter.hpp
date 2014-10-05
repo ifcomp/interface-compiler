@@ -12,17 +12,18 @@ class Parameter : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-
-private:
-    TypeBaseRef _type;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Parameter();
     virtual ~Parameter();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     TypeBaseRef type();
     void setType(TypeBaseRef type);
+
+private:
+    TypeBaseRef _type;
 };
 
 typedef std::shared_ptr<Parameter> ParameterRef;

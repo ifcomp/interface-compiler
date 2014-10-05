@@ -10,21 +10,22 @@ class UnresolvedType : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
-
-private:
-    std::string _primary;
-    std::vector<std::string> _params;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     UnresolvedType();
     virtual ~UnresolvedType();
 
+public:
     std::string primary();
     void setPrimary(std::string primary);
 
     void addParam(std::string param);
     const std::vector<std::string>& params();
+
+private:
+    std::string _primary;
+    std::vector<std::string> _params;
 };
 
 typedef std::shared_ptr<UnresolvedType> UnresolvedTypeRef;

@@ -165,7 +165,7 @@ void Formatter::name(std::ostream& stream, Model::IdentifiableRef identifiable) 
     }
     else
     {
-        throw std::runtime_error("unknown identifiable type " + identifiable->objectTypeName());
+        throw std::runtime_error("unknown identifiable type " + identifiable->typeName());
     }
 }
 
@@ -277,7 +277,7 @@ void Formatter::definition(std::ostream& stream, Model::ElementRef element) cons
     }
     else
     {
-        throw std::runtime_error("unknown namespace element type " + element->objectTypeName());
+        throw std::runtime_error("unknown namespace element type " + element->typeName());
     }
 }
 

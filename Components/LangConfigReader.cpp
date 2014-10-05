@@ -215,7 +215,7 @@ YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleA
 
     if (styleContextObject)
     {
-        styleContextKey = styleContextObject->objectTypeName();
+        styleContextKey = styleContextObject->typeName();
         transform(styleContextKey.begin(), styleContextKey.end(), styleContextKey.begin(), ::tolower);
     }
 
@@ -261,8 +261,8 @@ std::string LangConfigReader::listKnownStyleAttributes() const
 
 string LangConfigReader::styleToken(string input, Model::ObjectRef styleContextObject) const
 {
-    if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME /*&&
-        styleContextObject->objectTypeName() != Model::Container::TYPE_NAME*/)
+    if (styleContextObject->typeName() != Model::Primitive::TYPE_NAME /*&&
+        styleContextObject->typeName() != Model::Container::TYPE_NAME*/)
     {
         NameStyle nameStyle = configNameStyle(styleContextObject);
         string delimiter = configAttribute<string>(StyleAttribute::NAME_DELIMITER, styleContextObject);

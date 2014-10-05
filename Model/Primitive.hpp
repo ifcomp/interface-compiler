@@ -9,9 +9,10 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 class Primitive : public Element
 {
 public:
-
     static const char* TYPE_NAME;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
+public:
     enum class Underlying
     {
         UNDEFINED = -1,
@@ -36,14 +37,11 @@ public:
      */
     static const char *underlyingNames[int(Underlying::_COUNT_)];
 
-private:
-    Underlying _underlying;
-
 public:
     Primitive();
     virtual ~Primitive();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     /**
      * @brief Get Underlying
      * @return Current Underlying
@@ -83,6 +81,9 @@ public:
      * @return String containing a list of underlying names, each one in a row.
      */
     static std::string listSupportedUnderlying();
+
+private:
+    Underlying _underlying;
 };
 
 typedef std::shared_ptr<Primitive> PrimitiveRef;

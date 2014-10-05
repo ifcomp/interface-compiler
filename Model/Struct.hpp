@@ -12,17 +12,18 @@ class Struct : public Element
 {
 public:
     static const char* TYPE_NAME;
-
-private:
-    std::vector<ParameterRef> _fields;
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     Struct();
     virtual ~Struct();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     void addField(ParameterRef field);
     std::vector<ParameterRef> fields();
+
+private:
+    std::vector<ParameterRef> _fields;
 };
 
 typedef std::shared_ptr<Struct> StructRef;

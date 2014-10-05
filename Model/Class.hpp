@@ -12,12 +12,7 @@ class Class : public Element
 {
 public:
     static const char* TYPE_NAME;
-
-    enum class Behavior
-    {
-        VALUE,
-        INTERFACE
-    };
+    virtual std::string typeName() override { return TYPE_NAME; }
 
 public:
     class Constant;
@@ -29,10 +24,17 @@ public:
     typedef std::shared_ptr<Operation> OperationRef;
 
 public:
+    enum class Behavior
+    {
+        VALUE,
+        INTERFACE
+    };
+
+public:
     Class();
     virtual ~Class();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     Behavior behavior();
     void setBehavior(Behavior behavior);
 
