@@ -1,6 +1,6 @@
 #include "Components/StandardParser.hpp"
-#include "Components/Cpp/CppHeadersFormatter.hpp"
-#include "Components/JavaScript/JSHeaderFormatter.hpp"
+#include "Components/Cpp/HeaderFormatter.hpp"
+#include "Components/JavaScript/HeaderFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
             std::ofstream output("test.cpp", std::ios_base::trunc);
             output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
-            Components::CppHeadersFormatter format;
+            Components::Cpp::HeaderFormatter format;
             format.execute(root, output);
         }
         catch (const ios_base::failure &e)
@@ -36,7 +36,7 @@ int main(int argc, char** argv)
             std::ofstream output("test.js", std::ios_base::trunc);
             output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
-            Components::JSHeaderFormatter format;
+            Components::JavaScript::HeaderFormatter format;
             format.execute(root, output);
         }
         catch (const ios_base::failure &e)

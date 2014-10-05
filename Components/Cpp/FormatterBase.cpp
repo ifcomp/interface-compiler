@@ -1,4 +1,4 @@
-#include "CppHeadersFormatter.hpp"
+#include "Components/Cpp/FormatterBase.hpp"
 
 #include <set>
 #include <iostream>
@@ -6,7 +6,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-namespace Everbase { namespace InterfaceCompiler { namespace Components {
+namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
 using std::endl;
 using std::flush;
@@ -17,12 +17,17 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+
+template <typename T>
+using NameConfig = FormatterConfig::NameConfig<T>;
+
+template <Model::Primitive::Underlying U>
+using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
+
 using NameConfigs = FormatterConfig::NameConfigs;
-template <Model::Primitive::Underlying U> using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
-CppHeadersFormatter::CppHeadersFormatter()
+FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
         {
             std::string("::"), std::string(4, ' '), 85,
@@ -57,12 +62,12 @@ CppHeadersFormatter::CppHeadersFormatter()
 {
 }
 
-void CppHeadersFormatter::_param(std::ostream& stream, Model::ParameterRef parameter) const
+void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << type(parameter->type()) << " " << name(parameter);
 }
 
-void CppHeadersFormatter::_type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const
+void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const
 {
     if (auto primitive = std::dynamic_pointer_cast<Primitive>(primary))
     {
@@ -91,7 +96,7 @@ void CppHeadersFormatter::_type(std::ostream& stream, Model::ElementRef primary,
     }
 }
 
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     stream << "namespace " << name(namespace_) << endl << "{" << endl;
 
@@ -104,83 +109,7 @@ void CppHeadersFormatter::_definition(std::ostream& stream, Model::NamespaceRef 
     stream << "}" << endl;
 }
 
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
-{
-    stream << "struct " << name(struct_) << endl << "{" << endl;
-
-    for (auto field : struct_->fields())
-    {
-        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl;
-    }
-
-    stream << "};" << endl;
-}
-
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
-{
-    stream << "class " << name(class_) << endl << "{" << endl;
-
-    for( auto operation : class_->operations() )
-    {
-        filter(stream).push<indent>(config.indentData) << definition(operation) << endl;
-    }
-
-    for ( auto event : class_->events() )
-    {
-        filter(stream).push<indent>(config.indentData) << definition(event) << endl;
-    }
-
-    for ( auto constant : class_->constants() )
-    {
-        filter(stream).push<indent>(config.indentData) << definition(constant) << endl;
-    }
-
-    stream << "};" << endl;
-}
-
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
-{
-    int number = 0;
-    std::string valueString;
-    boost::uuids::uuid uuid;
-
-    if (constant->value().type() == typeid(int))
-    {
-        number = boost::any_cast<int>(constant->value());
-        valueString = boost::lexical_cast<std::string>(number);
-    }
-    else if (constant->value().type() == typeid(std::string))
-    {
-        valueString = "\"" + boost::any_cast<std::string>(constant->value()) + "\"";
-    }
-    else if (constant->value().type() == typeid(boost::uuids::uuid))
-    {
-        uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-        valueString = boost::lexical_cast<std::string>(uuid);
-    }
-
-    stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = " << valueString << ";" << endl;
-}
-
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
-{
-    for (auto value : event->values())
-    {
-        stream << type(value->type()) << " " << name(event) << "();" << endl;
-    }
-}
-
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
-{
-    if (operation->doc())
-    {
-        stream << doc(operation->doc());
-    }
-
-    stream << signature(operation) << ";" << endl;
-}
-
-void CppHeadersFormatter::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
+void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->result())
     {
@@ -201,21 +130,4 @@ void CppHeadersFormatter::_signature(std::ostream& stream, Model::Class::Operati
     stream << ")";
 }
 
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
-{
-    stream << "enum class " << name(enum_) << endl << "{" << endl;
-
-    for (auto value : indices(enum_->values()))
-    {
-        filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl;
-    }
-
-    stream << "};" << endl;
-}
-
-void CppHeadersFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
-{
-    stream << name(value) << " = " << value->value();
-}
-
-} } } // namespace: Everbase::InterfaceCompiler::Components
+} } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp

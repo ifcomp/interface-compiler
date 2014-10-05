@@ -31,11 +31,9 @@ set(SRC
     MultiStream.hpp
     IndexList.hpp
     CompilerSetup.hpp
-    Config.hpp
     FormatToken.hpp
 
     Compiler.hpp
-    ConfigProvider.hpp
     Formatter.hpp
     Parser.hpp
     Transformer.hpp

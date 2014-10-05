@@ -4,12 +4,12 @@
 
 #include <fstream>
 
-namespace Everbase { namespace InterfaceCompiler { namespace Components {
+namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace JavaScript {
 
-class JSHeaderFormatter : public Formatter
+class HeaderFormatter : public Formatter
 {
 public:
-    JSHeaderFormatter();
+    HeaderFormatter();
 
 protected:
     using Formatter::qname;
@@ -36,4 +36,4 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
 };
 
-} } } // namespace: Everbase::InterfaceCompiler::Components
+} } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript

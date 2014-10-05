@@ -1,4 +1,5 @@
 set(SRC ${SRC}
-	Components/JavaScript/JSHeaderFormatter.hpp
-	Components/JavaScript/JSHeaderFormatter.cpp
+	Components/JavaScript/HeaderFormatter.cpp
+
+	Components/JavaScript/HeaderFormatter.hpp
 PARENT_SCOPE)

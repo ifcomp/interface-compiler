@@ -1,4 +1,4 @@
-#include "Components/JavaScript/JSHeaderFormatter.hpp"
+#include "Components/JavaScript/HeaderFormatter.hpp"
 
 #include <set>
 #include <iostream>
@@ -7,9 +7,9 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
 
-using std::string;
+namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace JavaScript {
 
-namespace Everbase { namespace InterfaceCompiler { namespace Components {
+using std::string;
 
 using std::endl;
 using std::flush;
@@ -20,12 +20,17 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
+
+template <typename T>
+using NameConfig = FormatterConfig::NameConfig<T>;
+
+template <Model::Primitive::Underlying U>
+using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
+
 using NameConfigs = FormatterConfig::NameConfigs;
-template <Model::Primitive::Underlying U> using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
-JSHeaderFormatter::JSHeaderFormatter()
+HeaderFormatter::HeaderFormatter()
     : Formatter(FormatterConfig
         {
             std::string("."), std::string(4, ' '), 85,
@@ -60,12 +65,12 @@ JSHeaderFormatter::JSHeaderFormatter()
 {
 }
 
-void JSHeaderFormatter::_param(std::ostream& stream, Model::ParameterRef parameter) const
+void HeaderFormatter::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
 	stream << "/* " << type(parameter->type()) << " */" << " " << name(parameter);
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
 	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || {  }" << endl << endl;
 	
@@ -75,7 +80,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef na
 	}
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
     stream << qname(struct_) << "= function() {  }" << endl << endl;
@@ -90,7 +95,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struc
 	stream << "// struct: }" << endl << endl;
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
@@ -126,7 +131,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_
 	stream << "// class: }" << endl << endl;
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 	int number = 0;
 	std::string valueString;
@@ -149,7 +154,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::Constant
 	stream << qname(constant) << " = " << valueString << ";" << endl << endl;
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
@@ -170,7 +175,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef
 	stream << "// event: }" << endl << endl;
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->doc())
 	{
@@ -180,7 +185,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::Operatio
 	stream << signature(operation) << " { throw new Error(\"not implemented\"); }" << endl << endl;
 }
 
-void JSHeaderFormatter::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
+void HeaderFormatter::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->result())
 	{
@@ -215,7 +220,7 @@ void JSHeaderFormatter::_signature(std::ostream& stream, Model::Class::Operation
 	stream << ")";
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
@@ -229,7 +234,7 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) 
 	stream << "// enum: }" << endl << endl;
 }
 
-void JSHeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 	if (value->doc())
 	{
@@ -239,4 +244,4 @@ void JSHeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef 
 	stream << qname(value) << " = " << value->value() << ";" << endl << endl;
 }
 
-} } } // namespace: Everbase::InterfaceCompiler::Components
+} } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
