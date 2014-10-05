@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Components/YamlReader.hpp"
+#include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <functional>
 #include <map>
+
 #include "Model/Namespace.hpp"
 #include "Model/Class.hpp"
 #include "Model/Class/Operation.hpp"
@@ -26,7 +27,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
  * @brief YAML parser class for namespace objects
  * @author Gunther Lemm <lemm@silpion.de>
  */
-class NamespaceReader : public YamlReader
+class NamespaceReader
 {
     /**
      * Member function signature for nodetype-lookup
@@ -128,6 +129,26 @@ public:
 
 
 private:
+    /**
+     * @brief YAML file
+     * @param fileName Filename of YAML file;
+     * @return Root node
+     * @throw std::runtime_error in case of YAML parser problems
+     */
+    virtual YAML::Node loadFile(std::istream& stream);
+
+    /**
+     * @brief Check if node[key] has a specific type.
+     * @param node  YAML node
+     * @param key   Key name
+     * @param expectedType  YAML node type
+     * @param mandatory if true, key must be found and must have the right type
+     * @return true if node[key] has expectedType
+     * @throw std::runtime_error if types don't match and mandatory is set
+     */
+    bool checkNode(const YAML::Node &node, const char *key,
+                   YAML::NodeType::value expectedType = YAML::NodeType::Scalar, bool mandatory = false);
+
     /**
      * @brief Parse namespace members into rootNamespace starting at node.
      * @param node          YAML root node

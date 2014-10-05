@@ -25,9 +25,9 @@ FormatToken<Model::IdentifiableRef> Formatter::name(Model::IdentifiableRef ident
     return FormatToken<Model::IdentifiableRef> { this, &Formatter::name, std::tuple<Model::IdentifiableRef> { identifiable } };
 }
 
-FormatToken<std::string, std::string, FormatterConfig::NameConfig> Formatter::name(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> Formatter::name(std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const
 {
-    return FormatToken<std::string, std::string, FormatterConfig::NameConfig> { this, &Formatter::name, std::tuple<std::string, std::string, FormatterConfig::NameConfig> { longName, shortName, config } };
+    return FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> { this, &Formatter::name, std::tuple<std::string, std::string, FormatterConfig::NameConfigBase> { longName, shortName, config } };
 }
 
 FormatToken<Model::ParameterRef> Formatter::param(Model::ParameterRef parameter) const
@@ -45,6 +45,11 @@ FormatToken<Model::TypeRef> Formatter::type(Model::TypeBaseRef type) const
     }
 
     return FormatToken<Model::TypeRef> { this, &Formatter::type, std::tuple<Model::TypeRef> { resolvedType } };
+}
+
+FormatToken<Model::PrimitiveRef> Formatter::type(Model::PrimitiveRef primitive) const
+{
+    return FormatToken<Model::PrimitiveRef> { this, &Formatter::type, std::tuple<Model::PrimitiveRef> { primitive } };
 }
 
 FormatToken<Model::DocumentationRef> Formatter::doc(Model::DocumentationRef documentation) const
@@ -169,7 +174,7 @@ void Formatter::name(std::ostream& stream, Model::IdentifiableRef identifiable) 
     }
 }
 
-void Formatter::name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+void Formatter::name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const
 {
     boost::regex regex("[A-Z]?[a-z]+|[A-Z]?[0-9]+|[A-Z]");
 
@@ -215,6 +220,71 @@ void Formatter::name(std::ostream& stream, std::string longName, std::string sho
 
         stream << part;
         start = match[0].second;
+    }
+}
+
+void Formatter::type(std::ostream& stream, Model::PrimitiveRef primitive) const
+{
+    switch(primitive->underlying())
+    {
+        case Model::Primitive::Underlying::BYTE:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::BYTE>().native;
+            break;
+
+        case Model::Primitive::Underlying::UINT16:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::UINT16>().native;
+            break;
+
+        case Model::Primitive::Underlying::UINT32:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::UINT32>().native;
+            break;
+
+        case Model::Primitive::Underlying::UINT64:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::UINT64>().native;
+            break;
+
+        case Model::Primitive::Underlying::BOOLEAN:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::BOOLEAN>().native;
+            break;
+
+        case Model::Primitive::Underlying::TIMESTAMP:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::TIMESTAMP>().native;
+            break;
+
+        case Model::Primitive::Underlying::STRING:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::STRING>().native;
+            break;
+
+        case Model::Primitive::Underlying::UUID:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::UUID>().native;
+            break;
+
+        case Model::Primitive::Underlying::BUFFER:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::BUFFER>().native;
+            break;
+
+        case Model::Primitive::Underlying::CONST_BUFFER:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::CONST_BUFFER>().native;
+            break;
+
+        case Model::Primitive::Underlying::VECTOR:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::VECTOR>().native;
+            break;
+
+        case Model::Primitive::Underlying::LIST:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::LIST>().native;
+            break;
+
+        case Model::Primitive::Underlying::SET:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::SET>().native;
+            break;
+
+        case Model::Primitive::Underlying::MAP:
+            stream << config.primitiveConfig<Model::Primitive::Underlying::MAP>().native;
+            break;
+
+        default:
+            throw std::runtime_error("invalid primitive");
     }
 }
 

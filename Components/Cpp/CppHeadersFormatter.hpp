@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Formatter.hpp"
-#include "Components/LangConfigReader.hpp"
 
 #include <fstream>
 
@@ -9,11 +8,8 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 class CppHeadersFormatter : public Formatter
 {
-private:
-    LangConfigReader _langConfig;
-
 public:
-    CppHeadersFormatter(std::istream& configStream);
+    CppHeadersFormatter();
 
 protected:
     using Formatter::qname;

@@ -2,13 +2,9 @@ add_subdirectory(Cpp)
 add_subdirectory(JavaScript)
 
 set(SRC ${SRC}
-	Components/YamlReader.cpp
-	Components/LangConfigReader.cpp
 	Components/NamespaceReader.cpp
 	Components/StandardParser.cpp
 
-	Components/YamlReader.hpp
-	Components/LangConfigReader.hpp
 	Components/NamespaceReader.hpp
 	Components/StandardParser.hpp
 PARENT_SCOPE)

@@ -29,6 +29,7 @@ public:
         VECTOR,
         LIST,
         SET,
+        MAP,
         _COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
     };
 

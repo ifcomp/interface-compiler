@@ -17,10 +17,12 @@ using namespace Model;
 using namespace StreamFilter;
 
 using NameStyle = FormatterConfig::NameStyle;
-template <typename T> using NameConfig = FormatterConfig::TypeNameConfig<T>;
+template <typename T> using NameConfig = FormatterConfig::NameConfig<T>;
 using NameConfigs = FormatterConfig::NameConfigs;
+template <Model::Primitive::Underlying U> using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
+using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
-CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
+CppHeadersFormatter::CppHeadersFormatter()
     : Formatter(FormatterConfig
         {
             std::string("::"), std::string(4, ' '), 85,
@@ -34,11 +36,25 @@ CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
                 NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
+            },
+            PrimitiveConfigs {
+                PrimitiveConfig<Primitive::Underlying::BYTE>("std::uint8_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT16>("std::uint16_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT32>("std::uint32_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT64>("std::uint64_t"),
+                PrimitiveConfig<Primitive::Underlying::BOOLEAN>("bool"),
+                PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
+                PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
+                PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid"),
+                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Buffer"),
+                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::ConstBuffer"),
+                PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
+                PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
+                PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),
+                PrimitiveConfig<Primitive::Underlying::MAP>("std::map<$0, $1>")
             }
         })
-    , _langConfig(configStream)
 {
-    _langConfig.parseTypeMap();
 }
 
 void CppHeadersFormatter::param(std::ostream& stream, Model::ParameterRef parameter) const
@@ -50,7 +66,7 @@ void CppHeadersFormatter::type(std::ostream& stream, Model::TypeRef type) const
 {
     if (auto primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
     {
-        stream << _langConfig.primitiveToLang(primitive);
+        stream << Formatter::type(primitive);
     }
     else
     {

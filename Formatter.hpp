@@ -24,10 +24,11 @@ protected:
 protected:
 	FormatToken<Model::IdentifiableRef> qname(Model::IdentifiableRef identifiable) const;
 	FormatToken<Model::IdentifiableRef> name(Model::IdentifiableRef identifiable) const;
-	FormatToken<std::string, std::string, FormatterConfig::NameConfig> name(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const;
+	FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> name(std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
 
 	FormatToken<Model::ParameterRef> param(Model::ParameterRef parameter) const;
 	FormatToken<Model::TypeRef> type(Model::TypeBaseRef type) const;
+	FormatToken<Model::PrimitiveRef> type(Model::PrimitiveRef primitive) const;
 
 	FormatToken<Model::DocumentationRef> doc(Model::DocumentationRef documentation) const;
 
@@ -49,10 +50,11 @@ protected:
 protected:
 	virtual void qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
-	virtual void name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const;
+	virtual void name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
 
 	virtual void param(std::ostream& stream, Model::ParameterRef parameter) const = 0;
 	virtual void type(std::ostream& stream, Model::TypeRef type) const = 0;
+	virtual void type(std::ostream& stream, Model::PrimitiveRef primitive) const;
 
 	virtual void doc(std::ostream& stream, Model::DocumentationRef documentation) const;
 

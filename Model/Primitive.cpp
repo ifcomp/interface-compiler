@@ -18,7 +18,8 @@ const char* Primitive::underlyingNames[] =
     "ConstBuffer",
     "Vector",
     "List",
-    "Set"
+    "Set",
+    "Map"
 };
 
 Primitive::Primitive()

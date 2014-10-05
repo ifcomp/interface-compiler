@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Formatter.hpp"
-#include "Components/LangConfigReader.hpp"
 
 #include <fstream>
 
@@ -9,11 +8,8 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
 class JSHeaderFormatter : public Formatter
 {
-private:
-	LangConfigReader _langConfigReader;
-
 public:
-    JSHeaderFormatter(std::istream& configStream);
+    JSHeaderFormatter();
 
 protected:
     using Formatter::qname;
