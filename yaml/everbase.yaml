@@ -583,6 +583,10 @@
               doc: { brief: 'Sets the parent object.' }
               params:
                 - { name: ParentObjectId, type: Everbase::Uuid }
+            - name: HasParentObject
+              doc: { brief: 'Returns true if a parent object is available.' }
+              params:
+                - { name: ParentObjectStatus, type: Everbase::Boolean }
             - name: Write
               doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
               params:
@@ -680,11 +684,6 @@
             - name: KeepBoth
               doc: { brief: 'Resolves the conflict by keeping both of the two conflicting versions. Returns the new object id of the second version.' }
               return: { name: NewObjectId, type: Everbase::Uuid }
-            - name: UpdateTo
-              doc: { brief: 'Resolves the conflict by creating a new version. Returns a writable object which is successor of both conflicting version.' }
-              params:
-                - { name: ObjectId, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
             - name: IsResolved
               doc: { brief: 'Returns true if the conflict is resolved.' }
               return: { name: Status, type: Everbase::Boolean }
@@ -1286,10 +1285,6 @@
               params:
                 - { name: Path1, type: Everbase::FileSystem::Path }
                 - { name: Path2, type: Everbase::FileSystem::Path }
-            - name: UpdateTo
-              doc: { brief: 'Resolves the conflict by updating to a new version.' }
-              params:
-                - { name: Path, type: Everbase::FileSystem::Path }
             - name: IsResolved
               doc: { brief: 'Returns true if the conflict is resolved.' }
               return: { name: Resolved, type: Everbase::Boolean }
