@@ -72,7 +72,7 @@ void HeaderFormatter::_param(std::ostream& stream, Model::ParameterRef parameter
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
-	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || {  }" << endl << endl;
+	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
 	for ( auto element : namespace_->elements() )
 	{
@@ -83,12 +83,12 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef name
 void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
-    stream << qname(struct_) << "= function() {  }" << endl << endl;
+    stream << qname(struct_) << "= function() { };" << endl << endl;
 
 	for (auto field : struct_->fields())
 	{
 		stream << "Object.defineProperty(" << qname(struct_) << ".prototype, '" << name(field) << "', "
-		       << "{get: function() { throw new Error(\"not implemented\"); }, set: function(new" << field->longName() << ") { throw new Error(\"not implemented\"); }}); "
+		       << "{ get: function() { throw new Error(\"not implemented\"); }, set: function(new" << field->longName() << ") { throw new Error(\"not implemented\"); } } ); "
 		       << "/* " << type(field->type()) << " */" << endl << endl;
 	}
 
@@ -167,9 +167,9 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 	for (auto value : event->values())
 	{
 		stream << "Object.defineProperty( " << qname(event) << ".prototype, '" 
-			<< name(value) <<	"', {get: function() { throw new Error(\"not implemented\"); }, set: function("
+			<< name(value) <<	"', { get: function() { throw new Error(\"not implemented\"); }, set: function("
 			<< name("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
-			<< " ) { throw new Error(\"not implemented\"); }}); /* " << type(value->type()) << " */" << endl << endl;
+			<< " ) { throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;
 	}
 
 	stream << "// event: }" << endl << endl;
@@ -224,7 +224,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 {
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
-	stream << qname(enum_) << "= {  };" << endl << endl;
+	stream << qname(enum_) << "= { };" << endl << endl;
 
 	for (auto value : enum_->values())
 	{

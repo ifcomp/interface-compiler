@@ -1,3 +1,4 @@
+- method to clone entire model
 - Migration of NamespaceReader to StandardParser
 - move setParent to add* methods
 - Implement errors
