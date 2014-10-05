@@ -365,11 +365,6 @@ void Formatter::_definition(std::ostream& stream, Model::RootRef root) const
 
 void Formatter::_definition(std::ostream& stream, Model::ElementRef element) const
 {
-    if ( element->doc() )
-    {
-        stream << doc(element->doc());
-    }
-
     if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
     {
         stream << definition(namespace_);

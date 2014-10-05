@@ -72,6 +72,11 @@ void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) 
 
 void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
+    if ( namespace_->doc() )
+    {
+        stream << doc(namespace_->doc());
+    }
+    
 	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
 	for ( auto element : namespace_->elements() )

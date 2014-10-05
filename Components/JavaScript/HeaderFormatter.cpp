@@ -21,8 +21,13 @@ using namespace StreamFilter;
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
+    if ( struct_->doc() )
+    {
+        stream << doc(struct_->doc());
+    }
+    
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
-    stream << qname(struct_) << "= function() { };" << endl << endl;
+    stream << qname(struct_) << " = function() { };" << endl << endl;
 
 	for (auto field : struct_->fields())
 	{
@@ -36,6 +41,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
+    if ( class_->doc() )
+    {
+        stream << doc(class_->doc());
+    }
+    
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
 	stream << qname(class_) << " = function() { };" << endl << endl;
@@ -72,6 +82,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
+    if ( constant->doc() )
+    {
+        stream << doc(constant->doc());
+    }
+    
 	int number = 0;
 	std::string valueString;
 	boost::uuids::uuid uuid;
@@ -95,20 +110,23 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    if ( event->doc() )
+    {
+        stream << doc(event->doc());
+    }
+    
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
 	stream << qname(event) << " = function() { };" << endl << endl;
-
 	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
-
 	stream << qname(event) << ".TYPE_ID = " << " \'" << boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl;
 
 	for (auto value : event->values())
 	{
-		stream << "Object.defineProperty( " << qname(event) << ".prototype, '" 
+		stream << "Object.defineProperty(" << qname(event) << ".prototype, '" 
 			<< name(value) <<	"', { get: function() { throw new Error(\"not implemented\"); }, set: function("
 			<< name("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
-			<< " ) { throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;
+			<< ") { throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;
 	}
 
 	stream << "// event: }" << endl << endl;
@@ -126,9 +144,14 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationR
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
+    if ( enum_->doc() )
+    {
+        stream << doc(enum_->doc());
+    }
+    
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
-	stream << qname(enum_) << "= { };" << endl << endl;
+	stream << qname(enum_) << " = { };" << endl << endl;
 
 	for (auto value : enum_->values())
 	{

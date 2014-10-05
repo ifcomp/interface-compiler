@@ -1,11 +1,13 @@
 - name: Everbase
   type: namespace
+  doc: { brief: 'Everbase Technology.' }
   members:
 
 # ********* Primitives *********
 
     - name: Primitives
       type: namespace
+      doc: { brief: 'Primitive Data Types.' }
       members:
 
         - name: Byte
@@ -68,6 +70,7 @@
 
     - name: CoreSystem
       type: namespace
+      doc: { brief: 'Everbase Core System.' }
       members:
 
         - name: DeviceRole
@@ -451,6 +454,7 @@
 
     - name: ObjectStore
       type: namespace
+      doc: { brief: 'Everbase Object Store.' }
       members:
 
         - name: PermissionMode
@@ -914,6 +918,7 @@
 
     - name: FileSystem
       type: namespace
+      doc: { brief: 'Everbase File System.' }
       members:
 
         - name: Path

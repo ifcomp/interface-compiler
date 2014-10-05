@@ -18,6 +18,11 @@ using namespace StreamFilter;
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
+    if ( struct_->doc() )
+    {
+        stream << doc(struct_->doc());
+    }
+    
     stream << "struct " << name(struct_) << endl << "{" << endl;
 
     for (auto field : struct_->fields())
@@ -30,6 +35,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
+    if ( class_->doc() )
+    {
+        stream << doc(class_->doc());
+    }
+    
     stream << "class " << name(class_) << endl << "{" << endl;
 
     for( auto operation : class_->operations() )
@@ -52,6 +62,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
+    if ( constant->doc() )
+    {
+        stream << doc(constant->doc());
+    }
+    
     int number = 0;
     std::string valueString;
     boost::uuids::uuid uuid;
@@ -76,6 +91,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    if ( event->doc() )
+    {
+        stream << doc(event->doc());
+    }
+    
     for (auto value : event->values())
     {
         stream << type(value->type()) << " " << name(event) << "();" << endl;
@@ -94,6 +114,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationR
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
+    if ( enum_->doc() )
+    {
+        stream << doc(enum_->doc());
+    }
+    
     stream << "enum class " << name(enum_) << endl << "{" << endl;
 
     for (auto value : indices(enum_->values()))
@@ -106,6 +131,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
+    if ( value->doc() )
+    {
+        stream << doc(value->doc());
+    }
+    
     stream << name(value) << " = " << value->value();
 }
 

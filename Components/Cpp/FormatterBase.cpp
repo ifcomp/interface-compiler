@@ -98,6 +98,11 @@ void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::
 
 void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
+    if ( namespace_->doc() )
+    {
+        stream << doc(namespace_->doc());
+    }
+    
     stream << "namespace " << name(namespace_) << endl << "{" << endl;
 
     for ( auto element : namespace_->elements() )
