@@ -1,6 +1,5 @@
 #include "Model/Class.hpp"
 #include "Model/Constant.hpp"
-#include "Model/Container.hpp"
 #include "Model/Documentation.hpp"
 #include "Model/DomainObject.hpp"
 #include "Model/Enum.hpp"

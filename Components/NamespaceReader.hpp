@@ -8,7 +8,6 @@
 #include "Model/Class.hpp"
 #include "Model/Enum.hpp"
 #include "Model/Struct.hpp"
-#include "Model/Container.hpp"
 #include "Model/Primitive.hpp"
 #include "Model/Documentation.hpp"
 #include "Model/Operation.hpp"
@@ -45,7 +44,6 @@ public:
     static const char *TYPE_PRIMITIVE;
     static const char *TYPE_ENUM;
     static const char *TYPE_STRUCT;
-    static const char *TYPE_CONTAINER;
     static const char *TYPE_CONSTANT;
     /** @} */
 
@@ -56,7 +54,6 @@ public:
     static const char *KEY_NAME;
     static const char *KEY_SHORTNAME;
     static const char *KEY_NODETYPE;
-    static const char *KEY_CONTAINER_TYPE;
     static const char *KEY_PRIMITIVE_TYPE;
     static const char *KEY_INHERITS;
     static const char *KEY_TYPE;
@@ -176,14 +173,6 @@ private:
      * @throw std::runtime_error on incomplete definition
      */
     Model::NamespaceMemberRef parseStruct(const YAML::Node &node);
-
-    /**
-     * @brief Parse TYPE_PRIMITIVE section
-     * @param node  YAML node that contains primitive definition
-     * @return Shared pointer to a filled Object
-     * @throw std::runtime_error on incomplete definition
-     */
-    Model::NamespaceMemberRef parseContainer(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_CONSTANT definition

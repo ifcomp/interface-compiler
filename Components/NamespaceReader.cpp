@@ -18,13 +18,11 @@ const char *NamespaceReader::TYPE_CLASS              = "class";
 const char *NamespaceReader::TYPE_PRIMITIVE          = "primitive";
 const char *NamespaceReader::TYPE_ENUM               = "enum";
 const char *NamespaceReader::TYPE_STRUCT             = "struct";
-const char *NamespaceReader::TYPE_CONTAINER          = "container";
 const char *NamespaceReader::TYPE_CONSTANT           = "constant";
 
 const char *NamespaceReader::KEY_NAME                = "name";
 const char *NamespaceReader::KEY_SHORTNAME           = "short";
 const char *NamespaceReader::KEY_NODETYPE            = "nodetype";
-const char *NamespaceReader::KEY_CONTAINER_TYPE      = "containertype";
 const char *NamespaceReader::KEY_PRIMITIVE_TYPE      = "primitivetype";
 const char *NamespaceReader::KEY_TYPE                = "type";
 const char *NamespaceReader::KEY_VALUE               = "value";
@@ -60,7 +58,6 @@ NamespaceReader::NamespaceReader(Model::NamespaceRef rootNamespace) :
     mParserMethods[TYPE_PRIMITIVE]  = &NamespaceReader::parsePrimitive;
     mParserMethods[TYPE_ENUM]       = &NamespaceReader::parseEnum;
     mParserMethods[TYPE_STRUCT]     = &NamespaceReader::parseStruct;
-    mParserMethods[TYPE_CONTAINER]  = &NamespaceReader::parseContainer;
     mParserMethods[TYPE_CONSTANT]   = &NamespaceReader::parseConstant;
 }
 
@@ -156,11 +153,11 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
     {
         if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
         {
-            newClass->setType(Class::ClassType::VALUE);
+            newClass->setBehavior(Class::Behavior::VALUE);
         }
         else
         {
-            newClass->setType(Class::ClassType::INTERFACE);
+            newClass->setBehavior(Class::Behavior::INTERFACE);
         }
 
         if (checkNode(node, KEY_INHERITS))
@@ -295,33 +292,6 @@ NamespaceMemberRef NamespaceReader::parseStruct(const YAML::Node &node)
     }
 
     return newStruct;
-}
-
-
-NamespaceMemberRef NamespaceReader::parseContainer(const YAML::Node &node)
-{
-    ContainerRef newContainer = newIdentifiable<Container>(node);
-    registerType(newContainer);
-
-    try
-    {
-        if (checkNode(node, KEY_CONTAINER_TYPE, YAML::NodeType::Scalar, true))
-        {
-            try {
-                newContainer->setType(node[KEY_CONTAINER_TYPE].Scalar());
-            }
-            catch (const runtime_error &e)
-            {
-                throw runtime_error(e.what() + Container::listSupportedTypes());
-            }
-        }
-    }
-    catch (const runtime_error &e)
-    {
-        throw runtime_error(addFQNameToException(newContainer, " : "));
-    }
-
-    return newContainer;
 }
 
 

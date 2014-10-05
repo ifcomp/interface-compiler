@@ -2,22 +2,20 @@
 
 typemap:
     primitives:
-        - byte: std::uint8_t
-        - uint32: std::uint32_t
-        - uint64: std::uint64_t
-        - float: float
-        - bool: bool
-        - timestamp: std::time_t
-        - string: std::string
-        - uuid: boost::uuids::uuid
-        - buffer: evb::Buffer
-        - const-buffer: evb::ConstBuffer
-
-    containers:
-        - vector: 'std::vector<@>'
-        - list: 'std::list<@>'
-        - set: 'std::set<@>'
-        - map: 'std::map<@, @>'
+        - Byte: std::uint8_t
+        - UInt16: std::uint16_t
+        - UInt32: std::uint32_t
+        - UInt64: std::uint64_t
+        - Boolean: bool
+        - Timestamp: std::time_t
+        - String: std::string
+        - Uuid: boost::uuids::uuid
+        - Buffer: evb::Buffer
+        - ConstBuffer: evb::ConstBuffer
+        - Vector: 'std::vector<$1>'
+        - List: 'std::list<$1>'
+        - Set: 'std::set<$1>'
+        - Map: 'std::map<$1, $2>'
 
 style:
     default:

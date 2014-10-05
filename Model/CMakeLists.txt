@@ -1,7 +1,6 @@
 set(SRC ${SRC}
    Model/Class.cpp
    Model/Constant.cpp
-   Model/Container.cpp
    Model/Documentation.cpp
    Model/DomainObject.cpp
    Model/Enum.cpp
@@ -21,7 +20,6 @@ set(SRC ${SRC}
 
    Model/Class.hpp
    Model/Constant.hpp
-   Model/Container.hpp
    Model/Documentation.hpp
    Model/DomainObject.hpp
    Model/Enum.hpp

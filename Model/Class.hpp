@@ -15,7 +15,7 @@ class Class : public NamespaceMember
 public:
     static const char* TYPE_NAME;
 
-    enum class ClassType
+    enum class Behavior
     {
         VALUE,
         INTERFACE
@@ -26,8 +26,8 @@ public:
     virtual ~Class();
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
-    ClassType type();
-    void setType(ClassType type);
+    Behavior behavior();
+    void setBehavior(Behavior behavior);
 
     TypeBaseRef parent();
     void setParent(TypeBaseRef parent);
@@ -39,7 +39,7 @@ public:
     std::vector<EventRef> events();
 
 private:
-    ClassType _type;
+    Behavior _behavior;
     TypeBaseRef _parent;
     std::vector<OperationRef> _operations;
     std::vector<EventRef> _events;

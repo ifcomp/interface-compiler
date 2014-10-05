@@ -4,7 +4,6 @@
 #include "Model/DomainObject.hpp"
 #include "Model/Type.hpp"
 #include "Model/Primitive.hpp"
-#include "Model/Container.hpp"
 
 #include <istream>
 #include <ostream>
@@ -67,22 +66,6 @@ public:
      * @throw std::runtime_error if primitive could not be translated
      */
     std::string primitiveToLang(Model::PrimitiveRef primitive) const;
-
-    /**
-     * @brief Find language-specific output string for Container
-     * @param container Pointer to Container object
-     * @return language-specific keyword to represent Container
-     * @throw std::runtime_error if container could not be translated
-     */
-    std::string containerToLang(Model::ContainerRef container) const;
-
-    /**
-     * @brief Resolve container type to language-specific string.
-     * @param type Container
-     * @param fullyQualified If true, add fully qualified namespace
-     * @return language-specific string
-     */
-    std::string containerTypeToLang(Model::TypeBaseRef type, bool fullyQualified) const;
 
     /**
      * @brief Get formatted namespace string for identifiable.

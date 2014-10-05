@@ -25,6 +25,9 @@ public:
         UUID,
         BUFFER,
         CONST_BUFFER,
+        VECTOR,
+        LIST,
+        SET,
         _PRIMITIVE_COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
     };
 

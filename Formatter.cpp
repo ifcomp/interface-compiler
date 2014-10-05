@@ -12,166 +12,156 @@ Formatter::Formatter(FormatterConfig config)
 
 void Formatter::execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const
 {
-	output << format(input);
+	output << definition(input);
 }
 
-FormatToken<Model::RootRef> Formatter::format(Model::RootRef root) const
+FormatToken<Model::IdentifiableRef> Formatter::qname(Model::IdentifiableRef identifiable) const
 {
-	return FormatToken<Model::RootRef> { this, &Formatter::format, std::tuple<Model::RootRef> { root } };
+    return FormatToken<Model::IdentifiableRef> { this, &Formatter::qname, std::tuple<Model::IdentifiableRef> { identifiable } };
 }
 
-FormatToken<Model::IdentifiableRef> Formatter::formatQualifiedName(Model::IdentifiableRef identifiable) const
+FormatToken<Model::IdentifiableRef> Formatter::name(Model::IdentifiableRef identifiable) const
 {
-    return FormatToken<Model::IdentifiableRef> { this, &Formatter::formatQualifiedName, std::tuple<Model::IdentifiableRef> { identifiable } };
+    return FormatToken<Model::IdentifiableRef> { this, &Formatter::name, std::tuple<Model::IdentifiableRef> { identifiable } };
 }
 
-FormatToken<Model::IdentifiableRef> Formatter::formatName(Model::IdentifiableRef identifiable) const
+FormatToken<std::string, std::string, FormatterConfig::NameConfig> Formatter::name(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
 {
-	return FormatToken<Model::IdentifiableRef> { this, &Formatter::formatName, std::tuple<Model::IdentifiableRef> { identifiable } };
+    return FormatToken<std::string, std::string, FormatterConfig::NameConfig> { this, &Formatter::name, std::tuple<std::string, std::string, FormatterConfig::NameConfig> { longName, shortName, config } };
 }
 
-FormatToken<std::string, std::string, FormatterConfig::NameConfig> Formatter::formatName(std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+FormatToken<Model::ParameterRef> Formatter::param(Model::ParameterRef parameter) const
 {
-    return FormatToken<std::string, std::string, FormatterConfig::NameConfig> { this, &Formatter::formatName, std::tuple<std::string, std::string, FormatterConfig::NameConfig> { longName, shortName, config } };
+    return FormatToken<Model::ParameterRef> { this, &Formatter::param, std::tuple<Model::ParameterRef> { parameter } };
 }
 
-FormatToken<Model::DocumentationRef> Formatter::format(Model::DocumentationRef documentation) const
+FormatToken<Model::TypeRef> Formatter::type(Model::TypeBaseRef type) const
 {
-	return FormatToken<Model::DocumentationRef> { this, &Formatter::format, std::tuple<Model::DocumentationRef> { documentation } };
-}
-
-FormatToken<Model::TypeRef> Formatter::format(Model::TypeBaseRef type) const
-{
-	auto resolvedType = std::dynamic_pointer_cast<Model::Type>(type);
+    auto resolvedType = std::dynamic_pointer_cast<Model::Type>(type);
 
     if (!resolvedType)
     {
-		throw std::runtime_error("cannot format unresolved type");
+        throw std::runtime_error("cannot format unresolved type");
     }
 
-	return FormatToken<Model::TypeRef> { this, &Formatter::format, std::tuple<Model::TypeRef> { resolvedType } };
+    return FormatToken<Model::TypeRef> { this, &Formatter::type, std::tuple<Model::TypeRef> { resolvedType } };
 }
 
-FormatToken<Model::ParameterRef> Formatter::format(Model::ParameterRef parameter) const
+FormatToken<Model::DocumentationRef> Formatter::doc(Model::DocumentationRef documentation) const
 {
-	return FormatToken<Model::ParameterRef> { this, &Formatter::format, std::tuple<Model::ParameterRef> { parameter } };
+    return FormatToken<Model::DocumentationRef> { this, &Formatter::doc, std::tuple<Model::DocumentationRef> { documentation } };
 }
 
-FormatToken<Model::NamespaceMemberRef> Formatter::format(Model::NamespaceMemberRef member) const
+FormatToken<Model::RootRef> Formatter::definition(Model::RootRef root) const
 {
-	return FormatToken<Model::NamespaceMemberRef> { this, &Formatter::format, std::tuple<Model::NamespaceMemberRef> { member } };
+	return FormatToken<Model::RootRef> { this, &Formatter::definition, std::tuple<Model::RootRef> { root } };
 }
 
-FormatToken<Model::PrimitiveRef> Formatter::format(Model::PrimitiveRef primitive) const
+FormatToken<Model::NamespaceRef> Formatter::definition(Model::NamespaceRef namespace_) const
 {
-	return FormatToken<Model::PrimitiveRef> { this, &Formatter::format, std::tuple<Model::PrimitiveRef> { primitive } };
+    return FormatToken<Model::NamespaceRef> { this, &Formatter::definition, std::tuple<Model::NamespaceRef> { namespace_ } };
 }
 
-FormatToken<Model::ContainerRef> Formatter::format(Model::ContainerRef container) const
+FormatToken<Model::NamespaceMemberRef> Formatter::definition(Model::NamespaceMemberRef member) const
 {
-	return FormatToken<Model::ContainerRef> { this, &Formatter::format, std::tuple<Model::ContainerRef> { container } };
+	return FormatToken<Model::NamespaceMemberRef> { this, &Formatter::definition, std::tuple<Model::NamespaceMemberRef> { member } };
 }
 
-FormatToken<Model::ConstantRef> Formatter::format(Model::ConstantRef constant) const
+FormatToken<Model::ConstantRef> Formatter::definition(Model::ConstantRef constant) const
 {
-	return FormatToken<Model::ConstantRef> { this, &Formatter::format, std::tuple<Model::ConstantRef> { constant } };
+	return FormatToken<Model::ConstantRef> { this, &Formatter::definition, std::tuple<Model::ConstantRef> { constant } };
 }
 
-FormatToken<Model::StructRef> Formatter::format(Model::StructRef struct_) const
+FormatToken<Model::StructRef> Formatter::definition(Model::StructRef struct_) const
 {
-	return FormatToken<Model::StructRef> { this, &Formatter::format, std::tuple<Model::StructRef> { struct_ } };
+	return FormatToken<Model::StructRef> { this, &Formatter::definition, std::tuple<Model::StructRef> { struct_ } };
 }
 
-FormatToken<Model::ClassRef> Formatter::format(Model::ClassRef class_) const
+FormatToken<Model::ClassRef> Formatter::definition(Model::ClassRef class_) const
 {
-	return FormatToken<Model::ClassRef> { this, &Formatter::format, std::tuple<Model::ClassRef> { class_ } };
+	return FormatToken<Model::ClassRef> { this, &Formatter::definition, std::tuple<Model::ClassRef> { class_ } };
 }
 
-FormatToken<Model::EventRef> Formatter::format(Model::EventRef event) const
+FormatToken<Model::EventRef> Formatter::definition(Model::EventRef event) const
 {
-	return FormatToken<Model::EventRef> { this, &Formatter::format, std::tuple<Model::EventRef> { event } };
+	return FormatToken<Model::EventRef> { this, &Formatter::definition, std::tuple<Model::EventRef> { event } };
 }
 
-FormatToken<Model::NamespaceRef> Formatter::format(Model::NamespaceRef namespace_) const
+FormatToken<Model::OperationRef> Formatter::definition(Model::OperationRef operation) const
 {
-	return FormatToken<Model::NamespaceRef> { this, &Formatter::format, std::tuple<Model::NamespaceRef> { namespace_ } };
+	return FormatToken<Model::OperationRef> { this, &Formatter::definition, std::tuple<Model::OperationRef> { operation } };
 }
 
-FormatToken<Model::EnumRef> Formatter::format(Model::EnumRef enum_) const
+FormatToken<Model::OperationRef> Formatter::signature(Model::OperationRef operation) const
 {
-	return FormatToken<Model::EnumRef> { this, &Formatter::format, std::tuple<Model::EnumRef> { enum_ } };
+	return FormatToken<Model::OperationRef> { this, &Formatter::signature, std::tuple<Model::OperationRef> { operation } };
 }
 
-FormatToken<Model::ValueRef> Formatter::format(Model::ValueRef value) const
+FormatToken<Model::EnumRef> Formatter::definition(Model::EnumRef enum_) const
 {
-	return FormatToken<Model::ValueRef> { this, &Formatter::format, std::tuple<Model::ValueRef> { value } };
+    return FormatToken<Model::EnumRef> { this, &Formatter::definition, std::tuple<Model::EnumRef> { enum_ } };
 }
 
-FormatToken<Model::OperationRef> Formatter::format(Model::OperationRef operation) const
+FormatToken<Model::ValueRef> Formatter::definition(Model::ValueRef value) const
 {
-	return FormatToken<Model::OperationRef> { this, &Formatter::format, std::tuple<Model::OperationRef> { operation } };
+    return FormatToken<Model::ValueRef> { this, &Formatter::definition, std::tuple<Model::ValueRef> { value } };
 }
 
-FormatToken<Model::OperationRef> Formatter::formatSig(Model::OperationRef operation) const
-{
-	return FormatToken<Model::OperationRef> { this, &Formatter::formatSig, std::tuple<Model::OperationRef> { operation } };
-}
-
-void Formatter::formatQualifiedName(std::ostream& stream, Model::IdentifiableRef identifiable) const
+void Formatter::qname(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parentObject()) )
     {
-        stream << formatQualifiedName(parent) << config.nssep;
+        stream << qname(parent) << config.namespaceDelimiter;
     }
 
-    stream << formatName(identifiable);
+    stream << name(identifiable);
 }
 
-void Formatter::formatName(std::ostream& stream, Model::IdentifiableRef identifiable) const
+void Formatter::name(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     if( std::dynamic_pointer_cast<Model::Namespace>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Namespace>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Namespace>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Parameter>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Parameter>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Parameter>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Enum>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Enum>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Enum>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Value>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Value>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Value>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Event>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Event>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Event>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Struct>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Struct>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Struct>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Class>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Class>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Class>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Operation>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Operation>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Operation>());
     }
     else
     if( std::dynamic_pointer_cast<Model::Constant>(identifiable) )
     {
-        stream << formatName(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Constant>());
+        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Constant>());
     }
     else
     {
@@ -179,7 +169,7 @@ void Formatter::formatName(std::ostream& stream, Model::IdentifiableRef identifi
     }
 }
 
-void Formatter::formatName(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
+void Formatter::name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfig config) const
 {
     boost::regex regex("[A-Z]?[a-z]+|[A-Z]?[0-9]+|[A-Z]");
 
@@ -228,7 +218,7 @@ void Formatter::formatName(std::ostream& stream, std::string longName, std::stri
     }
 }
 
-void Formatter::format(std::ostream& stream, Model::DocumentationRef documentation) const
+void Formatter::doc(std::ostream& stream, Model::DocumentationRef documentation) const
 {
 	using namespace std;
 	using namespace Model;
@@ -249,69 +239,61 @@ void Formatter::format(std::ostream& stream, Model::DocumentationRef documentati
 	stream << " */" << endl;
 }
 
-void Formatter::format(std::ostream& stream, Model::NamespaceMemberRef member) const
+void Formatter::definition(std::ostream& stream, Model::RootRef root) const
 {
-    if ( auto doc = member->doc() )
+    stream << definition(root->getNamespace());
+}
+
+void Formatter::definition(std::ostream& stream, Model::NamespaceMemberRef member) const
+{
+    if ( auto docobj = member->doc() )
     {
-        stream << format(doc);
+        stream << doc(docobj);
     }
 
     if ( auto primitive = std::dynamic_pointer_cast<Model::Primitive>(member) )
     {
-        stream << format(primitive);
-    }
-    else
-    if ( auto container = std::dynamic_pointer_cast<Model::Container>(member) )
-    {
-        stream << format(container);
+        stream << definition(primitive);
     }
     else
     if ( auto constant = std::dynamic_pointer_cast<Model::Constant>(member) )
     {
-        stream << format(constant);
+        stream << definition(constant);
     }
     else
     if ( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(member) )
     {
-        stream << format(struct_);
+        stream << definition(struct_);
     }
     else
     if ( auto class_ = std::dynamic_pointer_cast<Model::Class>(member) )
     {
-        stream << format(class_);
+        stream << definition(class_);
     }
     else
     if ( auto event = std::dynamic_pointer_cast<Model::Event>(member) )
     {
-        stream << format(event);
+        stream << definition(event);
     }
     else
     if ( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(member) )
     {
-        stream << format(namespace_);
+        stream << definition(namespace_);
     }
     else
     if ( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(member) )
     {
-        stream << format(enum_);
+        stream << definition(enum_);
     }
     else
     if ( auto operation = std::dynamic_pointer_cast<Model::Operation>(member) )
     {
-        stream << format(operation);
+        stream << definition(operation);
     }
     else
     {
         throw std::runtime_error("unknown namespace member type " + member->objectTypeName());
     }
-}
-
-void Formatter::format(std::ostream& stream, Model::PrimitiveRef primitive) const
-{
-}
-
-void Formatter::format(std::ostream& stream, Model::ContainerRef container) const
-{
 }
 
 } } // namespace: Everbase::InterfaceCompiler

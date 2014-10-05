@@ -5,7 +5,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 const char* Class::TYPE_NAME = "Class";
 
 Class::Class()
-	: _type(ClassType::INTERFACE)
+	: _behavior(Behavior::INTERFACE)
 {
 }
 
@@ -13,14 +13,14 @@ Class::~Class()
 {
 }
 
-Class::ClassType Class::type()
+Class::Behavior Class::behavior()
 {
-	return _type;
+	return _behavior;
 }
 
-void Class::setType(Class::ClassType type)
+void Class::setBehavior(Class::Behavior behavior)
 {
-    _type = type;
+    _behavior = behavior;
 }
 
 TypeBaseRef Class::parent()

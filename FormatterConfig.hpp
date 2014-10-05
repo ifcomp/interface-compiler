@@ -76,38 +76,38 @@ struct FormatterConfig
 		TypeNameConfig<Model::Class>,
 		TypeNameConfig<Model::Operation>,
 		TypeNameConfig<Model::Constant>
-	> Naming;
+	> NameConfigs;
 
-	std::string nssep;
-	std::string indent;
-	std::uint8_t docWrap;
-	Naming naming;
+	std::string namespaceDelimiter;
+	std::string indentData;
+	std::uint8_t documentationWrapping;
+	NameConfigs nameConfigs;
 
-	FormatterConfig(std::string nssep, std::string indent, std::uint8_t docWrap, Naming naming)
-		: nssep(nssep)
-		, indent(indent)
-		, docWrap(docWrap)
-		, naming(naming)
+	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs)
+		: namespaceDelimiter(namespaceDelimiter)
+		, indentData(indentData)
+		, documentationWrapping(documentationWrapping)
+		, nameConfigs(nameConfigs)
 	{ }
 
 	FormatterConfig(const FormatterConfig& other)
-		: nssep(other.nssep)
-		, indent(other.indent)
-		, docWrap(other.docWrap)
-		, naming(other.naming)
+		: namespaceDelimiter(other.namespaceDelimiter)
+		, indentData(other.indentData)
+		, documentationWrapping(other.documentationWrapping)
+		, nameConfigs(other.nameConfigs)
 	{ }
 
 	FormatterConfig(FormatterConfig&& other)
-		: nssep(std::move(other.nssep))
-		, indent(std::move(other.indent))
-		, docWrap(std::move(other.docWrap))
-		, naming(std::move(other.naming))
+		: namespaceDelimiter(std::move(other.namespaceDelimiter))
+		, indentData(std::move(other.indentData))
+		, documentationWrapping(std::move(other.documentationWrapping))
+		, nameConfigs(std::move(other.nameConfigs))
 	{ }
 
 	template<typename T>
 	TypeNameConfig<T> nameConfig() const
 	{
-		return TupleHelper::get<TypeNameConfig<T>>(naming);
+		return TupleHelper::get<TypeNameConfig<T>>(nameConfigs);
 	}
 };
 

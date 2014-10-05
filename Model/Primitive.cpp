@@ -15,7 +15,10 @@ const char* Primitive::primitiveNames[] =
     "String",
     "Uuid",
     "Buffer",
-    "ConstBuffer"
+    "ConstBuffer",
+    "Vector",
+    "List",
+    "Set"
 };
 
 Primitive::Primitive()

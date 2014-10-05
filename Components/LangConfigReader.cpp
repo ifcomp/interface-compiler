@@ -2,7 +2,6 @@
 
 #include "Model/Class.hpp"
 #include "Model/Constant.hpp"
-#include "Model/Container.hpp"
 #include "Model/Documentation.hpp"
 #include "Model/Enum.hpp"
 #include "Model/Event.hpp"
@@ -69,6 +68,7 @@ void LangConfigReader::parseTypeMap()
                 }
             }
         }
+        /*
         if (checkNode(mRootNode[KEY_SECTION_TYPEMAP], KEY_TYPE_CONTAINERS, YAML::NodeType::Sequence, true))
         {
             for (auto containerNode : mRootNode[KEY_SECTION_TYPEMAP][KEY_TYPE_CONTAINERS])
@@ -84,8 +84,9 @@ void LangConfigReader::parseTypeMap()
                 }
             }
         }
+        */
     }
-    cout << mPrimitiveMap.size() << " primitives, " << mContainerMap.size() << " containers" << endl;
+    cout << mPrimitiveMap.size() << " primitives, " << /*mContainerMap.size() <<*/ " containers" << endl;
 }
 
 
@@ -101,7 +102,7 @@ std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive) con
     return mPrimitiveMap.at(typeName);
 }
 
-
+/*
 string LangConfigReader::containerToLang(Model::ContainerRef container) const
 {
     string typeName = container->typeName();
@@ -166,7 +167,7 @@ string LangConfigReader::containerTypeToLang(Model::TypeBaseRef type, bool fully
     }
     throw runtime_error("LangConfigParser::containerTypeToLang(): bad type!\n");
 }
-
+*/
 
 string LangConfigReader::formatNamespace(Model::IdentifiableRef identifiable) const
 {
@@ -260,8 +261,8 @@ std::string LangConfigReader::listKnownStyleAttributes() const
 
 string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleContextObject) const
 {
-    if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME &&
-        styleContextObject->objectTypeName() != Model::Container::TYPE_NAME)
+    if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME /*&&
+        styleContextObject->objectTypeName() != Model::Container::TYPE_NAME*/)
     {
         NameStyle nameStyle = configNameStyle(styleContextObject);
         string delimiter = configAttribute<string>(StyleAttribute::NAME_DELIMITER, styleContextObject);

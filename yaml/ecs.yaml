@@ -1412,16 +1412,14 @@
       nodetype: primitive
       primitivetype: ConstBuffer
 
-    # containers
-
     - name: Vector
-      nodetype: container
-      containertype: Vector
+      nodetype: primitive
+      primitivetype: Vector
 
     - name: List
-      nodetype: container
-      containertype: List
+      nodetype: primitive
+      primitivetype: List
 
     - name: Set
-      nodetype: container
-      containertype: Set
+      nodetype: primitive
+      primitivetype: Set
