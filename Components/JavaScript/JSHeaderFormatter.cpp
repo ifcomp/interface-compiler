@@ -92,11 +92,11 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ClassRef class_)
 
 	stream << qname(class_) << " = function() { };" << endl << endl;
 
-	if( auto parent = std::dynamic_pointer_cast<Model::Type>(class_->parent()) )
+	if( auto super = std::dynamic_pointer_cast<Model::Type>(class_->super()) )
 	{
-		if (auto parentClass = std::dynamic_pointer_cast<Model::Class>(parent->primary()))
+		if (auto superClass = std::dynamic_pointer_cast<Model::Class>(super->primary()))
 		{
-			stream << qname(class_) << ".prototype" << " = " << "Object.create(" << qname(parentClass) << ".prototype);" << endl << endl;
+			stream << qname(class_) << ".prototype" << " = " << "Object.create(" << qname(superClass) << ".prototype);" << endl << endl;
 		}
 	}
 	else

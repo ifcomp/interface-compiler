@@ -140,7 +140,7 @@
 
         - name: User
           type: class
-          inherits: Everbase::CoreSystem::UserEntity
+          super: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Is a person who uses the EFS.' }
           operations:
             - name: CreateJoinRequest
@@ -214,7 +214,7 @@
         - name: UserGroup
           type: class
           short: Group
-          inherits: Everbase::CoreSystem::UserEntity
+          super: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Specifies a set of users for permission handling and other purposes.' }
           operations:
             - name: Create
@@ -273,7 +273,7 @@
 
         - name: Device
           type: class
-          inherits: Everbase::CoreSystem::DeviceEntity
+          super: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Is a system which provides or consumes services within the EFS.' }
           operations:
             - name: GetAll
@@ -322,7 +322,7 @@
         - name: DeviceGroup
           type: class
           short: DevGroup
-          inherits: Everbase::CoreSystem::DeviceEntity
+          super: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Specifies a set of devices for grid management and other purposes.' }
           operations:
             - name: Create
@@ -1120,7 +1120,7 @@
         - name: Directory
           type: class
           short: Dir
-          inherits: Everbase::FileSystem::Node
+          super: Everbase::FileSystem::Node
           doc: { brief: 'Is a file system cataloging structure which contains references to other files and directories.', more: 'Each entry of an directory is associated with an arbitrary name. User space filesystem implementation have to handle the translation of these names to operating system compatible names.' }
           operations:
             - name: Create
@@ -1150,7 +1150,7 @@
 
         - name: ProfileRoot
           type: class
-          inherits: Everbase::FileSystem::Directory
+          super: Everbase::FileSystem::Directory
           doc: { brief: 'Represents the root directory of a profile.' }
           operations:
             - name: Open
@@ -1168,7 +1168,7 @@
 
         - name: DomainRoot
           type: class
-          inherits: Everbase::FileSystem::Directory
+          super: Everbase::FileSystem::Directory
           doc: { brief: 'Represents the root directory of a domain.' }
           operations:
             - name: Open
@@ -1188,7 +1188,7 @@
 
         - name: File
           type: class
-          inherits: Everbase::FileSystem::Node
+          super: Everbase::FileSystem::Node
           doc: { brief: 'Is a file system storage structure which can be used to store arbitrary data.' }
           operations:
             - name: Create

@@ -41,7 +41,7 @@ const char *NamespaceReader::KEY_CONSTANTS           = "constants";
 const char *NamespaceReader::FLAG_STATIC             = "static";
 const char *NamespaceReader::FLAG_SYNCHRONOUS        = "synchronous";
 const char *NamespaceReader::FLAG_VALUETYPE          = "valueType";
-const char *NamespaceReader::KEY_INHERITS            = "inherits";
+const char *NamespaceReader::KEY_SUPER               = "super";
 
 const char *NamespaceReader::KEY_ID                  = "id";
 
@@ -158,11 +158,11 @@ ElementRef NamespaceReader::parseClass(const YAML::Node &node)
             newClass->setBehavior(Class::Behavior::INTERFACE);
         }
 
-        if (checkNode(node, KEY_INHERITS))
+        if (checkNode(node, KEY_SUPER))
         {
             UnresolvedTypeRef newType = make_shared<UnresolvedType>();
-            newType->setPrimary(node[KEY_INHERITS].Scalar());
-            newClass->setParent(newType);
+            newType->setPrimary(node[KEY_SUPER].Scalar());
+            newClass->setSuper(newType);
         }
 
         if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
@@ -638,14 +638,14 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
         {
             // resolve events, operations & return
             try {
-                // resolve parent
-                if (classRef->parent())
+                // resolve super
+                if (classRef->super())
                 {
-                    TypeRef parentType = resolveType(classRef->parent());
+                    TypeRef superType = resolveType(classRef->super());
 
-                    if (dynamic_pointer_cast<Class>(parentType->primary()))
+                    if (dynamic_pointer_cast<Class>(superType->primary()))
                     {
-                        classRef->setParent(parentType);
+                        classRef->setSuper(superType);
                     }
                     else
                     {

@@ -55,7 +55,7 @@ public:
     static const char *KEY_SHORTNAME;
     static const char *KEY_NODETYPE;
     static const char *KEY_UNDERLYING;
-    static const char *KEY_INHERITS;
+    static const char *KEY_SUPER;
     static const char *KEY_TYPE;
     static const char *KEY_VALUE;
     static const char *KEY_RESULT;

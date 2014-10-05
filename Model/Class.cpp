@@ -23,14 +23,14 @@ void Class::setBehavior(Class::Behavior behavior)
     _behavior = behavior;
 }
 
-TypeBaseRef Class::parent()
+TypeBaseRef Class::super()
 {
-    return _parent;
+    return _super;
 }
 
-void Class::setParent(TypeBaseRef parent)
+void Class::setSuper(TypeBaseRef super)
 {
-	_parent = parent;
+	_super = super;
 }
 
 void Class::addOperation(Class::OperationRef operation)

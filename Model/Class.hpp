@@ -36,8 +36,8 @@ public:
     Behavior behavior();
     void setBehavior(Behavior behavior);
 
-    TypeBaseRef parent();
-    void setParent(TypeBaseRef parent);
+    TypeBaseRef super();
+    void setSuper(TypeBaseRef super);
 
     void addOperation(OperationRef operation);
     std::vector<OperationRef> operations();
@@ -50,7 +50,7 @@ public:
 
 private:
     Behavior _behavior;
-    TypeBaseRef _parent;
+    TypeBaseRef _super;
     std::vector<OperationRef> _operations;
     std::vector<EventRef> _events;
     std::vector<ConstantRef> _constants;
