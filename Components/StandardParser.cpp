@@ -15,7 +15,7 @@ Model::RootRef StandardParser::execute ( const ConfigProvider& cprov, std::istre
     reader.listKnownTypes();
 
     auto rootNamespace = std::dynamic_pointer_cast<Model::Namespace>(tmpNamespace->elements()[0]);
-    rootNamespace->setParentObject(nullptr);
+    rootNamespace->setParent(nullptr);
 
     Model::RootRef root = std::make_shared<Model::Root>();
     root->setNamespace(rootNamespace);

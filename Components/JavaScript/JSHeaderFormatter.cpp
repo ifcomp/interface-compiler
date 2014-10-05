@@ -34,7 +34,7 @@ JSHeaderFormatter::JSHeaderFormatter(std::istream &configStream)
                 NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "", false },
+                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             }
@@ -142,8 +142,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::ConstantR
     	uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 		valueString = boost::lexical_cast<std::string>(uuid);
 	}
-	stream << qname(constant) << ".TYPE_ID = " << 
-		valueString << ";" << endl << endl;
+	stream << qname(constant) << " = " << valueString << ";" << endl << endl;
 }
 
 void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::EventRef event) const
@@ -154,8 +153,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::EventRef 
 
 	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
 
-	stream << qname(event) << ".TYPE_ID = " << endl;
-	stream << qname(event) << ".prototype.TYPE_ID =" << " \'" << boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl;
+	stream << qname(event) << ".TYPE_ID = " << " \'" << boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl;
 
 	for (auto value : event->values())
 	{
@@ -203,7 +201,7 @@ void JSHeaderFormatter::signature(std::ostream& stream, Model::Class::OperationR
 		}
 	}
 	
-    stream << " " << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parentObject())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";
+    stream << " " << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parent())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";
 
 	for( auto parameter : indices(operation->params()) )
 	{

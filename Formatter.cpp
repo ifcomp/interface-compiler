@@ -109,7 +109,7 @@ FormatToken<Model::Enum::ValueRef> Formatter::definition(Model::Enum::ValueRef v
 
 void Formatter::qname(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
-    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parentObject()) )
+    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parent()) )
     {
         stream << qname(parent) << config.namespaceDelimiter;
     }

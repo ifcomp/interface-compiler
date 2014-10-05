@@ -6,14 +6,14 @@ Object::Object()
 {
 }
 
-ObjectRef Object::parentObject()
+ObjectRef Object::parent()
 {
-    return _parentObject;
+    return _parent;
 }
 
-void Object::setParentObject(ObjectRef parentObject)
+void Object::setParent(ObjectRef parent)
 {
-    _parentObject = parentObject;
+    _parent = parent;
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -22,13 +22,13 @@ public:
      * @brief Get pointer to parent object.
      * @return Pointer to parent object
      */
-    ObjectRef parentObject();
+    ObjectRef parent();
 
     /**
      * @brief Set pointer to parent object.
-     * @param parentObject Pointer to parent object
+     * @param parent Pointer to parent object
      */
-    void setParentObject(ObjectRef parentObject);
+    void setParent(ObjectRef parent);
 
     /**
      * @brief Get Class identifier
@@ -37,7 +37,7 @@ public:
     virtual std::string objectTypeName() = 0;
 
 private:
-    ObjectRef _parentObject;
+    ObjectRef _parent;
 };
 
 } } } // namespace Everbase::InterfaceCompiler::Model

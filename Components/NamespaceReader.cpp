@@ -99,7 +99,7 @@ void NamespaceReader::parseElements(const YAML::Node &node, NamespaceRef rootNam
             {
                 MemberFunc func = mParserMethods[nodeType];
                 ElementRef element = (this->*func)(sequenceNode);
-                element->setParentObject(rootNamespace);
+                element->setParent(rootNamespace);
                 rootNamespace->addElement(element);
             }
             else
@@ -170,7 +170,7 @@ ElementRef NamespaceReader::parseClass(const YAML::Node &node)
             for (auto operationNode : node[KEY_OPERATIONS])
             {
                 Class::OperationRef newOperation = parseClassOperation(operationNode);
-                newOperation->setParentObject(newClass);
+                newOperation->setParent(newClass);
                 newClass->addOperation(newOperation);
             }
         }
@@ -180,7 +180,7 @@ ElementRef NamespaceReader::parseClass(const YAML::Node &node)
             for (auto eventNode : node[KEY_EVENTS])
             {
                 Class::EventRef newEvent = parseClassEvent(eventNode);
-                newEvent->setParentObject(newClass);
+                newEvent->setParent(newClass);
                 newClass->addEvent(newEvent);
             }
         }
@@ -190,7 +190,7 @@ ElementRef NamespaceReader::parseClass(const YAML::Node &node)
             for (auto constantNode : node[KEY_CONSTANTS])
             {
                 Class::ConstantRef newConstant = parseClassConstant(constantNode);
-                newConstant->setParentObject(newClass);
+                newConstant->setParent(newClass);
                 newClass->addConstant(newConstant);
             }
         }
@@ -245,7 +245,7 @@ ElementRef NamespaceReader::parseEnum(const YAML::Node &node)
                 for (auto enumNode : node[KEY_VALUES])
                 {
                     Enum::ValueRef newValue = parseEnumValue(enumNode);
-                    newValue->setParentObject(newEnum);
+                    newValue->setParent(newEnum);
                     newEnum->addValue(newValue);
                 }
             }
@@ -278,7 +278,7 @@ ElementRef NamespaceReader::parseStruct(const YAML::Node &node)
                 for (auto fieldNode : node[KEY_FIELDS])
                 {
                     ParameterRef newField = parseParameter(fieldNode);
-                    newField->setParentObject(newStruct);
+                    newField->setParent(newStruct);
                     newStruct->addField(newField);
                 }
             }
@@ -319,7 +319,7 @@ Class::Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node
                 for (auto param : node[KEY_PARAMS])
                 {
                     ParameterRef newParam = parseParameter(param);
-                    newParam->setParentObject(newOperation);
+                    newParam->setParent(newOperation);
                     newOperation->addParam(newParam);
                 }
             }
@@ -332,7 +332,7 @@ Class::Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node
         if (checkNode(node, KEY_RESULT, YAML::NodeType::Map))
         {
             ParameterRef newResult = parseParameter(node[KEY_RESULT]);
-            newResult->setParentObject(newOperation);
+            newResult->setParent(newOperation);
             newOperation->setResult(newResult);
         }
     }
@@ -356,7 +356,7 @@ Class::Class::EventRef NamespaceReader::parseClassEvent(const YAML::Node &node)
             for (auto valueNode : node[KEY_VALUES])
             {
                 ParameterRef newParam = parseParameter(valueNode);
-                newParam->setParentObject(newEvent);
+                newParam->setParent(newEvent);
                 newEvent->addValue(newParam);
             }
         }

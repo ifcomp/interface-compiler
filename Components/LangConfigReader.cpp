@@ -177,14 +177,14 @@ string LangConfigReader::formatNamespace(Model::IdentifiableRef identifiable) co
     string namespaceName;
     string delimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAMESPACE_DELIMITER, identifiable);
 
-    IdentifiableRef parentRef = dynamic_pointer_cast<Identifiable>(identifiable->parentObject());
+    IdentifiableRef parentRef = dynamic_pointer_cast<Identifiable>(identifiable->parent());
 
     while (parentRef && parentRef->longName() != "::")
     {
 		string nameDelimiter = configAttribute<string>(LangConfigReader::StyleAttribute::NAME_DELIMITER, parentRef);
         nameStyle = configNameStyle(parentRef, StyleAttribute::NAME_STYLE);
         namespaceName = styleToken(parentRef->longName(), nameStyle, nameDelimiter) + delimiter + namespaceName;
-        parentRef = dynamic_pointer_cast<Identifiable>(parentRef->parentObject());
+        parentRef = dynamic_pointer_cast<Identifiable>(parentRef->parent());
     }
     return namespaceName;
 }

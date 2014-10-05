@@ -31,7 +31,7 @@ CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
                 NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "", false },
+                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             }
