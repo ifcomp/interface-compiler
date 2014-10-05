@@ -57,24 +57,41 @@ CppHeadersFormatter::CppHeadersFormatter()
 {
 }
 
-void CppHeadersFormatter::param(std::ostream& stream, Model::ParameterRef parameter) const
+void CppHeadersFormatter::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << type(parameter->type()) << " " << name(parameter);
 }
 
-void CppHeadersFormatter::type(std::ostream& stream, Model::TypeRef type) const
+void CppHeadersFormatter::_type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const
 {
-    if (auto primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
+    if (auto primitive = std::dynamic_pointer_cast<Primitive>(primary))
     {
-        stream << Formatter::type(primitive);
+        stream << type(primitive, params);
+    }
+    else if( auto class_ = std::dynamic_pointer_cast<Class>(primary) )
+    {
+        if(params.size() > 0)
+            { throw std::runtime_error("type parameters not supported"); }
+
+        if(class_->behavior() == Class::Behavior::VALUE)
+        {
+            stream << qname(primary);
+        }
+        else
+        {
+            stream << "std::shared_ptr<" << qname(primary) << ">";
+        }
     }
     else
     {
-        stream << qname(type->primary());
+        if(params.size() > 0)
+            { throw std::runtime_error("type parameters not supported"); }
+
+        stream << qname(primary);
     }
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     stream << "namespace " << name(namespace_) << endl << "{" << endl;
 
@@ -87,7 +104,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::NamespaceRef n
     stream << "}" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::StructRef struct_) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     stream << "struct " << name(struct_) << endl << "{" << endl;
 
@@ -99,7 +116,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::StructRef stru
     stream << "};" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::ClassRef class_) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
     stream << "class " << name(class_) << endl << "{" << endl;
 
@@ -121,7 +138,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::ClassRef class
     stream << "};" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
     int number = 0;
     std::string valueString;
@@ -145,7 +162,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::Constan
     stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = " << valueString << ";" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::EventRef event) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
     for (auto value : event->values())
     {
@@ -153,7 +170,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::EventRe
     }
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->doc())
     {
@@ -163,7 +180,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::Operati
     stream << signature(operation) << ";" << endl;
 }
 
-void CppHeadersFormatter::signature(std::ostream& stream, Model::Class::OperationRef operation) const
+void CppHeadersFormatter::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->result())
     {
@@ -184,7 +201,7 @@ void CppHeadersFormatter::signature(std::ostream& stream, Model::Class::Operatio
     stream << ")";
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::EnumRef enum_) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
     stream << "enum class " << name(enum_) << endl << "{" << endl;
 
@@ -196,7 +213,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::EnumRef enum_)
     stream << "};" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void CppHeadersFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
     stream << name(value) << " = " << value->value();
 }

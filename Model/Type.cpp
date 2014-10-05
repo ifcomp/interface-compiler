@@ -27,7 +27,7 @@ void Type::addParam(ElementRef param)
     _params.push_back(param);
 }
 
-const std::vector<ElementRef>& Type::params()
+std::vector<ElementRef> Type::params()
 {
     return _params;
 }

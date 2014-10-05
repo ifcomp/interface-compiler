@@ -22,7 +22,7 @@ public:
     void setPrimary(ElementRef primary);
 
     void addParam(ElementRef param);
-    const std::vector<ElementRef>& params();
+    std::vector<ElementRef> params();
 
 private:
     ElementRef _primary;

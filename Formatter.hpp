@@ -27,7 +27,8 @@ protected:
 
 	FormatToken<Model::ParameterRef> param(Model::ParameterRef parameter) const;
 	FormatToken<Model::TypeRef> type(Model::TypeBaseRef type) const;
-	FormatToken<Model::PrimitiveRef> type(Model::PrimitiveRef primitive) const;
+	FormatToken<Model::ElementRef, std::vector<Model::ElementRef>> type(Model::ElementRef primary, std::vector<Model::ElementRef> params) const;
+	FormatToken<Model::PrimitiveRef, std::vector<Model::ElementRef>> type(Model::PrimitiveRef primitive, std::vector<Model::ElementRef> params) const;
 
 	FormatToken<Model::DocumentationRef> doc(Model::DocumentationRef documentation) const;
 
@@ -47,30 +48,31 @@ protected:
 	FormatToken<Model::Enum::ValueRef> definition(Model::Enum::ValueRef value) const;
 
 protected:
-	virtual void qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
-	virtual void name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
-	virtual void name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
+	virtual void _qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
+	virtual void _name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
+	virtual void _name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
 
-	virtual void param(std::ostream& stream, Model::ParameterRef parameter) const = 0;
-	virtual void type(std::ostream& stream, Model::TypeRef type) const = 0;
-	virtual void type(std::ostream& stream, Model::PrimitiveRef primitive) const;
+	virtual void _param(std::ostream& stream, Model::ParameterRef parameter) const = 0;
+	virtual void _type(std::ostream& stream, Model::TypeRef type) const;
+	virtual void _type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const;
+	virtual void _type(std::ostream& stream, Model::PrimitiveRef primitive, std::vector<Model::ElementRef> params) const;
 
-	virtual void doc(std::ostream& stream, Model::DocumentationRef documentation) const;
+	virtual void _doc(std::ostream& stream, Model::DocumentationRef documentation) const;
 
-	virtual void definition(std::ostream& stream, Model::RootRef root) const;
-	virtual void definition(std::ostream& stream, Model::NamespaceRef namespace_) const = 0;
+	virtual void _definition(std::ostream& stream, Model::RootRef root) const;
+	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const = 0;
 
-	virtual void definition(std::ostream& stream, Model::ElementRef element) const;
-	virtual void definition(std::ostream& stream, Model::StructRef struct_) const = 0;
+	virtual void _definition(std::ostream& stream, Model::ElementRef element) const;
+	virtual void _definition(std::ostream& stream, Model::StructRef struct_) const = 0;
 
-	virtual void definition(std::ostream& stream, Model::ClassRef class_) const = 0;
-	virtual void definition(std::ostream& stream, Model::Class::ConstantRef constant) const = 0;
-	virtual void definition(std::ostream& stream, Model::Class::EventRef event) const = 0;
-	virtual void definition(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
-	virtual void signature(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
+	virtual void _definition(std::ostream& stream, Model::ClassRef class_) const = 0;
+	virtual void _definition(std::ostream& stream, Model::Class::ConstantRef constant) const = 0;
+	virtual void _definition(std::ostream& stream, Model::Class::EventRef event) const = 0;
+	virtual void _definition(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
+	virtual void _signature(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
 
-	virtual void definition(std::ostream& stream, Model::EnumRef enum_) const = 0;
-	virtual void definition(std::ostream& stream, Model::Enum::ValueRef value) const = 0;
+	virtual void _definition(std::ostream& stream, Model::EnumRef enum_) const = 0;
+	virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const = 0;
 };
 
 } } // namespace: Everbase::InterfaceCompiler

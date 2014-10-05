@@ -60,24 +60,12 @@ JSHeaderFormatter::JSHeaderFormatter()
 {
 }
 
-void JSHeaderFormatter::param(std::ostream& stream, Model::ParameterRef parameter) const
+void JSHeaderFormatter::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
 	stream << "/* " << type(parameter->type()) << " */" << " " << name(parameter);
 }
 
-void JSHeaderFormatter::type(std::ostream& stream, Model::TypeRef type) const
-{
-    if (auto primitive = std::dynamic_pointer_cast<Primitive>(type->primary()))
-    {
-        stream << Formatter::type(primitive);
-    }
-    else
-    {
-        stream << qname(type->primary());
-    }
-}
-
-void JSHeaderFormatter::definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
 	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || {  }" << endl << endl;
 	
@@ -87,7 +75,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::NamespaceRef nam
 	}
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::StructRef struct_) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
     stream << qname(struct_) << "= function() {  }" << endl << endl;
@@ -102,7 +90,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::StructRef struct
 	stream << "// struct: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::ClassRef class_) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
@@ -138,7 +126,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ClassRef class_)
 	stream << "// class: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 	int number = 0;
 	std::string valueString;
@@ -161,7 +149,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::ConstantR
 	stream << qname(constant) << " = " << valueString << ";" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::EventRef event) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
@@ -182,7 +170,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::EventRef 
 	stream << "// event: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->doc())
 	{
@@ -192,7 +180,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::Operation
 	stream << signature(operation) << " { throw new Error(\"not implemented\"); }" << endl << endl;
 }
 
-void JSHeaderFormatter::signature(std::ostream& stream, Model::Class::OperationRef operation) const
+void JSHeaderFormatter::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->result())
 	{
@@ -227,7 +215,7 @@ void JSHeaderFormatter::signature(std::ostream& stream, Model::Class::OperationR
 	stream << ")";
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::EnumRef enum_) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
@@ -241,7 +229,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::EnumRef enum_) c
 	stream << "// enum: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void JSHeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 	if (value->doc())
 	{

@@ -1,0 +1,8 @@
+- Migration of NamespaceReader to StandardParser
+- move setParent to add* methods
+- Implement errors
+- Implement constants
+- check impact of abstractType
+- check impact of valueType
+- try to improve readability by checking paragraphing
+- final bug and formatting checking

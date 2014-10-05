@@ -38,6 +38,8 @@ public:
      */
     static const char *underlyingNames[int(Underlying::_COUNT_)];
 
+    static const unsigned int underlyingParamCounts[int(Underlying::_COUNT_)];
+
 public:
     Primitive();
     virtual ~Primitive();
@@ -58,9 +60,15 @@ public:
 
     /**
      * @brief Get underlying name
-     * @return Type name
+     * @return std::string
      */
     std::string underlyingName();
+
+    /**
+     * @brief Get underlying parameter count
+     * @return unsigned int
+     */
+    unsigned int underlyingParamCount();
 
     /**
      * @brief Set underlying by underlying name.

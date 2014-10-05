@@ -22,6 +22,24 @@ const char* Primitive::underlyingNames[] =
     "Map"
 };
 
+const unsigned int Primitive::underlyingParamCounts[] =
+{
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    2
+};
+
 Primitive::Primitive()
     : _underlying(Underlying::UNDEFINED)
 {
@@ -44,6 +62,11 @@ void Primitive::setUnderlying(Primitive::Underlying underlying)
 std::string Primitive::underlyingName()
 {
     return underlyingNames[ int(_underlying) ];
+}
+
+unsigned int Primitive::underlyingParamCount()
+{
+    return underlyingParamCounts[ int(_underlying) ];
 }
 
 void Primitive::setUnderlying(std::string underlyingName)
