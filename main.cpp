@@ -13,37 +13,55 @@ int main(int argc, char** argv)
 	ConfigProvider cprov;
 	Components::StandardParser parser;
 
-    if (argc == 3)
+    if (true)
     {
         try {
-            cout << "*** parsing file " << argv[1] << " ***" << endl;
+            cout << "*** parsing file ***" << endl;
 
-            std::ifstream file(argv[1]);
+            std::ifstream file("../yaml/ecs.yaml");
             file.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
             Model::RootRef root = parser.execute(cprov, file);
 
             try
             {
-                std::ifstream configFile(argv[2]);
+                std::ifstream configFile("../yaml/cpp.yaml");
                 configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
+                std::ofstream outputFile("test.cpp", std::ios_base::trunc);
+                outputFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
                 Components::CppHeadersFormatter format(configFile);
-                //Components::JSHeaderFormatter format(configFile);
-                format.execute(cprov, root, std::cout);
+                format.execute(cprov, root, outputFile);
             }
             catch (const ios_base::failure &e)
             {
-                cout << "error opening config file " << argv[2] << " (" << e.what() << ")" << endl;
+                cout << "error opening config file (" << e.what() << ")" << endl;
+            }
+
+            try
+            {
+                std::ifstream configFile("../yaml/js.yaml");
+                configFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
+                std::ofstream outputFile("test.js", std::ios_base::trunc);
+                outputFile.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
+                Components::JSHeaderFormatter format(configFile);
+                format.execute(cprov, root, outputFile);
+            }
+            catch (const ios_base::failure &e)
+            {
+                cout << "error opening config file (" << e.what() << ")" << endl;
             }
         }
         catch (const ios_base::failure &e)
         {
-            cout << "[ERROR] could not read from file " << argv[1] << " (" << e.what() << ")" << endl;
+            cout << "[ERROR] could not read from file (" << e.what() << ")" << endl;
         }
         catch (const std::runtime_error &e)
         {
-            cout << "[ERROR] " << e.what() << "please check your yaml file " << argv[1] << endl;
+            cout << "[ERROR] " << e.what() << "please check your yaml file" << endl;
             return 1;
         }
     }

@@ -229,7 +229,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ValueRef value) 
 		stream << doc(value->doc());
 	}
 
-	stream << qname(std::dynamic_pointer_cast<Model::Identifiable>(value->parentObject())) << "." << name(value) << " = " << value->value() << ";" << endl << endl;
+	stream << qname(value) << " = " << value->value() << ";" << endl << endl;
 }
 
 } } } // namespace: Everbase::InterfaceCompiler::Components

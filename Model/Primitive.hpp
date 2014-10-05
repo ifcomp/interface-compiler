@@ -12,7 +12,7 @@ public:
 
     static const char* TYPE_NAME;
 
-    enum class PrimitiveType
+    enum class Underlying
     {
         UNDEFINED = -1,
         BYTE,
@@ -28,16 +28,16 @@ public:
         VECTOR,
         LIST,
         SET,
-        _PRIMITIVE_COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
+        _COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
     };
 
     /**
-     * @brief Mapping of primitive name strings to PrimitiveType enum
+     * @brief Mapping of underlying name strings to Underlying enum
      */
-    static const char *primitiveNames[int(PrimitiveType::_PRIMITIVE_COUNT_)];
+    static const char *underlyingNames[int(Underlying::_COUNT_)];
 
 private:
-    PrimitiveType _type;
+    Underlying _underlying;
 
 public:
     Primitive();
@@ -45,44 +45,44 @@ public:
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     /**
-     * @brief Get PrimitiveType
-     * @return Current PrimitiveType
+     * @brief Get Underlying
+     * @return Current Underlying
      */
-    PrimitiveType type();
+    Underlying underlying();
 
     /**
-     * @brief Set type by PrimitiveType.
-     * @see PrimitiveType
-     * @param type PrimitiveType to set
+     * @brief Set underlying by Underlying.
+     * @see Underlying
+     * @param underlying Underlying to set
      */
-    void setType(PrimitiveType type);
+    void setUnderlying(Underlying underlying);
 
     /**
-     * @brief Get type name
+     * @brief Get underlying name
      * @return Type name
      */
-    std::string typeName();
+    std::string underlyingName();
 
     /**
-     * @brief Set type by type name.
-     * @see primitiveNames
-     * @param typeName Type name as listed in primitiveNames
+     * @brief Set underlying by underlying name.
+     * @see underlyingNames
+     * @param underlyingName Type name as listed in underlyingNames
      * @throw std::runtime_error if name was not found
      */
-    void setType(std::string typeName);
+    void setUnderlying(std::string underlyingName);
 
     /**
-     * @brief Decode type name to PrimitiveType
-     * @param typeName Type name as listed in primitiveNames
-     * @return Returns PrimitiveType (PrimitiveType::UNDEFINED if name was not found)
+     * @brief Decode underlying name to Underlying
+     * @param underlyingName Type name as listed in underlyingNames
+     * @return Returns Underlying (Underlying::UNDEFINED if name was not found)
      */
-    static PrimitiveType decodeTypeName(std::string typeName);
+    static Underlying decodeUnderlyingName(std::string underlyingName);
 
     /**
-     * @brief Return human-readable list of known primitive types.
-     * @return String containing a list of type names, each one in a row.
+     * @brief Return human-readable list of known underlyings.
+     * @return String containing a list of underlying names, each one in a row.
      */
-    static std::string listSupportedTypes();
+    static std::string listSupportedUnderlying();
 };
 
 typedef std::shared_ptr<Primitive> PrimitiveRef;

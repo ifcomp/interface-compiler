@@ -22,8 +22,7 @@ const char *NamespaceReader::TYPE_CONSTANT           = "constant";
 
 const char *NamespaceReader::KEY_NAME                = "name";
 const char *NamespaceReader::KEY_SHORTNAME           = "short";
-const char *NamespaceReader::KEY_NODETYPE            = "nodetype";
-const char *NamespaceReader::KEY_PRIMITIVE_TYPE      = "primitivetype";
+const char *NamespaceReader::KEY_UNDERLYING          = "underlying";
 const char *NamespaceReader::KEY_TYPE                = "type";
 const char *NamespaceReader::KEY_VALUE               = "value";
 const char *NamespaceReader::KEY_RESULT              = "return";
@@ -93,9 +92,9 @@ void NamespaceReader::parseNamespaceMembers(const YAML::Node &node, NamespaceRef
 {
     for (auto sequenceNode : node)
     {
-        if (checkNode(sequenceNode, KEY_NODETYPE, YAML::NodeType::Scalar, true))
+        if (checkNode(sequenceNode, KEY_TYPE, YAML::NodeType::Scalar, true))
         {
-            string nodeType = sequenceNode[KEY_NODETYPE].as<string>();
+            string nodeType = sequenceNode[KEY_TYPE].as<string>();
 
             if (mParserMethods.find(nodeType) != mParserMethods.end())
             {
@@ -209,14 +208,14 @@ NamespaceMemberRef NamespaceReader::parsePrimitive(const YAML::Node &node)
     registerType(newPrimitive);
 
     try {
-        if (checkNode(node, KEY_PRIMITIVE_TYPE, YAML::NodeType::Scalar, true))
+        if (checkNode(node, KEY_UNDERLYING, YAML::NodeType::Scalar, true))
         {
             try {
-                newPrimitive->setType(node[KEY_PRIMITIVE_TYPE].Scalar());
+                newPrimitive->setUnderlying(node[KEY_UNDERLYING].Scalar());
             }
             catch (const runtime_error &e)
             {
-                throw runtime_error(e.what() + Primitive::listSupportedTypes());
+                throw runtime_error(e.what() + Primitive::listSupportedUnderlying());
             }
         }
     }

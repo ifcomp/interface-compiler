@@ -4,7 +4,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 const char* Primitive::TYPE_NAME = "Primitive";
 
-const char* Primitive::primitiveNames[] =
+const char* Primitive::underlyingNames[] =
 {
     "Byte",
     "UInt16",
@@ -22,65 +22,58 @@ const char* Primitive::primitiveNames[] =
 };
 
 Primitive::Primitive()
-    : _type(PrimitiveType::UNDEFINED)
+    : _underlying(Underlying::UNDEFINED)
 {
 }
-
 
 Primitive::~Primitive()
 {
 }
 
-
-Primitive::PrimitiveType Primitive::type()
+Primitive::Underlying Primitive::underlying()
 {
-	return _type;
+	return _underlying;
 }
 
-
-void Primitive::setType(Primitive::PrimitiveType type)
+void Primitive::setUnderlying(Primitive::Underlying underlying)
 {
-    _type = type;
+    _underlying = underlying;
 }
 
-
-std::string Primitive::typeName()
+std::string Primitive::underlyingName()
 {
-    return primitiveNames[ int(_type) ];
+    return underlyingNames[ int(_underlying) ];
 }
 
-
-void Primitive::setType(std::string typeName)
+void Primitive::setUnderlying(std::string underlyingName)
 {
-    _type = decodeTypeName(typeName);
+    _underlying = decodeUnderlyingName(underlyingName);
 
-    if (_type == PrimitiveType::UNDEFINED)
+    if (_underlying == Underlying::UNDEFINED)
     {
-        throw std::runtime_error("unknown primitive type " + typeName + "\n");
+        throw std::runtime_error("unknown primitive underlying " + underlyingName + "\n");
     }
 }
 
-
-Primitive::PrimitiveType Primitive::decodeTypeName(std::string typeName)
+Primitive::Underlying Primitive::decodeUnderlyingName(std::string underlyingName)
 {
-    for (int n = 0; n < int(PrimitiveType::_PRIMITIVE_COUNT_); ++n)
+    for (int n = 0; n < int(Underlying::_COUNT_); ++n)
     {
-        if (typeName == primitiveNames[n])
+        if (underlyingName == underlyingNames[n])
         {
-            return (PrimitiveType) n;
+            return (Underlying) n;
         }
     }
-    return PrimitiveType::UNDEFINED;
+    return Underlying::UNDEFINED;
 }
 
-
-std::string Primitive::listSupportedTypes()
+std::string Primitive::listSupportedUnderlying()
 {
-    std::string list = "the following primitive types are supported:\n";
+    std::string list = "the following primitive underlyings are supported:\n";
 
-    for (int n = 0; n < int(PrimitiveType::_PRIMITIVE_COUNT_); ++n)
+    for (int n = 0; n < int(Underlying::_COUNT_); ++n)
     {
-        list += "- " + std::string(primitiveNames[n]) + "\n";
+        list += "- " + std::string(underlyingNames[n]) + "\n";
     }
     return list;
 }

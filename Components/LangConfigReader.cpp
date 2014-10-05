@@ -92,7 +92,7 @@ void LangConfigReader::parseTypeMap()
 
 std::string LangConfigReader::primitiveToLang(Model::PrimitiveRef primitive) const
 {
-    string typeName = primitive->typeName();
+    string typeName = primitive->underlyingName();
 
     if (mPrimitiveMap.find(typeName) == mPrimitiveMap.end())
     {

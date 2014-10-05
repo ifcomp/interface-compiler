@@ -225,7 +225,7 @@ void Formatter::doc(std::ostream& stream, Model::DocumentationRef documentation)
 	using namespace StreamFilter;
 
 	stream << "/**" << endl;
-	    
+	
     if (documentation->keyExists(Documentation::KEY_BRIEF))
     {
         filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;

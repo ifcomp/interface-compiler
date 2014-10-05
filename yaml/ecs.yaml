@@ -1,14 +1,14 @@
 - name: Everbase
-  nodetype: namespace
+  type: namespace
   members:
 
 #--END EVERBASE CORESYSTEM BEGIN ----------------------------------------
 
     - name: CoreSystem
-      nodetype: namespace
+      type: namespace
       members:
         - name: Profile
-          nodetype: class
+          type: class
           doc: { brief: 'Is an device local element for managing the users credentials for an arbitrary set of domains.' }
           operations:
             - name: Create
@@ -37,7 +37,7 @@
               synchronous: true
 
         - name: Session
-          nodetype: class
+          type: class
           doc: { brief: 'A session defines the current environment, e.g. the currently active profile. A session is a lightweight object with minimal initialization cost. Session follows a stack semantic. The most recent session is the current session for all operations.', more: 'Per default a session using the primary profile is on top of the stack.' }
           operations:
             - name: Begin
@@ -52,7 +52,7 @@
               synchronous: true
 
         - name: Credential
-          nodetype: class
+          type: class
           doc: { brief: 'Identifies a user or device.', more: 'Supported credential formats are passwords, X.509 certificates, public keys and OAuth authentication token.' }
           operations:
             - name: FromPassword
@@ -76,7 +76,7 @@
                 - InvalidArgument/InvalidFormat
 
         - name: Domain
-          nodetype: class
+          type: class
           doc: { brief: 'Enables an organization to manage a set of users, devices, groups and data.' }
           operations:
             - name: Create
@@ -130,7 +130,7 @@
                 - { name: Type, type: Everbase::Uuid }
 
         - name: UserEntity
-          nodetype: class
+          type: class
           doc: { brief: 'Is either a user or a user group.' }
           abstractType: true
           operations:
@@ -139,7 +139,7 @@
               return: { name: Name, type: Everbase::String }
 
         - name: User
-          nodetype: class
+          type: class
           inherits: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Is a person who uses the EFS.' }
           operations:
@@ -212,7 +212,7 @@
               return: { name: Fingerprint, type: Everbase::String }
 
         - name: UserGroup
-          nodetype: class
+          type: class
           short: Group
           inherits: Everbase::CoreSystem::UserEntity
           doc: { brief: 'Specifies a set of users for permission handling and other purposes.' }
@@ -263,7 +263,7 @@
               return: { name: Users, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
 
         - name: DeviceEntity
-          nodetype: class
+          type: class
           doc: { brief: 'Is either a device or a device group.' }
           abstractType: true
           operations:
@@ -272,7 +272,7 @@
               return: { name: Name, type: Everbase::String }
 
         - name: Device
-          nodetype: class
+          type: class
           inherits: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Is a system which provides or consumes services within the EFS.' }
           operations:
@@ -320,7 +320,7 @@
               return: { name: Fingerprint, type: Everbase::String }
 
         - name: DeviceGroup
-          nodetype: class
+          type: class
           short: DevGroup
           inherits: Everbase::CoreSystem::DeviceEntity
           doc: { brief: 'Specifies a set of devices for grid management and other purposes.' }
@@ -373,14 +373,14 @@
 #---Elements...
 
     - name: DeviceRole
-      nodetype: enum
+      type: enum
       doc: { brief: 'Specifies the behaviour of a device within a domain.', more: 'Can be used as flag, but not as a bit mask.' }
       values:
         - { name: Grid, value: 0x1, doc: { brief: 'Grid members are steady members and guarantee availability of data. The grid is entirely trusted by a domain provider.' } }
         - { name: Peer, value: 0x2, doc: { brief: 'Peers are volatile members.' } }
 
     - name: MembershipMode
-      nodetype: enum
+      type: enum
       doc: { brief: 'Specifies the membership mode of an user or device.', more: 'Can be used as a bit mask.' }
       values:
         - { name: JoinRequest, value: 0x1 }
@@ -392,10 +392,10 @@
 #---BEGIN EVERBASE OBJECTSTORE BEGIN ---------------------------------------------
 
     - name: ObjectStore
-      nodetype: namespace
+      type: namespace
       members:
         - name: Policy
-          nodetype: class
+          type: class
           doc: { brief: 'Is a set of permissions and rules.', more: 'A policy can be either specific to a set of objects (unnamed policy) or a domain (named policy).' }
           operations:
             - name: Create
@@ -450,7 +450,7 @@
               return: { name: Rules, type: [ Everbase::Set, Everbase::ObjectStore::Rule ] }
 
         - name: Permission
-          nodetype: class
+          type: class
           doc: { brief: 'Specifies the access mode of an user entity. These control the ability of a user entity to perform operations on the content of a filesystem node.' }
           operations:
             - name: SetEntity
@@ -471,12 +471,12 @@
               return: { name: Mode, type: Everbase::PermissionMode }
 
         - name: Rule
-          nodetype: class
+          type: class
           doc: { brief: 'Influences the data handling performed by the system.', more: 'There are various data handling rules, e.g. geographical restrictions, encryption requirements and more.' }
           abstractType: true
 
         - name: Object
-          nodetype: class
+          type: class
           doc: { brief: 'A versioned object which can be used to store arbitrary data.' }
           operations:
             - name: Create
@@ -648,7 +648,7 @@
                 - { name: Status, type: Everbase::Status }
 
         - name: Conflict
-          nodetype: class
+          type: class
           doc: { brief: 'Describes a conflict which occured during a concurrent update of Everbase::ObjectStore::.' }
           operations:
             - name: GetAll
@@ -701,7 +701,7 @@
                 - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
 
         - name: SyncProcess
-          nodetype: class
+          type: class
           doc: { brief: 'Describes a sync process of an object.' }
           operations:
             - name: GetAll
@@ -765,7 +765,7 @@
 #---Elements...
 
     - name: PermissionMode
-      nodetype: enum
+      type: enum
       doc: { brief: 'Defines a set of potentially controllable operations on objects.', more: 'Can be used as a bit mask.' }
       values:
         - { name: Read, value: 0x1, doc: { brief: 'Read operation.' } }
@@ -773,7 +773,7 @@
         - { name: Manage, value: 0x4, doc: { brief: 'Manage operation, includes management of permissions and rules.' }  }
 
     - name: SyncMode
-      nodetype: enum
+      type: enum
       doc: { brief: 'Describes directions of data transfers or idle behaviour.', more: 'Can be used as a bit mask.' }
       values:
         - { name: Idle, value: 0x1, doc: { brief: 'No current or scheduled data transfer.' } }
@@ -783,7 +783,7 @@
         - { name: Downloading, value: 0x10, doc: { brief: 'Current data transfer is a download.' } }
 
     - name: SyncStatus
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes a data transfer process.' }
       fields:
         - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current direction of data transfer.' } }
@@ -791,7 +791,7 @@
         - { name: CurrentBytesTransferred, type: Everbase::UInt64, doc: { brief: 'Number of current bytes transferred.' } }
 
     - name: CumulatedSyncStatus
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes the cumulated status of multiple data transfer processes.' }
       fields:
         - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current directions of data transfer.' } }
@@ -801,7 +801,7 @@
         - { name: CurrentBytesUploaded, type: Everbase::UInt64, doc: { brief: 'Number of bytes uploaded.' } }
 
     - name: Timestamps
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes a set of timestamps.' }
       fields:
         - { name: Creation, type: Everbase::Timestamp, doc: { brief: 'Time of object creation.' } }
@@ -809,7 +809,7 @@
         - { name: LastLocalAccess, type: Everbase::Timestamp, doc: { brief: 'Time of last access on local device.' } }
 
     - name: Size
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes the various size attributes of a object.' }
       fields:
         - { name: ContentBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for content data.' } }
@@ -818,7 +818,7 @@
         - { name: TotalBytes, type: Everbase::UInt64, doc: { brief: 'Number of total bytes including internal data, meta data and content data.' } }
 
     - name: Caching
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes where the data of a object is located.' }
       fields:
         - { name: UniqueBytesOnGrid, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the grid.' } }
@@ -831,7 +831,7 @@
         - { name: TotalUniqueBytesMissing, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the entire distributed system.' } }
 
     - name: Status
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes the status of a object including version information, timestamps, size, caching, sync status and conflicts.' }
       fields:
         - { name: Version, type: Everbase::Uuid, doc: { brief: 'Version of object reflected within the status information.' } }
@@ -846,7 +846,7 @@
         - { name: Permission, type: Everbase::PermissionMode, doc: { brief: 'Effective permission mode of the authenticated user.' } }
 
     - name: CumulatedStatus
-      nodetype: struct
+      type: struct
       doc: { brief: 'Describes the status of multiple object including size, caching, sync status and conflicts.' }
       fields:
         - { name: Size, type: Everbase::Size, doc: { brief: 'Various size attributes of object.' } }
@@ -860,10 +860,10 @@
 #---BEGIN EVERBASE FILESYSTEM BEGIN ---------------------------------------------
 
     - name: FileSystem
-      nodetype: namespace
+      type: namespace
       members:
         - name: Path
-          nodetype: class
+          type: class
           doc: { brief: 'Specifies a unique location of a directory or file within the EFS.', more: 'A path is a sequence of names. A name can be any valid unicode string. Each name can be associated with a version identifier.' }
           valueType: true
           operations:
@@ -966,7 +966,7 @@
               return: { name: VersionStatus, type: Everbase::Boolean }
 
         - name: Metadata
-          nodetype: class
+          type: class
           short: Meta
           doc: { brief: 'Is a key value store.', more: 'The key value store can be used by the application developers to save small pieces of data with arbitrary type.' }
           operations:
@@ -994,7 +994,7 @@
               return: { name: Keys, type: [ Everbase::Set, Everbase::String ] }
 
         - name: Node
-          nodetype: class
+          type: class
           doc: { brief: 'Is a filesystem node, which can be one of various things including a file or directory.' }
           operations:
             - name: Move
@@ -1118,7 +1118,7 @@
                 - { name: Status, type: Everbase::Status }
 
         - name: Directory
-          nodetype: class
+          type: class
           short: Dir
           inherits: Everbase::FileSystem::Node
           doc: { brief: 'Is a file system cataloging structure which contains references to other files and directories.', more: 'Each entry of an directory is associated with an arbitrary name. User space filesystem implementation have to handle the translation of these names to operating system compatible names.' }
@@ -1149,7 +1149,7 @@
               value: 5f58a908-6fcf-4bf2-aaf3-a06c7572fec5
 
         - name: ProfileRoot
-          nodetype: class
+          type: class
           inherits: Everbase::FileSystem::Directory
           doc: { brief: 'Represents the root directory of a profile.' }
           operations:
@@ -1167,7 +1167,7 @@
               value: c4c391c4-e530-4feb-aab7-9a12d3715f6e
 
         - name: DomainRoot
-          nodetype: class
+          type: class
           inherits: Everbase::FileSystem::Directory
           doc: { brief: 'Represents the root directory of a domain.' }
           operations:
@@ -1187,7 +1187,7 @@
               value: 7dd69fdd-9bc9-4322-babc-62d6143fd752
 
         - name: File
-          nodetype: class
+          type: class
           inherits: Everbase::FileSystem::Node
           doc: { brief: 'Is a file system storage structure which can be used to store arbitrary data.' }
           operations:
@@ -1252,7 +1252,7 @@
               value: bf869264-1888-4516-a6f6-890075f7f657
 
         - name: Conflict
-          nodetype: class
+          type: class
           doc: { brief: 'Describes a conflict which occured during a concurrent update of files.' }
           operations:
             - name: GetAll
@@ -1306,7 +1306,7 @@
                 - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
 
         - name: SyncProcess
-          nodetype: class
+          type: class
           doc: { brief: 'Describes a sync process of a file or folder.' }
           operations:
             - name: GetAll
@@ -1373,53 +1373,53 @@
     #Primitives
 
     - name: Byte
-      nodetype: primitive
-      primitivetype: Byte
+      type: primitive
+      underlying: Byte
 
     - name: UInt16
-      nodetype: primitive
-      primitivetype: UInt16
+      type: primitive
+      underlying: UInt16
 
     - name: UInt32
-      nodetype: primitive
-      primitivetype: UInt32
+      type: primitive
+      underlying: UInt32
 
     - name: UInt64
-      nodetype: primitive
-      primitivetype: UInt64
+      type: primitive
+      underlying: UInt64
 
     - name: Boolean
-      nodetype: primitive
-      primitivetype: Boolean
+      type: primitive
+      underlying: Boolean
 
     - name: Timestamp
-      nodetype: primitive
-      primitivetype: Timestamp
+      type: primitive
+      underlying: Timestamp
 
     - name: String
-      nodetype: primitive
-      primitivetype: String
+      type: primitive
+      underlying: String
 
     - name: Uuid
-      nodetype: primitive
-      primitivetype: Uuid
+      type: primitive
+      underlying: Uuid
 
     - name: Buffer
-      nodetype: primitive
-      primitivetype: Buffer
+      type: primitive
+      underlying: Buffer
 
     - name: ConstBuffer
-      nodetype: primitive
-      primitivetype: ConstBuffer
+      type: primitive
+      underlying: ConstBuffer
 
     - name: Vector
-      nodetype: primitive
-      primitivetype: Vector
+      type: primitive
+      underlying: Vector
 
     - name: List
-      nodetype: primitive
-      primitivetype: List
+      type: primitive
+      underlying: List
 
     - name: Set
-      nodetype: primitive
-      primitivetype: Set
+      type: primitive
+      underlying: Set
