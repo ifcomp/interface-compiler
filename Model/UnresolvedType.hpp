@@ -10,6 +10,7 @@ class UnresolvedType : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
 private:
     std::string _primary;
@@ -18,7 +19,6 @@ private:
 public:
     UnresolvedType();
     virtual ~UnresolvedType();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     std::string primary();
     void setPrimary(std::string primary);

@@ -32,20 +32,19 @@ protected:
 	FormatToken<Model::DocumentationRef> doc(Model::DocumentationRef documentation) const;
 
 	FormatToken<Model::RootRef> definition(Model::RootRef root) const;
-
 	FormatToken<Model::NamespaceRef> definition(Model::NamespaceRef namespace_) const;
-	FormatToken<Model::NamespaceMemberRef> definition(Model::NamespaceMemberRef member) const;
 
+	FormatToken<Model::ElementRef> definition(Model::ElementRef element) const;
 	FormatToken<Model::StructRef> definition(Model::StructRef struct_) const;
-
+	
 	FormatToken<Model::ClassRef> definition(Model::ClassRef class_) const;
-	FormatToken<Model::ConstantRef> definition(Model::ConstantRef constant) const;
-	FormatToken<Model::EventRef> definition(Model::EventRef event) const;
-	FormatToken<Model::OperationRef> definition(Model::OperationRef operation) const;
-	FormatToken<Model::OperationRef> signature(Model::OperationRef operation) const;
+	FormatToken<Model::Class::ConstantRef> definition(Model::Class::ConstantRef constant) const;
+	FormatToken<Model::Class::EventRef> definition(Model::Class::EventRef event) const;
+	FormatToken<Model::Class::OperationRef> definition(Model::Class::OperationRef operation) const;
+	FormatToken<Model::Class::OperationRef> signature(Model::Class::OperationRef operation) const;
 
 	FormatToken<Model::EnumRef> definition(Model::EnumRef enum_) const;
-	FormatToken<Model::ValueRef> definition(Model::ValueRef value) const;
+	FormatToken<Model::Enum::ValueRef> definition(Model::Enum::ValueRef value) const;
 
 protected:
 	virtual void qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
@@ -58,20 +57,19 @@ protected:
 	virtual void doc(std::ostream& stream, Model::DocumentationRef documentation) const;
 
 	virtual void definition(std::ostream& stream, Model::RootRef root) const;
-
 	virtual void definition(std::ostream& stream, Model::NamespaceRef namespace_) const = 0;
-	virtual void definition(std::ostream& stream, Model::NamespaceMemberRef member) const;
 
+	virtual void definition(std::ostream& stream, Model::ElementRef element) const;
 	virtual void definition(std::ostream& stream, Model::StructRef struct_) const = 0;
 
 	virtual void definition(std::ostream& stream, Model::ClassRef class_) const = 0;
-	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const = 0;
-	virtual void definition(std::ostream& stream, Model::EventRef event) const = 0;
-	virtual void definition(std::ostream& stream, Model::OperationRef operation) const = 0;
-	virtual void signature(std::ostream& stream, Model::OperationRef operation) const = 0;
+	virtual void definition(std::ostream& stream, Model::Class::ConstantRef constant) const = 0;
+	virtual void definition(std::ostream& stream, Model::Class::EventRef event) const = 0;
+	virtual void definition(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
+	virtual void signature(std::ostream& stream, Model::Class::OperationRef operation) const = 0;
 
 	virtual void definition(std::ostream& stream, Model::EnumRef enum_) const = 0;
-	virtual void definition(std::ostream& stream, Model::ValueRef value) const = 0;
+	virtual void definition(std::ostream& stream, Model::Enum::ValueRef value) const = 0;
 };
 
 } } // namespace: Everbase::InterfaceCompiler

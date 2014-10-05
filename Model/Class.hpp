@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Model/NamespaceMember.hpp"
-#include "Model/Operation.hpp"
-#include "Model/Event.hpp"
-#include "Model/Constant.hpp"
+#include "Model/Element.hpp"
 #include "Model/Type.hpp"
 
 #include <memory>
@@ -11,7 +8,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Class : public NamespaceMember
+class Class : public Element
 {
 public:
     static const char* TYPE_NAME;
@@ -21,6 +18,15 @@ public:
         VALUE,
         INTERFACE
     };
+
+public:
+    class Constant;
+    class Event;
+    class Operation;
+
+    typedef std::shared_ptr<Constant> ConstantRef;
+    typedef std::shared_ptr<Event> EventRef;
+    typedef std::shared_ptr<Operation> OperationRef;
 
 public:
     Class();

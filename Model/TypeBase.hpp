@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Model/DomainObject.hpp"
+#include "Model/Object.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class TypeBase : public DomainObject
+class TypeBase : public Object
 {
 public:
     TypeBase();

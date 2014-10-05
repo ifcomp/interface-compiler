@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Model/NamespaceMember.hpp"
+#include "Model/Element.hpp"
 
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Primitive : public NamespaceMember
+class Primitive : public Element
 {
 public:
 

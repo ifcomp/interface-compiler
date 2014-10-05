@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Model/Parameter.hpp"
+#include "Model/Class.hpp"
 
 #include <string>
 #include <memory>
@@ -8,7 +9,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Event : public Identifiable
+class Class::Event : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
@@ -28,7 +29,5 @@ public:
     void setTypeId(boost::uuids::uuid typeId);
     boost::uuids::uuid typeId();
 };
-
-typedef std::shared_ptr<Event> EventRef;
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -25,15 +25,15 @@ CppHeadersFormatter::CppHeadersFormatter(std::istream &configStream)
         {
             std::string("::"), std::string(4, ' '), 85,
             NameConfigs {
-                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
-                NameConfig<Enum>      { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Value>     { NameStyle::UPPERCASE, "_", false },
-                NameConfig<Event>     { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Struct>    { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Class>     { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
-                NameConfig<Constant>  { NameStyle::UPPERCASE, "", false }
+                NameConfig<Namespace>        { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Struct>           { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "", false },
+                NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             }
         })
     , _langConfig(configStream)
@@ -62,10 +62,10 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::NamespaceRef n
 {
     stream << "namespace " << name(namespace_) << endl << "{" << endl;
 
-    for ( auto member : namespace_->members() )
+    for ( auto element : namespace_->elements() )
     {
         std::size_t count = 0;
-        filter(stream).push<indent>(config.indentData).push<counter>(count) << definition(member) << (count > 0 ? "\n" : "") << flush;
+        filter(stream).push<indent>(config.indentData).push<counter>(count) << definition(element) << (count > 0 ? "\n" : "") << flush;
     }
 
     stream << "}" << endl;
@@ -105,7 +105,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::ClassRef class
     stream << "};" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::ConstantRef constant) const
+void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
     int number = 0;
     std::string valueString;
@@ -129,7 +129,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::ConstantRef co
     stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = " << valueString << ";" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::EventRef event) const
+void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::EventRef event) const
 {
     for (auto value : event->values())
     {
@@ -137,7 +137,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::EventRef event
     }
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::OperationRef operation) const
+void CppHeadersFormatter::definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->doc())
     {
@@ -147,7 +147,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::OperationRef o
     stream << signature(operation) << ";" << endl;
 }
 
-void CppHeadersFormatter::signature(std::ostream& stream, Model::OperationRef operation) const
+void CppHeadersFormatter::signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->result())
     {
@@ -180,7 +180,7 @@ void CppHeadersFormatter::definition(std::ostream& stream, Model::EnumRef enum_)
     stream << "};" << endl;
 }
 
-void CppHeadersFormatter::definition(std::ostream& stream, Model::ValueRef value) const
+void CppHeadersFormatter::definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
     stream << name(value) << " = " << value->value();
 }

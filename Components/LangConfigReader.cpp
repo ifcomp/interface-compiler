@@ -1,12 +1,12 @@
 #include "Components/LangConfigReader.hpp"
 
 #include "Model/Class.hpp"
-#include "Model/Constant.hpp"
+#include "Model/Class/Constant.hpp"
 #include "Model/Documentation.hpp"
 #include "Model/Enum.hpp"
-#include "Model/Event.hpp"
+#include "Model/Class/Event.hpp"
 #include "Model/Namespace.hpp"
-#include "Model/Operation.hpp"
+#include "Model/Class/Operation.hpp"
 #include "Model/Parameter.hpp"
 #include "Model/Primitive.hpp"
 #include "Model/Struct.hpp"
@@ -190,7 +190,7 @@ string LangConfigReader::formatNamespace(Model::IdentifiableRef identifiable) co
 }
 
 
-LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjectRef styleContextObject, StyleAttribute styleAttribute) const
+LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::ObjectRef styleContextObject, StyleAttribute styleAttribute) const
 {
     const YAML::Node &node = configValue(styleAttribute, styleContextObject);
 
@@ -208,7 +208,7 @@ LangConfigReader::NameStyle LangConfigReader::configNameStyle(Model::DomainObjec
 }
 
 
-YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject) const
+YAML::Node LangConfigReader::configValue(LangConfigReader::StyleAttribute styleAttribute, Model::ObjectRef styleContextObject) const
 {
     string styleAttributekey(styleAttributeKeys[styleAttribute]);
     string styleContextKey = "default";
@@ -259,7 +259,7 @@ std::string LangConfigReader::listKnownStyleAttributes() const
 }
 
 
-string LangConfigReader::styleToken(string input, Model::DomainObjectRef styleContextObject) const
+string LangConfigReader::styleToken(string input, Model::ObjectRef styleContextObject) const
 {
     if (styleContextObject->objectTypeName() != Model::Primitive::TYPE_NAME /*&&
         styleContextObject->objectTypeName() != Model::Container::TYPE_NAME*/)

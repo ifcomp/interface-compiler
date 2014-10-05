@@ -65,7 +65,7 @@ void NamespaceReader::parseFile(std::istream& stream)
     YAML::Node yamlConfig = loadFile(stream);
 
     try {
-        parseNamespaceMembers(yamlConfig, mRootNamespace);
+        parseElements(yamlConfig, mRootNamespace);
     }
     catch (const runtime_error &e)
     {
@@ -87,7 +87,7 @@ void NamespaceReader::reset()
 }
 
 
-void NamespaceReader::parseNamespaceMembers(const YAML::Node &node, NamespaceRef rootNamespace)
+void NamespaceReader::parseElements(const YAML::Node &node, NamespaceRef rootNamespace)
 {
     for (auto sequenceNode : node)
     {
@@ -98,20 +98,20 @@ void NamespaceReader::parseNamespaceMembers(const YAML::Node &node, NamespaceRef
             if (mParserMethods.find(nodeType) != mParserMethods.end())
             {
                 MemberFunc func = mParserMethods[nodeType];
-                NamespaceMemberRef member = (this->*func)(sequenceNode);
-                member->setParentObject(rootNamespace);
-                rootNamespace->addMember(member);
+                ElementRef element = (this->*func)(sequenceNode);
+                element->setParentObject(rootNamespace);
+                rootNamespace->addElement(element);
             }
             else
             {
-                cout << "WARNING: ignoring unknown nodetype " << nodeType << endl;
+                cout << "WARNING: ignoring unknown type " << nodeType << endl;
             }
         }
     }
 }
 
 
-NamespaceMemberRef NamespaceReader::parseNamespace(const YAML::Node &node)
+ElementRef NamespaceReader::parseNamespace(const YAML::Node &node)
 {
     string namespaceName;
 
@@ -134,7 +134,7 @@ NamespaceMemberRef NamespaceReader::parseNamespace(const YAML::Node &node)
 
     if (checkNode(node, KEY_MEMBERS, YAML::NodeType::Sequence, true))
     {
-        parseNamespaceMembers(node[KEY_MEMBERS], newNamespace);
+        parseElements(node[KEY_MEMBERS], newNamespace);
     }
 
     endNamespace();
@@ -142,7 +142,7 @@ NamespaceMemberRef NamespaceReader::parseNamespace(const YAML::Node &node)
 }
 
 
-NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
+ElementRef NamespaceReader::parseClass(const YAML::Node &node)
 {
     ClassRef newClass = newIdentifiable<Class>(node);
     registerType(newClass);
@@ -169,7 +169,7 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
         {
             for (auto operationNode : node[KEY_OPERATIONS])
             {
-                OperationRef newOperation = parseOperation(operationNode);
+                Class::OperationRef newOperation = parseClassOperation(operationNode);
                 newOperation->setParentObject(newClass);
                 newClass->addOperation(newOperation);
             }
@@ -179,7 +179,7 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
         {
             for (auto eventNode : node[KEY_EVENTS])
             {
-                EventRef newEvent = parseEvent(eventNode);
+                Class::EventRef newEvent = parseClassEvent(eventNode);
                 newEvent->setParentObject(newClass);
                 newClass->addEvent(newEvent);
             }
@@ -189,7 +189,7 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
         {
             for (auto constantNode : node[KEY_CONSTANTS])
             {
-                ConstantRef newConstant = parseConstant(constantNode);
+                Class::ConstantRef newConstant = parseClassConstant(constantNode);
                 newConstant->setParentObject(newClass);
                 newClass->addConstant(newConstant);
             }
@@ -204,7 +204,7 @@ NamespaceMemberRef NamespaceReader::parseClass(const YAML::Node &node)
 }
 
 
-NamespaceMemberRef NamespaceReader::parsePrimitive(const YAML::Node &node)
+ElementRef NamespaceReader::parsePrimitive(const YAML::Node &node)
 {
     // Primitives only consist of their names
     PrimitiveRef newPrimitive = newIdentifiable<Primitive>(node);
@@ -231,7 +231,7 @@ NamespaceMemberRef NamespaceReader::parsePrimitive(const YAML::Node &node)
 }
 
 
-NamespaceMemberRef NamespaceReader::parseEnum(const YAML::Node &node)
+ElementRef NamespaceReader::parseEnum(const YAML::Node &node)
 {
     EnumRef newEnum = newIdentifiable<Enum>(node);
     registerType(newEnum);
@@ -244,7 +244,7 @@ NamespaceMemberRef NamespaceReader::parseEnum(const YAML::Node &node)
             {
                 for (auto enumNode : node[KEY_VALUES])
                 {
-                    ValueRef newValue = parseValue(enumNode);
+                    Enum::ValueRef newValue = parseEnumValue(enumNode);
                     newValue->setParentObject(newEnum);
                     newEnum->addValue(newValue);
                 }
@@ -264,7 +264,7 @@ NamespaceMemberRef NamespaceReader::parseEnum(const YAML::Node &node)
 }
 
 
-NamespaceMemberRef NamespaceReader::parseStruct(const YAML::Node &node)
+ElementRef NamespaceReader::parseStruct(const YAML::Node &node)
 {
     StructRef newStruct = newIdentifiable<Struct>(node);
     registerType(newStruct);
@@ -297,9 +297,9 @@ NamespaceMemberRef NamespaceReader::parseStruct(const YAML::Node &node)
 }
 
 
-OperationRef NamespaceReader::parseOperation(const YAML::Node &node)
+Class::Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node &node)
 {
-    OperationRef newOperation = newIdentifiable<Operation>(node);
+    Class::Class::OperationRef newOperation = newIdentifiable<Class::Operation>(node);
 
     try
     {
@@ -345,9 +345,9 @@ OperationRef NamespaceReader::parseOperation(const YAML::Node &node)
 }
 
 
-EventRef NamespaceReader::parseEvent(const YAML::Node &node)
+Class::Class::EventRef NamespaceReader::parseClassEvent(const YAML::Node &node)
 {
-    EventRef newEvent = newIdentifiable<Event>(node);
+    Class::Class::EventRef newEvent = newIdentifiable<Class::Event>(node);
 
     try
     {
@@ -380,9 +380,9 @@ EventRef NamespaceReader::parseEvent(const YAML::Node &node)
 }
 
 
-ValueRef NamespaceReader::parseValue(const YAML::Node &node)
+Enum::Enum::ValueRef NamespaceReader::parseEnumValue(const YAML::Node &node)
 {
-    ValueRef newValue = newIdentifiable<Value>(node);
+    Enum::Enum::ValueRef newValue = newIdentifiable<Enum::Value>(node);
 
     if (node[KEY_VALUE].IsScalar())
     {
@@ -449,9 +449,9 @@ TypeBaseRef NamespaceReader::parseType(const YAML::Node &node)
 }
 
 
-ConstantRef NamespaceReader::parseConstant(const YAML::Node &node)
+Class::ConstantRef NamespaceReader::parseClassConstant(const YAML::Node &node)
 {
-    ConstantRef newConstant = newIdentifiable<Constant>(node);
+    Class::ConstantRef newConstant = newIdentifiable<Class::Constant>(node);
 
     try
     {
@@ -525,7 +525,7 @@ void NamespaceReader::parseDoc(const YAML::Node &node, IdentifiableRef identifia
 }
 
 
-void NamespaceReader::registerType(NamespaceMemberRef member)
+void NamespaceReader::registerType(ElementRef member)
 {
     std::string type = getCurrentNamespace() + "::" + member->longName();
 
@@ -540,7 +540,7 @@ void NamespaceReader::registerType(NamespaceMemberRef member)
 }
 
 
-NamespaceMemberRef NamespaceReader::resolveTypeName(string typeName)
+ElementRef NamespaceReader::resolveTypeName(string typeName)
 {
     std::string key = getCurrentNamespace() + "::" + typeName;
 
@@ -558,7 +558,7 @@ TypeRef NamespaceReader::resolveType(TypeBaseRef type)
 
     if (unresolvedType)
     {
-        NamespaceMemberRef member = resolveTypeName(unresolvedType->primary());
+        ElementRef member = resolveTypeName(unresolvedType->primary());
 
         if (member)
         {
@@ -620,10 +620,10 @@ void NamespaceReader::resolveParameterType(ParameterRef parameter)
 
 void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
 {
-    for (auto namespaceMember : rootNamespace->members())
+    for (auto element : rootNamespace->elements())
     {
         // namespace
-        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(namespaceMember);
+        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(element);
         if (nestedNamespace)
         {
             try {
@@ -634,7 +634,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 throw runtime_error(addFQNameToException(nestedNamespace, ""));
             }
         }
-        else if (const ClassRef &classRef = dynamic_pointer_cast<Class>(namespaceMember))
+        else if (const ClassRef &classRef = dynamic_pointer_cast<Class>(element))
         {
             // resolve events, operations & return
             try {
@@ -696,7 +696,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                     }
                     catch (const runtime_error &e)
                     {
-                        throw runtime_error(addFQNameToException(namespaceMember, " "));
+                        throw runtime_error(addFQNameToException(element, " "));
                     }
                 }
             }
@@ -705,7 +705,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                 throw runtime_error(addFQNameToException(classRef, "::"));
             }
         }
-        else if (const StructRef &structRef = dynamic_pointer_cast<Struct>(namespaceMember))
+        else if (const StructRef &structRef = dynamic_pointer_cast<Struct>(element))
         {
             // resolve structs
             try {
@@ -716,7 +716,7 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
             }
             catch (const runtime_error &e)
             {
-                throw runtime_error(addFQNameToException(namespaceMember, " "));
+                throw runtime_error(addFQNameToException(element, " "));
             }
         }
     }

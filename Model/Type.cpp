@@ -12,22 +12,22 @@ Type::~Type()
 {
 }
 
-NamespaceMemberRef Type::primary()
+ElementRef Type::primary()
 {
     return _primary;
 }
 
-void Type::setPrimary(NamespaceMemberRef primary)
+void Type::setPrimary(ElementRef primary)
 {
     _primary = primary;
 }
 
-void Type::addParam(NamespaceMemberRef param)
+void Type::addParam(ElementRef param)
 {
     _params.push_back(param);
 }
 
-const std::vector<NamespaceMemberRef>& Type::params()
+const std::vector<ElementRef>& Type::params()
 {
     return _params;
 }

@@ -17,14 +17,14 @@ Namespace::~Namespace()
 {
 }
 
-std::vector<NamespaceMemberRef> Namespace::members()
+std::vector<ElementRef> Namespace::elements()
 {
-    return _members;
+    return _elements;
 }
 
-void Namespace::addMember(NamespaceMemberRef member)
+void Namespace::addElement(ElementRef element)
 {
-	_members.push_back(member);
+	_elements.push_back(element);
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

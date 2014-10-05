@@ -1,10 +1,11 @@
 #pragma once
 
+#include "Model/Object.hpp"
 #include "Model/Namespace.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Root : public DomainObject
+class Root : public Object
 {
 public:
     static const char* TYPE_NAME;

@@ -69,13 +69,13 @@ struct FormatterConfig
 	typedef std::tuple<
 		TypeNameConfig<Model::Namespace>,
 		TypeNameConfig<Model::Parameter>,
-		TypeNameConfig<Model::Enum>,
-		TypeNameConfig<Model::Value>,
-		TypeNameConfig<Model::Event>,
 		TypeNameConfig<Model::Struct>,
+		TypeNameConfig<Model::Enum>,
+		TypeNameConfig<Model::Enum::Value>,
 		TypeNameConfig<Model::Class>,
-		TypeNameConfig<Model::Operation>,
-		TypeNameConfig<Model::Constant>
+		TypeNameConfig<Model::Class::Constant>,
+		TypeNameConfig<Model::Class::Event>,
+		TypeNameConfig<Model::Class::Operation>
 	> NameConfigs;
 
 	std::string namespaceDelimiter;

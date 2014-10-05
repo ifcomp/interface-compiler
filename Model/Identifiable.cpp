@@ -2,8 +2,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-Identifiable::Identifiable(DomainObjectRef parentObject)
-    : DomainObject(parentObject)
+Identifiable::Identifiable()
 {
 }
 

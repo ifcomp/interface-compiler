@@ -28,15 +28,15 @@ JSHeaderFormatter::JSHeaderFormatter(std::istream &configStream)
         {
             std::string("."), std::string(4, ' '), 85,
             NameConfigs {
-                NameConfig<Namespace> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Parameter> { NameStyle::LOWER_CAMELCASE, "", false },
-                NameConfig<Enum> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Value> { NameStyle::UPPERCASE, "_", false },
-                NameConfig<Event> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Struct> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Class> { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Operation> { NameStyle::LOWER_CAMELCASE, "", false },
-                NameConfig<Constant> { NameStyle::UPPERCASE, "", false }
+                NameConfig<Namespace>        { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Struct>           { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "", false },
+                NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             }
         })
     , _langConfigReader(configStream)
@@ -65,9 +65,9 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::NamespaceRef nam
 {
 	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || {  }" << endl << endl;
 	
-	for ( auto member : namespace_->members() )
+	for ( auto element : namespace_->elements() )
 	{
-		filter(stream) << definition(member);
+		filter(stream) << definition(element);
 	}
 }
 
@@ -122,7 +122,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ClassRef class_)
 	stream << "// class: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::ConstantRef constant) const
+void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 	int number = 0;
 	std::string valueString;
@@ -146,7 +146,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::ConstantRef cons
 		valueString << ";" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::EventRef event) const
+void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
@@ -168,7 +168,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::EventRef event) 
 	stream << "// event: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::OperationRef operation) const
+void JSHeaderFormatter::definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->doc())
 	{
@@ -178,7 +178,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::OperationRef ope
 	stream << signature(operation) << " { throw new Error(\"not implemented\"); }" << endl << endl;
 }
 
-void JSHeaderFormatter::signature(std::ostream& stream, Model::OperationRef operation) const
+void JSHeaderFormatter::signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 	if(operation->result())
 	{
@@ -227,7 +227,7 @@ void JSHeaderFormatter::definition(std::ostream& stream, Model::EnumRef enum_) c
 	stream << "// enum: }" << endl << endl;
 }
 
-void JSHeaderFormatter::definition(std::ostream& stream, Model::ValueRef value) const
+void JSHeaderFormatter::definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 	if (value->doc())
 	{

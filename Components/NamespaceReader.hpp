@@ -6,18 +6,18 @@
 #include <map>
 #include "Model/Namespace.hpp"
 #include "Model/Class.hpp"
+#include "Model/Class/Operation.hpp"
+#include "Model/Class/Event.hpp"
+#include "Model/Class/Constant.hpp"
 #include "Model/Enum.hpp"
+#include "Model/Enum/Value.hpp"
 #include "Model/Struct.hpp"
 #include "Model/Primitive.hpp"
 #include "Model/Documentation.hpp"
-#include "Model/Operation.hpp"
-#include "Model/Event.hpp"
 #include "Model/Parameter.hpp"
 #include "Model/Type.hpp"
-#include "Model/Value.hpp"
 #include "Model/UnresolvedType.hpp"
 #include "Model/Type.hpp"
-#include "Model/Constant.hpp"
 
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
@@ -32,7 +32,7 @@ class NamespaceReader : public YamlReader
      * Member function signature for nodetype-lookup
      * @see Parser::Parser
      */
-    typedef Model::NamespaceMemberRef (NamespaceReader::*MemberFunc)(const YAML::Node &);
+    typedef Model::ElementRef (NamespaceReader::*MemberFunc)(const YAML::Node &);
 
 public:
     /**
@@ -133,7 +133,7 @@ private:
      * @param node          YAML root node
      * @param rootNamespace Pointer to Namespace object that acts as root for found entries
      */
-    void parseNamespaceMembers(const YAML::Node &node, Model::NamespaceRef rootNamespace);
+    void parseElements(const YAML::Node &node, Model::NamespaceRef rootNamespace);
 
     /**
      * @brief Parse TYPE_NAMESPACE section
@@ -141,7 +141,7 @@ private:
      * @return  Shared pointer to a filled Object
      * @throw  std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parseNamespace(const YAML::Node &node);
+    Model::ElementRef parseNamespace(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_CLASS section
@@ -149,7 +149,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parseClass(const YAML::Node &node);
+    Model::ElementRef parseClass(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_PRIMITIVE section
@@ -157,7 +157,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parsePrimitive(const YAML::Node &node);
+    Model::ElementRef parsePrimitive(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_ENUM section
@@ -165,7 +165,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parseEnum(const YAML::Node &node);
+    Model::ElementRef parseEnum(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_STRUCT section
@@ -173,7 +173,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::NamespaceMemberRef parseStruct(const YAML::Node &node);
+    Model::ElementRef parseStruct(const YAML::Node &node);
 
     /**
      * @brief Parse TYPE_CONSTANT definition
@@ -181,7 +181,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ConstantRef parseConstant(const YAML::Node &node);
+    Model::Class::ConstantRef parseClassConstant(const YAML::Node &node);
 
     /**
      * @brief Parse operation definition (entries of KEY_OPERATIONS inside TYPE_CLASS section);
@@ -189,7 +189,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::OperationRef parseOperation(const YAML::Node &node);
+    Model::Class::OperationRef parseClassOperation(const YAML::Node &node);
 
     /**
      * @brief Parse event definition (entries of KEY_EVENTS inside TYPE_CLASS section)
@@ -197,7 +197,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::EventRef parseEvent(const YAML::Node &node);
+    Model::Class::EventRef parseClassEvent(const YAML::Node &node);
 
     /**
      * @brief Parse a value definition (KEY_VALUE inside KEY_VALUES section)
@@ -205,7 +205,7 @@ private:
      * @return Shared pointer to a filled Object
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ValueRef parseValue(const YAML::Node &node);
+    Model::Enum::ValueRef parseEnumValue(const YAML::Node &node);
 
     /**
      * @brief Parse parameter definition
@@ -242,14 +242,14 @@ private:
      * @brief Register type of member in map of known types.
      * @param member    Member object
      */
-    void registerType(Model::NamespaceMemberRef member);
+    void registerType(Model::ElementRef member);
 
     /**
-     * @brief Try to resolve typeName to a NamespaceMemberRef
+     * @brief Try to resolve typeName to a ElementRef
      * @param typeName  Name of type relative to current namespace stack
-     * @return Pointer to NamespaceMember object | nullptr if not found
+     * @return Pointer to Element object | nullptr if not found
      */
-    Model::NamespaceMemberRef resolveTypeName(std::string typeName);
+    Model::ElementRef resolveTypeName(std::string typeName);
 
     /**
      * @brief Try to resolve UnresolvedType object into a new Type object
@@ -309,7 +309,7 @@ private:
 private:
     Model::NamespaceRef mRootNamespace;
     std::map<std::string, MemberFunc> mParserMethods;
-    std::map<std::string, Model::NamespaceMemberRef> mKnownTypes;
+    std::map<std::string, Model::ElementRef> mKnownTypes;
     std::vector<std::string> mNamespaceElementStack;
 };
 

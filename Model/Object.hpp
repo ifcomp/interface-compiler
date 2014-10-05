@@ -9,26 +9,26 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
  * @brief Base class for identifying and linking domain objects.
  * @autor Gunther Lemm <lemm@silpion.de>
  */
-class DomainObject;
+class Object;
 
-typedef std::shared_ptr<DomainObject> DomainObjectRef;
+typedef std::shared_ptr<Object> ObjectRef;
 
-class DomainObject
+class Object
 {
 public:
-    DomainObject(DomainObjectRef parentObject = nullptr);
+    Object();
 
     /**
      * @brief Get pointer to parent object.
      * @return Pointer to parent object
      */
-    DomainObjectRef parentObject();
+    ObjectRef parentObject();
 
     /**
      * @brief Set pointer to parent object.
      * @param parentObject Pointer to parent object
      */
-    void setParentObject(DomainObjectRef parentObject);
+    void setParentObject(ObjectRef parentObject);
 
     /**
      * @brief Get Class identifier
@@ -37,7 +37,7 @@ public:
     virtual std::string objectTypeName() = 0;
 
 private:
-    DomainObjectRef _parentObject;
+    ObjectRef _parentObject;
 };
 
 } } } // namespace Everbase::InterfaceCompiler::Model

@@ -1,12 +1,12 @@
-#include "Model/NamespaceMember.hpp"
+#include "Model/Element.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-NamespaceMember::NamespaceMember()
+Element::Element()
 {
 }
 
-NamespaceMember::~NamespaceMember()
+Element::~Element()
 {
 }
 

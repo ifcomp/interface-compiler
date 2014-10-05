@@ -32,13 +32,13 @@ protected:
 	virtual void definition(std::ostream& stream, Model::StructRef struct_) const override;
 
 	virtual void definition(std::ostream& stream, Model::ClassRef class_) const override;
-	virtual void definition(std::ostream& stream, Model::ConstantRef constant) const override;
-	virtual void definition(std::ostream& stream, Model::EventRef event) const override;
-	virtual void definition(std::ostream& stream, Model::OperationRef operation) const override;
-	virtual void signature(std::ostream& stream, Model::OperationRef operation) const override;
+	virtual void definition(std::ostream& stream, Model::Class::ConstantRef constant) const override;
+	virtual void definition(std::ostream& stream, Model::Class::EventRef event) const override;
+	virtual void definition(std::ostream& stream, Model::Class::OperationRef operation) const override;
+	virtual void signature(std::ostream& stream, Model::Class::OperationRef operation) const override;
 
 	virtual void definition(std::ostream& stream, Model::EnumRef enum_) const override;
-	virtual void definition(std::ostream& stream, Model::ValueRef value) const override;
+	virtual void definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
 };
 
 } } } // namespace: Everbase::InterfaceCompiler::Components

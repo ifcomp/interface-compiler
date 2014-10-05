@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Components/YamlReader.hpp"
-#include "Model/DomainObject.hpp"
+#include "Model/Object.hpp"
 #include "Model/Type.hpp"
 #include "Model/Primitive.hpp"
 
@@ -79,7 +79,7 @@ public:
      * @param styleContext Style context enum entry to specify the config section
      * @return Configured NameStyle for styleContext
      */
-    NameStyle configNameStyle(Model::DomainObjectRef styleContextObject, StyleAttribute styleAttribute = StyleAttribute::NAME_STYLE) const;
+    NameStyle configNameStyle(Model::ObjectRef styleContextObject, StyleAttribute styleAttribute = StyleAttribute::NAME_STYLE) const;
 
     /**
      * @brief Print all registered style attributes to stdout.
@@ -94,13 +94,13 @@ public:
      * @return Attribute value
      */
     template <typename T> T configAttribute(StyleAttribute styleAttribute,
-                                            Model::DomainObjectRef styleContextObject = nullptr) const
+                                            Model::ObjectRef styleContextObject = nullptr) const
     {
         const YAML::Node &node = configValue(styleAttribute, styleContextObject);
         return node.as<T>();
     }
 
-    std::string styleToken(std::string input, Model::DomainObjectRef styleContextObject) const;
+    std::string styleToken(std::string input, Model::ObjectRef styleContextObject) const;
 
     std::string styleToken(std::string input, NameStyle nameStyle, std::string delimiter) const;
 
@@ -121,7 +121,7 @@ private:
      * @throw std::runtime_error if key was not found in styleContext or default context
      * @see styleContextKeys
      */
-    YAML::Node configValue(StyleAttribute styleAttribute, Model::DomainObjectRef styleContextObject) const;
+    YAML::Node configValue(StyleAttribute styleAttribute, Model::ObjectRef styleContextObject) const;
 
 private:
     YAML::Node mRootNode;

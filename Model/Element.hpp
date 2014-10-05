@@ -7,13 +7,13 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class NamespaceMember : public Identifiable
+class Element : public Identifiable
 {
 public:
-    NamespaceMember();
-    virtual ~NamespaceMember();
+    Element();
+    virtual ~Element();
 };
 
-typedef std::shared_ptr<NamespaceMember> NamespaceMemberRef;
+typedef std::shared_ptr<Element> ElementRef;
 
 } } } // namespace Everbase::InterfaceCompiler::Model

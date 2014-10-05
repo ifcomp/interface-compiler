@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Model/NamespaceMember.hpp"
+#include "Model/Element.hpp"
 
 #include <string>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Namespace : public NamespaceMember
+class Namespace : public Element
 {
 public:
     static const char* TYPE_NAME;
 
 private:
-    std::vector<NamespaceMemberRef> _members;
+    std::vector<ElementRef> _elements;
 
 public:
     Namespace();
@@ -21,8 +21,8 @@ public:
     virtual ~Namespace();
     virtual std::string objectTypeName() override { return TYPE_NAME; }
 
-    void addMember(NamespaceMemberRef member);
-    std::vector<NamespaceMemberRef> members();
+    void addElement(ElementRef element);
+    std::vector<ElementRef> elements();
 };
 
 typedef std::shared_ptr<Namespace> NamespaceRef;

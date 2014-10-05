@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model/DomainObject.hpp"
+#include "Model/Object.hpp"
 #include "Model/Documentation.hpp"
 
 #include <string>
@@ -8,10 +8,10 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Identifiable : public DomainObject
+class Identifiable : public Object
 {
 public:
-    Identifiable(DomainObjectRef parentObject = nullptr);
+    Identifiable();
     virtual ~Identifiable();
 
     std::string longName();

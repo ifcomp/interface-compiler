@@ -2,12 +2,13 @@
 
 #include "Model/Identifiable.hpp"
 #include "Model/Type.hpp"
+#include "Model/Class.hpp"
 
 #include <boost/any.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Constant : public Identifiable
+class Class::Constant : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
@@ -27,7 +28,5 @@ public:
     boost::any value();
     void setValue(boost::any value);
 };
-
-typedef std::shared_ptr<Constant> ConstantRef;
 
 } } } // namespace Everbase::InterfaceCompiler::Model

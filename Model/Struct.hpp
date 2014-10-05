@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model/NamespaceMember.hpp"
+#include "Model/Element.hpp"
 #include "Model/Parameter.hpp"
 
 #include <string>
@@ -8,7 +8,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Struct : public NamespaceMember
+class Struct : public Element
 {
 public:
     static const char* TYPE_NAME;

@@ -12,12 +12,12 @@ Enum::~Enum()
 {
 }
 
-void Enum::addValue(ValueRef value)
+void Enum::addValue(Enum::ValueRef value)
 {
     _values.push_back(value);
 }
 
-std::vector<ValueRef> Enum::values()
+std::vector<Enum::ValueRef> Enum::values()
 {
     return _values;
 }

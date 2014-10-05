@@ -33,32 +33,32 @@ void Class::setParent(TypeBaseRef parent)
 	_parent = parent;
 }
 
-void Class::addOperation(OperationRef operation)
+void Class::addOperation(Class::OperationRef operation)
 {
     _operations.push_back(operation);
 }
 
-std::vector<OperationRef> Class::operations()
+std::vector<Class::OperationRef> Class::operations()
 {
 	return _operations;
 }
 
-void Class::addEvent(EventRef event)
+void Class::addEvent(Class::EventRef event)
 {
     _events.push_back(event);
 }
 
-std::vector<EventRef> Class::events()
+std::vector<Class::EventRef> Class::events()
 {
     return _events;
 }
 
-void Class::addConstant(ConstantRef constant)
+void Class::addConstant(Class::ConstantRef constant)
 {
 	_constants.push_back(constant);
 }
 
-std::vector<ConstantRef> Class::constants()
+std::vector<Class::ConstantRef> Class::constants()
 {
 	return _constants;
 }

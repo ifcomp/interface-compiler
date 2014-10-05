@@ -1,39 +1,39 @@
 set(SRC ${SRC}
    Model/Class.cpp
-   Model/Constant.cpp
+   Model/Class/Constant.cpp
+   Model/Class/Event.cpp
+   Model/Class/Operation.cpp
    Model/Documentation.cpp
-   Model/DomainObject.cpp
+   Model/Object.cpp
    Model/Enum.cpp
-   Model/Event.cpp
+   Model/Enum/Value.cpp
    Model/Identifiable.cpp
    Model/Namespace.cpp
-   Model/NamespaceMember.cpp
-   Model/Operation.cpp
+   Model/Element.cpp
    Model/Parameter.cpp
    Model/Primitive.cpp
    Model/Struct.cpp
    Model/TypeBase.cpp
    Model/UnresolvedType.cpp
    Model/Type.cpp
-   Model/Value.cpp
    Model/Root.cpp
 
    Model/Class.hpp
-   Model/Constant.hpp
+   Model/Class/Constant.hpp
+   Model/Class/Event.hpp
+   Model/Class/Operation.hpp
    Model/Documentation.hpp
-   Model/DomainObject.hpp
+   Model/Object.hpp
    Model/Enum.hpp
-   Model/Event.hpp
+   Model/Enum/Value.hpp
    Model/Identifiable.hpp
    Model/Namespace.hpp
-   Model/NamespaceMember.hpp
-   Model/Operation.hpp
+   Model/Element.hpp
    Model/Parameter.hpp
    Model/Primitive.hpp
    Model/Struct.hpp
    Model/TypeBase.hpp
    Model/UnresolvedType.hpp
    Model/Type.hpp
-   Model/Value.hpp
    Model/Root.hpp
 PARENT_SCOPE)

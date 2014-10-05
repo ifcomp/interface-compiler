@@ -2,13 +2,14 @@
 
 #include "Model/Identifiable.hpp"
 #include "Model/Parameter.hpp"
+#include "Model/Class.hpp"
 
 #include <string>
 #include <memory>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Operation : public Identifiable
+class Class::Operation : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
@@ -36,7 +37,5 @@ public:
     void setResult(ParameterRef result);
     ParameterRef result();
 };
-
-typedef std::shared_ptr<Operation> OperationRef;
 
 } } } // namespace Everbase::InterfaceCompiler::Model

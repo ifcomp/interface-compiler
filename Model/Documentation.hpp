@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model/DomainObject.hpp"
+#include "Model/Object.hpp"
 
 #include <string>
 #include <memory>
@@ -9,11 +9,13 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
-class Documentation : public DomainObject
+class Documentation : public Object
 {
 public:
     static const char* TYPE_NAME;
+    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
+public:
     static const char* KEY_BRIEF;
     static const char* KEY_MORE;
     static const char* KEY_PARAM;
@@ -32,7 +34,6 @@ private:
 public:
     Documentation();
     virtual ~Documentation();
-    virtual std::string objectTypeName() override { return TYPE_NAME; }
 
     bool keyExists(std::string doxygenKey);
     std::vector<DocEntry> docEntries();
