@@ -10,15 +10,13 @@ int main(int argc, char** argv)
 	using namespace Everbase::InterfaceCompiler;
     using namespace std;
 
-	ConfigProvider cprov;
-
     try
     {
         std::ifstream input(argc > 1 ? argv[1] : "../yaml/everbase.yaml");
         input.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
         Components::StandardParser parser;
-        Model::RootRef root = parser.execute(cprov, input);
+        Model::RootRef root = parser.execute(input);
 
         try
         {
@@ -26,7 +24,7 @@ int main(int argc, char** argv)
             output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
             Components::CppHeadersFormatter format;
-            format.execute(cprov, root, output);
+            format.execute(root, output);
         }
         catch (const ios_base::failure &e)
         {
@@ -39,7 +37,7 @@ int main(int argc, char** argv)
             output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
             Components::JSHeaderFormatter format;
-            format.execute(cprov, root, output);
+            format.execute(root, output);
         }
         catch (const ios_base::failure &e)
         {

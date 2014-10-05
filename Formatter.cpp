@@ -10,7 +10,7 @@ Formatter::Formatter(FormatterConfig config)
 {
 }
 
-void Formatter::execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const
+void Formatter::execute ( Model::RootRef input, std::ostream& output ) const
 {
 	output << definition(input);
 }

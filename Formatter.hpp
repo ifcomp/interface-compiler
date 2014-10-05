@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Model/Model.hpp"
-#include "ConfigProvider.hpp"
 #include "FormatToken.hpp"
 #include "IndexList.hpp"
 #include "StreamFilter.hpp"
@@ -16,7 +15,7 @@ class Formatter
 {
 public:
 	Formatter(FormatterConfig config);
-	void execute ( const ConfigProvider& cprov, Model::RootRef input, std::ostream& output ) const;
+	void execute ( Model::RootRef input, std::ostream& output ) const;
 
 protected:
 	const FormatterConfig config;

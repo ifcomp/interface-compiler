@@ -3,10 +3,8 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components {
 
-Model::RootRef StandardParser::execute ( const ConfigProvider& cprov, std::istream& input ) const
+Model::RootRef StandardParser::execute ( std::istream& input ) const
 {
-	using namespace std;
-
     auto tmpNamespace = std::make_shared<Model::Namespace>("Root");
     NamespaceReader reader(tmpNamespace);
 
