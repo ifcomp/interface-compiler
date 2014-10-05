@@ -12,6 +12,9 @@ Identifiable::~Identifiable()
 
 std::string Identifiable::longName()
 {
+	if(_longName.length() == 0)
+		return _shortName;
+
     return _longName;
 }
 
@@ -22,6 +25,9 @@ void Identifiable::setLongName(std::string longName)
 
 std::string Identifiable::shortName()
 {
+	if(_shortName.length() == 0)
+		return _longName;
+
     return _shortName;
 }
 

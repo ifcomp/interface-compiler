@@ -2,11 +2,88 @@
   type: namespace
   members:
 
-#--END EVERBASE CORESYSTEM BEGIN ----------------------------------------
+# ********* Primitives *********
+
+    - name: Primitives
+      type: namespace
+      members:
+
+        - name: Byte
+          type: primitive
+          underlying: Byte
+
+        - name: UInt16
+          type: primitive
+          underlying: UInt16
+
+        - name: UInt32
+          type: primitive
+          underlying: UInt32
+
+        - name: UInt64
+          type: primitive
+          underlying: UInt64
+
+        - name: Boolean
+          type: primitive
+          underlying: Boolean
+
+        - name: Timestamp
+          type: primitive
+          underlying: Timestamp
+
+        - name: String
+          type: primitive
+          underlying: String
+
+        - name: Uuid
+          type: primitive
+          underlying: Uuid
+
+        - name: Buffer
+          type: primitive
+          underlying: Buffer
+
+        - name: ConstBuffer
+          type: primitive
+          underlying: ConstBuffer
+
+        - name: Vector
+          type: primitive
+          underlying: Vector
+
+        - name: List
+          type: primitive
+          underlying: List
+
+        - name: Set
+          type: primitive
+          underlying: Set
+
+        - name: Map
+          type: primitive
+          underlying: Map
+
+# ********* CoreSystem *********
 
     - name: CoreSystem
       type: namespace
       members:
+
+        - name: DeviceRole
+          type: enum
+          doc: { brief: 'Specifies the behaviour of a device within a domain.', more: 'Can be used as flag, but not as a bit mask.' }
+          values:
+            - { name: Grid, value: 0x1, doc: { brief: 'Grid members are steady members and guarantee availability of data. The grid is entirely trusted by a domain provider.' } }
+            - { name: Peer, value: 0x2, doc: { brief: 'Peers are volatile members.' } }
+
+        - name: MembershipMode
+          type: enum
+          doc: { brief: 'Specifies the membership mode of an user or device.', more: 'Can be used as a bit mask.' }
+          values:
+            - { name: JoinRequest, value: 0x1 }
+            - { name: Member, value: 0x2 }
+
         - name: Profile
           type: class
           doc: { brief: 'Is an device local element for managing the users credentials for an arbitrary set of domains.' }
@@ -20,7 +97,7 @@
               static: true
               return: { name: Profile, type: Everbase::CoreSystem::Profile }
               params:
-                - { name: ProfileId, type: Everbase::Uuid }
+                - { name: ProfileId, type: Everbase::Primitives::Uuid }
             - name: GetPrimary
               doc: { brief: 'Returns the primary profile, which can be used e.g. for desktop applications.' }
               static: true
@@ -28,12 +105,12 @@
             - name: GetAll
               doc: { brief: 'Returns a set of profile identifiers of the local device.' }
               static: true
-              return: { name: Ids, type: [ Everbase::Set, Everbase::CoreSystem::Profile ] }
+              return: { name: Ids, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::Profile ] }
             - name: Erase
               doc: { brief: 'Erases the profile.', more: 'Once the profile is erased, all subsequent calls to that object fail. In case this is the primary profile, the operation will fail.' }
             - name: GetId
               doc: { brief: 'Returns the identifier of the profile.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
               synchronous: true
 
         - name: Session
@@ -62,8 +139,8 @@
               synchronous: true
               return: { name: Credential, type: Everbase::CoreSystem::Credential, doc: { brief: 'The credential derived from username and password.' } }
               params:
-                - { name: Password, type: Everbase::String, doc: { brief: 'The password.' } }
-                - { name: Username, type: Everbase::String, doc: { brief: 'The username.' } }
+                - { name: Password, type: Everbase::Primitives::String, doc: { brief: 'The password.' } }
+                - { name: Username, type: Everbase::Primitives::String, doc: { brief: 'The username.' } }
             - name: FromX509
               short: X509
               doc: { brief: 'Returns a X.509 credential.' }
@@ -71,7 +148,7 @@
               synchronous: true
               return: { name: Credential, type: Everbase::CoreSystem::Credential, doc: { brief: 'The credential derived from a X.509 certificate.' } }
               params:
-                - { name: Certificate, type: Everbase::String, doc: { brief: 'The X.509 certificate, formatted as PEM.' } }
+                - { name: Certificate, type: Everbase::Primitives::String, doc: { brief: 'The X.509 certificate, formatted as PEM.' } }
               errors:
                 - InvalidArgument/InvalidFormat
 
@@ -84,50 +161,50 @@
               static: true
               return: { name: Domain, type: Everbase::CoreSystem::Domain }
               params:
-                - { name: DomainName, type: Everbase::String }
-                - { name: AdminVCard, type: Everbase::String }
+                - { name: DomainName, type: Everbase::Primitives::String }
+                - { name: AdminVCard, type: Everbase::Primitives::String }
                 - { name: AdminCredential, type: Everbase::CoreSystem::Credential }
             - name: Open
               doc: { brief: 'Opens an existing and authenticated domain.' }
               static: true
               return: { name: Domain, type: Everbase::CoreSystem::Domain }
               params:
-                - { name: DomainName, type: Everbase::String }
+                - { name: DomainName, type: Everbase::Primitives::String }
             - name: Authenticate
               doc: { brief: 'Authenticate against an existing domain.' }
               static: true
               return: { name: Domain, type: Everbase::CoreSystem::Domain }
               params:
-                - { name: DomainName, type: Everbase::String }
+                - { name: DomainName, type: Everbase::Primitives::String }
                 - { name: Credential, type: Everbase::CoreSystem::Credential }
             - name: GetAuthenticated
               doc: { brief: 'Retrieves all authenticated domains.' }
               static: true
-              return: { name: Domain, type: [ Everbase::Set, Everbase::CoreSystem::Domain ] }
+              return: { name: Domain, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::Domain ] }
             - name: Deauthenticate
               doc: { brief: 'Invalidates the authentication.', more: 'Once the authentication of the domain is invalidated, all subsequent calls to that object fail.' }
             - name: GetName
               doc: { brief: 'Returns the domain name.' }
-              return: { name: DomainName, type: Everbase::String }
+              return: { name: DomainName, type: Everbase::Primitives::String }
             - name: AddRoot
               doc: { brief: 'Adds an object root identifier to the domain.' }
               params:
-                - { name: Type, type: Everbase::Uuid }
-                - { name: Root, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
+                - { name: Root, type: Everbase::Primitives::Uuid }
             - name: RemoveRoot
               doc: { brief: 'Removes an object root identifier from the domain.' }
               params:
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: GetRoot
               doc: { brief: 'Retrieves an object root identifier of the domain by type.' }
-              return: { name: Root, type: Everbase::Uuid }
+              return: { name: Root, type: Everbase::Primitives::Uuid }
               params:
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: HasRoot
               doc: { brief: 'Returns true if an object root identifier with the provided type exists on the domain.' }
-              return: { name: RootStatus, type: Everbase::Boolean }
+              return: { name: RootStatus, type: Everbase::Primitives::Boolean }
               params:
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
 
         - name: UserEntity
           type: class
@@ -136,7 +213,7 @@
           operations:
             - name: GetName
               doc: { brief: 'Returns the display name of the user entity.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
 
         - name: User
           type: class
@@ -148,7 +225,7 @@
               static: true
               return: { name: User, type: Everbase::CoreSystem::User }
               params:
-                - { name: VCard, type: Everbase::String }
+                - { name: VCard, type: Everbase::Primitives::String }
                 - { name: Credential, type: Everbase::CoreSystem::Credential }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
               errors:
@@ -157,10 +234,10 @@
             - name: GetAll
               doc: { brief: 'Returns all users of a domain.' }
               static: true
-              return: { name: User, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
+              return: { name: User, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::User ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
-                - { name: MembershipMode, type: Everbase::MembershipMode }
+                - { name: MembershipMode, type: Everbase::CoreSystem::MembershipMode }
             - name: GetAuthenticated
               doc: { brief: 'Returns the authenticated user of a domain.' }
               static: true
@@ -172,26 +249,26 @@
               static: true
               return: { name: User, type: Everbase::CoreSystem::User }
               params:
-                - { name: UserId, type: Everbase::Uuid }
+                - { name: UserId, type: Everbase::Primitives::Uuid }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetId
               doc: { brief: 'Returns the identifier of the user.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
               synchronous: true
             - name: Erase
               doc: { brief: 'Erases the user.', more: 'Once the user is erased, all subsequent calls to that object fail.' }
             - name: GetName
               doc: { brief: 'Returns the display name of the user.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
             - name: SetVCard
               doc: { brief: 'Sets the vcard of the user.' }
               params:
-                - { name: VCard, type: Everbase::String }
+                - { name: VCard, type: Everbase::Primitives::String }
               errors:
                 - InvalidArgument/InvalidVCardFormat
             - name: GetVCard
               doc: { brief: 'Returns the vcard of the user.' }
-              return: { name: VCard, type: Everbase::String }
+              return: { name: VCard, type: Everbase::Primitives::String }
             - name: SetCredential
               doc: { brief: 'Sets the credential of the user.' }
               params:
@@ -204,12 +281,12 @@
               return: { name: Credential, type: Everbase::CoreSystem::Credential }
             - name: GetMembershipMode
               doc: { brief: 'Returns the current membership mode.' }
-              return: { name: MembershipMode, type: Everbase::MembershipMode }
+              return: { name: MembershipMode, type: Everbase::CoreSystem::MembershipMode }
             - name: Join
               doc: { brief: 'Performs a join.' }
             - name: GetFingerprint
               doc: { brief: 'Returns the fingerprint.' }
-              return: { name: Fingerprint, type: Everbase::String }
+              return: { name: Fingerprint, type: Everbase::Primitives::String }
 
         - name: UserGroup
           type: class
@@ -222,12 +299,12 @@
               static: true
               return: { name: Group, type: Everbase::CoreSystem::UserGroup }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetAll
               doc: { brief: 'Returns all user group of a specific domain.' }
               static: true
-              return: { name: Groups, type: [ Everbase::Set, Everbase::CoreSystem::UserGroup ] }
+              return: { name: Groups, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::UserGroup ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: Open
@@ -235,21 +312,21 @@
               static: true
               return: { name: UserGroup, type: Everbase::CoreSystem::UserGroup }
               params:
-                - { name: UserGroupId, type: Everbase::Uuid }
+                - { name: UserGroupId, type: Everbase::Primitives::Uuid }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetId
               doc: { brief: 'Returns the identifier of the user group.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
               synchronous: true
             - name: Erase
               doc: { brief: 'Erases the user group.', more: 'Once the user group is erased, all subsequent calls to that object fail.' }
             - name: SetName
               doc: { brief: 'Sets the display name of the user group.' }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
             - name: GetName
               doc: { brief: 'Returns the display name of the user group.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
             - name: AddUser
               doc: { brief: 'Adds a user to the user group.' }
               params:
@@ -260,7 +337,7 @@
                 - { name: User, type: Everbase::CoreSystem::User }
             - name: GetUsers
               doc: { brief: 'Returns all users of the user group.' }
-              return: { name: Users, type: [ Everbase::Set, Everbase::CoreSystem::User ] }
+              return: { name: Users, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::User ] }
 
         - name: DeviceEntity
           type: class
@@ -269,7 +346,7 @@
           operations:
             - name: GetName
               doc: { brief: 'Returns the display name of the device entity.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
 
         - name: Device
           type: class
@@ -279,45 +356,45 @@
             - name: GetAll
               doc: { brief: 'Returns all device Everbase::CoreSystem of a domain.' }
               static: true
-              return: { name: Device, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
+              return: { name: Device, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::Device ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
-                - { name: MembershipMode, type: Everbase::MembershipMode }
+                - { name: MembershipMode, type: Everbase::CoreSystem::MembershipMode }
             - name: Open
               doc: { brief: 'Opens an existing device by id.' }
               static: true
               return: { name: Device, type: Everbase::CoreSystem::Device }
               params:
-                - { name: DeviceId, type: Everbase::Uuid }
+                - { name: DeviceId, type: Everbase::Primitives::Uuid }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetId
               doc: { brief: 'Returns the identifier of the device.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
               synchronous: true
             - name: Erase
               doc: { brief: 'Erases the device object.', more: 'Once the device object is erased, all subsequent calls to that object fail.' }
             - name: SetName
               doc: { brief: 'Sets the display name of the device object.' }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
             - name: GetName
               doc: { brief: 'Returns the display name of the device object.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
             - name: SetRole
               doc: { brief: 'Sets the role of the device object.' }
               params:
-                - { name: Role, type: Everbase::DeviceRole }
+                - { name: Role, type: Everbase::CoreSystem::DeviceRole }
             - name: GetRole
               doc: { brief: 'Returns the role of the device object.' }
-              return: { name: Role, type: Everbase::DeviceRole }
+              return: { name: Role, type: Everbase::CoreSystem::DeviceRole }
             - name: GetMembershipMode
               doc: { brief: 'Returns the current membership mode.' }
-              return: { name: MembershipMode, type: Everbase::MembershipMode }
+              return: { name: MembershipMode, type: Everbase::CoreSystem::MembershipMode }
             - name: Join
               doc: { brief: 'Performs a join.' }
             - name: GetFingerprint
               doc: { brief: 'Returns the fingerprint.' }
-              return: { name: Fingerprint, type: Everbase::String }
+              return: { name: Fingerprint, type: Everbase::Primitives::String }
 
         - name: DeviceGroup
           type: class
@@ -330,12 +407,12 @@
               static: true
               return: { name: Group, type: Everbase::CoreSystem::DeviceGroup }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetAll
               doc: { brief: 'Returns all device groups of a domain.' }
               static: true
-              return: { name: Groups, type: [ Everbase::Set, Everbase::CoreSystem::DeviceGroup ] }
+              return: { name: Groups, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::DeviceGroup ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: Open
@@ -343,21 +420,21 @@
               static: true
               return: { name: DeviceGroup, type: Everbase::CoreSystem::DeviceGroup }
               params:
-                - { name: DeviceGroupId, type: Everbase::Uuid }
+                - { name: DeviceGroupId, type: Everbase::Primitives::Uuid }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: GetId
               doc: { brief: 'Returns the identifier of the device group.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
               synchronous: true
             - name: Erase
               doc: { brief: 'Erases the device group.', more: 'Once the device group is erased, all subsequent calls to that object fail.' }
             - name: SetName
               doc: { brief: 'Sets the display name of the device group.' }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
             - name: GetName
               doc: { brief: 'Returns the display name of the device group.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
             - name: AddDevice
               doc: { brief: 'Adds a device object to the device group.' }
               params:
@@ -368,32 +445,104 @@
                 - { name: Device, type: Everbase::CoreSystem::Device }
             - name: GetDevices
               doc: { brief: 'Returns all device Everbase::CoreSystem of the device group.' }
-              return: { name: Devices, type: [ Everbase::Set, Everbase::CoreSystem::Device ] }
+              return: { name: Devices, type: [ Everbase::Primitives::Set, Everbase::CoreSystem::Device ] }
 
-#---Elements...
-
-    - name: DeviceRole
-      type: enum
-      doc: { brief: 'Specifies the behaviour of a device within a domain.', more: 'Can be used as flag, but not as a bit mask.' }
-      values:
-        - { name: Grid, value: 0x1, doc: { brief: 'Grid members are steady members and guarantee availability of data. The grid is entirely trusted by a domain provider.' } }
-        - { name: Peer, value: 0x2, doc: { brief: 'Peers are volatile members.' } }
-
-    - name: MembershipMode
-      type: enum
-      doc: { brief: 'Specifies the membership mode of an user or device.', more: 'Can be used as a bit mask.' }
-      values:
-        - { name: JoinRequest, value: 0x1 }
-        - { name: Member, value: 0x2 }
-
-#---END EVERBASE CORESYSTEM END ---------------------------------------------
-
-
-#---BEGIN EVERBASE OBJECTSTORE BEGIN ---------------------------------------------
+# ********* ObjectStore *********
 
     - name: ObjectStore
       type: namespace
       members:
+
+        - name: PermissionMode
+          type: enum
+          doc: { brief: 'Defines a set of potentially controllable operations on objects.', more: 'Can be used as a bit mask.' }
+          values:
+            - { name: Read, value: 0x1, doc: { brief: 'Read operation.' } }
+            - { name: Write, value: 0x2, doc: { brief: 'Write operation.' }  }
+            - { name: Manage, value: 0x4, doc: { brief: 'Manage operation, includes management of permissions and rules.' }  }
+
+        - name: SyncMode
+          type: enum
+          doc: { brief: 'Describes directions of data transfers or idle behaviour.', more: 'Can be used as a bit mask.' }
+          values:
+            - { name: Idle, value: 0x1, doc: { brief: 'No current or scheduled data transfer.' } }
+            - { name: Waiting, value: 0x2, doc: { brief: 'Data transfer scheduled.' } }
+            - { name: Paused, value: 0x4, doc: { brief: 'Current data transfer paused.' } }
+            - { name: Uploading, value: 0x8, doc: { brief: 'Current data transfer is an upload.' } }
+            - { name: Downloading, value: 0x10, doc: { brief: 'Current data transfer is a download.' } }
+
+        - name: SyncStatus
+          type: struct
+          doc: { brief: 'Describes a data transfer process.' }
+          fields:
+            - { name: Mode, type: Everbase::ObjectStore::SyncMode, doc: { brief: 'Current direction of data transfer.' } }
+            - { name: TotalBytesToTransfer, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of total bytes to transfer.' } }
+            - { name: CurrentBytesTransferred, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of current bytes transferred.' } }
+
+        - name: CumulatedSyncStatus
+          type: struct
+          doc: { brief: 'Describes the cumulated status of multiple data transfer processes.' }
+          fields:
+            - { name: Mode, type: Everbase::ObjectStore::SyncMode, doc: { brief: 'Current directions of data transfer.' } }
+            - { name: TotalBytesToDownload, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of total bytes to download.' } }
+            - { name: CurrentBytesDownloaded, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of bytes downloaded.' } }
+            - { name: TotalBytesToUpload, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of total bytes to upload.' } }
+            - { name: CurrentBytesUploaded, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of bytes uploaded.' } }
+
+        - name: Timestamps
+          type: struct
+          doc: { brief: 'Describes a set of timestamps.' }
+          fields:
+            - { name: Creation, type: Everbase::Primitives::Timestamp, doc: { brief: 'Time of object creation.' } }
+            - { name: LastModification, type: Everbase::Primitives::Timestamp, doc: { brief: 'Time of last modification.' } }
+            - { name: LastLocalAccess, type: Everbase::Primitives::Timestamp, doc: { brief: 'Time of last access on local device.' } }
+
+        - name: Size
+          type: struct
+          doc: { brief: 'Describes the various size attributes of a object.' }
+          fields:
+            - { name: ContentBytes, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of bytes used for content data.' } }
+            - { name: MetaBytes, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of bytes used for meta data.' } }
+            - { name: InternalBytes, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of bytes used for internal data.' } }
+            - { name: TotalBytes, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of total bytes including internal data, meta data and content data.' } }
+
+        - name: Caching
+          type: struct
+          doc: { brief: 'Describes where the data of a object is located.' }
+          fields:
+            - { name: UniqueBytesOnGrid, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes cached on the grid.' } }
+            - { name: UniqueBytesOnPeers, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes cached on the peer overlay network.' } }
+            - { name: UniqueBytesOnLocal, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes cached on the local device.' } }
+            - { name: TotalUniqueBytes, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes cached on the entire distributed system.' } }
+            - { name: UniqueBytesMissingOnGrid, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes missing on the grid.' } }
+            - { name: UniqueBytesMissingOnPeer, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes missing on the peer.' } }
+            - { name: UniqueBytesMissingOnLocal, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes missing on the local device.' } }
+            - { name: TotalUniqueBytesMissing, type: Everbase::Primitives::UInt64, doc: { brief: 'Number of unique bytes missing on the entire distributed system.' } }
+
+        - name: Status
+          type: struct
+          doc: { brief: 'Describes the status of a object including version information, timestamps, size, caching, sync status and conflicts.' }
+          fields:
+            - { name: Version, type: Everbase::Primitives::Uuid, doc: { brief: 'Version of object reflected within the status information.' } }
+            - { name: Author, type: Everbase::Primitives::Uuid, doc: { brief: 'User id of the author of this version.' } }
+            - { name: Type, type: Everbase::Primitives::Uuid, doc: { brief: 'Type of object.' } }
+            - { name: Timestamps, type: Everbase::ObjectStore::Timestamps, doc: { brief: 'Various timestamps of object.' } }
+            - { name: Size, type: Everbase::ObjectStore::Size, doc: { brief: 'Various size attributes of object.' } }
+            - { name: Caching, type: Everbase::ObjectStore::Caching, doc: { brief: 'Caching status of object.' } }
+            - { name: SyncStatus, type: Everbase::ObjectStore::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
+            - { name: Conflicts, type: Everbase::Primitives::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
+            - { name: Pinned, type: Everbase::Primitives::Boolean, doc: { brief: 'Pinning status.' } }
+            - { name: Permission, type: Everbase::ObjectStore::PermissionMode, doc: { brief: 'Effective permission mode of the authenticated user.' } }
+
+        - name: CumulatedStatus
+          type: struct
+          doc: { brief: 'Describes the status of multiple object including size, caching, sync status and conflicts.' }
+          fields:
+            - { name: Size, type: Everbase::ObjectStore::Size, doc: { brief: 'Various size attributes of object.' } }
+            - { name: Caching, type: Everbase::ObjectStore::Caching, doc: { brief: 'Caching status of object.' } }
+            - { name: SyncStatus, type: Everbase::ObjectStore::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
+            - { name: Conflicts, type: Everbase::Primitives::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
+
         - name: Policy
           type: class
           doc: { brief: 'Is a set of permissions and rules.', more: 'A policy can be either specific to a set of objects (unnamed policy) or a domain (named policy).' }
@@ -403,14 +552,14 @@
               static: true
               return: { name: Policy, type: Everbase::ObjectStore::Policy, doc: { brief: 'The policy object.' } }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
                 - { name: Domain, type: Everbase::CoreSystem::Domain, doc: { brief: '.' } }
               errors:
                 - InvalidArgument/InvalidName
             - name: GetAll
               doc: { brief: 'Returns all policies of a domain.' }
               static: true
-              return: { name: Policies, type: [Everbase::Set, Everbase::ObjectStore::Policy ] }
+              return: { name: Policies, type: [Everbase::Primitives::Set, Everbase::ObjectStore::Policy ] }
               params:
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: Erase
@@ -418,25 +567,25 @@
             - name: SetName
               doc: { brief: 'Sets the name of the policy.' }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
               errors:
                 - InvalidArgument/InvalidName
             - name: GetName
               doc: { brief: 'Returns the name of the policy.' }
-              return: { name: Name, type: Everbase::String }
+              return: { name: Name, type: Everbase::Primitives::String }
             - name: AddPermission
               doc: { brief: 'Adds a new permission object to the policy.' }
               return: { name: Permission, type: Everbase::ObjectStore::Permission }
               params:
                 - { name: Entity, type: Everbase::CoreSystem::UserEntity }
-                - { name: Mode, type: Everbase::PermissionMode }
+                - { name: Mode, type: Everbase::ObjectStore::PermissionMode }
             - name: RemovePermission
               doc: { brief: 'Removes a permission object from the policy.' }
               params:
                 - { name: Permission, type: Everbase::ObjectStore::Permission }
             - name: GetPermissions
               doc: { brief: 'Returns all permission Everbase::ObjectStore:: of the policy.' }
-              return: { name: Permissions, type: [Everbase::Set, Everbase::ObjectStore::Permission ] }
+              return: { name: Permissions, type: [Everbase::Primitives::Set, Everbase::ObjectStore::Permission ] }
             - name: AddRule
               doc: { brief: 'Adds a rule object to the policy.' }
               params:
@@ -447,7 +596,7 @@
                 - { name: Rule, type: Everbase::ObjectStore::Rule }
             - name: GetRules
               doc: { brief: 'Returns all rule Everbase::ObjectStore:: of the policy.' }
-              return: { name: Rules, type: [ Everbase::Set, Everbase::ObjectStore::Rule ] }
+              return: { name: Rules, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Rule ] }
 
         - name: Permission
           type: class
@@ -463,12 +612,12 @@
             - name: SetMode
               doc: { brief: 'Sets the permission mode.' }
               params:
-                - { name: Mode, type: Everbase::PermissionMode }
+                - { name: Mode, type: Everbase::ObjectStore::PermissionMode }
               errors:
                 - InvalidArgument/InvalidMode
             - name: GetMode
               doc: { brief: 'Returns the permission mode.' }
-              return: { name: Mode, type: Everbase::PermissionMode }
+              return: { name: Mode, type: Everbase::ObjectStore::PermissionMode }
 
         - name: Rule
           type: class
@@ -484,76 +633,76 @@
               static: true
               return: { name: Object, type: Everbase::ObjectStore::Object }
               params:
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
                 - { name: Domain, type: Everbase::CoreSystem::Domain }
             - name: Clone
               doc: { brief: 'Clones a specific version of an existing object.', more: 'Requires a commit to persist that object.' }
               static: true
               return: { name: Object, type: Everbase::ObjectStore::Object }
               params:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
-                - { name: CopyHistory, type: Everbase::Boolean }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
+                - { name: CopyHistory, type: Everbase::Primitives::Boolean }
             - name: OpenHead
               doc: { brief: 'Opens head version of an existing object.', more: 'Throws exception in case there are multiple head versions.' }
               static: true
               return: { name: Object, type: Everbase::ObjectStore::Object }
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
             - name: OpenHeads
               doc: { brief: 'Opens head versions of an existing object.' }
               static: true
-              return: { name: Object, type: [ Everbase::Set, Everbase::ObjectStore::Object ] }
+              return: { name: Object, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Object ] }
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
             - name: OpenVersion
               doc: { brief: 'Opens a specific version of an existing object.' }
               static: true
               return: { name: Object, type: Everbase::ObjectStore::Object }
               params:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
             - name: SetPinning
               doc: { brief: 'Sets the pinning status of the object.' }
               static: true
               params:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Pinning, type: Everbase::Boolean }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Pinning, type: Everbase::Primitives::Boolean }
             - name: GetPinning
               doc: { brief: 'Gets the pinning status of the object.' }
               static: true
-              return: { name: Pinning, type: Everbase::Boolean }
+              return: { name: Pinning, type: Everbase::Primitives::Boolean }
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetStatus
               doc: { brief: 'Returns status information of an object.' }
               static: true
-              return: { name: Status, type: Everbase::Status }
+              return: { name: Status, type: Everbase::ObjectStore::Status }
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetVersionStatus
               doc: { brief: 'Returns status information of an object.' }
               static: true
-              return: { name: Status, type: Everbase::Status }
+              return: { name: Status, type: Everbase::ObjectStore::Status }
               params:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
             - name: GetId
               doc: { brief: 'Returns object id.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetVersion
               doc: { brief: 'Returns current version id.' }
-              return: { name: Version, type: Everbase::Uuid }
+              return: { name: Version, type: Everbase::Primitives::Uuid }
             - name: GetParentVersions
               doc: { brief: 'Returns version ids of predecessors.' }
-              return: { name: Version, type: [ Everbase::Set, Everbase::Uuid ] }
+              return: { name: Version, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
             - name: GetType
               doc: { brief: 'Returns type of the object.' }
-              return: { name: Type, type: Everbase::Uuid }
+              return: { name: Type, type: Everbase::Primitives::Uuid }
             - name: SetType
               doc: { brief: 'Updates the type of the object.' }
               params:
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: AttachPolicy
               doc: { brief: 'Attaches a policy to the object.' }
               params:
@@ -565,57 +714,57 @@
                 - { name: Policy, type: Everbase::ObjectStore::Policy }
             - name: GetPolicies
               doc: { brief: 'Returns all attached policies of the object.' }
-              return: { name: Policies, type: [ Everbase::Set, Everbase::ObjectStore::Policy ] }
+              return: { name: Policies, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Policy ] }
             - name: GetEffectivePolicy
               doc: { brief: 'Returns the effective policy of the object.', more: 'The effective policy is a computed object derived from all applicable attached and inherited policies.' }
               return: { name: Policy, type: Everbase::ObjectStore::Policy }
             - name: GetPolicyInheritance
               doc: { brief: 'Returns true if policy inheritance is activated (default).' }
-              return: { name: Inheritance, type: Everbase::Boolean }
+              return: { name: Inheritance, type: Everbase::Primitives::Boolean }
             - name: SetPolicyInheritance
               doc: { brief: 'Enables or disables policy inheritance.' }
               params:
-                - { name: Inheritance, type: Everbase::Boolean }
+                - { name: Inheritance, type: Everbase::Primitives::Boolean }
             - name: GetParentObject
               doc: { brief: 'Returns the current parent object.' }
-              return: { name: ParentObjectId, type: Everbase::Uuid }
+              return: { name: ParentObjectId, type: Everbase::Primitives::Uuid }
             - name: SetParentObject
               doc: { brief: 'Sets the parent object.' }
               params:
-                - { name: ParentObjectId, type: Everbase::Uuid }
+                - { name: ParentObjectId, type: Everbase::Primitives::Uuid }
             - name: HasParentObject
               doc: { brief: 'Returns true if a parent object is available.' }
               params:
-                - { name: ParentObjectStatus, type: Everbase::Boolean }
+                - { name: ParentObjectStatus, type: Everbase::Primitives::Boolean }
             - name: Write
               doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
               params:
-                - { name: SourceBuffer, type: Everbase::ConstBuffer }
-                - { name: Position, type: Everbase::UInt64 }
-                - { name: Section, type: Everbase::Byte }
+                - { name: SourceBuffer, type: Everbase::Primitives::ConstBuffer }
+                - { name: Position, type: Everbase::Primitives::UInt64 }
+                - { name: Section, type: Everbase::Primitives::Byte }
             - name: Read
               doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
-              return: { name: BytesRead, type: Everbase::UInt32 }
+              return: { name: BytesRead, type: Everbase::Primitives::UInt32 }
               params:
-                - { name: TargetBuffer, type: Everbase::Buffer }
-                - { name: FillBuffer, type: Everbase::Boolean }
-                - { name: Position, type: Everbase::UInt64 }
-                - { name: Section, type: Everbase::Byte }
+                - { name: TargetBuffer, type: Everbase::Primitives::Buffer }
+                - { name: FillBuffer, type: Everbase::Primitives::Boolean }
+                - { name: Position, type: Everbase::Primitives::UInt64 }
+                - { name: Section, type: Everbase::Primitives::Byte }
             - name: Truncate
               doc: { brief: 'Truncates the object to a specified length in bytes.' }
               params:
-                - { name: NewContentSize, type: Everbase::UInt64 }
-                - { name: Section, type: Everbase::Byte }
+                - { name: NewContentSize, type: Everbase::Primitives::UInt64 }
+                - { name: Section, type: Everbase::Primitives::Byte }
             - name: GetSize
               doc: { brief: 'Returns the current object size in bytes.' }
-              return: { name: CurContentSize, type: Everbase::UInt64 }
+              return: { name: CurContentSize, type: Everbase::Primitives::UInt64 }
               params:
-                - { name: Section, type: Everbase::Byte }
+                - { name: Section, type: Everbase::Primitives::Byte }
             - name: Commit
               doc: { brief: 'Commits the current state of the object as a new version.' }
-              return: { name: NewVersion, type: Everbase::Uuid }
+              return: { name: NewVersion, type: Everbase::Primitives::Uuid }
               params:
-                - { name: AdditionalParentVersions, type: [ Everbase::Set, Everbase::Uuid ] }
+                - { name: AdditionalParentVersions, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
             - name: Rollback
               doc: { brief: 'Discards all changes since the last commit or open operation.' }
             - name: Erase
@@ -627,29 +776,29 @@
               doc: { brief: 'An object had been created.' }
               id: 1a961e2a-004c-4e11-80f0-e5236f6eded6
               values:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: Erased
               doc: { brief: 'An object had been removed.' }
               id: 29135c66-a515-453f-877e-01e1861ecfc5
               values:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: NewVersion
               doc: { brief: 'A new version of an object had been created.' }
               id: f8294c6e-af1e-4238-be7f-e05661d16b08
               values:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Version, type: Everbase::Uuid }
-                - { name: Type, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
+                - { name: Type, type: Everbase::Primitives::Uuid }
             - name: StatusUpdate
               doc: { brief: 'A status update of an object occured.' }
               id: 80d70515-14ba-4cff-9bb4-add71fb32d4f
               values:
-                - { name: Id, type: Everbase::Uuid }
-                - { name: Status, type: Everbase::Status }
+                - { name: Id, type: Everbase::Primitives::Uuid }
+                - { name: Status, type: Everbase::ObjectStore::Status }
 
         - name: Conflict
           type: class
@@ -658,46 +807,46 @@
             - name: GetAll
               doc: { brief: 'Returns all currently known conflicts.' }
               static: true
-              return: { name: Conflicts, type: [ Everbase::Set, Everbase::ObjectStore::Conflict ] }
+              return: { name: Conflicts, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Conflict ] }
             - name: Open
               doc: { brief: 'Opens a conflict.' }
               static: true
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
               return: { name: Conflict, type: Everbase::ObjectStore::Conflict }
             - name: GetId
               doc: { brief: 'Returns the conflict id.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetObjectId
               doc: { brief: 'Returns the object id of the conflict-prone object.' }
-              return: { name: ObjectId, type: Everbase::Uuid }
+              return: { name: ObjectId, type: Everbase::Primitives::Uuid }
             - name: GetVersion1
               doc: { brief: 'Returns the version id of the first version.' }
-              return: { name: Version1, type: Everbase::Uuid }
+              return: { name: Version1, type: Everbase::Primitives::Uuid }
             - name: GetVersion2
               doc: { brief: 'Returns the version id of the second version.' }
-              return: { name: Version2, type: Everbase::Uuid }
+              return: { name: Version2, type: Everbase::Primitives::Uuid }
             - name: KeepSingle
               doc: { brief: 'Resolves the conflict by keeping one of the two conflicting versions.' }
               params:
-                - { name: Version, type: Everbase::Uuid }
+                - { name: Version, type: Everbase::Primitives::Uuid }
             - name: KeepBoth
               doc: { brief: 'Resolves the conflict by keeping both of the two conflicting versions. Returns the new object id of the second version.' }
-              return: { name: NewObjectId, type: Everbase::Uuid }
+              return: { name: NewObjectId, type: Everbase::Primitives::Uuid }
             - name: IsResolved
               doc: { brief: 'Returns true if the conflict is resolved.' }
-              return: { name: Status, type: Everbase::Boolean }
+              return: { name: Status, type: Everbase::Primitives::Boolean }
           events:
             - name: Occured
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 09c75fc8-02c2-4158-ad4e-f50fd72529e7
               values:
-                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 1399b73f-b327-4f63-8547-abfa1cbc423e
               values:
-                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
 
         - name: SyncProcess
           type: class
@@ -706,28 +855,28 @@
             - name: GetAll
               doc: { brief: 'Returns all active or paused sync processes.' }
               static: true
-              return: { name: SyncProcesses, type: [ Everbase::Set, Everbase::ObjectStore::SyncProcess ] }
+              return: { name: SyncProcesses, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::SyncProcess ] }
             - name: Open
               doc: { brief: 'Opens a sync process.' }
               static: true
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
               return: { name: SyncProcesses, type: Everbase::ObjectStore::SyncProcess }
             - name: GetId
               doc: { brief: 'Returns the sync process id.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetObjectId
               doc: { brief: 'Returns the object id.' }
-              return: { name: ObjectId, type: Everbase::Uuid }
+              return: { name: ObjectId, type: Everbase::Primitives::Uuid }
             - name: GetVersion
               doc: { brief: 'Returns the version id.' }
-              return: { name: Version, type: Everbase::Uuid }
+              return: { name: Version, type: Everbase::Primitives::Uuid }
             - name: IsPaused
               doc: { brief: 'Returns true if the sync process is currently paused.' }
-              return: { name: Paused, type: Everbase::Boolean }
+              return: { name: Paused, type: Everbase::Primitives::Boolean }
             - name: GetStatus
               doc: { brief: 'Returns the current sync status.' }
-              return: { name: SyncStatus, type: Everbase::SyncStatus }
+              return: { name: SyncStatus, type: Everbase::ObjectStore::SyncStatus }
             - name: Pause
               doc: { brief: 'Pauses the sync process.' }
             - name: Resume
@@ -739,128 +888,34 @@
               doc: { brief: 'A new sync process started.' }
               id: 14dd4e11-f267-49b2-9815-6476f17544c9
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Completed
               doc: { brief: 'An existing sync process completed.' }
               id: 926aefd8-ca5a-448f-a41e-2635d8539426
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Paused
               doc: { brief: 'An existing sync process had been paused.' }
               id: 08468046-b18f-4af7-a8b1-cc89585ad555
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Resumed
               doc: { brief: 'An existing sync process had been resumed.' }
               id: b077a28f-bfdb-4ad7-b14f-16129cd922d1
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Progress
               doc: { brief: 'An existing sync process made progress.' }
               id: 518438d3-a650-4a91-a736-c2ac43f2ebcf
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
 
-#---Elements...
-
-    - name: PermissionMode
-      type: enum
-      doc: { brief: 'Defines a set of potentially controllable operations on objects.', more: 'Can be used as a bit mask.' }
-      values:
-        - { name: Read, value: 0x1, doc: { brief: 'Read operation.' } }
-        - { name: Write, value: 0x2, doc: { brief: 'Write operation.' }  }
-        - { name: Manage, value: 0x4, doc: { brief: 'Manage operation, includes management of permissions and rules.' }  }
-
-    - name: SyncMode
-      type: enum
-      doc: { brief: 'Describes directions of data transfers or idle behaviour.', more: 'Can be used as a bit mask.' }
-      values:
-        - { name: Idle, value: 0x1, doc: { brief: 'No current or scheduled data transfer.' } }
-        - { name: Waiting, value: 0x2, doc: { brief: 'Data transfer scheduled.' } }
-        - { name: Paused, value: 0x4, doc: { brief: 'Current data transfer paused.' } }
-        - { name: Uploading, value: 0x8, doc: { brief: 'Current data transfer is an upload.' } }
-        - { name: Downloading, value: 0x10, doc: { brief: 'Current data transfer is a download.' } }
-
-    - name: SyncStatus
-      type: struct
-      doc: { brief: 'Describes a data transfer process.' }
-      fields:
-        - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current direction of data transfer.' } }
-        - { name: TotalBytesToTransfer, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to transfer.' } }
-        - { name: CurrentBytesTransferred, type: Everbase::UInt64, doc: { brief: 'Number of current bytes transferred.' } }
-
-    - name: CumulatedSyncStatus
-      type: struct
-      doc: { brief: 'Describes the cumulated status of multiple data transfer processes.' }
-      fields:
-        - { name: Mode, type: Everbase::SyncMode, doc: { brief: 'Current directions of data transfer.' } }
-        - { name: TotalBytesToDownload, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to download.' } }
-        - { name: CurrentBytesDownloaded, type: Everbase::UInt64, doc: { brief: 'Number of bytes downloaded.' } }
-        - { name: TotalBytesToUpload, type: Everbase::UInt64, doc: { brief: 'Number of total bytes to upload.' } }
-        - { name: CurrentBytesUploaded, type: Everbase::UInt64, doc: { brief: 'Number of bytes uploaded.' } }
-
-    - name: Timestamps
-      type: struct
-      doc: { brief: 'Describes a set of timestamps.' }
-      fields:
-        - { name: Creation, type: Everbase::Timestamp, doc: { brief: 'Time of object creation.' } }
-        - { name: LastModification, type: Everbase::Timestamp, doc: { brief: 'Time of last modification.' } }
-        - { name: LastLocalAccess, type: Everbase::Timestamp, doc: { brief: 'Time of last access on local device.' } }
-
-    - name: Size
-      type: struct
-      doc: { brief: 'Describes the various size attributes of a object.' }
-      fields:
-        - { name: ContentBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for content data.' } }
-        - { name: MetaBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for meta data.' } }
-        - { name: InternalBytes, type: Everbase::UInt64, doc: { brief: 'Number of bytes used for internal data.' } }
-        - { name: TotalBytes, type: Everbase::UInt64, doc: { brief: 'Number of total bytes including internal data, meta data and content data.' } }
-
-    - name: Caching
-      type: struct
-      doc: { brief: 'Describes where the data of a object is located.' }
-      fields:
-        - { name: UniqueBytesOnGrid, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the grid.' } }
-        - { name: UniqueBytesOnPeers, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the peer overlay network.' } }
-        - { name: UniqueBytesOnLocal, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the local device.' } }
-        - { name: TotalUniqueBytes, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes cached on the entire distributed system.' } }
-        - { name: UniqueBytesMissingOnGrid, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the grid.' } }
-        - { name: UniqueBytesMissingOnPeer, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the peer.' } }
-        - { name: UniqueBytesMissingOnLocal, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the local device.' } }
-        - { name: TotalUniqueBytesMissing, type: Everbase::UInt64, doc: { brief: 'Number of unique bytes missing on the entire distributed system.' } }
-
-    - name: Status
-      type: struct
-      doc: { brief: 'Describes the status of a object including version information, timestamps, size, caching, sync status and conflicts.' }
-      fields:
-        - { name: Version, type: Everbase::Uuid, doc: { brief: 'Version of object reflected within the status information.' } }
-        - { name: Author, type: Everbase::Uuid, doc: { brief: 'User id of the author of this version.' } }
-        - { name: Type, type: Everbase::Uuid, doc: { brief: 'Type of object.' } }
-        - { name: Timestamps, type: Everbase::Timestamps, doc: { brief: 'Various timestamps of object.' } }
-        - { name: Size, type: Everbase::Size, doc: { brief: 'Various size attributes of object.' } }
-        - { name: Caching, type: Everbase::Caching, doc: { brief: 'Caching status of object.' } }
-        - { name: SyncStatus, type: Everbase::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
-        - { name: Conflicts, type: Everbase::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
-        - { name: Pinned, type: Everbase::Boolean, doc: { brief: 'Pinning status.' } }
-        - { name: Permission, type: Everbase::PermissionMode, doc: { brief: 'Effective permission mode of the authenticated user.' } }
-
-    - name: CumulatedStatus
-      type: struct
-      doc: { brief: 'Describes the status of multiple object including size, caching, sync status and conflicts.' }
-      fields:
-        - { name: Size, type: Everbase::Size, doc: { brief: 'Various size attributes of object.' } }
-        - { name: Caching, type: Everbase::Caching, doc: { brief: 'Caching status of object.' } }
-        - { name: SyncStatus, type: Everbase::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
-        - { name: Conflicts, type: Everbase::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
-
-#---END EVERBASE OBJECTSTORE END ---------------------------------------------
-
-
-#---BEGIN EVERBASE FILESYSTEM BEGIN ---------------------------------------------
+# ********* FileSystem *********
 
     - name: FileSystem
       type: namespace
       members:
+
         - name: Path
           type: class
           doc: { brief: 'Specifies a unique location of a directory or file within the EFS.', more: 'A path is a sequence of names. A name can be any valid unicode string. Each name can be associated with a version identifier.' }
@@ -871,7 +926,7 @@
               static: true
               return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
               params:
-                - { name: SystemPath, type: Everbase::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
+                - { name: SystemPath, type: Everbase::Primitives::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
               errors:
                 - InvalidArgument/InvalidPath
             - name: FromWebUrl
@@ -879,7 +934,7 @@
               static: true
               return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
               params:
-                - { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
+                - { name: WebUrl, type: Everbase::Primitives::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
               errors:
                 - InvalidArgument/InvalidPath
             - name: FromEverbaseUrl
@@ -888,45 +943,45 @@
               synchronous: true
               return: { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'The converted canonical path object.' } }
               params:
-                - { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
+                - { name: EverbaseUrl, type: Everbase::Primitives::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
               errors:
                 - InvalidArgument/InvalidUrl
             - name: ToSysPath
               doc: { brief: 'Converts a canonical path object to a system path. See FromSysPath.' }
-              return: { name: SysPath, type: Everbase::String, doc: { brief: 'The system path.' } }
+              return: { name: SysPath, type: Everbase::Primitives::String, doc: { brief: 'The system path.' } }
               errors:
                 - RuntimeError/MountpointMissing
             - name: ToWebUrl
               doc: { brief: 'Converts a canonical path object to a web url. See FromWebUrl.' }
-              return: { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path.' } }
+              return: { name: WebUrl, type: Everbase::Primitives::String, doc: { brief: 'The web path.' } }
               errors:
                 - RuntimeError/WebInterfaceMissing
             - name: ToEverbaseUrl
               doc: { brief: 'Converts a canonical path object to a canonical URL. See FromEverbaseUrl.' }
               synchronous: true
-              return: { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL.' } }
+              return: { name: EverbaseUrl, type: Everbase::Primitives::String, doc: { brief: 'The canonical URL.' } }
             - name: IsValidSysPath
               doc: { brief: 'Returns true if provided string is a valid system path. See FromSysPath.' }
               static: true
-              return: { name: ValidSysPath, type: Everbase::Boolean, doc: { brief: 'True if it is a valid system path.' } }
+              return: { name: ValidSysPath, type: Everbase::Primitives::Boolean, doc: { brief: 'True if it is a valid system path.' } }
               params:
-                - { name: SysPath, type: Everbase::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
+                - { name: SysPath, type: Everbase::Primitives::String, doc: { brief: 'The system path, e.g. C:\Users\Joe\Everbase\acme.com\Marketing\Whitepaper.docx.' } }
             - name: IsValidWebUrl
               doc: { brief: 'Returns true if provided string is a valid web url. See FromWebUrl.' }
               static: true
-              return: { name: ValidWebUrl, type: Everbase::Boolean, doc: { brief: 'True if it is a valid web url.' } }
+              return: { name: ValidWebUrl, type: Everbase::Primitives::Boolean, doc: { brief: 'True if it is a valid web url.' } }
               params:
-                - { name: WebUrl, type: Everbase::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
+                - { name: WebUrl, type: Everbase::Primitives::String, doc: { brief: 'The web path, e.g. https://fs.acme.com/Marketing/Whitepaper.docx.' } }
             - name: IsValidEverbaseUrl
               doc: { brief: 'Returns true if provided string is a valid everbase url. See FromEverbaseUrl.' }
               static: true
-              return: { name: ValidEverbaseUrl, type: Everbase::Boolean, doc: { brief: 'True if it is a valid everbase url.' } }
+              return: { name: ValidEverbaseUrl, type: Everbase::Primitives::Boolean, doc: { brief: 'True if it is a valid everbase url.' } }
               params:
-                - { name: EverbaseUrl, type: Everbase::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
+                - { name: EverbaseUrl, type: Everbase::Primitives::String, doc: { brief: 'The canonical URL, e.g. everbase://acme.com/Marketing/Whitepaper.docx.' } }
             - name: IsRoot
               doc: { brief: 'Returns true in case we have a root path.' }
               synchronous: true
-              return: { name: Root, type: Everbase::Boolean, doc: { brief: 'True if it is a root path.' } }
+              return: { name: Root, type: Everbase::Primitives::Boolean, doc: { brief: 'True if it is a root path.' } }
             - name: GetParent
               doc: { brief: 'Returns the parent path.' }
               synchronous: true
@@ -938,31 +993,31 @@
               synchronous: true
               return: { name: Child, type: Everbase::FileSystem::Path, doc: { brief: 'The child path object.' } }
               params:
-                - { name: ChildName, type: Everbase::String, doc: { brief: 'The childs name.' } }
+                - { name: ChildName, type: Everbase::Primitives::String, doc: { brief: 'The childs name.' } }
             - name: GetVersionedChild
               doc: { brief: 'Returns a versioned child path.' }
               synchronous: true
               return: { name: Child, type: Everbase::FileSystem::Path, doc: { brief: 'The versioned child path object.' } }
               params:
-                - { name: ChildName, type: Everbase::String, doc: { brief: 'The childs name.' } }
-                - { name: ChildVersion, type: Everbase::Uuid, doc: { brief: 'The childs version.' } }
+                - { name: ChildName, type: Everbase::Primitives::String, doc: { brief: 'The childs name.' } }
+                - { name: ChildVersion, type: Everbase::Primitives::Uuid, doc: { brief: 'The childs version.' } }
             - name: GetName
               doc: { brief: 'Returns the name of the specified location.' }
               synchronous: true
-              return: { name: Name, type: Everbase::String, doc: { brief: 'The name of the filesystem node.' } }
+              return: { name: Name, type: Everbase::Primitives::String, doc: { brief: 'The name of the filesystem node.' } }
               errors:
                 - OutOfRange/IsRootPath
             - name: GetVersion
               doc: { brief: 'Returns the version of the specified location.' }
               synchronous: true
-              return: { name: Version, type: Everbase::Uuid, doc: { brief: 'The version of the filesystem node.' } }
+              return: { name: Version, type: Everbase::Primitives::Uuid, doc: { brief: 'The version of the filesystem node.' } }
               errors:
                 - OutOfRange/IsRootPath
                 - OutOfRange/NoVersion
             - name: HasVersion
               doc: { brief: 'Returns true if the the specified location has version information.' }
               synchronous: true
-              return: { name: VersionStatus, type: Everbase::Boolean }
+              return: { name: VersionStatus, type: Everbase::Primitives::Boolean }
 
         - name: Metadata
           type: class
@@ -972,25 +1027,25 @@
             - name: SetValue
               doc: { brief: 'Associates the specified value with the specified key in the key value store.', more: 'If the store previously contained the key, the old value is replaced by the specified value.' }
               params:
-                - { name: Key, type: Everbase::String }
-                - { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+                - { name: Key, type: Everbase::Primitives::String }
+                - { name: Value, type: [ Everbase::Primitives::Vector, Everbase::Primitives::Byte ] }
             - name: GetValue
               doc: { brief: 'Returns the value to which the specified key is associated.', more: 'Failes in case the store does not contain the specified key.' }
-              return: { name: Value, type: [ Everbase::Vector, Everbase::Byte ] }
+              return: { name: Value, type: [ Everbase::Primitives::Vector, Everbase::Primitives::Byte ] }
               params:
-                - { name: Key, type: Everbase::String }
+                - { name: Key, type: Everbase::Primitives::String }
             - name: Has
               doc: { brief: 'Returns true if this key value store contains the specified key.' }
-              return: { name: Exists, type: Everbase::Boolean }
+              return: { name: Exists, type: Everbase::Primitives::Boolean }
               params:
-                - { name: Key, type: Everbase::String }
+                - { name: Key, type: Everbase::Primitives::String }
             - name: Erase
               doc: { brief: 'Erases the specified key.' }
               params:
-                - { name: Key, type: Everbase::String }
+                - { name: Key, type: Everbase::Primitives::String }
             - name: GetKeys
               doc: { brief: 'Returns all keys of the key value store.' }
-              return: { name: Keys, type: [ Everbase::Set, Everbase::String ] }
+              return: { name: Keys, type: [ Everbase::Primitives::Set, Everbase::Primitives::String ] }
 
         - name: Node
           type: class
@@ -1008,7 +1063,7 @@
               params:
                 - { name: SourcePath, type: Everbase::FileSystem::Path }
                 - { name: TargetPath, type: Everbase::FileSystem::Path }
-                - { name: CopyHistory, type: Everbase::Boolean }
+                - { name: CopyHistory, type: Everbase::Primitives::Boolean }
             - name: Remove
               doc: { brief: 'Deletes the specified filesystem node.' }
               static: true
@@ -1017,13 +1072,13 @@
             - name: GetStatus
               doc: { brief: 'Returns status information of a filesystem node.' }
               static: true
-              return: { name: Status, type: Everbase::Status }
+              return: { name: Status, type: Everbase::ObjectStore::Status }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: GetTreeStatus
               doc: { brief: 'Returns status information of filesystem nodes recursively.' }
               static: true
-              return: { name: Status, type: Everbase::CumulatedStatus }
+              return: { name: Status, type: Everbase::ObjectStore::CumulatedStatus }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: SetPinning
@@ -1031,11 +1086,11 @@
               static: true
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
-                - { name: Pinning, type: Everbase::Boolean }
+                - { name: Pinning, type: Everbase::Primitives::Boolean }
             - name: GetPinning
               doc: { brief: 'Gets the pinning status of the path.' }
               static: true
-              return: { name: Pinning, type: Everbase::Boolean }
+              return: { name: Pinning, type: Everbase::Primitives::Boolean }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: Close
@@ -1058,7 +1113,7 @@
               return: { name: VersionedPath, type: Everbase::FileSystem::Path }
             - name: GetParentVersions
               doc: { brief: 'Returns the versioned paths of the parent versions.' }
-              return: { name: VersionedPaths, type: [ Everbase::Set, Everbase::FileSystem::Path ] }
+              return: { name: VersionedPaths, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ] }
             - name: AttachPolicy
               doc: { brief: 'Attaches a policy to the filesystem node.' }
               params:
@@ -1070,17 +1125,17 @@
                 - { name: Policy, type: Everbase::ObjectStore::Policy }
             - name: GetPolicies
               doc: { brief: 'Returns all attached policies of the filesystem node.' }
-              return: { name: Policies, type: [ Everbase::Set, Everbase::ObjectStore::Policy ] }
+              return: { name: Policies, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Policy ] }
             - name: GetEffectivePolicy
               doc: { brief: 'Returns the effective policy of the filesystem node.', more: 'The effective policy is a computed object derived from all applicable attached and inherited policies.' }
               return: { name: Policy, type: Everbase::ObjectStore::Policy }
             - name: GetPolicyInheritance
               doc: { brief: 'Returns true if policy inheritance is activated (default).' }
-              return: { name: Inheritance, type: Everbase::Boolean }
+              return: { name: Inheritance, type: Everbase::Primitives::Boolean }
             - name: SetPolicyInheritance
               doc: { brief: 'Enables or disables policy inheritance.' }
               params:
-                - { name: Inheritance, type: Everbase::Boolean }
+                - { name: Inheritance, type: Everbase::Primitives::Boolean }
           events:
             - name: Created
               doc: { brief: 'A filesystem node had been created.' }
@@ -1114,7 +1169,7 @@
               id: 800018fa-5b1f-4946-86ae-af6657f1ec10
               values:
                 - { name: Path, type: Everbase::FileSystem::Path }
-                - { name: Status, type: Everbase::Status }
+                - { name: Status, type: Everbase::ObjectStore::Status }
 
         - name: Directory
           type: class
@@ -1127,7 +1182,7 @@
               static: true
               return: { name: Directory, type: Everbase::FileSystem::Directory }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
                 - { name: Parent, type: Everbase::FileSystem::Path }
             - name: Open
               doc: { brief: 'Opens an existing directory.' }
@@ -1137,14 +1192,14 @@
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: GetEntries
               doc: { brief: 'Returns all directory entries presented as a set of paths.' }
-              return: { name: Entries, type: [ Everbase::Set, Everbase::FileSystem::Path ] }
+              return: { name: Entries, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ] }
             - name: GetEntryCount
               doc: { brief: 'Returns the count of directory entries.' }
-              return: { name: EntryCount, type: Everbase::UInt64 }
+              return: { name: EntryCount, type: Everbase::Primitives::UInt64 }
           constants:
             - name: TypeId
               doc: { brief: 'Object type identifier for directories.' }
-              type: Everbase::Uuid
+              type: Everbase::Primitives::Uuid
               value: 5f58a908-6fcf-4bf2-aaf3-a06c7572fec5
 
         - name: ProfileRoot
@@ -1162,7 +1217,7 @@
           constants:
             - name: TypeId
               doc: { brief: 'Profile root type identifier for directories.' }
-              type: Everbase::Uuid
+              type: Everbase::Primitives::Uuid
               value: c4c391c4-e530-4feb-aab7-9a12d3715f6e
 
         - name: DomainRoot
@@ -1175,14 +1230,14 @@
               static: true
               return: { name: DomainRoot, type: Everbase::FileSystem::DomainRoot }
               params:
-                - { name: DomainName, type: Everbase::String }
+                - { name: DomainName, type: Everbase::Primitives::String }
             - name: GetDomain
               doc: { brief: 'Returns the associated domain.' }
               return: { name: Domain, type: Everbase::CoreSystem::Domain }
           constants:
             - name: TypeId
               doc: { brief: 'Domain root type identifier for directories.' }
-              type: Everbase::Uuid
+              type: Everbase::Primitives::Uuid
               value: 7dd69fdd-9bc9-4322-babc-62d6143fd752
 
         - name: File
@@ -1195,7 +1250,7 @@
               static: true
               return: { name: File, type: Everbase::FileSystem::File }
               params:
-                - { name: Name, type: Everbase::String }
+                - { name: Name, type: Everbase::Primitives::String }
                 - { name: Parent, type: Everbase::FileSystem::Path }
             - name: Open
               doc: { brief: 'Opens an existing file.' }
@@ -1206,48 +1261,48 @@
             - name: BeginUserView
               doc: { brief: 'Informs the system about the fact that the local user is viewing the file.' }
               static: true
-              return: { name: UserViewId, type: Everbase::UInt32 }
+              return: { name: UserViewId, type: Everbase::Primitives::UInt32 }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: EndUserView
               doc: { brief: 'Informs the system about the fact that the local user stopped viewing the file.' }
               static: true
               params:
-                - { name: UserViewId, type: Everbase::UInt32 }
+                - { name: UserViewId, type: Everbase::Primitives::UInt32 }
             - name: BeginUserEdit
               doc: { brief: 'Informs the system about the fact that the local user is editing the file.' }
               static: true
-              return: { name: UserEditId, type: Everbase::UInt32 }
+              return: { name: UserEditId, type: Everbase::Primitives::UInt32 }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
             - name: EndUserEdit
               doc: { brief: 'Informs the system about the fact that the local user stopped editing the file.' }
               static: true
               params:
-                - { name: UserEditId, type: Everbase::UInt32 }
+                - { name: UserEditId, type: Everbase::Primitives::UInt32 }
             - name: Write
               doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
               params:
-                - { name: SourceBuffer, type: Everbase::ConstBuffer }
-                - { name: Position, type: Everbase::UInt64 }
+                - { name: SourceBuffer, type: Everbase::Primitives::ConstBuffer }
+                - { name: Position, type: Everbase::Primitives::UInt64 }
             - name: Read
               doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
-              return: { name: BytesRead, type: Everbase::UInt32 }
+              return: { name: BytesRead, type: Everbase::Primitives::UInt32 }
               params:
-                - { name: TargetBuffer, type: Everbase::Buffer }
-                - { name: FillBuffer, type: Everbase::Boolean }
-                - { name: Position, type: Everbase::UInt64 }
+                - { name: TargetBuffer, type: Everbase::Primitives::Buffer }
+                - { name: FillBuffer, type: Everbase::Primitives::Boolean }
+                - { name: Position, type: Everbase::Primitives::UInt64 }
             - name: Truncate
               doc: { brief: 'Truncates a file to a specified length in bytes.' }
               params:
-                - { name: NewFileSize, type: Everbase::UInt64 }
+                - { name: NewFileSize, type: Everbase::Primitives::UInt64 }
             - name: GetSize
               doc: { brief: 'Returns the current file size in bytes.' }
-              return: { name: CurFileSize, type: Everbase::UInt64 }
+              return: { name: CurFileSize, type: Everbase::Primitives::UInt64 }
           constants:
             - name: TypeId
               doc: { brief: 'File type identifier for directories.' }
-              type: Everbase::Uuid
+              type: Everbase::Primitives::Uuid
               value: bf869264-1888-4516-a6f6-890075f7f657
 
         - name: Conflict
@@ -1257,19 +1312,19 @@
             - name: GetAll
               doc: { brief: 'Returns all currently known conflicts for a provided path.' }
               static: true
-              return: { name: Conflicts, type: [ Everbase::Set, Everbase::FileSystem::Conflict ] }
+              return: { name: Conflicts, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Conflict ] }
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
-                - { name: Recursive, type: Everbase::Boolean }
+                - { name: Recursive, type: Everbase::Primitives::Boolean }
             - name: Open
               doc: { brief: 'Opens a conflict.' }
               static: true
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
               return: { name: Conflict, type: Everbase::FileSystem::Conflict }
             - name: GetId
               doc: { brief: 'Returns the conflict id.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetPath1
               doc: { brief: 'Returns the first path of the conflicting versions.' }
               return: { name: VersionedPath1, type: Everbase::FileSystem::Path }
@@ -1287,18 +1342,18 @@
                 - { name: Path2, type: Everbase::FileSystem::Path }
             - name: IsResolved
               doc: { brief: 'Returns true if the conflict is resolved.' }
-              return: { name: Resolved, type: Everbase::Boolean }
+              return: { name: Resolved, type: Everbase::Primitives::Boolean }
           events:
             - name: Occured
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 3c2ea1bf-a594-4102-92ce-9205c7266a58
               values:
-                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 6c3ea618-4e26-4bb0-9a1d-ea214b917938
               values:
-                - { name: ConflictIds, type: [ Everbase::Set, Everbase::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
 
         - name: SyncProcess
           type: class
@@ -1309,26 +1364,26 @@
               static: true
               params:
                 - { name: Path, type: Everbase::FileSystem::Path }
-                - { name: Recursive, type: Everbase::Boolean }
-              return: { name: SyncProcesses, type: [ Everbase::Set, Everbase::FileSystem::SyncProcess ] }
+                - { name: Recursive, type: Everbase::Primitives::Boolean }
+              return: { name: SyncProcesses, type: [ Everbase::Primitives::Set, Everbase::FileSystem::SyncProcess ] }
             - name: Open
               doc: { brief: 'Opens a sync process.' }
               static: true
               params:
-                - { name: Id, type: Everbase::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid }
               return: { name: SyncProcesses, type: Everbase::FileSystem::SyncProcess }
             - name: GetId
               doc: { brief: 'Returns the sync process id.' }
-              return: { name: Id, type: Everbase::Uuid }
+              return: { name: Id, type: Everbase::Primitives::Uuid }
             - name: GetPath
               doc: { brief: 'Returns the versioned path of the file or folder.' }
               return: { name: Path, type: Everbase::FileSystem::Path }
             - name: IsPaused
               doc: { brief: 'Returns true if the sync process is currently paused.' }
-              return: { name: Paused, type: Everbase::Boolean }
+              return: { name: Paused, type: Everbase::Primitives::Boolean }
             - name: GetStatus
               doc: { brief: 'Returns the current sync status.' }
-              return: { name: SyncStatus, type: Everbase::SyncStatus }
+              return: { name: SyncStatus, type: Everbase::ObjectStore::SyncStatus }
             - name: Pause
               doc: { brief: 'Pauses the sync process.' }
             - name: Resume
@@ -1340,78 +1395,24 @@
               doc: { brief: 'A new sync process started.' }
               id: 91321309-43e3-4150-affc-0c0645aa8188
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Completed
               doc: { brief: 'An existing sync process is completed.' }
               id: 40211d2a-e50f-4bb3-9e5a-9c899c9da9f7
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Paused
               doc: { brief: 'An existing sync process had been paused.' }
               id: 5dd45b84-0687-4fde-b922-c321b2945116
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Resumed
               doc: { brief: 'An existing sync process had been resumed.' }
               id: 54442669-fad1-4641-8f57-436771e9ab0a
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
             - name: Progress
               doc: { brief: 'An existing sync process made progress.' }
               id: 64463672-5be6-444f-b434-80f80b96d2a2
               values:
-                - { name: SyncProcessId, type: Everbase::Uuid }
-
-#---END EVERBASE FILESYSTEM END ---------------------------------------------
-
-    - name: Byte
-      type: primitive
-      underlying: Byte
-
-    - name: UInt16
-      type: primitive
-      underlying: UInt16
-
-    - name: UInt32
-      type: primitive
-      underlying: UInt32
-
-    - name: UInt64
-      type: primitive
-      underlying: UInt64
-
-    - name: Boolean
-      type: primitive
-      underlying: Boolean
-
-    - name: Timestamp
-      type: primitive
-      underlying: Timestamp
-
-    - name: String
-      type: primitive
-      underlying: String
-
-    - name: Uuid
-      type: primitive
-      underlying: Uuid
-
-    - name: Buffer
-      type: primitive
-      underlying: Buffer
-
-    - name: ConstBuffer
-      type: primitive
-      underlying: ConstBuffer
-
-    - name: Vector
-      type: primitive
-      underlying: Vector
-
-    - name: List
-      type: primitive
-      underlying: List
-
-    - name: Set
-      type: primitive
-      underlying: Set
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
