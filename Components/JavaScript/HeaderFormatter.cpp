@@ -59,10 +59,6 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
 			stream << qname(class_) << ".prototype" << " = " << "Object.create(" << qname(superClass) << ".prototype);" << endl << endl;
 		}
 	}
-	else
-	{
-		stream << qname(class_) << ".prototype" << " = " << "Object.create(Everbase.Observable.prototype);" << endl << endl;
-	}
 
 	for (auto constant : class_->constants())
 	{
