@@ -18,8 +18,14 @@ Documentation::~Documentation()
 {
 }
 
+ObjectRef Documentation::clone() const
+{
+    DocumentationRef newDoc = std::make_shared<Documentation>();
+    clone(newDoc);
+    return newDoc;
+}
 
-bool Documentation::keyExists(std::string doxygenKey)
+bool Documentation::keyExists(std::string doxygenKey) const
 {
     for (auto entry : _docEntries)
     {
@@ -31,14 +37,12 @@ bool Documentation::keyExists(std::string doxygenKey)
     return false;
 }
 
-
-std::vector<Documentation::DocEntry> Documentation::docEntries()
+std::vector<Documentation::DocEntry> Documentation::docEntries() const
 {
     return _docEntries;
 }
 
-
-std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxygenKey)
+std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxygenKey) const
 {
     std::vector<DocEntry> entries;
 
@@ -53,8 +57,7 @@ std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxyg
     return entries;
 }
 
-
-Documentation::DocEntry Documentation::docEntry(std::string doxygenKey)
+Documentation::DocEntry Documentation::docEntry(std::string doxygenKey) const
 {
     for (auto entry : _docEntries)
     {
@@ -66,8 +69,7 @@ Documentation::DocEntry Documentation::docEntry(std::string doxygenKey)
     throw std::runtime_error("doxygenKey " + doxygenKey + " not set");
 }
 
-
-std::string Documentation::description(std::string doxygenKey)
+std::string Documentation::description(std::string doxygenKey) const
 {
     try {
         return docEntry(doxygenKey).description;
@@ -78,22 +80,38 @@ std::string Documentation::description(std::string doxygenKey)
     }
 }
 
-
 void Documentation::addDocEntry(DocEntry entry)
 {
     _docEntries.push_back(entry);
 }
-
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string description)
 {
     _docEntries.push_back(DocEntry{ doxygenKey, "", description });
 }
 
-
 void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, std::string description)
 {
     _docEntries.push_back(DocEntry{ doxygenKey, paramName, description });
+}
+
+void Documentation::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    DocumentationRef clonedDoc = dynamic_pointer_cast<Documentation>(clonedObject);
+
+    if (clonedDoc)
+    {
+        for (auto docEntry : docEntries())
+        {
+            clonedDoc->addDocEntry(docEntry);
+        }
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Documentation - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

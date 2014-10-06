@@ -49,7 +49,14 @@ Primitive::~Primitive()
 {
 }
 
-Primitive::Underlying Primitive::underlying()
+ObjectRef Primitive::clone() const
+{
+    PrimitiveRef newPrimitive = std::make_shared<Primitive>();
+    clone(newPrimitive);
+    return newPrimitive;
+}
+
+Primitive::Underlying Primitive::underlying() const
 {
 	return _underlying;
 }
@@ -59,12 +66,12 @@ void Primitive::setUnderlying(Primitive::Underlying underlying)
     _underlying = underlying;
 }
 
-std::string Primitive::underlyingName()
+std::string Primitive::underlyingName() const
 {
     return underlyingNames[ int(_underlying) ];
 }
 
-unsigned int Primitive::underlyingParamCount()
+unsigned int Primitive::underlyingParamCount() const
 {
     return underlyingParamCounts[ int(_underlying) ];
 }
@@ -100,6 +107,23 @@ std::string Primitive::listSupportedUnderlying()
         list += "- " + std::string(underlyingNames[n]) + "\n";
     }
     return list;
+}
+
+void Primitive::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    PrimitiveRef clonedPrimitive = dynamic_pointer_cast<Primitive>(clonedObject);
+
+    if (clonedPrimitive)
+    {
+        Identifiable::clone(clonedPrimitive);
+        clonedPrimitive->setUnderlying(underlying());
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Primitive - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

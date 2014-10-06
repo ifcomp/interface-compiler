@@ -13,18 +13,22 @@ class Class::Event : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Event();
     virtual ~Event();
+    virtual ObjectRef clone() const override;
 
 public:
     void addValue(ParameterRef value);
-    std::vector<ParameterRef> values();
+    std::vector<ParameterRef> values() const;
 
     void setTypeId(boost::uuids::uuid typeId);
-    boost::uuids::uuid typeId();
+    boost::uuids::uuid typeId() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     std::vector<ParameterRef> _values;

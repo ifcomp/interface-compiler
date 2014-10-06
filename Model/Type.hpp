@@ -11,18 +11,22 @@ class Type : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Type();
     virtual ~Type();
+    virtual ObjectRef clone() const override;
 
 public:
-    ElementRef primary();
+    ElementRef primary() const;
     void setPrimary(ElementRef primary);
 
     void addParam(ElementRef param);
-    std::vector<ElementRef> params();
+    std::vector<ElementRef> params() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     ElementRef _primary;

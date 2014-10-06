@@ -17,13 +17,42 @@ Namespace::~Namespace()
 {
 }
 
-std::vector<ElementRef> Namespace::elements()
+ObjectRef Namespace::clone() const
+{
+    NamespaceRef newNamespace = std::make_shared<Namespace>();
+    clone(newNamespace);
+    return newNamespace;
+}
+
+std::vector<ElementRef> Namespace::elements() const
 {
     return _elements;
 }
 
+void Namespace::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    NamespaceRef clonedNamespace = dynamic_pointer_cast<Namespace>(clonedObject);
+
+    if (clonedNamespace)
+    {
+        Identifiable::clone(clonedNamespace);
+
+        for (auto element : elements())
+        {
+            clonedNamespace->addElement(dynamic_pointer_cast<Element>(element->clone()));
+        }
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Namespace - got " + clonedObject->typeName());
+    }
+}
+
 void Namespace::addElement(ElementRef element)
 {
+    element->setParent(shared_from_this());
 	_elements.push_back(element);
 }
 

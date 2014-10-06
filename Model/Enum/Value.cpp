@@ -12,14 +12,38 @@ Enum::Value::~Value()
 {
 }
 
-int32_t Enum::Value::value()
+ObjectRef Enum::Value::clone() const
+{
+    ValueRef newValue = std::make_shared<Value>();
+    clone(newValue);
+    return newValue;
+}
+
+int32_t Enum::Value::value() const
 {
 	return _value;
 }
 
 void Enum::Value::setValue(int32_t value)
 {
-	_value = value;
+    _value = value;
+}
+
+void Enum::Value::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    ValueRef clonedValue = dynamic_pointer_cast<Value>(clonedObject);
+
+    if (clonedValue)
+    {
+        Identifiable::clone(clonedValue);
+        clonedValue->setValue(value());
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Value - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

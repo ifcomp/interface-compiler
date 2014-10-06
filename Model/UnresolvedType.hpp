@@ -10,18 +10,22 @@ class UnresolvedType : public TypeBase
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     UnresolvedType();
     virtual ~UnresolvedType();
+    virtual ObjectRef clone() const override;
 
 public:
-    std::string primary();
+    std::string primary() const;
     void setPrimary(std::string primary);
 
     void addParam(std::string param);
-    const std::vector<std::string>& params();
+    const std::vector<std::string>& params() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     std::string _primary;

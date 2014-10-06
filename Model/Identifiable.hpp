@@ -15,14 +15,19 @@ public:
     virtual ~Identifiable();
 
 public:
-    std::string longName();
+    std::string longName() const;
     void setLongName(std::string longName);
 
-    std::string shortName();
+    std::string shortName() const;
     void setShortName(std::string shortName);
 
-    DocumentationRef doc();
+    DocumentationRef doc() const;
     void setDoc(DocumentationRef doc);
+
+    using Object::clone;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     std::string _longName;
