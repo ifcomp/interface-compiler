@@ -780,29 +780,29 @@
               doc: { brief: 'An object had been created.' }
               id: 1a961e2a-004c-4e11-80f0-e5236f6eded6
               values:
-                - { name: Id, type: Everbase::Primitives::Uuid }
-                - { name: Version, type: Everbase::Primitives::Uuid }
-                - { name: Type, type: Everbase::Primitives::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid, doc: { brief: 'Id of object' } }
+                - { name: Version, type: Everbase::Primitives::Uuid, doc: { brief: 'Version of object' } }
+                - { name: Type, type: Everbase::Primitives::Uuid, doc: { brief: 'Type of object' } }
             - name: Erased
               doc: { brief: 'An object had been removed.' }
               id: 29135c66-a515-453f-877e-01e1861ecfc5
               values:
-                - { name: Id, type: Everbase::Primitives::Uuid }
-                - { name: Version, type: Everbase::Primitives::Uuid }
-                - { name: Type, type: Everbase::Primitives::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid, doc: { brief: 'Id of object' } }
+                - { name: Version, type: Everbase::Primitives::Uuid, doc: { brief: 'Version of object' } }
+                - { name: Type, type: Everbase::Primitives::Uuid, doc: { brief: 'Type of object' } }
             - name: NewVersion
               doc: { brief: 'A new version of an object had been created.' }
               id: f8294c6e-af1e-4238-be7f-e05661d16b08
               values:
-                - { name: Id, type: Everbase::Primitives::Uuid }
-                - { name: Version, type: Everbase::Primitives::Uuid }
-                - { name: Type, type: Everbase::Primitives::Uuid }
+                - { name: Id, type: Everbase::Primitives::Uuid, doc: { brief: 'Id of object' } }
+                - { name: Version, type: Everbase::Primitives::Uuid, doc: { brief: 'Version of object' } }
+                - { name: Type, type: Everbase::Primitives::Uuid, doc: { brief: 'Type of object' } }
             - name: StatusUpdate
               doc: { brief: 'A status update of an object occured.' }
               id: 80d70515-14ba-4cff-9bb4-add71fb32d4f
               values:
-                - { name: Id, type: Everbase::Primitives::Uuid }
-                - { name: Status, type: Everbase::ObjectStore::Status }
+                - { name: Id, type: Everbase::Primitives::Uuid, doc: { brief: 'Id of object' } }
+                - { name: Status, type: Everbase::ObjectStore::Status, doc: { brief: 'Status of object' } }
 
         - name: Conflict
           type: class
@@ -845,12 +845,12 @@
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 09c75fc8-02c2-4158-ad4e-f50fd72529e7
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 1399b73f-b327-4f63-8547-abfa1cbc423e
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
 
         - name: SyncProcess
           type: class
@@ -892,27 +892,27 @@
               doc: { brief: 'A new sync process started.' }
               id: 14dd4e11-f267-49b2-9815-6476f17544c9
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Completed
               doc: { brief: 'An existing sync process completed.' }
               id: 926aefd8-ca5a-448f-a41e-2635d8539426
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Paused
               doc: { brief: 'An existing sync process had been paused.' }
               id: 08468046-b18f-4af7-a8b1-cc89585ad555
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Resumed
               doc: { brief: 'An existing sync process had been resumed.' }
               id: b077a28f-bfdb-4ad7-b14f-16129cd922d1
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Progress
               doc: { brief: 'An existing sync process made progress.' }
               id: 518438d3-a650-4a91-a736-c2ac43f2ebcf
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
 
 # ********* FileSystem *********
 
@@ -1146,35 +1146,35 @@
               doc: { brief: 'A filesystem node had been created.' }
               id: e679cf7e-28a2-44b8-9883-cd6529c622b5
               values:
-                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'Path of filesystem node.' } }
             - name: Moved
               doc: { brief: 'A filesystem node had been moved or renamed.' }
               id: 683833f9-8faa-4ed0-829e-c30517126b9d
               values:
-                - { name: SourcePath, type: Everbase::FileSystem::Path }
-                - { name: TargetPath, type: Everbase::FileSystem::Path }
+                - { name: SourcePath, type: Everbase::FileSystem::Path, doc: { brief: 'Source path of filesystem node.' } }
+                - { name: TargetPath, type: Everbase::FileSystem::Path, doc: { brief: 'Target path of filesystem node.' } }
             - name: Copied
               doc: { brief: 'A filesystem node had been copied.' }
               id: f3235967-ae29-420d-9622-a5f6c8f80d02
               values:
-                - { name: SourcePath, type: Everbase::FileSystem::Path }
-                - { name: TargetPath, type: Everbase::FileSystem::Path }
+                - { name: SourcePath, type: Everbase::FileSystem::Path, doc: { brief: 'Source path of filesystem node.' } }
+                - { name: TargetPath, type: Everbase::FileSystem::Path, doc: { brief: 'Target path of filesystem node.' } }
             - name: Removed
               doc: { brief: 'A filesystem node had been removed.' }
               id: 24387094-7a51-4284-83b6-d7b28e2038ed
               values:
-                - { name: Path, type: Everbase::FileSystem::Path }
+                - { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'Path of filesystem node.' } }
             - name: NewVersion
               doc: { brief: 'A new version of a filesystem node had been created.' }
               id: b5310949-fbb2-46fd-8bb7-379740965f92
               values:
-                - { name: VersionedPath, type: Everbase::FileSystem::Path }
+                - { name: VersionedPath, type: Everbase::FileSystem::Path, doc: { brief: 'Path of filesystem node.' } }
             - name: StatusUpdate
               doc: { brief: 'A status update of a filesystem node occured.' }
               id: 800018fa-5b1f-4946-86ae-af6657f1ec10
               values:
-                - { name: Path, type: Everbase::FileSystem::Path }
-                - { name: Status, type: Everbase::ObjectStore::Status }
+                - { name: Path, type: Everbase::FileSystem::Path, doc: { brief: 'Path of filesystem node.' } }
+                - { name: Status, type: Everbase::ObjectStore::Status, doc: { brief: 'Status of filesystem node.' } }
 
         - name: Directory
           type: class
@@ -1353,12 +1353,12 @@
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 3c2ea1bf-a594-4102-92ce-9205c7266a58
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 6c3ea618-4e26-4bb0-9a1d-ea214b917938
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
 
         - name: SyncProcess
           type: class
@@ -1400,24 +1400,24 @@
               doc: { brief: 'A new sync process started.' }
               id: 91321309-43e3-4150-affc-0c0645aa8188
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Completed
               doc: { brief: 'An existing sync process is completed.' }
               id: 40211d2a-e50f-4bb3-9e5a-9c899c9da9f7
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Paused
               doc: { brief: 'An existing sync process had been paused.' }
               id: 5dd45b84-0687-4fde-b922-c321b2945116
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Resumed
               doc: { brief: 'An existing sync process had been resumed.' }
               id: 54442669-fad1-4641-8f57-436771e9ab0a
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }
             - name: Progress
               doc: { brief: 'An existing sync process made progress.' }
               id: 64463672-5be6-444f-b434-80f80b96d2a2
               values:
-                - { name: SyncProcessId, type: Everbase::Primitives::Uuid }
+                - { name: SyncProcessId, type: Everbase::Primitives::Uuid, doc: { brief: 'Sync process id.' } }

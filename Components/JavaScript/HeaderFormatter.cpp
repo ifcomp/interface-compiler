@@ -28,6 +28,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
 
 	for (auto field : struct_->fields())
 	{
+        if ( field->doc() )
+        {
+            stream << doc(field->doc());
+        }
+    
 		stream << "Object.defineProperty(" << qname(struct_) << ".prototype, '" << name(field) << "', "
 		       << "{ get: function() { throw new Error(\"not implemented\"); }, set: function(" << name(field) << ") { throw new Error(\"not implemented\"); } } ); "
 		       << "/* " << type(field->type()) << " */" << endl << endl;
@@ -163,6 +168,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
 	for (auto value : event->values())
 	{
+        if ( value->doc() )
+        {
+            stream << doc(value->doc());
+        }
+    
 		stream << "Object.defineProperty(" << qname(event) << ".prototype, '" 
 			<< name(value) <<	"', { get: function() { throw new Error(\"not implemented\"); }, set: function(" << name(value) << ") "
 			<< "{ throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;

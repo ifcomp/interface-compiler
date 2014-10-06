@@ -23,7 +23,12 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
 
     for (auto field : struct_->fields())
     {
-        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl;
+        if ( field->doc() )
+        {
+            filter(stream).push<indent>(config.indentData) << doc(field->doc());
+        }
+    
+        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl << endl;
     }
 
     stream << "};" << endl;
@@ -121,17 +126,33 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
-    // TODO
-    
     if ( event->doc() )
     {
         stream << doc(event->doc());
     }
+
+    auto typeId = boost::any_cast<boost::uuids::uuid>(event->typeId());
     
+    stream << "struct " << name(event) << " : public Primitives::Event<";
+
+    for( auto i : indices(std::vector<std::uint8_t>(typeId.data, typeId.data + 16)) )
+    {
+        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
+    }
+    
+    stream << ">" << endl << "{" << endl;
+
     for (auto value : event->values())
     {
-        stream << type(value->type()) << " " << name(event) << "();" << endl;
+        if ( value->doc() )
+        {
+            filter(stream).push<indent>(config.indentData) << doc(value->doc());
+        }
+    
+        filter(stream).push<indent>(config.indentData) << param(value) << ";" << endl << endl;
     }
+
+    stream << "};" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
