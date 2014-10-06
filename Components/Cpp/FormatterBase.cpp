@@ -45,8 +45,8 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid"),
-                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Buffer"),
-                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::ConstBuffer"),
+                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Primitives::Buffer"),
+                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::Primitives::ConstBuffer"),
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),
@@ -107,6 +107,20 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     }
 
     stream << "}" << endl;
+}
+
+void FormatterBase::_definition(std::ostream& stream, Model::RootRef root) const
+{
+    stream << "#include <memory>" << endl
+           << "#include <set>" << endl
+           << "#include <ctime>" << endl
+           << "#include <boost/uuid/uuid.hpp>" << endl
+           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
+           << endl;
+
+    Formatter::_definition(stream, root);
 }
 
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const

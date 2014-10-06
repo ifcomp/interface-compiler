@@ -547,6 +547,32 @@
             - { name: SyncStatus, type: Everbase::ObjectStore::CumulatedSyncStatus, doc: { brief: 'Sync status of object.' } }
             - { name: Conflicts, type: Everbase::Primitives::UInt32, doc: { brief: 'Number of pair-wise conflicts within object.' } }
 
+        - name: Permission
+          type: class
+          doc: { brief: 'Specifies the access mode of an user entity. These control the ability of a user entity to perform operations on the content of a filesystem node.' }
+          operations:
+            - name: SetEntity
+              doc: { brief: 'Sets the user entity which is subject of this permission object.' }
+              params:
+                - { name: Entity, type: Everbase::CoreSystem::UserEntity }
+            - name: GetEntity
+              doc: { brief: 'Returns the user entity which is subject of this permission object.' }
+              return: { name: Entity, type: Everbase::CoreSystem::UserEntity }
+            - name: SetMode
+              doc: { brief: 'Sets the permission mode.' }
+              params:
+                - { name: Mode, type: Everbase::ObjectStore::PermissionMode }
+              errors:
+                - InvalidArgument/InvalidMode
+            - name: GetMode
+              doc: { brief: 'Returns the permission mode.' }
+              return: { name: Mode, type: Everbase::ObjectStore::PermissionMode }
+
+        - name: Rule
+          type: class
+          doc: { brief: 'Influences the data handling performed by the system.', more: 'There are various data handling rules, e.g. geographical restrictions, encryption requirements and more.' }
+          abstractType: true
+
         - name: Policy
           type: class
           doc: { brief: 'Is a set of permissions and rules.', more: 'A policy can be either specific to a set of objects (unnamed policy) or a domain (named policy).' }
@@ -601,32 +627,6 @@
             - name: GetRules
               doc: { brief: 'Returns all rule Everbase::ObjectStore:: of the policy.' }
               return: { name: Rules, type: [ Everbase::Primitives::Set, Everbase::ObjectStore::Rule ] }
-
-        - name: Permission
-          type: class
-          doc: { brief: 'Specifies the access mode of an user entity. These control the ability of a user entity to perform operations on the content of a filesystem node.' }
-          operations:
-            - name: SetEntity
-              doc: { brief: 'Sets the user entity which is subject of this permission object.' }
-              params:
-                - { name: Entity, type: Everbase::CoreSystem::UserEntity }
-            - name: GetEntity
-              doc: { brief: 'Returns the user entity which is subject of this permission object.' }
-              return: { name: Entity, type: Everbase::CoreSystem::UserEntity }
-            - name: SetMode
-              doc: { brief: 'Sets the permission mode.' }
-              params:
-                - { name: Mode, type: Everbase::ObjectStore::PermissionMode }
-              errors:
-                - InvalidArgument/InvalidMode
-            - name: GetMode
-              doc: { brief: 'Returns the permission mode.' }
-              return: { name: Mode, type: Everbase::ObjectStore::PermissionMode }
-
-        - name: Rule
-          type: class
-          doc: { brief: 'Influences the data handling performed by the system.', more: 'There are various data handling rules, e.g. geographical restrictions, encryption requirements and more.' }
-          abstractType: true
 
         - name: Object
           type: class
