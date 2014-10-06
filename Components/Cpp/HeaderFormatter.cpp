@@ -246,7 +246,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
     for (auto value : indices(enum_->values()))
     {
-        filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl;
+        filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl << endl;
     }
 
     stream << "};" << endl;
