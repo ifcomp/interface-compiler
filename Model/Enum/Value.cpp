@@ -37,6 +37,7 @@ void Enum::Value::clone(ObjectRef clonedObject) const
 
     if (clonedValue)
     {
+        Identifiable::clone(clonedValue);
         clonedValue->setValue(value());
     }
     else

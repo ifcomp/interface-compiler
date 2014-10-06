@@ -26,13 +26,11 @@ ElementRef Type::primary() const
 
 void Type::setPrimary(ElementRef primary)
 {
-    primary->setParent(shared_from_this());
     _primary = primary;
 }
 
 void Type::addParam(ElementRef param)
 {
-    param->setParent(shared_from_this());
     _params.push_back(param);
 }
 

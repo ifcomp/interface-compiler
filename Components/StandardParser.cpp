@@ -17,7 +17,6 @@ Model::RootRef StandardParser::execute ( std::istream& input ) const
 
     Model::RootRef root = std::make_shared<Model::Root>();
     root->setNamespace(rootNamespace);
-
     return root;
 }
 
