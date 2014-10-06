@@ -11,6 +11,10 @@
   type: namespace
   doc: { brief: 'Everbase Technology.' }
   members:
+  
+    - name: Event
+      type: class
+      doc: { brief: 'Dummy-declaration for implementing events.' }
 
 # ********* Primitives *********
 

@@ -70,6 +70,11 @@ void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) 
 	stream << "/* " << type(parameter->type()) << " */" << " " << name(parameter);
 }
 
+void FormatterBase::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::vector<Model::ElementRef> params) const
+{
+    stream << primitive->longName();
+}
+
 void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )
@@ -77,22 +82,9 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
         stream << doc(namespace_->doc());
     }
     
-	string var = "";
-	//TODO: impiment real functionality
-	bool doDummyDecl = false;
-	if (!namespace_->parent())
-	{
-		var = "var";
-		doDummyDecl = true;
-	}
+	string var = namespace_->parent() ? "" : "var ";
 	stream << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
-	if (doDummyDecl)
-	{
-		stream << "/**" << endl << " * @brief Dummy-declaration for implementing events. " << endl << " */";
-		stream << endl << "Everbase.Event = function() { }" << endl << endl;
-	}
-
 	for ( auto element : namespace_->elements() )
 	{
 		filter(stream) << definition(element);
