@@ -1,11 +1,5 @@
 #include "Components/Cpp/FormatterBase.hpp"
 
-#include <set>
-#include <iostream>
-#include <sstream>
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_io.hpp>
-
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
 using std::endl;

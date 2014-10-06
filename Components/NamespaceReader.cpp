@@ -500,15 +500,8 @@ Class::ConstantRef NamespaceReader::parseClassConstant(const YAML::Node &node)
         if (checkNode(node, KEY_VALUE, YAML::NodeType::Scalar, true))
         {
             string value = node[KEY_VALUE].Scalar();
-            try
-            {
-                int number = boost::lexical_cast<int>(value);
-                newConstant->setValue(number);
-            }
-            catch(boost::bad_lexical_cast& e)
-            {
-                newConstant->setValue(value);
-            }
+            newConstant->setValue(value);
+            // value will get translated in resolve procedure
         }
     }
     catch (const runtime_error &e)
@@ -597,8 +590,6 @@ TypeRef NamespaceReader::resolveType(TypeBaseRef type)
 
         if (member)
         {
-//            cout << "resolved primary type " << member->longName() << endl;
-
             TypeRef resolvedType = make_shared<Type>();
             resolvedType->setPrimary(member);
 
@@ -608,7 +599,6 @@ TypeRef NamespaceReader::resolveType(TypeBaseRef type)
                 member = resolveTypeName(paramTypeName);
                 if (member)
                 {
-//                    cout << "resolved subtype " << member->longName() << endl;
                     resolvedType->addParam(member);
                 }
                 else
@@ -727,6 +717,49 @@ void NamespaceReader::resolveTypesInNamespace(NamespaceRef rootNamespace)
                         if (resolvedType)
                         {
                             constant->setType(resolvedType);
+
+                            // convert value
+                            std::string value = boost::any_cast<std::string>(constant->value());
+
+                            if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
+                            {
+                                switch( primitive->underlying() )
+                                {
+                                    case Primitive::Underlying::BYTE:
+                                        constant->setValue(boost::lexical_cast<std::uint8_t>(value));
+                                        break;
+
+                                    case Primitive::Underlying::UINT16:
+                                        constant->setValue(boost::lexical_cast<std::uint16_t>(value));
+                                        break;
+
+                                    case Primitive::Underlying::UINT32:
+                                        constant->setValue(boost::lexical_cast<std::uint32_t>(value));
+                                        break;
+
+                                    case Primitive::Underlying::UINT64:
+                                        constant->setValue(boost::lexical_cast<std::uint64_t>(value));
+                                        break;
+
+                                    case Primitive::Underlying::BOOLEAN:
+                                        constant->setValue(boost::lexical_cast<bool>(value));
+                                        break;
+
+                                    case Primitive::Underlying::TIMESTAMP:
+                                        throw std::runtime_error("not supported");
+
+                                    case Primitive::Underlying::STRING:
+                                        constant->setValue(value);
+                                        break;
+
+                                    case Primitive::Underlying::UUID:
+                                        constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
+                                        break;
+
+                                    default:
+                                        throw std::runtime_error("not supported");
+                                }
+                            }
                         }
                     }
                     catch (const runtime_error &e)

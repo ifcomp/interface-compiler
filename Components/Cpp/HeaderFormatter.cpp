@@ -1,10 +1,6 @@
 #include "Components/Cpp/HeaderFormatter.hpp"
 
-#include <set>
-#include <iostream>
-#include <sstream>
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <boost/algorithm/string/replace.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -42,6 +38,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
     
     stream << "class " << name(class_) << endl << "{" << endl;
 
+    for ( auto constant : class_->constants() )
+    {
+        filter(stream).push<indent>(config.indentData) << definition(constant) << endl;
+    }
+
     for( auto operation : class_->operations() )
     {
         filter(stream).push<indent>(config.indentData) << definition(operation) << endl;
@@ -50,11 +51,6 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
     for ( auto event : class_->events() )
     {
         filter(stream).push<indent>(config.indentData) << definition(event) << endl;
-    }
-
-    for ( auto constant : class_->constants() )
-    {
-        filter(stream).push<indent>(config.indentData) << definition(constant) << endl;
     }
 
     stream << "};" << endl;
@@ -66,31 +62,67 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
     {
         stream << doc(constant->doc());
     }
-    
-    int number = 0;
-    std::string valueString;
-    boost::uuids::uuid uuid;
 
-    if (constant->value().type() == typeid(int))
+    stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = ";
+
+    if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
-        number = boost::any_cast<int>(constant->value());
-        valueString = boost::lexical_cast<std::string>(number);
-    }
-    else if (constant->value().type() == typeid(std::string))
-    {
-        valueString = "\"" + boost::any_cast<std::string>(constant->value()) + "\"";
-    }
-    else if (constant->value().type() == typeid(boost::uuids::uuid))
-    {
-        uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-        valueString = boost::lexical_cast<std::string>(uuid);
+        switch( primitive->underlying() )
+        {
+            case Primitive::Underlying::BYTE:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint8_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT16:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint16_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT32:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint32_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT64:
+                stream << "0x" << std::hex << boost::any_cast<std::uint64_t>(constant->value());
+                break;
+
+            case Primitive::Underlying::BOOLEAN:
+                stream << (boost::any_cast<bool>(constant->value()) ? "true" : "false");
+                break;
+
+            case Primitive::Underlying::TIMESTAMP:
+                throw std::runtime_error("not supported");
+
+            case Primitive::Underlying::STRING:
+                stream << "\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
+                break;
+
+            case Primitive::Underlying::UUID:
+                {
+                    auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+
+                    stream << "{ { ";
+
+                    for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
+                    {
+                        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
+                    }
+
+                    stream << " } }";
+                }
+                break;
+
+            default:
+                throw std::runtime_error("not supported");
+        }
     }
 
-    stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = " << valueString << ";" << endl;
+    stream << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    // TODO
+    
     if ( event->doc() )
     {
         stream << doc(event->doc());
@@ -136,7 +168,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef va
         stream << doc(value->doc());
     }
     
-    stream << name(value) << " = " << value->value();
+    stream << name(value) << " = 0x" << std::hex << static_cast<std::uint64_t>(value->value());
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp

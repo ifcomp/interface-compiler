@@ -1,12 +1,5 @@
 #include "Components/JavaScript/FormatterBase.hpp"
 
-#include <set>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/lexical_cast.hpp>
-
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace JavaScript {
 
 using std::string;
