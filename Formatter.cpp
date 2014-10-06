@@ -281,59 +281,59 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
     switch(primitive->underlying())
     {
         case Model::Primitive::Underlying::BYTE:
-            native = config.primitiveConfig<Model::Primitive::Underlying::BYTE>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::BYTE>().native;
             break;
 
         case Model::Primitive::Underlying::UINT16:
-            native = config.primitiveConfig<Model::Primitive::Underlying::UINT16>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::UINT16>().native;
             break;
 
         case Model::Primitive::Underlying::UINT32:
-            native = config.primitiveConfig<Model::Primitive::Underlying::UINT32>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::UINT32>().native;
             break;
 
         case Model::Primitive::Underlying::UINT64:
-            native = config.primitiveConfig<Model::Primitive::Underlying::UINT64>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::UINT64>().native;
             break;
 
         case Model::Primitive::Underlying::BOOLEAN:
-            native = config.primitiveConfig<Model::Primitive::Underlying::BOOLEAN>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::BOOLEAN>().native;
             break;
 
         case Model::Primitive::Underlying::TIMESTAMP:
-            native = config.primitiveConfig<Model::Primitive::Underlying::TIMESTAMP>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::TIMESTAMP>().native;
             break;
 
         case Model::Primitive::Underlying::STRING:
-            native = config.primitiveConfig<Model::Primitive::Underlying::STRING>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::STRING>().native;
             break;
 
         case Model::Primitive::Underlying::UUID:
-            native = config.primitiveConfig<Model::Primitive::Underlying::UUID>().native;
+            native = config.primitiveConfig1<Model::Primitive::Underlying::UUID>().native;
             break;
 
         case Model::Primitive::Underlying::BUFFER:
-            native = config.primitiveConfig<Model::Primitive::Underlying::BUFFER>().native;
+            native = config.primitiveConfig2<Model::Primitive::Underlying::BUFFER>().native;
             break;
 
         case Model::Primitive::Underlying::CONST_BUFFER:
-            native = config.primitiveConfig<Model::Primitive::Underlying::CONST_BUFFER>().native;
+            native = config.primitiveConfig2<Model::Primitive::Underlying::CONST_BUFFER>().native;
             break;
 
         case Model::Primitive::Underlying::VECTOR:
-            native = config.primitiveConfig<Model::Primitive::Underlying::VECTOR>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::VECTOR>().native;
             break;
 
         case Model::Primitive::Underlying::LIST:
-            native = config.primitiveConfig<Model::Primitive::Underlying::LIST>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::LIST>().native;
             break;
 
         case Model::Primitive::Underlying::SET:
-            native = config.primitiveConfig<Model::Primitive::Underlying::SET>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::SET>().native;
             break;
 
         case Model::Primitive::Underlying::MAP:
-            native = config.primitiveConfig<Model::Primitive::Underlying::MAP>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::MAP>().native;
             break;
 
         default:

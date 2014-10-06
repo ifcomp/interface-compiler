@@ -21,7 +21,9 @@ template <Model::Primitive::Underlying U>
 using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
-using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
+using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
+using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
+using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
 
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
@@ -38,7 +40,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
-            PrimitiveConfigs {
+            PrimitiveConfigs1 {
                 PrimitiveConfig<Primitive::Underlying::BYTE>("Byte"),
                 PrimitiveConfig<Primitive::Underlying::UINT16>("UInt16"),
                 PrimitiveConfig<Primitive::Underlying::UINT32>("UInt32"),
@@ -46,9 +48,13 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("Boolean"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("Timestamp"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
-                PrimitiveConfig<Primitive::Underlying::UUID>("Uuid"),
+                PrimitiveConfig<Primitive::Underlying::UUID>("Uuid")
+            },
+            PrimitiveConfigs2 {
                 PrimitiveConfig<Primitive::Underlying::BUFFER>("Buffer"),
-                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("ConstBuffer"),
+                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("ConstBuffer")
+            },
+            PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("Vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("List<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("Set<$0>"),
@@ -71,8 +77,22 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
         stream << doc(namespace_->doc());
     }
     
-	stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+	string var = "";
+	//TODO: impiment real functionality
+	bool doDummyDecl = false;
+	if (!namespace_->parent())
+	{
+		var = "var";
+		doDummyDecl = true;
+	}
+	stream << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
+	if (doDummyDecl)
+	{
+		stream << "/**" << endl << " * @brief Dummy-declaration for implementing events. " << endl << " */";
+		stream << endl << "Everbase.Event = function() { }" << endl << endl;
+	}
+
 	for ( auto element : namespace_->elements() )
 	{
 		filter(stream) << definition(element);
