@@ -27,6 +27,7 @@ TypeBaseRef Class::Constant::type() const
 
 void Class::Constant::setType(TypeBaseRef type)
 {
+    type->setParent(shared_from_this());
     _type = type;
 }
 

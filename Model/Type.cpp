@@ -26,11 +26,13 @@ ElementRef Type::primary() const
 
 void Type::setPrimary(ElementRef primary)
 {
+    primary->setParent(shared_from_this());
     _primary = primary;
 }
 
 void Type::addParam(ElementRef param)
 {
+    param->setParent(shared_from_this());
     _params.push_back(param);
 }
 
@@ -47,7 +49,10 @@ void Type::clone(ObjectRef clonedObject) const
 
     if (clonedType)
     {
-        clonedType->setPrimary(dynamic_pointer_cast<Element>(primary()->clone()));
+        if (primary())
+        {
+            clonedType->setPrimary(dynamic_pointer_cast<Element>(primary()->clone()));
+        }
 
         for (auto param : params())
         {

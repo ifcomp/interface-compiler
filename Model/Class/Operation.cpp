@@ -43,6 +43,7 @@ void Class::Operation::setSynchronous(bool isSynchronous)
 
 void Class::Operation::addParam(ParameterRef param)
 {
+    param->setParent(shared_from_this());
     _params.push_back(param);
 }
 
@@ -53,6 +54,7 @@ std::vector<ParameterRef> Class::Operation::params() const
 
 void Class::Operation::setResult(ParameterRef result)
 {
+    result->setParent(shared_from_this());
 	_result = result;
 }
 
@@ -72,7 +74,11 @@ void Class::Operation::clone(ObjectRef clonedObject) const
         Identifiable::clone(clonedOp);
         clonedOp->setStatic(isStatic());
         clonedOp->setSynchronous(isSynchronous());
-        clonedOp->setResult(dynamic_pointer_cast<Parameter>(result()->clone()));
+
+        if (result())
+        {
+            clonedOp->setResult(dynamic_pointer_cast<Parameter>(result()->clone()));
+        }
 
         for (auto param : params())
         {

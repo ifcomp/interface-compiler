@@ -26,6 +26,7 @@ NamespaceRef Root::getNamespace() const
 
 void Root::setNamespace(NamespaceRef ns)
 {
+    ns->setParent(shared_from_this());
     _namespace = ns;
 }
 
@@ -37,7 +38,10 @@ void Root::clone(ObjectRef clonedObject) const
 
     if (clonedRoot)
     {
-        clonedRoot->setNamespace(dynamic_pointer_cast<Namespace>(getNamespace()->clone()));
+        if (getNamespace())
+        {
+            clonedRoot->setNamespace(dynamic_pointer_cast<Namespace>(getNamespace()->clone()));
+        }
     }
     else
     {

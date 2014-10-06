@@ -52,6 +52,7 @@ void Namespace::clone(ObjectRef clonedObject) const
 
 void Namespace::addElement(ElementRef element)
 {
+    element->setParent(shared_from_this());
 	_elements.push_back(element);
 }
 

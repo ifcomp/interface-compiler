@@ -43,6 +43,7 @@ DocumentationRef Identifiable::doc() const
 
 void Identifiable::setDoc(DocumentationRef doc)
 {
+    doc->setParent(shared_from_this());
     _doc = doc;
 }
 
@@ -56,7 +57,11 @@ void Identifiable::clone(ObjectRef clonedObject) const
     {
         clonedIdentifiable->setLongName(longName());
         clonedIdentifiable->setShortName(shortName());
-        clonedIdentifiable->setDoc(dynamic_pointer_cast<Documentation>(doc()));
+
+        if (doc())
+        {
+            clonedIdentifiable->setDoc(dynamic_pointer_cast<Documentation>(doc()));
+        }
     }
     else
     {

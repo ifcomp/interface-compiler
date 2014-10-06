@@ -21,6 +21,7 @@ ObjectRef Struct::clone() const
 
 void Struct::addField(ParameterRef field)
 {
+    field->setParent(shared_from_this());
     _fields.push_back(field);
 }
 

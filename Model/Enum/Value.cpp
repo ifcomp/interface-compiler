@@ -14,9 +14,9 @@ Enum::Value::~Value()
 
 ObjectRef Enum::Value::clone() const
 {
-    ValueRef clonedValue = std::make_shared<Value>();
-    clonedValue->setValue(value());
-    return clonedValue;
+    ValueRef newValue = std::make_shared<Value>();
+    clone(newValue);
+    return newValue;
 }
 
 int32_t Enum::Value::value() const
@@ -26,7 +26,23 @@ int32_t Enum::Value::value() const
 
 void Enum::Value::setValue(int32_t value)
 {
-	_value = value;
+    _value = value;
+}
+
+void Enum::Value::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    ValueRef clonedValue = dynamic_pointer_cast<Value>(clonedObject);
+
+    if (clonedValue)
+    {
+        clonedValue->setValue(value());
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Value - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

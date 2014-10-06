@@ -22,6 +22,7 @@ ObjectRef Enum::clone() const
 
 void Enum::addValue(Enum::ValueRef value)
 {
+    value->setParent(shared_from_this());
     _values.push_back(value);
 }
 

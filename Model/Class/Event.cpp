@@ -21,6 +21,7 @@ ObjectRef Class::Event::clone() const
 
 void Class::Event::addValue(ParameterRef value)
 {
+    value->setParent(shared_from_this());
     _values.push_back(value);
 }
 

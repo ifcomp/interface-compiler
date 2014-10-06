@@ -42,11 +42,13 @@ TypeBaseRef Class::super() const
 
 void Class::setSuper(TypeBaseRef super)
 {
+    super->setParent(shared_from_this());
 	_super = super;
 }
 
 void Class::addOperation(Class::OperationRef operation)
 {
+    operation->setParent(shared_from_this());
     _operations.push_back(operation);
 }
 
@@ -57,6 +59,7 @@ std::vector<Class::OperationRef> Class::operations() const
 
 void Class::addEvent(Class::EventRef event)
 {
+    event->setParent(shared_from_this());
     _events.push_back(event);
 }
 
@@ -67,6 +70,7 @@ std::vector<Class::EventRef> Class::events() const
 
 void Class::addConstant(Class::ConstantRef constant)
 {
+    constant->setParent(shared_from_this());
 	_constants.push_back(constant);
 }
 
@@ -86,7 +90,11 @@ void Class::clone(ObjectRef clonedObject) const
         Identifiable::clone(clonedClass);
 
         clonedClass->setBehavior(behavior());
-        clonedClass->setSuper(dynamic_pointer_cast<TypeBase>(super()->clone()));
+
+        if (super())
+        {
+            clonedClass->setSuper(dynamic_pointer_cast<TypeBase>(super()->clone()));
+        }
 
         for (auto operation : _operations)
         {
