@@ -71,22 +71,9 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
         stream << doc(namespace_->doc());
     }
     
-	string var = "";
-	//TODO: impiment real functionality
-	bool doDummyDecl = false;
-	if (!namespace_->parent())
-	{
-		var = "var";
-		doDummyDecl = true;
-	}
+	string var = namespace_->parent() ? "" : "var ";
 	stream << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
-	if (doDummyDecl)
-	{
-		stream << "/**" << endl << " * @brief Dummy-declaration for implementing events. " << endl << " */";
-		stream << endl << "Everbase.Event = function() { }" << endl << endl;
-	}
-
 	for ( auto element : namespace_->elements() )
 	{
 		filter(stream) << definition(element);

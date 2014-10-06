@@ -2,6 +2,7 @@
 #include "Components/Cpp/FwdDeclFormatter.hpp"
 #include "Components/Cpp/HeaderFormatter.hpp"
 #include "Components/JavaScript/HeaderFormatter.hpp"
+#include "Components/JavaScript/WebClientFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -51,6 +52,19 @@ int main(int argc, char** argv)
             output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
 
             Components::JavaScript::HeaderFormatter format;
+            format.execute(root, output);
+        }
+        catch (const ios_base::failure &e)
+        {
+            cout << "error opening output file (" << e.what() << ")" << endl;
+        }
+
+		try
+        {
+            std::ofstream output("everbase-web-client.js", std::ios_base::trunc);
+            output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
+			Components::JavaScript::WebClientFormatter format;
             format.execute(root, output);
         }
         catch (const ios_base::failure &e)
