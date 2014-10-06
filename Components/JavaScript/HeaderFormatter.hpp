@@ -11,6 +11,8 @@ class HeaderFormatter : public FormatterBase
 protected:
     using FormatterBase::qname;
 	using FormatterBase::name;
+    using FormatterBase::qcname;
+	using FormatterBase::cname;
 	using FormatterBase::param;
 	using FormatterBase::type;
 	using FormatterBase::doc;
@@ -20,6 +22,8 @@ protected:
 protected:
     using FormatterBase::_qname;
     using FormatterBase::_name;
+    using FormatterBase::_qcname;
+    using FormatterBase::_cname;
     using FormatterBase::_param;
     using FormatterBase::_type;
     using FormatterBase::_doc;

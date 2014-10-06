@@ -11,6 +11,8 @@ class FwdDeclFormatter : public FormatterBase
 protected:
     using FormatterBase::qname;
     using FormatterBase::name;
+    using FormatterBase::qcname;
+    using FormatterBase::cname;
     using FormatterBase::param;
     using FormatterBase::type;
     using FormatterBase::doc;
@@ -20,6 +22,8 @@ protected:
 protected:
     using Formatter::_qname;
     using Formatter::_name;
+    using Formatter::_qcname;
+    using Formatter::_cname;
     using Formatter::_param;
     using Formatter::_type;
     using Formatter::_doc;
