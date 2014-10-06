@@ -53,7 +53,8 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::LIST>("List<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("Set<$0>"),
                 PrimitiveConfig<Primitive::Underlying::MAP>("Map<$0, $1>")
-            }
+            },
+            { }
         })
 {
 }

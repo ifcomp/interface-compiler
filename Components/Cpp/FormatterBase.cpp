@@ -51,7 +51,8 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),
                 PrimitiveConfig<Primitive::Underlying::MAP>("std::map<$0, $1>")
-            }
+            },
+            { "From", "Get" }
         })
 {
 }

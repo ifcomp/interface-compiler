@@ -171,7 +171,29 @@ void Formatter::_name(std::ostream& stream, Model::IdentifiableRef identifiable)
     else
     if( std::dynamic_pointer_cast<Model::Class::Operation>(identifiable) )
     {
-        stream << name(identifiable->longName(), identifiable->shortName(), config.nameConfig<Model::Class::Operation>());
+        std::string longName = identifiable->longName(), shortName = identifiable->shortName();
+
+        for( auto stripVerb : config.stripVerbs )
+        {
+            bool stripped = false;
+
+            if( longName.find(stripVerb) == 0 )
+            {
+                longName = longName.substr(stripVerb.length());
+                stripped = true;
+            }
+
+            if( shortName.find(stripVerb) == 0 )
+            {
+                shortName = shortName.substr(stripVerb.length());
+                stripped = true;
+            }
+
+            if(stripped)
+                { break; }
+        }
+
+        stream << name(longName, shortName, config.nameConfig<Model::Class::Operation>());
     }
     else
     {

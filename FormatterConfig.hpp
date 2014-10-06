@@ -118,18 +118,22 @@ struct FormatterConfig
 		PrimitiveConfig<Model::Primitive::Underlying::MAP>
 	> PrimitiveConfigs;
 
+	typedef std::vector<std::string> StripVerbs;
+
 	std::string namespaceDelimiter;
 	std::string indentData;
 	std::uint8_t documentationWrapping;
 	NameConfigs nameConfigs;
 	PrimitiveConfigs primitiveConfigs;
+	StripVerbs stripVerbs;
 
-	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs primitiveConfigs)
+	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs primitiveConfigs, StripVerbs stripVerbs)
 		: namespaceDelimiter(namespaceDelimiter)
 		, indentData(indentData)
 		, documentationWrapping(documentationWrapping)
 		, nameConfigs(nameConfigs)
 		, primitiveConfigs(primitiveConfigs)
+		, stripVerbs(stripVerbs)
 	{ }
 
 	FormatterConfig(const FormatterConfig& other)
@@ -138,6 +142,7 @@ struct FormatterConfig
 		, documentationWrapping(other.documentationWrapping)
 		, nameConfigs(other.nameConfigs)
 		, primitiveConfigs(other.primitiveConfigs)
+		, stripVerbs(other.stripVerbs)
 	{ }
 
 	FormatterConfig(FormatterConfig&& other)
@@ -146,6 +151,7 @@ struct FormatterConfig
 		, documentationWrapping(std::move(other.documentationWrapping))
 		, nameConfigs(std::move(other.nameConfigs))
 		, primitiveConfigs(std::move(other.primitiveConfigs))
+		, stripVerbs(std::move(other.stripVerbs))
 	{ }
 
 	template<typename T>
