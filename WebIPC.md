@@ -47,9 +47,8 @@ var message = {
 
 ### Primitives
 
-----------------------------------------------------------------------------
 | Canonical   | JSON                  | JavaScript            | Conversion |
-----------------------------------------------------------------------------
+|-------------|-----------------------|-----------------------|------------|
 | Byte        | Number                | Number                | None       |
 | UInt16      | Number                | Number                | None       |
 | UInt32      | Number                | Number                | None       |
@@ -64,14 +63,11 @@ var message = {
 | List        | Array                 | Array                 | None       |
 | Set         | Array                 | Array                 | None       |
 | Map         | Object                | Object                | None       |
-----------------------------------------------------------------------------
 
 ### Model
 
-----------------------------------------------------------------------------
 | Canonical   | JSON                  | JavaScript            | Conversion |
-----------------------------------------------------------------------------
+|-------------|-----------------------|-----------------------|------------|
 | Class       | Number as Handle      | Instance of Class     | Required   |
 | Struct      | Object                | Instance of Struct    | Required   |
 | Enum        | Number                | Number                | None       |
-----------------------------------------------------------------------------
