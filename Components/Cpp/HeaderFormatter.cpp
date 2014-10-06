@@ -41,7 +41,23 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         stream << doc(class_->doc());
     }
     
-    stream << "class " << name(class_) << endl << "{" << endl;
+    stream << "class " << name(class_) << " : public virtual ";
+
+    if(class_->super())
+    {
+        if( auto super = std::dynamic_pointer_cast<Model::Class>(std::dynamic_pointer_cast<Type>(class_->super())->primary()) )
+        {
+            stream << qname(super);
+        }
+        else
+            throw std::runtime_error("invalid super type");
+    }
+    else
+    {
+        stream << "std::enable_shared_from_this<" << name(class_) << ">";
+    }
+
+    stream << endl << "{" << endl;
 
     if(class_->constants().size() > 0)
     {
