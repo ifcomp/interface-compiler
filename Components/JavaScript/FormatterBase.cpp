@@ -70,6 +70,11 @@ void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) 
 	stream << "/* " << type(parameter->type()) << " */" << " " << name(parameter);
 }
 
+void FormatterBase::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::vector<Model::ElementRef> params) const
+{
+    stream << primitive->longName();
+}
+
 void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )
