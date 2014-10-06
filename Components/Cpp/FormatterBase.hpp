@@ -14,6 +14,8 @@ public:
 protected:
     using Formatter::qname;
     using Formatter::name;
+    using Formatter::qcname;
+    using Formatter::cname;
     using Formatter::param;
     using Formatter::type;
     using Formatter::doc;
@@ -23,6 +25,8 @@ protected:
 protected:
     using Formatter::_qname;
     using Formatter::_name;
+    using Formatter::_qcname;
+    using Formatter::_cname;
     using Formatter::_param;
     using Formatter::_type;
     using Formatter::_doc;
