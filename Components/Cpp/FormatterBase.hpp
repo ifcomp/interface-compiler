@@ -31,6 +31,7 @@ protected:
 
     virtual void _param(std::ostream& stream, Model::ParameterRef parameter) const override;
     virtual void _type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const override;
+    virtual void _definition(std::ostream& stream, Model::RootRef root) const;
     virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
     virtual void _signature(std::ostream& stream, Model::Class::OperationRef operation) const override;
 };

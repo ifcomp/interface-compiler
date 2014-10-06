@@ -19,7 +19,9 @@ template <Model::Primitive::Underlying U>
 using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
-using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
+using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
+using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
+using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
 
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
@@ -36,7 +38,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
-            PrimitiveConfigs {
+            PrimitiveConfigs1 {
                 PrimitiveConfig<Primitive::Underlying::BYTE>("std::uint8_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT16>("std::uint16_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT32>("std::uint32_t"),
@@ -44,9 +46,13 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("bool"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
-                PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid"),
-                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Buffer"),
-                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::ConstBuffer"),
+                PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid")
+            },
+            PrimitiveConfigs2 {
+                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Primitives::Buffer"),
+                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::Primitives::ConstBuffer")
+            },
+            PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),
@@ -107,6 +113,20 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     }
 
     stream << "}" << endl;
+}
+
+void FormatterBase::_definition(std::ostream& stream, Model::RootRef root) const
+{
+    stream << "#include <memory>" << endl
+           << "#include <set>" << endl
+           << "#include <ctime>" << endl
+           << "#include <boost/uuid/uuid.hpp>" << endl
+           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
+           << endl;
+
+    Formatter::_definition(stream, root);
 }
 
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
