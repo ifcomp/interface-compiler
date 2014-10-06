@@ -12,15 +12,19 @@ class Parameter : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Parameter();
     virtual ~Parameter();
+    virtual ObjectRef clone() const override;
 
 public:
-    TypeBaseRef type();
+    TypeBaseRef type() const;
     void setType(TypeBaseRef type);
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     TypeBaseRef _type;

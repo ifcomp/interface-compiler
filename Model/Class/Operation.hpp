@@ -13,24 +13,28 @@ class Class::Operation : public Identifiable
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Operation();
     virtual ~Operation();
+    virtual ObjectRef clone() const override;
 
 public:
-    bool isStatic();
+    bool isStatic() const;
     void setStatic(bool isStatic);
 
-    bool isSynchronous();
+    bool isSynchronous() const;
     void setSynchronous(bool isSynchronous);
 
     void addParam(ParameterRef param);
-    std::vector<ParameterRef> params();
+    std::vector<ParameterRef> params() const;
 
     void setResult(ParameterRef result);
-    ParameterRef result();
+    ParameterRef result() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     bool _isStatic;

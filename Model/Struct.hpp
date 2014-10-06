@@ -12,15 +12,19 @@ class Struct : public Element
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Struct();
     virtual ~Struct();
+    virtual ObjectRef clone() const override;
 
 public:
     void addField(ParameterRef field);
-    std::vector<ParameterRef> fields();
+    std::vector<ParameterRef> fields() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     std::vector<ParameterRef> _fields;

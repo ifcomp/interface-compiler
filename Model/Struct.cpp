@@ -12,14 +12,42 @@ Struct::~Struct()
 {
 }
 
+ObjectRef Struct::clone() const
+{
+    StructRef newStruct = std::make_shared<Struct>();
+    clone(newStruct);
+    return newStruct;
+}
+
 void Struct::addField(ParameterRef field)
 {
     _fields.push_back(field);
 }
 
-std::vector<ParameterRef> Struct::fields()
+std::vector<ParameterRef> Struct::fields() const
 {
     return _fields;
+}
+
+void Struct::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    StructRef clonedStruct = dynamic_pointer_cast<Struct>(clonedObject);
+
+    if (clonedStruct)
+    {
+        Identifiable::clone(clonedStruct);
+
+        for (auto field : fields())
+        {
+            clonedStruct->addField(dynamic_pointer_cast<Parameter>(field->clone()));
+        }
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Struct - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

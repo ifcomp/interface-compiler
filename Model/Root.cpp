@@ -12,14 +12,37 @@ Root::~Root()
 {
 }
 
-NamespaceRef Root::getNamespace()
+ObjectRef Root::clone() const
+{
+    RootRef newRoot = std::make_shared<Root>();
+    clone(newRoot);
+    return newRoot;
+}
+
+NamespaceRef Root::getNamespace() const
 {
 	return _namespace;
 }
 
 void Root::setNamespace(NamespaceRef ns)
 {
-	_namespace = ns;
+    _namespace = ns;
+}
+
+void Root::clone(ObjectRef clonedObject) const
+{
+    using namespace std;
+
+    RootRef clonedRoot = dynamic_pointer_cast<Root>(clonedObject);
+
+    if (clonedRoot)
+    {
+        clonedRoot->setNamespace(dynamic_pointer_cast<Namespace>(getNamespace()->clone()));
+    }
+    else
+    {
+        throw runtime_error("clone() failed: expected Root - got " + clonedObject->typeName());
+    }
 }
 
 } } } // namespace: Everbase::InterfaceCompiler::Model

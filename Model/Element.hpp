@@ -12,6 +12,8 @@ class Element : public Identifiable
 public:
     Element();
     virtual ~Element();
+
+    using Identifiable::clone;
 };
 
 typedef std::shared_ptr<Element> ElementRef;

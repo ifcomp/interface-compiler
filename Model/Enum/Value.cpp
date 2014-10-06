@@ -12,7 +12,14 @@ Enum::Value::~Value()
 {
 }
 
-int32_t Enum::Value::value()
+ObjectRef Enum::Value::clone() const
+{
+    ValueRef clonedValue = std::make_shared<Value>();
+    clonedValue->setValue(value());
+    return clonedValue;
+}
+
+int32_t Enum::Value::value() const
 {
 	return _value;
 }
