@@ -29,7 +29,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
 	for (auto field : struct_->fields())
 	{
 		stream << "Object.defineProperty(" << qname(struct_) << ".prototype, '" << name(field) << "', "
-		       << "{ get: function() { throw new Error(\"not implemented\"); }, set: function(new" << field->longName() << ") { throw new Error(\"not implemented\"); } } ); "
+		       << "{ get: function() { throw new Error(\"not implemented\"); }, set: function(" << name(field) << ") { throw new Error(\"not implemented\"); } } ); "
 		       << "/* " << type(field->type()) << " */" << endl << endl;
 	}
 
@@ -151,14 +151,21 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
 	stream << qname(event) << " = function() { };" << endl << endl;
 	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
-	stream << qname(event) << ".TYPE_ID = " << " \'" << boost::lexical_cast<std::string>(event->typeId()) << "\';" << endl << endl;
+	stream << qname(event) << ".TYPE_ID = ";
+
+	auto eventTypeId = event->typeId();
+    stream << "[ ";
+    for( auto i : indices(std::vector<std::uint8_t>(eventTypeId.data, eventTypeId.data + 16)) )
+    {
+        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
+    }
+    stream << " ];" << endl << endl;
 
 	for (auto value : event->values())
 	{
 		stream << "Object.defineProperty(" << qname(event) << ".prototype, '" 
-			<< name(value) <<	"', { get: function() { throw new Error(\"not implemented\"); }, set: function("
-			<< name("New" + value->longName(), "New" + value->shortName(), config.nameConfig<Model::Parameter>())
-			<< ") { throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;
+			<< name(value) <<	"', { get: function() { throw new Error(\"not implemented\"); }, set: function(" << name(value) << ") "
+			<< "{ throw new Error(\"not implemented\"); } } ); /* " << type(value->type()) << " */" << endl << endl;
 	}
 
 	stream << "// event: }" << endl << endl;
