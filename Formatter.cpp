@@ -2,6 +2,7 @@
 
 #include <boost/regex.hpp>
 #include <iostream>
+#include <sstream>
 
 namespace Everbase { namespace InterfaceCompiler {
 

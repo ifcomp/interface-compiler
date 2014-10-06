@@ -332,9 +332,9 @@ ElementRef NamespaceReader::parseStruct(const YAML::Node &node)
 }
 
 
-Class::Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node &node)
+Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node &node)
 {
-    Class::Class::OperationRef newOperation = newIdentifiable<Class::Operation>(node);
+    Class::OperationRef newOperation = newIdentifiable<Class::Operation>(node);
 
     try
     {
@@ -380,9 +380,9 @@ Class::Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node
 }
 
 
-Class::Class::EventRef NamespaceReader::parseClassEvent(const YAML::Node &node)
+Class::EventRef NamespaceReader::parseClassEvent(const YAML::Node &node)
 {
-    Class::Class::EventRef newEvent = newIdentifiable<Class::Event>(node);
+    Class::EventRef newEvent = newIdentifiable<Class::Event>(node);
 
     try
     {
@@ -415,9 +415,9 @@ Class::Class::EventRef NamespaceReader::parseClassEvent(const YAML::Node &node)
 }
 
 
-Enum::Enum::ValueRef NamespaceReader::parseEnumValue(const YAML::Node &node)
+Enum::ValueRef NamespaceReader::parseEnumValue(const YAML::Node &node)
 {
-    Enum::Enum::ValueRef newValue = newIdentifiable<Enum::Value>(node);
+    Enum::ValueRef newValue = newIdentifiable<Enum::Value>(node);
 
     if (node[KEY_VALUE].IsScalar())
     {
