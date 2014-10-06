@@ -5,104 +5,122 @@
 
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 int main(int argc, char** argv)
 {
 	using namespace Everbase::InterfaceCompiler;
     using namespace std;
 
-    /*
-    // Read and validate input
+    // Check parameter count
     if( argc < 4 )
     {
         cerr << "Usage: " << argv[0] << " <input> <formatter 1> <output 1> ..." << endl;
-        cerr << "Formatter: c++-header c++-kernel c++-library c++-webservice" << endl;
+        cerr << "Formatter: c++-fwddecl c++-header c++-kernel c++-library c++-webservice" << endl;
         cerr << "           js-header js-webclient" << endl;
-        return -1;
+        return 1;
     }
 
+    // Get parameter
     std::string inputPath = argv[1];
 
     std::vector<std::pair<std::string, std::string>> formats;
 
-    for( std::size_t i = 2; (i + 1) < argc; ++i )
+    for( int i = 2; (i + 1) < argc; i += 2 )
     {
-        formats.push_back( std::pair<std::string, std::string> { argv[i], argv[i+1] } ):
+        formats.push_back( std::pair<std::string, std::string> { argv[i], argv[i+1] } );
     }
 
     // Open file streams
-    std::map<std::string, std::ostream> outstreams;
+    std::map<std::string, std::unique_ptr<std::ofstream>> outstreams;
 
     try
     {
-
         for( auto i : formats )
         {
             if( outstreams.find(i.second) != outstreams.end() )
                 { continue; }
 
-            outstreams.emplace( i.second, i.second, ios_base::trunc );
-            outstreams[i.second].exceptions ( ifstream::failbit | ifstream::badbit );
+            outstreams.emplace( i.second, std::unique_ptr<std::ofstream>(new std::ofstream(i.second, ios_base::trunc)) );
+            outstreams[i.second]->exceptions( ifstream::failbit | ifstream::badbit );
         }
     }
+    catch (const exception& e)
+    {
+        cerr << "[ERROR 1] " << e.what() << endl;
+        return 1;
+    }
 
-    // Parse 
-    */
+    // Parse sources
+
+    Model::RootRef root;
 
     try
     {
-        ifstream input(argc > 1 ? argv[1] : "../yaml/everbase.yaml");
+        ifstream input(inputPath.c_str());
         input.exceptions ( ifstream::failbit | ifstream::badbit );
 
         Components::StandardParser parser;
-        Model::RootRef root = parser.execute(input);
+        root = parser.execute(input);
+    }
+    catch (const exception& e)
+    {
+        cerr << "[ERROR 2] " << e.what() << endl;
+        return 1;
+    }
 
-        try
-        {
-            ofstream output("everbase-fwddecl.cpp", ios_base::trunc);
-            output.exceptions ( ifstream::failbit | ifstream::badbit );
+    // Format
 
-            Components::Cpp::FwdDeclFormatter format;
-            format.execute(root, output);
-        }
-        catch (const ios_base::failure &e)
+    try
+    {
+        for( auto format : formats )
         {
-            cout << "error opening output file (" << e.what() << ")" << endl;
-        }
+            ofstream& output = *(outstreams[format.second]);
 
-        try
-        {
-            ofstream output("everbase-header.cpp", ios_base::trunc);
-            output.exceptions ( ifstream::failbit | ifstream::badbit );
-
-            Components::Cpp::HeaderFormatter format;
-            format.execute(root, output);
-        }
-        catch (const ios_base::failure &e)
-        {
-            cout << "error opening output file (" << e.what() << ")" << endl;
-        }
-
-        try
-        {
-            ofstream output("everbase-header.js", ios_base::trunc);
-            output.exceptions ( ifstream::failbit | ifstream::badbit );
-
-            Components::JavaScript::HeaderFormatter format;
-            format.execute(root, output);
-        }
-        catch (const ios_base::failure &e)
-        {
-            cout << "error opening output file (" << e.what() << ")" << endl;
+            if( format.first == "c++-fwddecl" )
+            {
+                Components::Cpp::FwdDeclFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "c++-header" )
+            {
+                Components::Cpp::HeaderFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "c++-kernel" )
+            {
+                throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "c++-library" )
+            {
+                throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "c++-webservice" )
+            {
+                throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "js-header" )
+            {
+                Components::JavaScript::HeaderFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "js-webclient" )
+            {
+                throw std::runtime_error("not implemented");
+            }
+            else
+                { throw std::runtime_error(std::string("invalid format: ") + format.first); }
         }
     }
-    catch (const ios_base::failure &e)
+    catch (const exception& e)
     {
-        cout << "[ERROR] could not read from file (" << e.what() << ")" << endl;
-    }
-    catch (const runtime_error &e)
-    {
-        cout << "[ERROR] " << e.what() << " - please check your yaml file" << endl;
+        cerr << "[ERROR 3] " << e.what() << endl;
         return 1;
     }
 

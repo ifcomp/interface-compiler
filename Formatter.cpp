@@ -31,6 +31,21 @@ FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> Formatter
     return FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> { this, &Formatter::_name, std::tuple<std::string, std::string, FormatterConfig::NameConfigBase> { longName, shortName, config } };
 }
 
+FormatToken<Model::IdentifiableRef> Formatter::qcname(Model::IdentifiableRef identifiable) const
+{
+    return FormatToken<Model::IdentifiableRef> { this, &Formatter::_qcname, std::tuple<Model::IdentifiableRef> { identifiable } };
+}
+
+FormatToken<Model::IdentifiableRef> Formatter::cname(Model::IdentifiableRef identifiable) const
+{
+    return FormatToken<Model::IdentifiableRef> { this, &Formatter::_cname, std::tuple<Model::IdentifiableRef> { identifiable } };
+}
+
+FormatToken<std::string> Formatter::cname(std::string longName) const
+{
+    return FormatToken<std::string> { this, &Formatter::_cname, std::tuple<std::string> { longName } };
+}
+
 FormatToken<Model::ParameterRef> Formatter::param(Model::ParameterRef parameter) const
 {
     return FormatToken<Model::ParameterRef> { this, &Formatter::_param, std::tuple<Model::ParameterRef> { parameter } };
@@ -249,6 +264,26 @@ void Formatter::_name(std::ostream& stream, std::string longName, std::string sh
         stream << part;
         start = match[0].second;
     }
+}
+
+void Formatter::_qcname(std::ostream& stream, Model::IdentifiableRef identifiable) const
+{
+    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parent()) )
+    {
+        stream << qcname(parent) << "::";
+    }
+
+    stream << cname(identifiable);
+}
+
+void Formatter::_cname(std::ostream& stream, Model::IdentifiableRef identifiable) const
+{
+    stream << cname(identifiable->longName());
+}
+
+void Formatter::_cname(std::ostream& stream, std::string longName) const
+{
+    stream << longName;
 }
 
 void Formatter::_type(std::ostream& stream, Model::TypeRef type_) const
