@@ -1,9 +1,9 @@
-- method to clone entire model
-- Migration of NamespaceReader to StandardParser
-- move setParent to add* methods
-- Implement errors
-- Implement constants
-- check impact of abstractType
-- check impact of valueType
-- try to improve readability by checking paragraphing
-- final bug and formatting checking
+- Model: method to clone entire model
+- Model: const correctes of model
+- Model: move setParent to add* methods
+- Components: Migration of NamespaceReader to StandardParser
+- Model/Parser/Formatter: Implement errors
+- Model/Parser/Formatter: check impact of abstractType
+- Model/Parser/Formatter: check impact of valueType
+- Formatter/StreamFilter: try to improve readability by checking paragraphing
+- *: final bug and formatting checking
