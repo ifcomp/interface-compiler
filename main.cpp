@@ -47,7 +47,7 @@ int main(int argc, char** argv)
     }
     catch (const exception& e)
     {
-        cerr << "[ERROR] " << e.what() << endl;
+        cerr << "[ERROR 1] " << e.what() << endl;
         return 1;
     }
 
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     }
     catch (const exception& e)
     {
-        cerr << "[ERROR] " << e.what() << endl;
+        cerr << "[ERROR 2] " << e.what() << endl;
         return 1;
     }
 
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
     }
     catch (const exception& e)
     {
-        cerr << "[ERROR] " << e.what() << endl;
+        cerr << "[ERROR 3] " << e.what() << endl;
         return 1;
     }
 
