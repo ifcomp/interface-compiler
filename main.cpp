@@ -113,7 +113,8 @@ int main(int argc, char** argv)
             else
             if( format.first == "js-webclient" )
             {
-                throw std::runtime_error("not implemented");
+                Components::JavaScript::WebClientFormatter format;
+                format.execute(root, output);
             }
             else
                 { throw std::runtime_error(std::string("invalid format: ") + format.first); }

@@ -37,7 +37,100 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef n
 	//Only once after rootnamespace
 	if (!namespace_->parent())
 	{
-		_initializeWebSocket(stream);
+	//	_initializeWebSocket(stream);
+	//	_generateTypeConversion(stream, namespace_);
+	}
+}
+
+void WebClientFormatter::_generateTypeConversion(std::ostream& stream, Model::NamespaceRef namespace_) const
+{
+	auto ta = *namespace_;
+	stream << "typeConversion = { }" << endl << endl;
+	stream << "typeConversion.toJSON = function() { }" << endl;
+	stream << "typeConversion.toJS = function() { }" << endl;
+	filter f(stream);
+
+	for ( auto element : namespace_->elements() )
+	{
+		if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+		{
+			//stream << name(element->longName(), element->shortName(), config.nameConfig<Model::Struct>());
+		   f << "typeConversion.toJSON['" << cname(struct_) << "'] = function(value) {" << endl;
+		   f.push<indent>()
+			   << "var result = new " << qname(struct_) << ";" << endl;
+
+		   for (auto field : struct_->fields())
+		   {
+			   f << "result" << cname(field) << " = " << "value[" << cname(field) << "]" << endl;
+		   }
+		   f.pop() << "}" << endl;
+		}
+	    else 
+        if(std::dynamic_pointer_cast<Model::PrimitiveRef>(element))
+	    {
+			Model::Primitive* primitive = (std::dynamic_pointer_cast<Model::PrimitiveRef>(element))->get();
+			switch(primitive->underlying())
+			{
+				case Model::Primitive::Underlying::BYTE:
+					f << "TypeConversion.toJSON['Everbase::Primitives::Byte'] = function(value) { return value; }";
+					break;
+
+				case Model::Primitive::Underlying::UINT16:
+					f << "TypeConversion.toJSON['Everbase::Primitives::UINT16'] = function(value) { return value; }";
+					break;
+
+		/*		case Model::Primitive::Underlying::UINT32:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::UINT32>().native;
+					break;
+
+				case Model::Primitive::Underlying::UINT64:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::UINT64>().native;
+					break;
+
+				case Model::Primitive::Underlying::BOOLEAN:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::BOOLEAN>().native;
+					break;
+
+				case Model::Primitive::Underlying::TIMESTAMP:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::TIMESTAMP>().native;
+					break;
+
+				case Model::Primitive::Underlying::STRING:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::STRING>().native;
+					break;
+
+				case Model::Primitive::Underlying::UUID:
+					native = config.primitiveConfig1<Model::Primitive::Underlying::UUID>().native;
+					break;
+
+				case Model::Primitive::Underlying::BUFFER:
+					native = config.primitiveConfig2<Model::Primitive::Underlying::BUFFER>().native;
+					break;
+
+				case Model::Primitive::Underlying::CONST_BUFFER:
+					native = config.primitiveConfig2<Model::Primitive::Underlying::CONST_BUFFER>().native;
+					break;
+
+				case Model::Primitive::Underlying::VECTOR:
+					native = config.primitiveConfig3<Model::Primitive::Underlying::VECTOR>().native;
+					break;
+
+				case Model::Primitive::Underlying::LIST:
+					native = config.primitiveConfig3<Model::Primitive::Underlying::LIST>().native;
+					break;
+
+				case Model::Primitive::Underlying::SET:
+					native = config.primitiveConfig3<Model::Primitive::Underlying::SET>().native;
+					break;
+
+				case Model::Primitive::Underlying::MAP:
+					native = config.primitiveConfig3<Model::Primitive::Underlying::MAP>().native;
+					break;*/
+
+				default:
+					throw std::runtime_error("invalid primitive");
+			}
+	    }
 	}
 }
 
@@ -70,20 +163,20 @@ void WebClientFormatter::_initializeWebSocket(std::ostream& stream) const
 	f << "function onClose(closeEventArgs) { };" << endl << endl
 		<< "function onError(errorEventArgs) { };" << endl << endl;
 
-	
-    //Create a GUID from randomly generated numbers.
-	f << "var guid = (function () {"<< endl;
-	f.push<indent>() << "function s4() {"	<< endl;
+
+	//Create a GUID from randomly generated numbers.
+	f << "var uuid = (function () {" << endl;
+	f.push<indent>() << "function s4() {" << endl;
 	f.push<indent>() << "return Math.floor((1 + Math.random()) * 0x10000)" << endl;
 	f.push<indent>() << ".toString(16)" << endl
-		<< ".substring(1);" << endl;
-       /* }
-        return function () {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                   s4() + '-' + s4() + s4() + s4();
-        };
-    })();*/
-}
+					 << ".substring(1);" << endl;
+	f.pop() << "}" << endl;
+	f.pop() << "return function () {" << endl;
+	f.push<indent>() << "return s4() + s4() + '-' + s4() + '-' + s4() + '-' +" << endl;
+	f.push<indent>() << "s4() + '-' + s4() + s4() + s4();" << endl;
+	f.pop().pop() << "};" << endl;
+	f.pop() << "})();";
+};
 
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
@@ -109,6 +202,21 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef stru
 	}
 
 	stream << "// struct: }" << endl << endl;
+
+
+	filter f(stream);
+	f << "typeConversion.toJSON['" << qcname(struct_) << "'] = function(value) {" << endl;
+	f.push<indent>()
+		<< "var result = new " << qname(struct_) << ";" << endl << endl;
+
+	for (auto field : struct_->fields())
+	{
+		f << "result." << cname(field) << " = ";
+		f << "typeConversion.toJSON['" << type(field->type()) << "'](value['" << cname(field) << "'])";
+		f << endl;
+	}
+	f << "return result;" << endl;
+	f.pop() << "}" << endl << endl;
 }
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
@@ -262,14 +370,14 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
 	filter f(stream);
 	f.push<indent>()
-		<< "ws.send(JSON.stringify(request));" << endl << endl
+		<< "ws.send(JSON.stringify(message));" << endl << endl
 		<< "return new Promise(function (resolve, reject) {" << endl;
 
 	f.push<indent>()
 		<< "//if succeeded" << endl
-		<< "processes[request.id] = resolve;" << endl
+		<< "processes[message.id] = resolve;" << endl
 		<< "//if failed" << endl
-		<< "//processes[request.id] = reject;" << endl;
+		<< "//processes[message.id] = reject;" << endl;
 
 	f.pop()
 		<< "});" << endl;
@@ -282,14 +390,13 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 {
 	filter f(stream);
 	f << endl;
-	f.push<indent>() << "var request = {" << endl;
+	f.push<indent>() << "var message = {" << endl;
 	f.push<indent>()
 		<< "type: \'call\'," << endl
-		<< "id: \'" << boost::uuids::random_generator()() << "\'," << endl
-		<< "class: \'" << qname(std::dynamic_pointer_cast<Model::Class>(operation->parent())) << "\'," << endl
-		<< "function: \'" << name(operation) << "\'," << endl
+		<< "id: uuid()," << endl
+		<< "class: \'" << qcname(std::dynamic_pointer_cast<Model::Class>(operation->parent())) << "\'," << endl
+		<< "operation: \'" << cname(operation) << "\'," << endl
 		<< "parameters: {";
-	
 
 	if (operation->params().size())
 	{
@@ -298,7 +405,7 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 
 		for (auto param : operation->params())
 		{
-			f << param->longName() << ": " << name(param) << "," << endl;
+			f << cname(param) << ": " << name(param) << "," << endl;
 		}
 		f.pop() << "}";
 		f << endl;
@@ -308,6 +415,7 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 		f << " }" << endl;
 	}
 	f.pop() << "}";
+
 	f << endl;
 }
 
@@ -328,6 +436,9 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::EnumRef enum_)
 	} 
 
 	stream << "// enum: }" << endl << endl;
+
+	filter f(stream);
+	f << "typeConversion.toJSON['" << qcname(enum_) << "'] = function(value) { return value } " << endl << endl;
 }
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const

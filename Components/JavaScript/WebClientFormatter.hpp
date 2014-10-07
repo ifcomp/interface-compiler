@@ -39,6 +39,7 @@ protected:
 
 	virtual void _formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const;
 	virtual void _initializeWebSocket(std::ostream& stream) const;
+	virtual void _generateTypeConversion(std::ostream& stream, Model::NamespaceRef namespace_) const;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
