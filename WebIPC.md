@@ -8,8 +8,9 @@
 var message = {
 	type: 'call',
 	id: <uuid identifying the call>,
-	class: <fully qualified canonical name of class>
-	operation: <canonical name of operation>
+	class: <fully qualified canonical name of class>,
+	operation: <canonical name of operation>,
+	this: <handle to instance of class>,
 	parameters: {
 		<canonical name of parameter>: <value of parameter>,
 		...

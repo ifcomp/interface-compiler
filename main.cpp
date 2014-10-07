@@ -3,7 +3,8 @@
 #include "Components/Cpp/HeaderFormatter.hpp"
 #include "Components/Cpp/LibraryHeaderFormatter.hpp"
 #include "Components/Cpp/LibraryFormatter.hpp"
-#include "Components/Cpp/WebserviceFormatter.hpp"
+#include "Components/Cpp/JsonEncodingFormatter.hpp"
+#include "Components/Cpp/RpcFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -28,13 +29,15 @@ int main(int argc, char** argv)
     if( argc < 4 )
     {
         cerr << "Usage: " << argv[0] << " <input> <formatter 1> <output 1> ..." << endl;
-        cerr << "Formatter: c++-header" << endl;
-        cerr << "           c++-library-header" << endl;
-        cerr << "           c++-library" << endl;
-        cerr << "           c++-webservice" << endl;
-        cerr << "           c++-kernel" << endl;
-        cerr << "           js-header" << endl;
-        cerr << "           js-webclient" << endl;
+        cerr << "Formatter: C++-Header" << endl;
+        cerr << "           C++-LibraryHeader" << endl;
+        cerr << "           C++-Library" << endl;
+        cerr << "           C++-JsonEncoding" << endl;
+        cerr << "           C++-Rpc" << endl;
+        cerr << "           C++-WebService" << endl;
+        cerr << "           C++-Kernel" << endl;
+        cerr << "           Js-Header" << endl;
+        cerr << "           Js-WebClient" << endl;
         return 1;
     }
 
@@ -96,42 +99,53 @@ int main(int argc, char** argv)
         {
             ofstream& output = *(outstreams[format.second]);
 
-            if( format.first == "c++-header" )
+            if( format.first == "C++-Header" )
             {
                 Components::Cpp::HeaderFormatter format;
                 format.execute(root, output);
             }
             else
-            if( format.first == "c++-library-header" )
+            if( format.first == "C++-LibraryHeader" )
             {
                 Components::Cpp::LibraryHeaderFormatter format;
                 format.execute(root, output);
             }
             else
-            if( format.first == "c++-library" )
+            if( format.first == "C++-Library" )
             {
                 Components::Cpp::LibraryFormatter format;
                 format.execute(root, output);
             }
             else
-            if( format.first == "c++-webservice" )
+            if( format.first == "C++-JsonEncoding" )
             {
-                Components::Cpp::WebserviceFormatter format;
+                Components::Cpp::JsonEncodingFormatter format;
                 format.execute(root, output);
             }
             else
-            if( format.first == "c++-kernel" )
+            if( format.first == "C++-Rpc" )
+            {
+                Components::Cpp::RpcFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "C++-WebService" )
             {
                 throw std::runtime_error("not implemented");
             }
             else
-            if( format.first == "js-header" )
+            if( format.first == "C++-Kernel" )
+            {
+                throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "Js-Header" )
             {
                 Components::JavaScript::HeaderFormatter format;
                 format.execute(root, output);
             }
             else
-            if( format.first == "js-webclient" )
+            if( format.first == "Js-WebClient" )
             {
                 Components::JavaScript::WebClientFormatter format;
                 format.execute(root, output);
@@ -144,19 +158,6 @@ int main(int argc, char** argv)
 			}
             else
                 { throw std::runtime_error(std::string("invalid format: ") + format.first); }
-        }
-
-		try
-        {
-            std::ofstream output("everbase-web-client.js", std::ios_base::trunc);
-            output.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
-
-			Components::JavaScript::WebClientFormatter format;
-            format.execute(root, output);
-        }
-        catch (const ios_base::failure &e)
-        {
-            cout << "error opening output file (" << e.what() << ")" << endl;
         }
     }
     catch (const exception& e)
