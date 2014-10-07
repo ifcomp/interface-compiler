@@ -42,10 +42,26 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
         for( auto operation : class_->operations() )
         {
             stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Operation>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::Operation>(new "
-                   << qname(class_) << "Rpc::"
-                   << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << "())}," << endl;
+                   << "Everbase::Rpc::" << qcname(operation, "_") << "())}," << endl;
         }
     }
+}
+
+void RpcFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+{
+    if ( namespace_->doc() )
+    {
+        stream << doc(namespace_->doc()) << endl;
+    }
+    
+    stream << "// namespace " << qname(namespace_) << ": {" << endl << endl;
+
+    for ( auto element : namespace_->elements() )
+    {
+        stream << definition(element);
+    }
+
+    stream << "// namespace " << qname(namespace_) << ": }" << endl << endl;
 }
 
 void RpcFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
@@ -61,15 +77,14 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ClassRef class_) con
 
     stream << "// class " << name(class_) << ": {" << endl << endl;
 
-    stream << "namespace " << name(class_->longName() + "Rpc", class_->shortName() + "Rpc", config.nameConfig<Model::Namespace>()) << endl
-           << "{" << endl;
+    stream << "namespace Everbase { namespace Rpc {" << endl << endl;
 
     for( auto operation : class_->operations() )
     {
         filter(stream).push<indent>(config.indentData) << definition(operation) << endl;
     }
 
-    stream << "}" << endl << endl;
+    stream << "} } // namespace: Everbase::Rpc" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
 }
@@ -92,7 +107,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream
-        << "struct " << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << " : public Everbase::Rpc::Operation" << endl
+        << "struct " << qcname(operation, "_") << " : public Everbase::Rpc::Operation" << endl
         << "{" << endl
         << "    inline virtual boost::any call(std::vector<boost::any> params) const" << endl
         << "    {" << endl;

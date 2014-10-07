@@ -43,6 +43,8 @@ protected:
     virtual void _includes(std::ostream& stream) const override;
     virtual void _footer(std::ostream& stream, Model::RootRef root) const;
     virtual void _backwards(std::ostream& stream, Model::ElementRef element) const override;
+
+    virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
     
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
