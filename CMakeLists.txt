@@ -1,9 +1,12 @@
+# General
+
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
 project(EverbaseInterfaceCompiler)
 
-message ("BuildType: " ${CMAKE_BUILD_TYPE} )
+
+# General compiler settings
+
 if( CMAKE_C_COMPILER_ID MATCHES MSVC AND CMAKE_CXX_COMPILER_ID MATCHES MSVC )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX- /wd4100 /wd4101 /wd4510 /wd4610 /wd4512 /wd4514 /wd4250 /wd4820 /D_SCL_SECURE_NO_WARNINGS /D_WIN32_WINNT=0x0601 /D_WINSOCK_DEPRECATED_NO_WARNINGS" )
     set( CMAKE_GENERATOR_TOOLSET "v140" CACHE STRING "Platform Toolset" FORCE)
@@ -18,12 +21,21 @@ if( NOT(CMAKE_CXX_COMPILER_ID MATCHES MSVC) )
     set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g" )
 endif()
 
+
+# Enable Boost
+
 set(Boost_USE_STATIC_LIBS ON) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost COMPONENTS regex filesystem system)
 
+
+# Enable YamlCPP
+
 find_package(YamlCpp REQUIRED)
+
+
+# Sources and includes
 
 set(SRC
     StreamFilter.hpp
@@ -55,8 +67,14 @@ include_directories(
     .
 )
 
+
+# Subdirs
+
 add_subdirectory(Components)
 add_subdirectory(Model)
+
+
+# Target
 
 add_executable(compiler ${SRC})
 target_link_libraries(compiler ${Boost_LIBRARIES} ${YamlCpp_LIBRARIES})

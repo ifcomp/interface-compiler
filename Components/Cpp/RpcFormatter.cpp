@@ -10,10 +10,20 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void RpcFormatter::_includes(std::ostream& stream) const
+{
+    FormatterBase::_includes(stream);
+
+    stream << "#include <boost/any.hpp>" << endl
+           << "#include \"Everbase/Rpc/OperationBase.hpp\"" << endl
+           << "#include \"Everbase/Rpc/OperationMap.hpp\"" << endl
+           << endl;
+}
+
 void RpcFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << endl;
-    stream << "const std::map<std::string, std::unique_ptr<OperationBase>> Everbase::Rpc::OperationMap::operations = {" << endl
+    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::OperationBase>> Everbase::Rpc::OperationMap::operations{" << endl
            << backwards(root->getNamespace())
            << "};" << endl;
 }
@@ -32,9 +42,9 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
     {
         for( auto operation : class_->operations() )
         {
-            stream << "std::pair<std::string, std::unique_ptr<OperationBase>>{\"" << qcname(operation) << "\", std::unique_ptr<OperationBase>(new "
+            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::OperationBase>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::OperationBase>(new "
                    << qname(class_) << "Rpc::"
-                   << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << "())}" << endl;
+                   << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << "())}," << endl;
         }
     }
 }
@@ -83,9 +93,9 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream
-        << "struct " << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << " : public Everbase::Rpc::Operation" << endl
+        << "struct " << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << " : public Everbase::Rpc::OperationBase" << endl
         << "{" << endl
-        << "    inline virtual boost::any call(std::vector<boost::any> params)" << endl
+        << "    inline virtual boost::any call(std::vector<boost::any> params) const" << endl
         << "    {" << endl;
 
     if(operation->isStatic())
@@ -96,14 +106,14 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     else
     {
         stream
-            << "        " << (operation->result() ? "return " : "") << "std::any_cast<std::shared_ptr<" << qname(class_) << ">>(param[0])->" << name(operation) << "(";
+            << "        " << (operation->result() ? "return " : "") << "boost::any_cast<std::shared_ptr<" << qname(class_) << ">>(params[0])->" << name(operation) << "(";
     }
 
     std::size_t i = operation->isStatic() ? 0 : 1;
 
     for( auto param : indices(operation->params()) )
     {
-        stream << "std::any_cast<" << type(param.value()->type()) << ">(param[" << i << "])" << (!param.last() ? ", " : "");
+        stream << "boost::any_cast<" << type(param.value()->type()) << ">(params[" << i << "])" << (!param.last() ? ", " : "");
         i += 1;
     }
 
