@@ -15,7 +15,7 @@ void JsonEncodingFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream << "#include <json_spirit/json_spirit.h>" << endl
-           << "#include \"Everbase/JSON/Encoding.hpp\"" << endl
+           << "#include \"Everbase/JSON/TypeEncoding.hpp\"" << endl
            << endl;
 }
 
@@ -53,7 +53,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef s
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Encoding<DirectoryT, " << qname(struct_) << ">" << endl
+        << "struct TypeEncoding<DirectoryT, " << qname(struct_) << ">" << endl
         << "{" << endl
         << "    static json_spirit::mValue encode(DirectoryT& directory, " << qname(struct_) << " source)" << endl
         << "    {" << endl
@@ -62,7 +62,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef s
     for( auto field : struct_->fields() )
     {
         stream
-            << "        object[\"" << cname(field) << "\"] = Encoding<DirectoryT, " << type(field->type()) << ">::encode(directory, source." << name(field) << ");" << endl;
+            << "        object[\"" << cname(field) << "\"] = TypeEncoding<DirectoryT, " << type(field->type()) << ">::encode(directory, source." << name(field) << ");" << endl;
     }
 
     stream
@@ -80,7 +80,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef s
     for( auto field : struct_->fields() )
     {
         stream
-            << "        struct_." << name(field) << " = Encoding<DirectoryT, " << type(field->type()) << ">::decode(directory, object.at(\"" << cname(field) << "\"));" << endl;
+            << "        struct_." << name(field) << " = TypeEncoding<DirectoryT, " << type(field->type()) << ">::decode(directory, object.at(\"" << cname(field) << "\"));" << endl;
     }
 
     stream
@@ -107,7 +107,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::ClassRef cl
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Encoding<DirectoryT, " << qname(class_) << "Ref>" << endl
+        << "struct TypeEncoding<DirectoryT, " << qname(class_) << "Ref>" << endl
         << "{" << endl
         << "    static json_spirit::mValue encode(DirectoryT& directory, " << qname(class_) << "Ref source)" << endl
         << "    {" << endl
@@ -150,7 +150,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::EnumRef enu
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Encoding<DirectoryT, " << qname(enum_) << ">" << endl
+        << "struct TypeEncoding<DirectoryT, " << qname(enum_) << ">" << endl
         << "{" << endl
         << "    static json_spirit::mValue encode(DirectoryT& directory, " << qname(enum_) << " source)" << endl
         << "    {" << endl
