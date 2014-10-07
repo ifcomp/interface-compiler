@@ -1,4 +1,4 @@
-#include "Components/Cpp/JsonEncodingFormatter.hpp"
+#include "Components/Cpp/RpcJsonFormatter.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -10,21 +10,21 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
-void JsonEncodingFormatter::_includes(std::ostream& stream) const
+void RpcJsonFormatter::_includes(std::ostream& stream) const
 {
     FormatterBase::_includes(stream);
 
     stream << "#include <json_spirit/json_spirit.h>" << endl
-           << "#include \"Everbase/JSON/TypeEncoding.hpp\"" << endl
-           << "#include \"Everbase/JSON/OperationEncoding.hpp\"" << endl
+           << "#include \"Everbase/Rpc/JSON/TypeEncoding.hpp\"" << endl
+           << "#include \"Everbase/Rpc/JSON/OperationEncoding.hpp\"" << endl
            << endl;
 }
 
-void JsonEncodingFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void RpcJsonFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )
     {
@@ -41,7 +41,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::NamespaceRe
     stream << "// namespace " << qname(namespace_) << ": }" << endl << endl;
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     if ( struct_->doc() )
     {
@@ -50,7 +50,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef s
 
     stream << "// struct " << qname(struct_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
 
     stream
         << "template<>" << endl
@@ -90,12 +90,12 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef s
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } // namespace: Everbase::JSON" << endl << endl;
+    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
 
     stream << "// struct " << name(struct_) << ": }" << endl << endl;
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
     if ( class_->doc() )
     {
@@ -104,7 +104,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::ClassRef cl
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
 
     stream
         << "template<>" << endl
@@ -127,20 +127,20 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::ClassRef cl
         stream << definition(operation);
     }
 
-    stream << "} } // namespace: Everbase::JSON" << endl << endl;
+    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     auto class_ = std::dynamic_pointer_cast<Model::Class>(operation->parent());
 
@@ -148,7 +148,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::Oper
         throw std::runtime_error("invalid operation");
 
     stream
-        << "struct " << qcname(operation, "_") <<  " : public Everbase::JSON::OperationEncoding" << endl
+        << "struct " << qcname(operation, "_") <<  " : public Everbase::Rpc::JSON::OperationEncoding" << endl
         << "{" << endl
         << "    virtual std::vector<boost::any> decodeParameters(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
         << "    {" << endl
@@ -158,7 +158,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::Oper
     if(!operation->isStatic())
     {
         stream
-            << "        decoded.push_back(boost::any(Everbase::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
+            << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
     }
 
     std::size_t i = operation->isStatic() ? 0 : 1;
@@ -166,7 +166,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::Oper
     for( auto param : operation->params() )
     {
         stream
-            << "        decoded.push_back(boost::any(Everbase::JSON::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
+            << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
         i += 1;
     }
 
@@ -180,7 +180,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::Oper
     if(operation->result())
     {
         stream
-            << "        return Everbase::JSON::TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, boost::any_cast<" << type(operation->result()->type()) << ">(result));" << endl;   
+            << "        return Everbase::Rpc::JSON::TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, boost::any_cast<" << type(operation->result()->type()) << ">(result));" << endl;   
     }
     else
     {
@@ -193,7 +193,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::Oper
         << "};" << endl << endl;
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
     if ( enum_->doc() )
     {
@@ -202,7 +202,7 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::EnumRef enu
 
     stream << "// enum " << qname(enum_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
 
     stream
         << "template<>" << endl
@@ -219,12 +219,12 @@ void JsonEncodingFormatter::_definition(std::ostream& stream, Model::EnumRef enu
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } // namespace: Everbase::JSON" << endl << endl;
+    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
 
     stream << "// enum " << name(enum_) << ": }" << endl << endl;
 }
 
-void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void RpcJsonFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 }
 
