@@ -6,7 +6,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace JavaScript {
 
-class WebClientFormatter : public FormatterBase
+class JsonEncoding : public FormatterBase
 {
 protected:
     using FormatterBase::qname;
@@ -24,7 +24,7 @@ protected:
     using FormatterBase::_type;
     using FormatterBase::_doc;
     using FormatterBase::_definition;
-    using FormatterBase::_signature;
+    //using FormatterBase::_signature;
     
 	virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
@@ -38,6 +38,7 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
 
 	virtual void _formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const;
+	
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript

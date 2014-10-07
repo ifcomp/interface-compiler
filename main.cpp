@@ -7,6 +7,7 @@
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
+#include "Components/JavaScript/JsonEncoding.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -14,6 +15,12 @@
 
 int main(int argc, char** argv)
 {
+	for (int i = 0; i < argc; i++)
+	{
+		printf("arg %d: %s\n", i, argv[i]);
+	};
+
+
 	using namespace Everbase::InterfaceCompiler;
     using namespace std;
 
@@ -33,6 +40,7 @@ int main(int argc, char** argv)
 
     // Get parameter
     std::string inputPath = argv[1];
+
 
     std::vector<std::pair<std::string, std::string>> formats;
 
@@ -55,8 +63,9 @@ int main(int argc, char** argv)
             outstreams[i.second]->exceptions( ifstream::failbit | ifstream::badbit );
         }
     }
-    catch (const exception& e)
+    catch (const runtime_error& e)
     {
+		
         cerr << "[ERROR 1] " << e.what() << endl;
         return 1;
     }
@@ -127,6 +136,12 @@ int main(int argc, char** argv)
                 Components::JavaScript::WebClientFormatter format;
                 format.execute(root, output);
             }
+			else
+			if (format.first == "js-encoding")
+			{
+				Components::JavaScript::JsonEncoding format;
+				format.execute(root, output);
+			}
             else
                 { throw std::runtime_error(std::string("invalid format: ") + format.first); }
         }
