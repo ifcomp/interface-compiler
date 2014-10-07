@@ -135,13 +135,7 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
     }
     else
     {
-        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(operation->parent()) )
-        {
-            //if(class_->behavior() == Model::Class::Behavior::INTERFACE)
-            //{
-                stream << "virtual ";
-            //}
-        }   
+        stream << "virtual ";
     }
 
     if (operation->result())

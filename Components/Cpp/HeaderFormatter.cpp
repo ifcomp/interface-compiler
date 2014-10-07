@@ -235,7 +235,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationR
         stream << doc(operation->doc());
     }
 
-    stream << signature(operation) << ";" << endl;
+    stream << signature(operation) << (!operation->isStatic() ? " = 0" : "") << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
