@@ -21,6 +21,13 @@ protected:
 	const FormatterConfig config;
 
 protected:
+	FormatToken<Model::RootRef> header(Model::RootRef root) const;
+	FormatToken<Model::RootRef> footer(Model::RootRef root) const;
+
+	FormatToken<> includes() const;
+	FormatToken<Model::ElementRef> forwards(Model::ElementRef element) const;
+	FormatToken<Model::ElementRef> backwards(Model::ElementRef element) const;
+
 	FormatToken<Model::IdentifiableRef> qname(Model::IdentifiableRef identifiable) const;
 	FormatToken<Model::IdentifiableRef> name(Model::IdentifiableRef identifiable) const;
 	FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> name(std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
@@ -52,6 +59,13 @@ protected:
 	FormatToken<Model::Enum::ValueRef> definition(Model::Enum::ValueRef value) const;
 
 protected:
+	virtual void _header(std::ostream& stream, Model::RootRef root) const;
+	virtual void _footer(std::ostream& stream, Model::RootRef root) const;
+
+	virtual void _includes(std::ostream& stream) const;
+	virtual void _forwards(std::ostream& stream, Model::ElementRef element) const;
+	virtual void _backwards(std::ostream& stream, Model::ElementRef element) const;
+
 	virtual void _qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;

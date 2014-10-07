@@ -33,58 +33,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef n
 	{
 		filter(stream) << definition(element);
 	}
-
-	//Only once after rootnamespace
-	if (!namespace_->parent())
-	{
-		_initializeWebSocket(stream);
-	}
 }
-
-void WebClientFormatter::_initializeWebSocket(std::ostream& stream) const
-{
-	filter f(stream);
-	f << "var processes = { };" << endl
-		<< "var host = 'ws://localhost:3000';" << endl
-		//<< "var ws = new WebSocket(host);" << endl << endl
-		<< "var ws = { };" << endl << endl
-
-		<< "ws.onopen = onOpen;" << endl
-		<< "ws.onmessage = onMessage;" << endl
-		<< "ws.onclose = onClose;" << endl
-		<< "ws.onerror = onError;" << endl << endl
-
-		<< "function onOpen(openEventArgs) { };" << endl << endl;
-
-	f << "function onMessage(msgEventArgs) {" << endl;
-	f.push<indent>()
-		<< "var response = JSON.parse(msgEventArgs.data);" << endl
-		<< "if (response.id in processes) { " << endl;
-	f.push<indent>()
-		<< "processes[response.id](response.value); " << endl
-		<< "delete processes[response.id];" << endl;
-	f.pop() << "}" << endl;
-	f.pop() << "};" << endl << endl;
-
-
-	f << "function onClose(closeEventArgs) { };" << endl << endl
-		<< "function onError(errorEventArgs) { };" << endl << endl;
-
-	
-    //Create a GUID from randomly generated numbers.
-	f << "var guid = (function () {"<< endl;
-	f.push<indent>() << "function s4() {"	<< endl;
-	f.push<indent>() << "return Math.floor((1 + Math.random()) * 0x10000)" << endl;
-	f.push<indent>() << ".toString(16)" << endl
-		<< ".substring(1);" << endl;
-       /* }
-        return function () {
-            return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-                   s4() + '-' + s4() + s4() + s4();
-        };
-    })();*/
-}
-
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
@@ -120,7 +69,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
     
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
-	stream << qname(class_) << " = function() { };" << endl << endl;
+	stream << qname(class_) << " = function(handle) { this._handle = typeof handle !== 'undefined' ? handle : null };" << endl << endl;
 
 	if( auto super = std::dynamic_pointer_cast<Model::Type>(class_->super()) )
 	{
@@ -262,14 +211,23 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
 	filter f(stream);
 	f.push<indent>()
-		<< "ws.send(JSON.stringify(request));" << endl << endl
+		<< "ws.send(JSON.stringify(message));" << endl << endl
 		<< "return new Promise(function (resolve, reject) {" << endl;
 
 	f.push<indent>()
-		<< "//if succeeded" << endl
-		<< "processes[request.id] = resolve;" << endl
-		<< "//if failed" << endl
-		<< "//processes[request.id] = reject;" << endl;
+		<< "//if succeeded" << endl;
+
+	if (operation->result())
+	{
+		f << "processes[message.id] = [ resolve, '" << type(operation->result()->type()) << "' ];" << endl;
+	}
+	else
+	{
+		f << "processes[message.id] = [ resolve, '' ];" << endl;
+	}
+
+	f   << "//if failed" << endl
+		<< "//processes[message.id] = reject;" << endl;
 
 	f.pop()
 		<< "});" << endl;
@@ -282,14 +240,14 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 {
 	filter f(stream);
 	f << endl;
-	f.push<indent>() << "var request = {" << endl;
+	f.push<indent>() << "var message = {" << endl;
 	f.push<indent>()
 		<< "type: \'call\'," << endl
-		<< "id: \'" << boost::uuids::random_generator()() << "\'," << endl
-		<< "class: \'" << qname(std::dynamic_pointer_cast<Model::Class>(operation->parent())) << "\'," << endl
-		<< "function: \'" << name(operation) << "\'," << endl
+		<< "id: uuid()," << endl
+		<< "class: \'" << qcname(std::dynamic_pointer_cast<Model::Class>(operation->parent())) << "\'," << endl
+		<< "operation: \'" << cname(operation) << "\'," << endl
+		<< "this: this._handle," << endl
 		<< "parameters: {";
-	
 
 	if (operation->params().size())
 	{
@@ -298,7 +256,7 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 
 		for (auto param : operation->params())
 		{
-			f << param->longName() << ": " << name(param) << "," << endl;
+			f << cname(param) << ": " << "TypeConversion.toJSON['" << type(param->type()) << "']( " << name(param) << " )," << endl;
 		}
 		f.pop() << "}";
 		f << endl;
@@ -308,7 +266,8 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 		f << " }" << endl;
 	}
 	f.pop() << "}";
-	f << endl;
+
+	f << endl << endl;
 }
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const

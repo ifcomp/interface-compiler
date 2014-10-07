@@ -87,7 +87,7 @@ public:
      * @brief Resolve types in object tree.
      * @param root Root of object tree
      */
-    void resolve(const Model::RootRef &root) const;
+    static void resolve(const Model::RootRef &root);
 
 private:
     /**
@@ -99,11 +99,11 @@ private:
      * @return true if node[key] has expectedType
      * @throw std::runtime_error if types don't match and mandatory is set
      */
-    bool checkNode(const YAML::Node &node, const char *key,
+    static bool checkNode(const YAML::Node &node, const char *key,
                    YAML::NodeType::value expectedType = YAML::NodeType::Scalar,
-                   bool mandatory = false) const;
+                   bool mandatory = false);
 
-    std::string getNamespace(const Model::IdentifiableRef &identifiable) const;
+    static std::string getNamespace(const Model::IdentifiableRef &identifiable);
 
     /**
      * @brief Parse namespace members into rootNamespace starting at node.
@@ -206,23 +206,30 @@ private:
      * @param identifiable  Pointer to Identifiable object that will be named
      * @throw std::runtime_error if KEY_NAME was not found
      */
-    void parseName(const YAML::Node &node, const Model::IdentifiableRef &identifiable) const;
+    static void parseName(const YAML::Node &node, const Model::IdentifiableRef &identifiable);
 
     /**
      * @brief Parse documentation into identifiable
      * @param node  YAML node that contains KEY_DOC
      * @param identifiable  Pointer to Identifiable object
      */
-    void parseDoc(const YAML::Node &node, const Model::IdentifiableRef &identifiable) const;
+    static void parseDoc(const YAML::Node &node, const Model::IdentifiableRef &identifiable);
 
-    Model::ElementRef findElement(const Model::ElementRef &parent, std::string name, bool matchSiblings = true) const;
+    /**
+     * @brief Find Element equal to name.
+     * @param parent Parent element to search in
+     * @param name Name of the element to seach for
+     * @param matchSiblings If true the siblings of parent are compared against name.
+     * @return
+     */
+    static Model::ElementRef findElement(const Model::ElementRef &parent, std::string name, bool matchSiblings = true);
 
     /**
      * @brief Try to resolve typeName to a ElementRef
      * @param typeName  Name of type relative to current namespace stack
      * @return Pointer to Element object | nullptr if not found
      */
-    Model::ElementRef resolveTypeName(std::string typeName, const Model::RootRef &root) const;
+    static Model::ElementRef resolveTypeName(std::string typeName, const Model::RootRef &root);
 
     /**
      * @brief Try to resolve UnresolvedType object into a new Type object
@@ -230,14 +237,14 @@ private:
      * @return new or existing Type object
      * @throw std::runtime_error if type is not resolvable or contains a base object
      */
-    Model::TypeRef resolveType(const Model::TypeBaseRef &type, const Model::RootRef &root) const;
+    static Model::TypeRef resolveType(const Model::TypeBaseRef &type, const Model::RootRef &root);
 
     /**
      * @brief Try to resolve all types included in parameter
      * @param parameter Parameter
      * @throw std::runtime_error in case of an unresolvable type
      */
-    void resolveParameterType(const Model::ParameterRef &parameter, const Model::RootRef &root) const;
+    static void resolveParameterType(const Model::ParameterRef &parameter, const Model::RootRef &root);
 
     /**
      * @brief Try to resolve all types contained in rootNamespace.
@@ -248,7 +255,7 @@ private:
      * @param rootNamespace Namespace that will be scanned for unresolved types
      * @throw std::runtime_error in case of unresolvable types
      */
-    void resolveTypesInNamespace(const Model::NamespaceRef &rootNamespace, const Model::RootRef &root) const;
+    static void resolveTypesInNamespace(const Model::NamespaceRef &rootNamespace, const Model::RootRef &root);
 
     /**
      * @brief Create new Identifiable object of type T from name and doc info in node
@@ -256,7 +263,7 @@ private:
      * @return new Identifiable-based object of type T
      * @throw std::runtime_error in case T is not derived from Identifiable
      */
-    template <typename T> std::shared_ptr<T> newIdentifiable(const YAML::Node &node) const
+    template <typename T> static std::shared_ptr<T> newIdentifiable(const YAML::Node &node)
     {
         std::shared_ptr<T> newMember(new T);
 

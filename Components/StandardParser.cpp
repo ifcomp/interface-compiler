@@ -78,13 +78,13 @@ RootRef StandardParser::parseFile(istream &stream) const
 }
 
 
-void StandardParser::resolve(const RootRef &root) const
+void StandardParser::resolve(const RootRef &root)
 {
     resolveTypesInNamespace(root->getNamespace(), root);
 }
 
 
-bool StandardParser::checkNode(const YAML::Node &node, const char *key, YAML::NodeType::value expectedType, bool mandatory) const
+bool StandardParser::checkNode(const YAML::Node &node, const char *key, YAML::NodeType::value expectedType, bool mandatory)
 {
     if (node[key].Type() == expectedType)
     {
@@ -107,7 +107,7 @@ bool StandardParser::checkNode(const YAML::Node &node, const char *key, YAML::No
 }
 
 
-string StandardParser::getNamespace(const IdentifiableRef &identifiable) const
+string StandardParser::getNamespace(const IdentifiableRef &identifiable)
 {
     ObjectRef parent = identifiable->parent();
     string output = "+";
@@ -213,16 +213,16 @@ ElementRef StandardParser::parseClass(const YAML::Node &node, const RootRef &roo
 {
     ClassRef newClass = newIdentifiable<Class>(node);
 
-//    try
-//    {
-        if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
-        {
-            newClass->setBehavior(Class::Behavior::VALUE);
-        }
-        else
-        {
-            newClass->setBehavior(Class::Behavior::INTERFACE);
-        }
+    try
+    {
+//        if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
+//        {
+//            newClass->setBehavior(Class::Behavior::VALUE);
+//        }
+//        else
+//        {
+//            newClass->setBehavior(Class::Behavior::INTERFACE);
+//        }
 
         if (checkNode(node, KEY_SUPER))
         {
@@ -257,11 +257,11 @@ ElementRef StandardParser::parseClass(const YAML::Node &node, const RootRef &roo
                 newClass->addConstant(newConstant);
             }
         }
-//    }
-//    catch (const runtime_error &e)
-//    {
-//        throw runtime_error(addFQNameToException(newClass, "::"));
-//    }
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(addFQNameToException(newClass, "::"));
+    }
 
     return newClass;
 }
@@ -366,10 +366,10 @@ Class::OperationRef StandardParser::parseClassOperation(const YAML::Node &node) 
             newOperation->setStatic(node[FLAG_STATIC].as<bool>());
         }
 
-        if (checkNode(node, FLAG_SYNCHRONOUS))
-        {
-            newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
-        }
+//        if (checkNode(node, FLAG_SYNCHRONOUS))
+//        {
+//            newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
+//        }
 
         if (checkNode(node, KEY_PARAMS, YAML::NodeType::Sequence))
         {
@@ -533,7 +533,7 @@ Class::ConstantRef StandardParser::parseClassConstant(const YAML::Node &node) co
 }
 
 
-void StandardParser::parseName(const YAML::Node &node, const IdentifiableRef &identifiable) const
+void StandardParser::parseName(const YAML::Node &node, const IdentifiableRef &identifiable)
 {
     if (checkNode(node, KEY_NAME, YAML::NodeType::Scalar, true))
     {
@@ -554,7 +554,7 @@ void StandardParser::parseName(const YAML::Node &node, const IdentifiableRef &id
 }
 
 
-void StandardParser::parseDoc(const YAML::Node &node, const IdentifiableRef &identifiable) const
+void StandardParser::parseDoc(const YAML::Node &node, const IdentifiableRef &identifiable)
 {
     if (checkNode(node, KEY_DOC, YAML::NodeType::Map))
     {
@@ -573,7 +573,7 @@ void StandardParser::parseDoc(const YAML::Node &node, const IdentifiableRef &ide
 }
 
 
-ElementRef StandardParser::findElement(const ElementRef &parent, string name, bool matchSiblings) const
+ElementRef StandardParser::findElement(const ElementRef &parent, string name, bool matchSiblings)
 {
     if (parent)
     {
@@ -586,7 +586,7 @@ ElementRef StandardParser::findElement(const ElementRef &parent, string name, bo
         }
         else
         {
-            if (NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(parent))
+            if (const NamespaceRef &nestedNamespace = dynamic_pointer_cast<Namespace>(parent))
             {
                 for (auto element : nestedNamespace->elements())
                 {
@@ -659,7 +659,7 @@ ElementRef StandardParser::findElement(const ElementRef &parent, string name, bo
 }
 
 
-ElementRef StandardParser::resolveTypeName(string typeName, const RootRef &root) const
+ElementRef StandardParser::resolveTypeName(string typeName, const RootRef &root)
 {
     vector<string> nameParts;
     boost::replace_all(typeName, "::", ":");
@@ -676,7 +676,7 @@ ElementRef StandardParser::resolveTypeName(string typeName, const RootRef &root)
 }
 
 
-TypeRef StandardParser::resolveType(const TypeBaseRef &type, const RootRef &root) const
+TypeRef StandardParser::resolveType(const TypeBaseRef &type, const RootRef &root)
 {
     UnresolvedTypeRef unresolvedType = dynamic_pointer_cast<UnresolvedType>(type);
 
@@ -726,7 +726,7 @@ TypeRef StandardParser::resolveType(const TypeBaseRef &type, const RootRef &root
 }
 
 
-void StandardParser::resolveParameterType(const ParameterRef &parameter, const RootRef &root) const
+void StandardParser::resolveParameterType(const ParameterRef &parameter, const RootRef &root)
 {
     try
     {
@@ -739,7 +739,7 @@ void StandardParser::resolveParameterType(const ParameterRef &parameter, const R
 }
 
 
-void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, const RootRef &root) const
+void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, const RootRef &root)
 {
     for (auto element : rootNamespace->elements())
     {

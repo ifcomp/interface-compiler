@@ -63,6 +63,18 @@ FormatterBase::FormatterBase()
 {
 }
 
+void FormatterBase::_includes(std::ostream& stream) const
+{
+    stream << "#include <memory>" << endl
+           << "#include <set>" << endl
+           << "#include <ctime>" << endl
+           << "#include <boost/uuid/uuid.hpp>" << endl
+           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
+           << endl;
+}
+
 void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << type(parameter->type()) << " " << name(parameter);
@@ -79,14 +91,14 @@ void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::
         if(params.size() > 0)
             { throw std::runtime_error("type parameters not supported"); }
 
-        if(class_->behavior() == Class::Behavior::VALUE)
-        {
-            stream << qname(primary);
-        }
-        else
-        {
-            stream << "std::shared_ptr<" << qname(primary) << ">";
-        }
+        //if(class_->behavior() == Class::Behavior::VALUE)
+        //{
+        //    stream << qname(primary);
+        //}
+        //else
+        //{
+            stream << qname(primary) << "Ref";
+        //}
     }
     else
     {
@@ -115,22 +127,17 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     stream << "}" << endl;
 }
 
-void FormatterBase::_definition(std::ostream& stream, Model::RootRef root) const
-{
-    stream << "#include <memory>" << endl
-           << "#include <set>" << endl
-           << "#include <ctime>" << endl
-           << "#include <boost/uuid/uuid.hpp>" << endl
-           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
-           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
-           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
-           << endl;
-
-    Formatter::_definition(stream, root);
-}
-
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
+    if( operation->isStatic() )
+    {
+        stream << "static ";
+    }
+    else
+    {
+        stream << "virtual ";
+    }
+
     if (operation->result())
     {
         stream << type(operation->result()->type());

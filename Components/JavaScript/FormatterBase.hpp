@@ -12,17 +12,27 @@ public:
     FormatterBase();
 
 protected:
+    using Formatter::header;
+    using Formatter::footer;
+    using Formatter::includes;
+    using Formatter::forwards;
+    using Formatter::backwards;
     using Formatter::qname;
-	using Formatter::name;
+    using Formatter::name;
     using Formatter::qcname;
-	using Formatter::cname;
-	using Formatter::param;
-	using Formatter::type;
-	using Formatter::doc;
-	using Formatter::definition;
-	using Formatter::signature;
+    using Formatter::cname;
+    using Formatter::param;
+    using Formatter::type;
+    using Formatter::doc;
+    using Formatter::definition;
+    using Formatter::signature;
 
 protected:
+    using Formatter::_header;
+    using Formatter::_footer;
+    using Formatter::_includes;
+    using Formatter::_forwards;
+    using Formatter::_backwards;
     using Formatter::_qname;
     using Formatter::_name;
     using Formatter::_qcname;

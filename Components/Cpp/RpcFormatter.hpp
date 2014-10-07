@@ -6,7 +6,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
-class HeaderFormatter : public FormatterBase
+class RpcFormatter : public FormatterBase
 {
 protected:
     using FormatterBase::header;
@@ -40,8 +40,10 @@ protected:
     using FormatterBase::_definition;
     using FormatterBase::_signature;
     
-    virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
-
+    virtual void _includes(std::ostream& stream) const override;
+    virtual void _footer(std::ostream& stream, Model::RootRef root) const;
+    virtual void _backwards(std::ostream& stream, Model::ElementRef element) const override;
+    
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
     virtual void _definition(std::ostream& stream, Model::ClassRef class_) const override;

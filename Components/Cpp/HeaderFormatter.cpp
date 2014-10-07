@@ -12,6 +12,32 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+{
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+    {
+        stream << "namespace " << name(namespace_) << endl << "{" << endl;
+
+        for ( auto element : namespace_->elements() )
+        {
+            filter(stream).push<indent>(config.indentData) << forwards(element);
+        }
+
+        stream << "}" << endl << endl;
+    }
+    else
+    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+    {
+        stream << "class " << name(class_) << ";" << endl;
+        stream << "using " << name(class_) << "Ref = std::shared_ptr<" << name(class_) << ">;" << endl << endl;
+    }
+    else
+    if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+    {
+        stream << "struct " << name(struct_) << ";" << endl << endl;
+    }
+}
+
 void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     if ( struct_->doc() )
@@ -89,44 +115,21 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         }
     }
 
-    if( class_->behavior() == Model::Class::Behavior::VALUE )
-    {
-        stream << "public:" << endl;
+    stream << "public:" << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "();" << endl
-            << name(class_) << "(const " << name(class_) << "& other);" << endl
-            << name(class_) << "(" << name(class_) << "&& other);" << endl
-            << "~" << name(class_) << "();" << endl << endl;
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "(const " << name(class_) << "& other) = delete;" << endl
+        << name(class_) << "(" << name(class_) << "&& other) = delete;" << endl
+        << "inline virtual ~" << name(class_) << "() { }" << endl << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "& operator=(const " << name(class_) << "& other);" << endl
-            << name(class_) << "& operator=(" << name(class_) << "&& other);" << endl << endl;
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "& operator=(const " << name(class_) << "& other) = delete;" << endl
+        << name(class_) << "& operator=(" << name(class_) << "&& other) = delete;" << endl << endl;
 
-        stream << "private:" << endl;
+    stream << "protected:" << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << "class PrivImpl;" << endl
-            << "PrivImpl* privImpl;" << endl;
-    }
-    else
-    {
-        stream << "public:" << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "(const " << name(class_) << "& other) = delete;" << endl
-            << name(class_) << "(" << name(class_) << "&& other) = delete;" << endl
-            << "virtual ~" << name(class_) << "();" << endl << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "& operator=(const " << name(class_) << "& other) = delete;" << endl
-            << name(class_) << "& operator=(" << name(class_) << "&& other) = delete;" << endl << endl;
-
-        stream << "protected:" << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "();" << endl;
-    }
+    filter(stream).push<indent>(config.indentData)
+        << "inline " << name(class_) << "() { }" << endl;
 
     stream << "};" << endl;
 }
@@ -232,7 +235,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationR
         stream << doc(operation->doc());
     }
 
-    stream << signature(operation) << ";" << endl;
+    stream << signature(operation) << (!operation->isStatic() ? " = 0" : "") << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const

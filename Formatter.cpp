@@ -16,6 +16,31 @@ void Formatter::execute ( Model::RootRef input, std::ostream& output ) const
 	output << definition(input);
 }
 
+FormatToken<Model::RootRef> Formatter::header(Model::RootRef root) const
+{
+    return FormatToken<Model::RootRef> { this, &Formatter::_header, std::tuple<Model::RootRef> { root } };
+}
+
+FormatToken<Model::RootRef> Formatter::footer(Model::RootRef root) const
+{
+    return FormatToken<Model::RootRef> { this, &Formatter::_footer, std::tuple<Model::RootRef> { root } };
+}
+
+FormatToken<> Formatter::includes() const
+{
+    return FormatToken<> { this, &Formatter::_includes, std::tuple<> { } };
+}
+
+FormatToken<Model::ElementRef> Formatter::forwards(Model::ElementRef element) const
+{
+    return FormatToken<Model::ElementRef> { this, &Formatter::_forwards, std::tuple<Model::ElementRef> { element } };
+}
+
+FormatToken<Model::ElementRef> Formatter::backwards(Model::ElementRef element) const
+{
+    return FormatToken<Model::ElementRef> { this, &Formatter::_backwards, std::tuple<Model::ElementRef> { element } };
+}
+
 FormatToken<Model::IdentifiableRef> Formatter::qname(Model::IdentifiableRef identifiable) const
 {
     return FormatToken<Model::IdentifiableRef> { this, &Formatter::_qname, std::tuple<Model::IdentifiableRef> { identifiable } };
@@ -131,6 +156,32 @@ FormatToken<Model::EnumRef> Formatter::definition(Model::EnumRef enum_) const
 FormatToken<Model::Enum::ValueRef> Formatter::definition(Model::Enum::ValueRef value) const
 {
     return FormatToken<Model::Enum::ValueRef> { this, &Formatter::_definition, std::tuple<Model::Enum::ValueRef> { value } };
+}
+
+void Formatter::_header(std::ostream& stream, Model::RootRef root) const
+{
+    stream << includes()
+           << forwards(root->getNamespace());
+}
+
+void Formatter::_footer(std::ostream& stream, Model::RootRef root) const
+{
+    stream << backwards(root->getNamespace());
+}
+
+void Formatter::_includes(std::ostream& stream) const
+{
+    // none per default
+}
+
+void Formatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+{
+    // none per default
+}
+
+void Formatter::_backwards(std::ostream& stream, Model::ElementRef element) const
+{
+    // none per default
 }
 
 void Formatter::_qname(std::ostream& stream, Model::IdentifiableRef identifiable) const
@@ -418,7 +469,9 @@ void Formatter::_doc(std::ostream& stream, Model::DocumentationRef documentation
 
 void Formatter::_definition(std::ostream& stream, Model::RootRef root) const
 {
-    stream << definition(root->getNamespace());
+    stream << header(root)
+           << definition(root->getNamespace())
+           << footer(root);
 }
 
 void Formatter::_definition(std::ostream& stream, Model::ElementRef element) const
