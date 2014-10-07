@@ -5,42 +5,44 @@
 ### Call
 
 ```
-var message = {
-	type: 'call',
-	id: <uuid identifying the call>,
-	operation: <fully qualified canonical name of operation>,
-	parameters: [
+var message =
+[
+	'call',
+	<uuid identifying the call>,
+	<fully qualified canonical name of operation>,
+	[
 		<handle to instance of class, if non-static>
 		<value of parameter>,
 		...
 	]
-};
+];
 ```
 
 ### Response
 
 ```
-var message = {
-	type: 'response',
-	id: <uuid identifying the associated call>,
-	result: <value of result>,
-	exception: <null, or string>
-};
+var message =
+[
+	'response',
+	<uuid identifying the associated call>,
+	<value of result>,
+	<null, or string of exception>
+];
 ```
 
 ### Event
 
 ```
-var message = {
-	type: 'event',
-	id: <uuid identifying the event type>,
-	class: <fully qualified canonical name of class>
-	event: <canonical name of event>
-	values: [
+var message =
+[
+	'event',
+	<uuid identifying the event type>,
+	<fully qualified canonical canonical name of event>
+	[
 		<value>,
 		...
 	]
-};
+];
 ```
 
 ## Values
