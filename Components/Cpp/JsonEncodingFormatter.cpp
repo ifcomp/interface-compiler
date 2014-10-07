@@ -1,4 +1,4 @@
-#include "Components/Cpp/WebserviceFormatter.hpp"
+#include "Components/Cpp/JsonEncodingFormatter.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -10,11 +10,11 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
-void WebserviceFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void JsonEncodingFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )
     {
@@ -31,7 +31,7 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::NamespaceRef 
     stream << "// namespace " << qname(namespace_) << ": }" << endl << endl;
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     if ( struct_->doc() )
     {
@@ -40,11 +40,11 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::StructRef str
 
     stream << "// struct " << qname(struct_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Serialize { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace JSON {" << endl << endl;
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Transform<DirectoryT, " << qname(struct_) << ">" << endl
+        << "struct Encoding<DirectoryT, " << qname(struct_) << ">" << endl
         << "{" << endl
         << "    static json_spirit::Value encode(DirectoryT& directory, " << qname(struct_) << " source)" << endl
         << "    {" << endl
@@ -79,12 +79,12 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::StructRef str
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } // namespace: Everbase::Serialize::JSON" << endl << endl;
+    stream << "} } // namespace: Everbase::JSON" << endl << endl;
 
     stream << "// struct " << name(struct_) << ": }" << endl << endl;
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
     if ( class_->doc() )
     {
@@ -93,11 +93,11 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::ClassRef clas
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Serialize { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace JSON {" << endl << endl;
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Transform<DirectoryT, " << qname(class_) << "Ref>" << endl
+        << "struct Encoding<DirectoryT, " << qname(class_) << "Ref>" << endl
         << "{" << endl
         << "    static json_spirit::Value encode(DirectoryT& directory, " << qname(class_) << "Ref source)" << endl
         << "    {" << endl
@@ -110,24 +110,24 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::ClassRef clas
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } // namespace: Everbase::Serialize::JSON" << endl << endl;
+    stream << "} } // namespace: Everbase::JSON" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
     if ( enum_->doc() )
     {
@@ -136,11 +136,11 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::EnumRef enum_
 
     stream << "// enum " << qname(enum_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Serialize { namespace JSON {" << endl << endl;
+    stream << "namespace Everbase { namespace JSON {" << endl << endl;
 
     stream
         << "template<typename DirectoryT>" << endl
-        << "struct Transform<DirectoryT, " << qname(enum_) << ">" << endl
+        << "struct Encoding<DirectoryT, " << qname(enum_) << ">" << endl
         << "{" << endl
         << "    static json_spirit::Value encode(DirectoryT& directory, " << qname(enum_) << " source)" << endl
         << "    {" << endl
@@ -153,12 +153,12 @@ void WebserviceFormatter::_definition(std::ostream& stream, Model::EnumRef enum_
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } // namespace: Everbase::Serialize::JSON" << endl << endl;
+    stream << "} } // namespace: Everbase::JSON" << endl << endl;
 
     stream << "// enum " << name(enum_) << ": }" << endl << endl;
 }
 
-void WebserviceFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void JsonEncodingFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 }
 
