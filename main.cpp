@@ -3,6 +3,7 @@
 #include "Components/Cpp/HeaderFormatter.hpp"
 #include "Components/Cpp/LibraryHeaderFormatter.hpp"
 #include "Components/Cpp/LibraryFormatter.hpp"
+#include "Components/Cpp/WebserviceFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -106,7 +107,8 @@ int main(int argc, char** argv)
             else
             if( format.first == "c++-webservice" )
             {
-                throw std::runtime_error("not implemented");
+                Components::Cpp::WebserviceFormatter format;
+                format.execute(root, output);
             }
             else
             if( format.first == "c++-kernel" )
