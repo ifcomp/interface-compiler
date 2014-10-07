@@ -46,6 +46,11 @@ FormatToken<Model::IdentifiableRef> Formatter::qname(Model::IdentifiableRef iden
     return FormatToken<Model::IdentifiableRef> { this, &Formatter::_qname, std::tuple<Model::IdentifiableRef> { identifiable } };
 }
 
+FormatToken<Model::IdentifiableRef, std::string> Formatter::qname(Model::IdentifiableRef identifiable, std::string delimiter) const
+{
+    return FormatToken<Model::IdentifiableRef, std::string> { this, &Formatter::_qname, std::tuple<Model::IdentifiableRef, std::string> { identifiable, delimiter } };
+}
+
 FormatToken<Model::IdentifiableRef> Formatter::name(Model::IdentifiableRef identifiable) const
 {
     return FormatToken<Model::IdentifiableRef> { this, &Formatter::_name, std::tuple<Model::IdentifiableRef> { identifiable } };
@@ -59,6 +64,11 @@ FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> Formatter
 FormatToken<Model::IdentifiableRef> Formatter::qcname(Model::IdentifiableRef identifiable) const
 {
     return FormatToken<Model::IdentifiableRef> { this, &Formatter::_qcname, std::tuple<Model::IdentifiableRef> { identifiable } };
+}
+
+FormatToken<Model::IdentifiableRef, std::string> Formatter::qcname(Model::IdentifiableRef identifiable, std::string delimiter) const
+{
+    return FormatToken<Model::IdentifiableRef, std::string> { this, &Formatter::_qcname, std::tuple<Model::IdentifiableRef, std::string> { identifiable, delimiter } };
 }
 
 FormatToken<Model::IdentifiableRef> Formatter::cname(Model::IdentifiableRef identifiable) const
@@ -194,6 +204,16 @@ void Formatter::_qname(std::ostream& stream, Model::IdentifiableRef identifiable
     stream << name(identifiable);
 }
 
+void Formatter::_qname(std::ostream& stream, Model::IdentifiableRef identifiable, std::string delimiter) const
+{
+    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parent()) )
+    {
+        stream << qname(parent, delimiter) << delimiter;
+    }
+
+    stream << name(identifiable);
+}
+
 void Formatter::_name(std::ostream& stream, Model::IdentifiableRef identifiable) const
 {
     if( std::dynamic_pointer_cast<Model::Namespace>(identifiable) )
@@ -322,6 +342,16 @@ void Formatter::_qcname(std::ostream& stream, Model::IdentifiableRef identifiabl
     if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parent()) )
     {
         stream << qcname(parent) << "::";
+    }
+
+    stream << cname(identifiable);
+}
+
+void Formatter::_qcname(std::ostream& stream, Model::IdentifiableRef identifiable, std::string delimiter) const
+{
+    if( auto parent = std::dynamic_pointer_cast<Model::Identifiable>(identifiable->parent()) )
+    {
+        stream << qcname(parent, delimiter) << delimiter;
     }
 
     stream << cname(identifiable);

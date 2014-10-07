@@ -15,15 +15,14 @@ void RpcFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream << "#include <boost/any.hpp>" << endl
-           << "#include \"Everbase/Rpc/OperationBase.hpp\"" << endl
-           << "#include \"Everbase/Rpc/OperationMap.hpp\"" << endl
+           << "#include \"Everbase/Rpc/Operation.hpp\"" << endl
            << endl;
 }
 
 void RpcFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << endl;
-    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::OperationBase>> Everbase::Rpc::OperationMap::operations{" << endl
+    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::Operation>> Everbase::Rpc::Operation::operations {" << endl
            << backwards(root->getNamespace())
            << "};" << endl;
 }
@@ -42,7 +41,7 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
     {
         for( auto operation : class_->operations() )
         {
-            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::OperationBase>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::OperationBase>(new "
+            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Operation>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::Operation>(new "
                    << qname(class_) << "Rpc::"
                    << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << "())}," << endl;
         }
@@ -93,7 +92,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream
-        << "struct " << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << " : public Everbase::Rpc::OperationBase" << endl
+        << "struct " << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << " : public Everbase::Rpc::Operation" << endl
         << "{" << endl
         << "    inline virtual boost::any call(std::vector<boost::any> params) const" << endl
         << "    {" << endl;

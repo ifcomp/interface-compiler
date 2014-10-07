@@ -29,10 +29,12 @@ protected:
 	FormatToken<Model::ElementRef> backwards(Model::ElementRef element) const;
 
 	FormatToken<Model::IdentifiableRef> qname(Model::IdentifiableRef identifiable) const;
+	FormatToken<Model::IdentifiableRef, std::string> qname(Model::IdentifiableRef identifiable, std::string delimiter) const;
 	FormatToken<Model::IdentifiableRef> name(Model::IdentifiableRef identifiable) const;
 	FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> name(std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
 
 	FormatToken<Model::IdentifiableRef> qcname(Model::IdentifiableRef identifiable) const;
+	FormatToken<Model::IdentifiableRef, std::string> qcname(Model::IdentifiableRef identifiable, std::string delimiter) const;
 	FormatToken<Model::IdentifiableRef> cname(Model::IdentifiableRef identifiable) const;
 	FormatToken<std::string> cname(std::string longName) const;
 
@@ -67,10 +69,12 @@ protected:
 	virtual void _backwards(std::ostream& stream, Model::ElementRef element) const;
 
 	virtual void _qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
+	virtual void _qname(std::ostream& stream, Model::IdentifiableRef identifiable, std::string delimiter) const;
 	virtual void _name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
 
 	virtual void _qcname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
+	virtual void _qcname(std::ostream& stream, Model::IdentifiableRef identifiable, std::string delimiter) const;
 	virtual void _cname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _cname(std::ostream& stream, std::string longName) const;
 
