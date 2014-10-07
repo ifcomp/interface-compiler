@@ -20,8 +20,32 @@ void RpcJsonFormatter::_includes(std::ostream& stream) const
            << endl;
 }
 
-void RpcJsonFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
+    stream << endl;
+    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>> Everbase::Rpc::JSON::OperationEncoding::operations {" << endl
+           << backwards(root->getNamespace())
+           << "};" << endl;
+}
+
+void RpcJsonFormatter::_backwards(std::ostream& stream, Model::ElementRef element) const
+{
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+    {
+        for ( auto element : namespace_->elements() )
+        {
+            filter(stream).push<indent>(config.indentData) << backwards(element);
+        }
+    }
+    else
+    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+    {
+        for( auto operation : class_->operations() )
+        {
+            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>(new "
+                   << "Everbase::Rpc::JSON::" << qcname(operation, "_") << "())}," << endl;
+        }
+    }
 }
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
