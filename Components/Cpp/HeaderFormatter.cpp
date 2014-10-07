@@ -12,6 +12,31 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+{
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+    {
+        stream << "namespace " << name(namespace_) << endl << "{" << endl;
+
+        for ( auto element : namespace_->elements() )
+        {
+            filter(stream).push<indent>(config.indentData) << forwards(element);
+        }
+
+        stream << "}" << endl << endl;
+    }
+    else
+    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+    {
+        stream << "class " << name(class_) << ";" << endl;
+    }
+    else
+    if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+    {
+        stream << "struct " << name(struct_) << ";" << endl;
+    }
+}
+
 void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     if ( struct_->doc() )

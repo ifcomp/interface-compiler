@@ -12,6 +12,8 @@ public:
     FormatterBase();
 
 protected:
+    using Formatter::includes;
+    using Formatter::forwards;
     using Formatter::qname;
     using Formatter::name;
     using Formatter::qcname;
@@ -23,6 +25,8 @@ protected:
     using Formatter::signature;
 
 protected:
+    using Formatter::_includes;
+    using Formatter::_forwards;
     using Formatter::_qname;
     using Formatter::_name;
     using Formatter::_qcname;
@@ -33,9 +37,9 @@ protected:
     using Formatter::_definition;
     using Formatter::_signature;
 
+    virtual void _includes(std::ostream& stream) const override;
     virtual void _param(std::ostream& stream, Model::ParameterRef parameter) const override;
     virtual void _type(std::ostream& stream, Model::ElementRef primary, std::vector<Model::ElementRef> params) const override;
-    virtual void _definition(std::ostream& stream, Model::RootRef root) const;
     virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
     virtual void _signature(std::ostream& stream, Model::Class::OperationRef operation) const override;
 };

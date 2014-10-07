@@ -29,6 +29,8 @@ protected:
     using Formatter::_doc;
     using Formatter::_definition;
     using Formatter::_signature;
+    
+    virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
 
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 

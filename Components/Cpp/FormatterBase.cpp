@@ -63,6 +63,18 @@ FormatterBase::FormatterBase()
 {
 }
 
+void FormatterBase::_includes(std::ostream& stream) const
+{
+    stream << "#include <memory>" << endl
+           << "#include <set>" << endl
+           << "#include <ctime>" << endl
+           << "#include <boost/uuid/uuid.hpp>" << endl
+           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
+           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
+           << endl;
+}
+
 void FormatterBase::_param(std::ostream& stream, Model::ParameterRef parameter) const
 {
     stream << type(parameter->type()) << " " << name(parameter);
@@ -113,20 +125,6 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     }
 
     stream << "}" << endl;
-}
-
-void FormatterBase::_definition(std::ostream& stream, Model::RootRef root) const
-{
-    stream << "#include <memory>" << endl
-           << "#include <set>" << endl
-           << "#include <ctime>" << endl
-           << "#include <boost/uuid/uuid.hpp>" << endl
-           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
-           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
-           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
-           << endl;
-
-    Formatter::_definition(stream, root);
 }
 
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const

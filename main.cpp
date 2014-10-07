@@ -1,5 +1,4 @@
 #include "Components/StandardParser.hpp"
-#include "Components/Cpp/FwdDeclFormatter.hpp"
 #include "Components/Cpp/HeaderFormatter.hpp"
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -17,8 +16,13 @@ int main(int argc, char** argv)
     if( argc < 4 )
     {
         cerr << "Usage: " << argv[0] << " <input> <formatter 1> <output 1> ..." << endl;
-        cerr << "Formatter: c++-fwddecl c++-header c++-kernel c++-library c++-webservice" << endl;
-        cerr << "           js-header js-webclient" << endl;
+        cerr << "Formatter: c++-header" << endl;
+        cerr << "           c++-header-private" << endl;
+        cerr << "           c++-kernel" << endl;
+        cerr << "           c++-library" << endl;
+        cerr << "           c++-webservice" << endl;
+        cerr << "           js-header" << endl;
+        cerr << "           js-webclient" << endl;
         return 1;
     }
 
@@ -78,16 +82,15 @@ int main(int argc, char** argv)
         {
             ofstream& output = *(outstreams[format.second]);
 
-            if( format.first == "c++-fwddecl" )
-            {
-                Components::Cpp::FwdDeclFormatter format;
-                format.execute(root, output);
-            }
-            else
             if( format.first == "c++-header" )
             {
                 Components::Cpp::HeaderFormatter format;
                 format.execute(root, output);
+            }
+            else
+            if( format.first == "c++-header-private" )
+            {
+                throw std::runtime_error("not implemented");
             }
             else
             if( format.first == "c++-kernel" )

@@ -21,6 +21,9 @@ protected:
 	const FormatterConfig config;
 
 protected:
+	FormatToken<> includes() const;
+	FormatToken<Model::ElementRef> forwards(Model::ElementRef element) const;
+
 	FormatToken<Model::IdentifiableRef> qname(Model::IdentifiableRef identifiable) const;
 	FormatToken<Model::IdentifiableRef> name(Model::IdentifiableRef identifiable) const;
 	FormatToken<std::string, std::string, FormatterConfig::NameConfigBase> name(std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
@@ -52,6 +55,9 @@ protected:
 	FormatToken<Model::Enum::ValueRef> definition(Model::Enum::ValueRef value) const;
 
 protected:
+	virtual void _includes(std::ostream& stream) const;
+	virtual void _forwards(std::ostream& stream, Model::ElementRef element) const;
+
 	virtual void _qname(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _name(std::ostream& stream, Model::IdentifiableRef identifiable) const;
 	virtual void _name(std::ostream& stream, std::string longName, std::string shortName, FormatterConfig::NameConfigBase config) const;
