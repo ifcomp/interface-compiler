@@ -10,7 +10,7 @@ class Primitive : public Element
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     enum class Underlying
@@ -43,13 +43,14 @@ public:
 public:
     Primitive();
     virtual ~Primitive();
+    virtual ObjectRef clone() const override;
 
 public:
     /**
      * @brief Get Underlying
      * @return Current Underlying
      */
-    Underlying underlying();
+    Underlying underlying() const;
 
     /**
      * @brief Set underlying by Underlying.
@@ -62,13 +63,13 @@ public:
      * @brief Get underlying name
      * @return std::string
      */
-    std::string underlyingName();
+    std::string underlyingName() const;
 
     /**
      * @brief Get underlying parameter count
      * @return unsigned int
      */
-    unsigned int underlyingParamCount();
+    unsigned int underlyingParamCount() const;
 
     /**
      * @brief Set underlying by underlying name.
@@ -90,6 +91,9 @@ public:
      * @return String containing a list of underlying names, each one in a row.
      */
     static std::string listSupportedUnderlying();
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     Underlying _underlying;

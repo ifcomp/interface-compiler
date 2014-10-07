@@ -11,7 +11,7 @@ class Enum : public Element
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
 	class Value;
@@ -20,10 +20,14 @@ public:
 public:
     Enum();
     virtual ~Enum();
+    virtual ObjectRef clone() const override;
 
 public:
     void addValue(ValueRef value);
-    std::vector<ValueRef> values();
+    std::vector<ValueRef> values() const;
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
     std::vector<ValueRef> _values;

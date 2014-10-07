@@ -13,7 +13,7 @@ class Documentation : public Object
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     static const char* KEY_BRIEF;
@@ -31,17 +31,21 @@ public:
 public:
     Documentation();
     virtual ~Documentation();
+    virtual ObjectRef clone() const override;
 
 public:
-    bool keyExists(std::string doxygenKey);
-    std::vector<DocEntry> docEntries();
-    std::vector<DocEntry> docEntries(std::string doxygenKey);
-    DocEntry docEntry(std::string doxygenKey);
-    std::string description(std::string doxygenKey);
+    bool keyExists(std::string doxygenKey) const;
+    std::vector<DocEntry> docEntries() const;
+    std::vector<DocEntry> docEntries(std::string doxygenKey) const;
+    DocEntry docEntry(std::string doxygenKey) const;
+    std::string description(std::string doxygenKey) const;
 
     void addDocEntry(DocEntry entry);
     void addDocEntry(std::string doxygenKey, std::string description);
     void addDocEntry(std::string doxygenKey, std::string paramName, std::string description);
+
+protected:
+    virtual void clone(ObjectRef clonedObject) const override;
 
 private:
     std::vector<DocEntry> _docEntries;

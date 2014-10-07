@@ -9,15 +9,19 @@ class Root : public Object
 {
 public:
     static const char* TYPE_NAME;
-    virtual std::string typeName() override { return TYPE_NAME; }
+    virtual std::string typeName() const override { return TYPE_NAME; }
 
 public:
     Root();
     virtual ~Root();
+    virtual ObjectRef clone() const override;
 
 public:
-	NamespaceRef getNamespace();
+    NamespaceRef getNamespace() const;
 	void setNamespace(NamespaceRef ns);
+
+protected:
+    void clone(ObjectRef clonedObject) const override;
 
 private:
 	NamespaceRef _namespace;

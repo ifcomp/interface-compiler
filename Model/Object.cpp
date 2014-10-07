@@ -6,7 +6,7 @@ Object::Object()
 {
 }
 
-ObjectRef Object::parent()
+ObjectRef Object::parent() const
 {
     return _parent;
 }
