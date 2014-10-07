@@ -1,8 +1,8 @@
 #include "Components/StandardParser.hpp"
 
 #include "Components/Cpp/HeaderFormatter.hpp"
-#include "Components/Cpp/WebserviceHeaderFormatter.hpp"
-#include "Components/Cpp/WebserviceFormatter.hpp"
+#include "Components/Cpp/LibraryHeaderFormatter.hpp"
+#include "Components/Cpp/LibraryFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -21,10 +21,10 @@ int main(int argc, char** argv)
     {
         cerr << "Usage: " << argv[0] << " <input> <formatter 1> <output 1> ..." << endl;
         cerr << "Formatter: c++-header" << endl;
-        cerr << "           c++-kernel" << endl;
+        cerr << "           c++-library-header" << endl;
         cerr << "           c++-library" << endl;
-        cerr << "           c++-webservice-header" << endl;
         cerr << "           c++-webservice" << endl;
+        cerr << "           c++-kernel" << endl;
         cerr << "           js-header" << endl;
         cerr << "           js-webclient" << endl;
         return 1;
@@ -92,26 +92,26 @@ int main(int argc, char** argv)
                 format.execute(root, output);
             }
             else
-            if( format.first == "c++-kernel" )
+            if( format.first == "c++-library-header" )
             {
-                throw std::runtime_error("not implemented");
+                Components::Cpp::LibraryHeaderFormatter format;
+                format.execute(root, output);
             }
             else
             if( format.first == "c++-library" )
             {
-                throw std::runtime_error("not implemented");
-            }
-            else
-            if( format.first == "c++-webservice-header" )
-            {
-                Components::Cpp::WebserviceHeaderFormatter format;
+                Components::Cpp::LibraryFormatter format;
                 format.execute(root, output);
             }
             else
             if( format.first == "c++-webservice" )
             {
-                Components::Cpp::WebserviceFormatter format;
-                format.execute(root, output);
+                throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "c++-kernel" )
+            {
+                throw std::runtime_error("not implemented");
             }
             else
             if( format.first == "js-header" )

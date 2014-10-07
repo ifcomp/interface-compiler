@@ -1,4 +1,4 @@
-#include "Components/Cpp/WebserviceHeaderFormatter.hpp"
+#include "Components/Cpp/LibraryHeaderFormatter.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -10,7 +10,7 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
-void WebserviceHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void LibraryHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
     if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
     {
@@ -30,11 +30,11 @@ void WebserviceHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRe
     }
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
     if ( class_->doc() )
     {
@@ -71,15 +71,15 @@ void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::ClassRe
     stream << "};" << endl;
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     if (operation->doc())
     {
@@ -96,11 +96,11 @@ void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Class::
     stream << ";" << endl;
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
 }
 
-void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 }
 

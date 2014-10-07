@@ -6,7 +6,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
-class WebserviceHeaderFormatter : public FormatterBase
+class LibraryHeaderFormatter : public FormatterBase
 {
 protected:
     using FormatterBase::qname;
