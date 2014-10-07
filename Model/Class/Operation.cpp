@@ -4,9 +4,9 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
 const char* Class::Operation::TYPE_NAME = "Operation";
 
-Class::Operation::Operation() :
-    _isStatic(false),
-    _isSynchronous(false)
+Class::Operation::Operation()
+    : _isStatic(false)
+//  , _isSynchronous(false)
 {
 }
 
@@ -31,15 +31,15 @@ void Class::Operation::setStatic(bool isStatic)
 	_isStatic = isStatic;
 }
 
-bool Class::Operation::isSynchronous() const
-{
-	return _isSynchronous;
-}
+//bool Class::Operation::isSynchronous() const
+//{
+//	return _isSynchronous;
+//}
 
-void Class::Operation::setSynchronous(bool isSynchronous)
-{
-	_isSynchronous = isSynchronous;
-}
+//void Class::Operation::setSynchronous(bool isSynchronous)
+//{
+//	_isSynchronous = isSynchronous;
+//}
 
 void Class::Operation::addParam(ParameterRef param)
 {
@@ -73,7 +73,7 @@ void Class::Operation::clone(ObjectRef clonedObject) const
     {
         Identifiable::clone(clonedOp);
         clonedOp->setStatic(isStatic());
-        clonedOp->setSynchronous(isSynchronous());
+        //clonedOp->setSynchronous(isSynchronous());
 
         if (result())
         {

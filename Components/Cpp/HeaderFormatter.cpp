@@ -29,11 +29,12 @@ void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element)
     if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
     {
         stream << "class " << name(class_) << ";" << endl;
+        stream << "using " << name(class_) << "Ref = std::shared_ptr<" << name(class_) << ">;" << endl << endl;
     }
     else
     if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
     {
-        stream << "struct " << name(struct_) << ";" << endl;
+        stream << "struct " << name(struct_) << ";" << endl << endl;
     }
 }
 
@@ -114,28 +115,28 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         }
     }
 
-    if( class_->behavior() == Model::Class::Behavior::VALUE )
-    {
-        stream << "public:" << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "();" << endl
-            << name(class_) << "(const " << name(class_) << "& other);" << endl
-            << name(class_) << "(" << name(class_) << "&& other);" << endl
-            << "~" << name(class_) << "();" << endl << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "& operator=(const " << name(class_) << "& other);" << endl
-            << name(class_) << "& operator=(" << name(class_) << "&& other);" << endl << endl;
-
-        stream << "private:" << endl;
-
-        filter(stream).push<indent>(config.indentData)
-            << "class PrivImpl;" << endl
-            << "PrivImpl* privImpl;" << endl;
-    }
-    else
-    {
+    //if( class_->behavior() == Model::Class::Behavior::VALUE )
+    //{
+    //    stream << "public:" << endl;
+    //
+    //    filter(stream).push<indent>(config.indentData)
+    //        << name(class_) << "();" << endl
+    //        << name(class_) << "(const " << name(class_) << "& other);" << endl
+    //        << name(class_) << "(" << name(class_) << "&& other);" << endl
+    //        << "~" << name(class_) << "();" << endl << endl;
+    //
+    //    filter(stream).push<indent>(config.indentData)
+    //        << name(class_) << "& operator=(const " << name(class_) << "& other);" << endl
+    //        << name(class_) << "& operator=(" << name(class_) << "&& other);" << endl << endl;
+    //
+    //    stream << "private:" << endl;
+    //
+    //    filter(stream).push<indent>(config.indentData)
+    //        << "class PrivImpl;" << endl
+    //        << "PrivImpl* privImpl;" << endl;
+    //}
+    //else
+    //{
         stream << "public:" << endl;
 
         filter(stream).push<indent>(config.indentData)
@@ -151,7 +152,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
 
         filter(stream).push<indent>(config.indentData)
             << name(class_) << "();" << endl;
-    }
+    //}
 
     stream << "};" << endl;
 }

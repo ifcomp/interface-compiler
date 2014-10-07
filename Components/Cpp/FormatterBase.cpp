@@ -91,14 +91,14 @@ void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::
         if(params.size() > 0)
             { throw std::runtime_error("type parameters not supported"); }
 
-        if(class_->behavior() == Class::Behavior::VALUE)
-        {
-            stream << qname(primary);
-        }
-        else
-        {
-            stream << "std::shared_ptr<" << qname(primary) << ">";
-        }
+        //if(class_->behavior() == Class::Behavior::VALUE)
+        //{
+        //    stream << qname(primary);
+        //}
+        //else
+        //{
+            stream << qname(primary) << "Ref";
+        //}
     }
     else
     {
@@ -129,6 +129,21 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
 
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
+    if( operation->isStatic() )
+    {
+        stream << "static ";
+    }
+    else
+    {
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(operation->parent()) )
+        {
+            //if(class_->behavior() == Model::Class::Behavior::INTERFACE)
+            //{
+                stream << "virtual ";
+            //}
+        }   
+    }
+
     if (operation->result())
     {
         stream << type(operation->result()->type());

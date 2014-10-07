@@ -95,25 +95,25 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
 {
 	if(operation->result())
 	{
-		if (!operation->isSynchronous())
-		{
+		//if (!operation->isSynchronous())
+		//{
 			stream << "/* Promise [" << type(operation->result()->type()) << " " << name(operation->result()) << "] */";
-		}
-		else 
-		{
-			stream << "/* " << type(operation->result()->type()) <<  " " << name(operation->result()) << " */";
-		}
+		//}
+		//else 
+		//{
+		//	stream << "/* " << type(operation->result()->type()) <<  " " << name(operation->result()) << " */";
+		//}
 	}
 	else 
 	{
-		if (!operation->isSynchronous())
-		{
+		//if (!operation->isSynchronous())
+		//{
 			stream << "/* Promise [] */";
-		}
-		else
-		{
-			stream << "/* void */";
-		}
+		//}
+		//else
+		//{
+		//	stream << "/* void */";
+		//}
 	}
 	
     stream << " " << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parent())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";

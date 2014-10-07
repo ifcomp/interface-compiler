@@ -8,7 +8,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Model {
 const char* Class::TYPE_NAME = "Class";
 
 Class::Class()
-	: _behavior(Behavior::INTERFACE)
+//	: _behavior(Behavior::INTERFACE)
 {
 }
 
@@ -25,15 +25,15 @@ ObjectRef Class::clone() const
     return newClass;
 }
 
-Class::Behavior Class::behavior() const
-{
-	return _behavior;
-}
+//Class::Behavior Class::behavior() const
+//{
+//	return _behavior;
+//}
 
-void Class::setBehavior(Class::Behavior behavior)
-{
-    _behavior = behavior;
-}
+//void Class::setBehavior(Class::Behavior behavior)
+//{
+//    _behavior = behavior;
+//}
 
 TypeBaseRef Class::super() const
 {
@@ -89,7 +89,7 @@ void Class::clone(ObjectRef clonedObject) const
     {
         Identifiable::clone(clonedClass);
 
-        clonedClass->setBehavior(behavior());
+        //clonedClass->setBehavior(behavior());
 
         if (super())
         {

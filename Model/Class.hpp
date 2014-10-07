@@ -28,11 +28,11 @@ public:
     typedef std::shared_ptr<Operation> OperationRef;
 
 public:
-    enum class Behavior
-    {
-        VALUE,
-        INTERFACE
-    };
+    //enum class Behavior
+    //{
+    //    VALUE,
+    //    INTERFACE
+    //};
 
 public:
     Class();
@@ -40,8 +40,8 @@ public:
     virtual ObjectRef clone() const override;
 
 public:
-    Behavior behavior() const;
-    void setBehavior(Behavior behavior);
+    //Behavior behavior() const;
+    //void setBehavior(Behavior behavior);
 
     TypeBaseRef super() const;
     void setSuper(TypeBaseRef super);
@@ -59,7 +59,7 @@ protected:
     void clone(ObjectRef clonedObject) const override;
 
 private:
-    Behavior _behavior;
+    //Behavior _behavior;
     TypeBaseRef _super;
     std::vector<OperationRef> _operations;
     std::vector<EventRef> _events;

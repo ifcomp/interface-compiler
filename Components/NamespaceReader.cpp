@@ -39,8 +39,8 @@ const char *NamespaceReader::KEY_EVENTS              = "events";
 const char *NamespaceReader::KEY_CONSTANTS           = "constants";
 
 const char *NamespaceReader::FLAG_STATIC             = "static";
-const char *NamespaceReader::FLAG_SYNCHRONOUS        = "synchronous";
-const char *NamespaceReader::FLAG_VALUETYPE          = "valueType";
+//const char *NamespaceReader::FLAG_SYNCHRONOUS        = "synchronous";
+//const char *NamespaceReader::FLAG_VALUETYPE          = "valueType";
 const char *NamespaceReader::KEY_SUPER               = "super";
 
 const char *NamespaceReader::KEY_ID                  = "id";
@@ -184,14 +184,14 @@ ElementRef NamespaceReader::parseClass(const YAML::Node &node)
 
     try
     {
-        if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
-        {
-            newClass->setBehavior(Class::Behavior::VALUE);
-        }
-        else
-        {
-            newClass->setBehavior(Class::Behavior::INTERFACE);
-        }
+        //if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
+        //{
+        //    newClass->setBehavior(Class::Behavior::VALUE);
+        //}
+        //else
+        //{
+        //    newClass->setBehavior(Class::Behavior::INTERFACE);
+        //}
 
         if (checkNode(node, KEY_SUPER))
         {
@@ -343,10 +343,10 @@ Class::OperationRef NamespaceReader::parseClassOperation(const YAML::Node &node)
             newOperation->setStatic(node[FLAG_STATIC].as<bool>());
         }
 
-        if (checkNode(node, FLAG_SYNCHRONOUS))
-        {
-            newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
-        }
+        //if (checkNode(node, FLAG_SYNCHRONOUS))
+        //{
+        //    newOperation->setSynchronous(node[FLAG_SYNCHRONOUS].as<bool>());
+        //}
 
         if (checkNode(node, KEY_PARAMS, YAML::NodeType::Sequence))
         {

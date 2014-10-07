@@ -80,8 +80,8 @@ public:
      * @brief Keywords that are interpreted as boolean flags
      */
     static const char *FLAG_STATIC;
-    static const char *FLAG_SYNCHRONOUS;
-    static const char *FLAG_VALUETYPE;
+    //static const char *FLAG_SYNCHRONOUS;
+    //static const char *FLAG_VALUETYPE;
     /** @} */
 
     /**
