@@ -4,6 +4,7 @@
 #include "Components/Cpp/LibraryHeaderFormatter.hpp"
 #include "Components/Cpp/LibraryFormatter.hpp"
 #include "Components/Cpp/JsonEncodingFormatter.hpp"
+#include "Components/Cpp/RpcFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -25,6 +26,7 @@ int main(int argc, char** argv)
         cerr << "           C++-LibraryHeader" << endl;
         cerr << "           C++-Library" << endl;
         cerr << "           C++-JsonEncoding" << endl;
+        cerr << "           C++-Rpc" << endl;
         cerr << "           C++-WebService" << endl;
         cerr << "           C++-Kernel" << endl;
         cerr << "           Js-Header" << endl;
@@ -109,6 +111,12 @@ int main(int argc, char** argv)
             if( format.first == "C++-JsonEncoding" )
             {
                 Components::Cpp::JsonEncodingFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "C++-Rpc" )
+            {
+                Components::Cpp::RpcFormatter format;
                 format.execute(root, output);
             }
             else
