@@ -10,8 +10,33 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
-void RpcFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void RpcFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
+    stream << endl;
+    stream << "const std::map<std::string, std::unique_ptr<OperationBase>> Everbase::Rpc::OperationMap::operations = {" << endl
+           << backwards(root->getNamespace())
+           << "};" << endl;
+}
+
+void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) const
+{
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+    {
+        for ( auto element : namespace_->elements() )
+        {
+            filter(stream).push<indent>(config.indentData) << backwards(element);
+        }
+    }
+    else
+    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+    {
+        for( auto operation : class_->operations() )
+        {
+            stream << "std::pair<std::string, std::unique_ptr<OperationBase>>{\"" << qcname(operation) << "\", std::unique_ptr<OperationBase>(new "
+                   << qname(class_) << "Rpc::"
+                   << name(operation->longName(), operation->shortName(), config.nameConfig<Model::Class>()) << "())}" << endl;
+        }
+    }
 }
 
 void RpcFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
