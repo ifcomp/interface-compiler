@@ -428,13 +428,13 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
             native = config.primitiveConfig1<Model::Primitive::Underlying::UUID>().native;
             break;
 
-        case Model::Primitive::Underlying::BUFFER:
-            native = config.primitiveConfig2<Model::Primitive::Underlying::BUFFER>().native;
-            break;
+//        case Model::Primitive::Underlying::BUFFER:
+//            native = config.primitiveConfig2<Model::Primitive::Underlying::BUFFER>().native;
+//            break;
 
-        case Model::Primitive::Underlying::CONST_BUFFER:
-            native = config.primitiveConfig2<Model::Primitive::Underlying::CONST_BUFFER>().native;
-            break;
+//        case Model::Primitive::Underlying::CONST_BUFFER:
+//            native = config.primitiveConfig2<Model::Primitive::Underlying::CONST_BUFFER>().native;
+//            break;
 
         case Model::Primitive::Underlying::VECTOR:
             native = config.primitiveConfig3<Model::Primitive::Underlying::VECTOR>().native;

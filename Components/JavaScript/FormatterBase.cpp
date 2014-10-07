@@ -22,7 +22,7 @@ using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
 using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
-using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
+//using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
 using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
 
 FormatterBase::FormatterBase()
@@ -50,10 +50,10 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("Uuid")
             },
-            PrimitiveConfigs2 {
-                PrimitiveConfig<Primitive::Underlying::BUFFER>("Buffer"),
-                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("ConstBuffer")
-            },
+//            PrimitiveConfigs2 {
+//                PrimitiveConfig<Primitive::Underlying::BUFFER>("Buffer"),
+//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("ConstBuffer")
+//            },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("Vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("List<$0>"),

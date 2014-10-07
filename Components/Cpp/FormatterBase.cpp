@@ -20,7 +20,7 @@ using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
 using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
-using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
+//using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
 using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
 
 FormatterBase::FormatterBase()
@@ -48,10 +48,10 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid")
             },
-            PrimitiveConfigs2 {
-                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Primitives::Buffer"),
-                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::Primitives::ConstBuffer")
-            },
+//            PrimitiveConfigs2 {
+//                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Primitives::Buffer"),
+//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::Primitives::ConstBuffer")
+//            },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
@@ -69,8 +69,6 @@ void FormatterBase::_includes(std::ostream& stream) const
            << "#include <set>" << endl
            << "#include <ctime>" << endl
            << "#include <boost/uuid/uuid.hpp>" << endl
-           << "#include \"Everbase/Primitives/Buffer.hpp\"" << endl
-           << "#include \"Everbase/Primitives/ConstBuffer.hpp\"" << endl
            << "#include \"Everbase/Primitives/Event.hpp\"" << endl
            << endl;
 }
