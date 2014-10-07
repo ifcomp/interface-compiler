@@ -14,25 +14,6 @@ void RpcFormatter::_forwards(std::ostream& stream, Model::ElementRef element) co
 {
 }
 
-/*
-void RpcFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
-{
-    if ( namespace_->doc() )
-    {
-        stream << doc(namespace_->doc()) << endl;
-    }
-    
-    stream << "// namespace " << qname(namespace_) << ": {" << endl << endl;
-
-    for ( auto element : namespace_->elements() )
-    {
-        stream << definition(element);
-    }
-
-    stream << "// namespace " << qname(namespace_) << ": }" << endl << endl;
-}
-*/
-
 void RpcFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 }

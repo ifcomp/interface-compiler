@@ -32,8 +32,6 @@ protected:
     
     virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
     
-    //virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
-
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
     virtual void _definition(std::ostream& stream, Model::ClassRef class_) const override;
