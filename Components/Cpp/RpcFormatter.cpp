@@ -102,7 +102,15 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream
-        << ");" << endl
+        << ");" << endl;
+
+    if(!operation->result())
+    {
+        stream
+            << "        return boost::any();" << endl;
+    }
+
+    stream
         << "    }" << endl
         << "};" << endl;
 }
