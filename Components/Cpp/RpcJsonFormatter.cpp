@@ -173,7 +173,40 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream
         << "struct " << qcname(operation, "_") <<  " : public Everbase::Rpc::JSON::OperationEncoding" << endl
-        << "{" << endl
+        << "{" << endl;
+
+
+    // *** encodeParameters
+
+    stream
+        << "    virtual json_spirit::mValue encodeParameters(Everbase::Rpc::ObjectDirectory& directory, std::vector<boost::any> parameters) const override" << endl
+        << "    {" << endl
+        << "        json_spirit::mArray encoded;" << endl;
+
+    if(!operation->isStatic())
+    {
+        stream
+            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::encode(directory, boost::any_cast<" << qname(class_) << "Ref>(parameters[0])));" << endl;
+    }
+
+    std::size_t i = operation->isStatic() ? 0 : 1;
+
+    for( auto param : operation->params() )
+    {
+        stream
+            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::encode(directory, boost::any_cast<" << type(param->type()) << ">(parameters[" << i << "])));" << endl;
+        i += 1;
+    }
+
+    stream
+        << "        return encoded;" << endl
+        << "    }" << endl
+        << endl;
+
+
+    // *** decodeParameters
+
+    stream
         << "    virtual std::vector<boost::any> decodeParameters(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
         << "    {" << endl
         << "        const json_spirit::mArray& encoded = parameters.get_array();" << endl
@@ -185,7 +218,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
             << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
     }
 
-    std::size_t i = operation->isStatic() ? 0 : 1;
+    i = operation->isStatic() ? 0 : 1;
 
     for( auto param : operation->params() )
     {
@@ -197,7 +230,12 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     stream
         << "        return decoded;" << endl
         << "    }" << endl
-        << endl
+        << endl;
+
+
+    // *** encodeResult
+
+    stream
         << "    virtual json_spirit::mValue encodeResult(Everbase::Rpc::ObjectDirectory& directory, boost::any result) const override" << endl
         << "    {" << endl;
 
@@ -213,7 +251,30 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     }
 
     stream
-        << "    }" << endl
+        << "    }" << endl << endl;
+
+
+    // *** decodeResult
+
+    stream
+        << "    virtual boost::any decodeResult(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue result) const override" << endl
+        << "    {" << endl;
+
+    if(operation->result())
+    {
+        stream
+            << "        return Everbase::Rpc::JSON::TypeEncoding<" << type(operation->result()->type()) << ">::decode(directory, result);" << endl;   
+    }
+    else
+    {
+        stream
+            << "        return boost::any();" << endl; 
+    }
+
+    stream
+        << "    }" << endl;
+
+    stream
         << "};" << endl << endl;
 }
 
