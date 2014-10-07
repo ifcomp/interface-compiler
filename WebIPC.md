@@ -8,13 +8,12 @@
 var message = {
 	type: 'call',
 	id: <uuid identifying the call>,
-	class: <fully qualified canonical name of class>,
-	operation: <canonical name of operation>,
-	this: <handle to instance of class>,
-	parameters: {
-		<canonical name of parameter>: <value of parameter>,
+	operation: <fully qualified canonical name of operation>,
+	parameters: [
+		<handle to instance of class, if non-static>
+		<value of parameter>,
 		...
-	}
+	]
 };
 ```
 
@@ -25,7 +24,7 @@ var message = {
 	type: 'response',
 	id: <uuid identifying the associated call>,
 	result: <value of result>,
-	exception: <null, or TBD>
+	exception: <null, or string>
 };
 ```
 
@@ -37,10 +36,10 @@ var message = {
 	id: <uuid identifying the event type>,
 	class: <fully qualified canonical name of class>
 	event: <canonical name of event>
-	values: {
-		<canonical name of value>: <value of value>,
+	values: [
+		<value>,
 		...
-	}
+	]
 };
 ```
 
