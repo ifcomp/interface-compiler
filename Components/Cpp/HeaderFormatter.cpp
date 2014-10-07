@@ -115,44 +115,21 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         }
     }
 
-    //if( class_->behavior() == Model::Class::Behavior::VALUE )
-    //{
-    //    stream << "public:" << endl;
-    //
-    //    filter(stream).push<indent>(config.indentData)
-    //        << name(class_) << "();" << endl
-    //        << name(class_) << "(const " << name(class_) << "& other);" << endl
-    //        << name(class_) << "(" << name(class_) << "&& other);" << endl
-    //        << "~" << name(class_) << "();" << endl << endl;
-    //
-    //    filter(stream).push<indent>(config.indentData)
-    //        << name(class_) << "& operator=(const " << name(class_) << "& other);" << endl
-    //        << name(class_) << "& operator=(" << name(class_) << "&& other);" << endl << endl;
-    //
-    //    stream << "private:" << endl;
-    //
-    //    filter(stream).push<indent>(config.indentData)
-    //        << "class PrivImpl;" << endl
-    //        << "PrivImpl* privImpl;" << endl;
-    //}
-    //else
-    //{
-        stream << "public:" << endl;
+    stream << "public:" << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "(const " << name(class_) << "& other) = delete;" << endl
-            << name(class_) << "(" << name(class_) << "&& other) = delete;" << endl
-            << "virtual ~" << name(class_) << "();" << endl << endl;
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "(const " << name(class_) << "& other) = delete;" << endl
+        << name(class_) << "(" << name(class_) << "&& other) = delete;" << endl
+        << "inline virtual ~" << name(class_) << "() { }" << endl << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "& operator=(const " << name(class_) << "& other) = delete;" << endl
-            << name(class_) << "& operator=(" << name(class_) << "&& other) = delete;" << endl << endl;
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "& operator=(const " << name(class_) << "& other) = delete;" << endl
+        << name(class_) << "& operator=(" << name(class_) << "&& other) = delete;" << endl << endl;
 
-        stream << "protected:" << endl;
+    stream << "protected:" << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "();" << endl;
-    //}
+    filter(stream).push<indent>(config.indentData)
+        << "inline " << name(class_) << "() { }" << endl;
 
     stream << "};" << endl;
 }

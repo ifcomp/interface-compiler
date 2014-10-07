@@ -26,14 +26,7 @@ void WebserviceHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRe
     else
     if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
     {
-        //if( class_->behavior() == Model::Class::Behavior::VALUE )
-        //{
-        //    stream << "class " << name(class_) << "::PrivImpl;" << endl;
-        //}
-        //else
-        //{
-            stream << "class " << name(class_) << "Impl;" << endl;
-        //}
+        stream << "class " << name(class_) << "Impl;" << endl;
     }
 }
 
@@ -48,16 +41,7 @@ void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::ClassRe
         stream << doc(class_->doc());
     }
 
-    //if( class_->behavior() == Model::Class::Behavior::VALUE )
-    //{
-    //    stream << "class " << name(class_) << "::PrivImpl" << endl;
-    //}
-    //else
-    //{
-        stream << "class " << name(class_) << "Impl : public virtual " << name(class_);
-    //}
-    
-    stream << endl << "{" << endl;
+    stream << "class " << name(class_) << "Impl : public virtual " << name(class_) << endl << "{" << endl;
 
     if(class_->operations().size() > 0)
     {
@@ -72,34 +56,17 @@ void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::ClassRe
         }
     }
 
-    //if( class_->behavior() == Model::Class::Behavior::VALUE )
-    //{
-    //    stream << "public:" << endl;
-    //
-    //    filter(stream).push<indent>(config.indentData)
-    //        << "PrivImpl();" << endl
-    //        << "PrivImpl(const PrivImpl& other);" << endl
-    //        << "PrivImpl(PrivImpl&& other);" << endl
-    //        << "~PrivImpl();" << endl << endl;
-    //
-    //    filter(stream).push<indent>(config.indentData)
-    //        << "PrivImpl& operator=(const PrivImpl& other);" << endl
-    //        << "PrivImpl& operator=(PrivImpl&& other);" << endl << endl;
-    //}
-    //else
-    //{
-        stream << "public:" << endl;
+    stream << "public:" << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "Impl();" << endl
-            << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
-            << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
-            << "virtual ~" << name(class_) << "Impl();" << endl << endl;
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "Impl();" << endl
+        << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
+        << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
+        << "virtual ~" << name(class_) << "Impl();" << endl << endl;
 
-        filter(stream).push<indent>(config.indentData)
-            << name(class_) << "Impl& operator=(const " << name(class_) << "Impl& other) = delete;" << endl
-            << name(class_) << "Impl& operator=(" << name(class_) << "Impl&& other) = delete;" << endl << endl;
-    //}
+    filter(stream).push<indent>(config.indentData)
+        << name(class_) << "Impl& operator=(const " << name(class_) << "Impl& other) = delete;" << endl
+        << name(class_) << "Impl& operator=(" << name(class_) << "Impl&& other) = delete;" << endl << endl;
 
     stream << "};" << endl;
 }
@@ -123,13 +90,7 @@ void WebserviceHeaderFormatter::_definition(std::ostream& stream, Model::Class::
 
     if( !operation->isStatic() )
     {
-        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(operation->parent()) )
-        {
-            //if(class_->behavior() == Model::Class::Behavior::INTERFACE)
-            //{
-                stream << " override";
-            //}
-        }
+        stream << " override";
     }
 
     stream << ";" << endl;
