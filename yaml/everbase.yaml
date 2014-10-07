@@ -92,6 +92,7 @@
         - name: MembershipMode
           type: enum
           doc: { brief: 'Specifies the membership mode of an user or device.', more: 'Can be used as a bit mask.' }
+          return: { name: CoreSystem, type: Everbase::CoreSystem }
           values:
             - { name: JoinRequest, value: 0x1 }
             - { name: Member, value: 0x2 }
