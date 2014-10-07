@@ -22,7 +22,7 @@ int main(int argc, char** argv)
     {
         cerr << "Usage: " << argv[0] << " <input> <formatter 1> <output 1> ..." << endl;
         cerr << "Formatter: C++-Header" << endl;
-        cerr << "           C++-Library-Header" << endl;
+        cerr << "           C++-LibraryHeader" << endl;
         cerr << "           C++-Library" << endl;
         cerr << "           C++-JsonEncoding" << endl;
         cerr << "           C++-WebService" << endl;
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
                 format.execute(root, output);
             }
             else
-            if( format.first == "C++-Library-Header" )
+            if( format.first == "C++-LibraryHeader" )
             {
                 Components::Cpp::LibraryHeaderFormatter format;
                 format.execute(root, output);
