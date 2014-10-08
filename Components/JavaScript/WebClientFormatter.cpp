@@ -52,7 +52,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef stru
             stream << doc(field->doc());
         }
     
-		stream << "Object.defineProperty(" << qname(struct_) << ".prototype, '" << name(field) << "', "
+		stream << "Object.defineProperty(" << qcname(struct_) << ".prototype, '" << name(field) << "', "
 		       << "{ get: function() { return this._" << name(field) << " }, set: function(" << name(field) << ") { this._" << name(field) << " = " << name(field) << " } } ); "
 		       << "/* " << type(field->type()) << " */" << endl << endl;
 	}
@@ -241,11 +241,11 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 	filter f(stream);
 	f << endl;
 	f.push<indent>() << "var message = {" << endl;
+	f << "[";
 	f.push<indent>()
-		<< "type: \'call\'," << endl
-		<< "id: uuid()," << endl
-		<< "class: \'" << qcname(std::dynamic_pointer_cast<Model::Class>(operation->parent())) << "\'," << endl
-		<< "operation: \'" << cname(operation) << "\'," << endl
+		<< "\'call\'," << endl
+		<< "\'" << qcname(operation) << "\'," << endl
+		<< "\'uuid()\'," << endl
 		<< "this: this._handle," << endl
 		<< "parameters: {";
 
