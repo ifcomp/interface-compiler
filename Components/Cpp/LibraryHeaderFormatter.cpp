@@ -43,7 +43,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
 
     stream << "class " << name(class_) << "Impl : public virtual " << name(class_) << endl << "{" << endl;
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "/decl.hpp\"" << endl;
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/decl.hpp\"" << endl;
 
     if(class_->operations().size() > 0)
     {

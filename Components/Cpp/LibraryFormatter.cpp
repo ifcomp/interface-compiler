@@ -27,7 +27,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// " << name(class_) << ": {" << endl << endl;
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "/def.cpp\"" << endl;
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/def.cpp\"" << endl;
 
     if(class_->operations().size() > 0)
     {
@@ -38,15 +38,10 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     stream
-        << name(class_) << "Impl::" << name(class_) << "Impl()" << endl << "{" << endl;
-
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "/constructor_sync_impl.cpp\"" << endl;
-
-    stream
-        << "}" << endl << endl
+        << name(class_) << "Impl::" << name(class_) << "Impl()" << endl << "{ }" << endl << endl
         << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "/destructor_sync_impl.cpp\"" << endl;
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/destructor_sync_impl.cpp\"" << endl;
 
     stream
         << "}" << endl << endl;
@@ -97,7 +92,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 //        stream << "    return " << type(operation->result()->type()) << "();" << endl;
 //    }
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(operation, "/") << "_sync_impl.cpp\"" << endl;
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << (!operation->isStatic() ? "Impl" : "") << "/" << name(operation) << "_sync_impl.cpp\"" << endl;
 
     stream << "}" << endl;
 }
