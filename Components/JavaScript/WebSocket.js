@@ -1,7 +1,7 @@
 var processes = { };
 var classInstanceHandles = { }
 
-var host = 'ws://localhost:3000';
+var host = 'ws://localhost:42230';
 var ws = new WebSocket(host);
 
 ws.onopen = onOpen;

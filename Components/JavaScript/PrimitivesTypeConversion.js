@@ -36,43 +36,43 @@ function(values, params) {
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[params[i]](values[i]);
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
     }; 
     return array;
-}
+};
 
-TypeConversion.ToJSON['List'] = 
+TypeConversion.toJSON['List'] = 
 function(values, params) {
     if (params.length != 1 &&  values.length != 1) {
         throw new Error('Unknown list type.')
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[params[i]](values[i]);
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
     }; 
     return array;
 }
 
-TypeConversion.ToJSON['Set'] = 
+TypeConversion.toJSON['Set'] = 
 function(values, params) {
     if (params.length != 1 &&  values.length != 1) {
         throw new Error('Unknown set type.')
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[params[i]](values[i]);
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
     }; 
     return array;
 }
 
-TypeConversion.ToJSON['Map'] = 
+TypeConversion.toJSON['Map'] = 
 function(values, params) {
     if (arams.length != 2 &&  values.length != 2) {
         throw new Error("Unkonwn map type.")
     };
     var map = { };
     for (var i = 0; i < values.length; i++) {
-        map[params[i]](values[i]) = TypeConversion.ToJSON[params[i]](values[i]);
+        map[params[i]](values[i]) = TypeConversion.toJSON[params[i]](values[i]);
     }; 
     return map; 
 }
@@ -95,43 +95,43 @@ function(values, params) {
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJS[params[i]](values[i]);
+        array.push(TypeConversion.toJS[params[i]](values[i]));
     }; 
     return array;
 }
 
-TypeConversion.ToJS['List'] = 
+TypeConversion.toJS['List'] = 
 function(values, params) {
     if (params.length != 1 &&  values.length != 1) {
         throw new Error('Unknown list type.')
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJS[params[i]](values[i]);
+        array.push(TypeConversion.toJS[params[i]](values[i]));
     }; 
     return array;
 }
 
-TypeConversion.ToJS['Set'] = 
+TypeConversion.toJS['Set'] = 
 function(values, params) {
     if (params.length != 1 &&  values.length != 1) {
         throw new Error('Unknown set type.')
     };
     var array;
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJS[params[i]](values[i]);
+        array.push(TypeConversion.toJS[params[i]](values[i]));
     }; 
     return array;
 }
 
-TypeConversion.ToJS['Map'] = 
+TypeConversion.toJS['Map'] = 
 function(values, params) {
     if (arams.length != 2 &&  values.length != 2) {
         throw new Error("Unkonwn map type.")
     };
     var map = { };
     for (var i = 0; i < values.length; i++) {
-        map[params[i]](values[i]) = TypeConversion.ToJS[params[i]](values[i]);
+        map[params[i]](values[i]) = TypeConversion.toJS[params[i]](values[i]);
     }; 
     return map; 
 }
