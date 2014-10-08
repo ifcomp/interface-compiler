@@ -742,7 +742,6 @@ TypeRef StandardParser::resolveType(const TypeBaseRef &type, const RootRef &root
         TypeRef resolvedType = dynamic_pointer_cast<Type>(type);
         if (resolvedType)
         {
-            cout << "resolved to existing type" << endl;
             return resolvedType;
         }
         else
