@@ -86,7 +86,7 @@ int main(int argc, char** argv)
         Components::StandardParser parser;
         root = parser.execute(input);
     }
-    catch (const exception& e)
+    catch (const runtime_error& e)
     {
         cerr << "[ERROR 2] " << e.what() << endl;
         return 1;
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
                 format.execute(root, output);
             }
             else
-            if (format.first == "js-JsonEncoding")
+            if (format.first == "Js-JsonEncoding")
             {
                 Components::JavaScript::JsonEncoding format;
                 format.execute(root, output);

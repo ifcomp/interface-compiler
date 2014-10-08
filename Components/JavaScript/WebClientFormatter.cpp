@@ -240,33 +240,21 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 {
 	filter f(stream);
 	f << endl;
-	f.push<indent>() << "var message = {" << endl;
-	f << "[";
+	f.push<indent>() << "var message = " << endl;
+	f << "[" <<endl;
 	f.push<indent>()
 		<< "\'call\'," << endl
 		<< "\'" << qcname(operation) << "\'," << endl
-		<< "\'uuid()\'," << endl
-		<< "this: this._handle," << endl
-		<< "parameters: {";
-
-	if (operation->params().size())
-	{
-		f << endl;
-		f.push<indent>();
-
+		<< "uuid()," << endl
+		<< "[" << endl;
+	f.push<indent>();
+	if (!operation->isStatic()) { f << "this._handle," << endl; };
 		for (auto param : operation->params())
 		{
-			f << cname(param) << ": " << "TypeConversion.toJSON['" << type(param->type()) << "']( " << name(param) << " )," << endl;
+			f << "TypeConversion.toJSON['" << type(param->type()) << "']( " << name(param) << " )," << endl;
 		}
-		f.pop() << "}";
-		f << endl;
-	}
-	else
-	{
-		f << " }" << endl;
-	}
-	f.pop() << "}";
-
+	f.pop() << "]" << endl;
+	f.pop() << "];";
 	f << endl << endl;
 }
 

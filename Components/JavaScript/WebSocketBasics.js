@@ -9,8 +9,6 @@ ws.onmessage = onMessage;
 ws.onclose = onClose;
 ws.onerror = onError;
 
-typeConversion.toJSON['Caching'] = function(value)
-
 function onOpen(openEventArgs) { };
 
 function onMessage(msgEventArgs) {
@@ -19,35 +17,32 @@ function onMessage(msgEventArgs) {
 };
 
 function routeMessage(message) {
-    if (response['type'] === 'response') {
-        processResponse(response);
+    if (message[0] === 'response') {
+        processResponse(message);
     }
-    else if (response['type'] === 'event') {
-        Console.log('Event recieved.');
+    else if (message[0] === 'event') {
+        console.log('Event recieved.');
     }
     else {
-        Console.log('Unknown response type.');
+        console.log('Unknown response type.');
     };
 };
 
 function processResponse(response) {
-    Console.log('Response recieved.');
-    if (response.id in processes) { 
-        var value;
-        var responseType = processes[response.id][2];
-        if (response.value in classInstanceHandles)
-        {
-            processes[response.id](classInstanceHandles[response.value]); 
-        }
-        else {
-            TypeConversion.toJS[responseType](response.value);
-        }
+    console.log('Response recieved.');
+    var responseId = response[2];
+    if (responseId in processes) { 
+        var responseVal = response[3];
+        console.log(responseVal);
+        var conversionedResult;
+        var responseType = processes[responseId][1];
+        conversionedResult = TypeConversion.toJS[responseType](responseVal);
 
-        processes[response.id](value); 
-        delete processes[response.id];
+        processes[responseId][0](conversionedResult); 
+        delete processes[responseId];
     }
     else {
-        Console.log('Respones couldn\'t be mapped')
+        console.log('Respones couldn\'t be mapped')
     }
 };
 

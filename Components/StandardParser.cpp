@@ -667,7 +667,7 @@ ElementRef StandardParser::resolveTypeName(string typeName, const RootRef &root)
 
     ElementRef element = root->getNamespace();
 
-    for (uint n = 0; n < nameParts.size(); ++n)
+    for (std::uint16_t n = 0; n < nameParts.size(); ++n)
     {
         element = findElement(element, nameParts[n], n);
     }
