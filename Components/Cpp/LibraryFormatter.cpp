@@ -27,7 +27,12 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// " << name(class_) << ": {" << endl << endl;
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/def.cpp\"" << endl;
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/def.cpp\"" << endl << endl;
+
+    for( auto constant : class_->constants() )
+    {
+        stream << definition(constant) << endl;
+    }
 
     if(class_->operations().size() > 0)
     {
@@ -51,6 +56,12 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
+    if ( constant->doc() )
+    {
+        stream << doc(constant->doc());
+    }
+
+    stream << "constexpr " << type(constant->type()) << " " << qname(constant) << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
