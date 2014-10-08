@@ -216,7 +216,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	}
 	else
 	{
-		f << "processes[message[2]] = [ resolve, '' ];" << endl;
+		f << "processes[message[2]] = [ resolve, '', [] ];" << endl;
 	}
 
 	f   << "//if failed" << endl
