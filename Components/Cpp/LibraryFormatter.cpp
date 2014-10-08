@@ -80,6 +80,11 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << ")" << endl << "{" << endl;
 
+    if (operation->result())
+    {
+        stream << "    return " << type(operation->result()->type()) << "();" << endl;
+    }
+
     stream << "}" << endl;
 }
 

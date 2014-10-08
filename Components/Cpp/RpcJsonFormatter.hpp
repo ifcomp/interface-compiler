@@ -6,7 +6,7 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
-class JsonEncodingFormatter : public FormatterBase
+class RpcJsonFormatter : public FormatterBase
 {
 protected:
     using FormatterBase::header;
@@ -41,7 +41,8 @@ protected:
     using FormatterBase::_signature;
     
     virtual void _includes(std::ostream& stream) const override;
-    virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
+    virtual void _footer(std::ostream& stream, Model::RootRef root) const override;
+    virtual void _backwards(std::ostream& stream, Model::ElementRef element) const override;
     
     virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
 

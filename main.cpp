@@ -3,8 +3,8 @@
 #include "Components/Cpp/HeaderFormatter.hpp"
 #include "Components/Cpp/LibraryHeaderFormatter.hpp"
 #include "Components/Cpp/LibraryFormatter.hpp"
-#include "Components/Cpp/JsonEncodingFormatter.hpp"
 #include "Components/Cpp/RpcFormatter.hpp"
+#include "Components/Cpp/RpcJsonFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
 #include "Components/JavaScript/WebClientFormatter.hpp"
@@ -32,11 +32,12 @@ int main(int argc, char** argv)
         cerr << "Formatter: C++-Header" << endl;
         cerr << "           C++-LibraryHeader" << endl;
         cerr << "           C++-Library" << endl;
-        cerr << "           C++-JsonEncoding" << endl;
         cerr << "           C++-Rpc" << endl;
+        cerr << "           C++-RpcJson" << endl;
         cerr << "           C++-WebService" << endl;
         cerr << "           C++-Kernel" << endl;
         cerr << "           Js-Header" << endl;
+        cerr << "           Js-JsonEncoding" << endl;
         cerr << "           Js-WebClient" << endl;
         return 1;
     }
@@ -117,15 +118,15 @@ int main(int argc, char** argv)
                 format.execute(root, output);
             }
             else
-            if( format.first == "C++-JsonEncoding" )
-            {
-                Components::Cpp::JsonEncodingFormatter format;
-                format.execute(root, output);
-            }
-            else
             if( format.first == "C++-Rpc" )
             {
                 Components::Cpp::RpcFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "C++-RpcJson" )
+            {
+                Components::Cpp::RpcJsonFormatter format;
                 format.execute(root, output);
             }
             else
@@ -145,17 +146,17 @@ int main(int argc, char** argv)
                 format.execute(root, output);
             }
             else
+            if (format.first == "js-JsonEncoding")
+            {
+                Components::JavaScript::JsonEncoding format;
+                format.execute(root, output);
+            }
+            else
             if( format.first == "Js-WebClient" )
             {
                 Components::JavaScript::WebClientFormatter format;
                 format.execute(root, output);
             }
-			else
-			if (format.first == "js-encoding")
-			{
-				Components::JavaScript::JsonEncoding format;
-				format.execute(root, output);
-			}
             else
                 { throw std::runtime_error(std::string("invalid format: ") + format.first); }
         }
