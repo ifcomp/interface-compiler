@@ -1,4 +1,4 @@
-TypeConversion = {};
+var TypeConversion = {};
 TypeConversion.toJSON = {};
 TypeConversion.toJS = {};
 
