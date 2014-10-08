@@ -41,7 +41,21 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
         stream << doc(class_->doc());
     }
 
-    stream << "class " << name(class_) << "Impl : public virtual " << name(class_) << endl << "{" << endl;
+    stream << "class " << name(class_) << "Impl : public virtual " << name(class_);
+
+    if(class_->super())
+    {
+        if( auto super = std::dynamic_pointer_cast<Model::Class>(std::dynamic_pointer_cast<Type>(class_->super())->primary()) )
+        {
+            stream << ", public virtual " << qname(super) << "Impl";
+        }
+        else
+            throw std::runtime_error("invalid super type");
+    }
+
+    stream << endl << "{" << endl;
+
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/decl.hpp\"" << endl;
 
     if(class_->operations().size() > 0)
     {
@@ -59,7 +73,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     stream << "public:" << endl;
 
     filter(stream).push<indent>(config.indentData)
-        << name(class_) << "Impl();" << endl
+//        << name(class_) << "Impl();" << endl
         << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
         << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
         << "virtual ~" << name(class_) << "Impl();" << endl << endl;
