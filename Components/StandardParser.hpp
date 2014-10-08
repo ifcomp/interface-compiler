@@ -16,7 +16,7 @@ public:
      * Member function signature for nodetype-lookup
      * @see Parser::Parser
      */
-    typedef Model::ElementRef (StandardParser::*MemberFunc)(const YAML::Node &, const Model::RootRef &) const;
+    typedef void (StandardParser::*MemberFunc)(const YAML::Node &, const Model::ElementRef &, const Model::RootRef &) const;
 
 public:
     /**
@@ -103,86 +103,110 @@ private:
                    YAML::NodeType::value expectedType = YAML::NodeType::Scalar,
                    bool mandatory = false);
 
+
+    /**
+     * @brief Get qualified name of Identifiable object.
+     * @param identifiable Identifiable object
+     * @param parent Parent object that is not yet linked to identifiable, but provides its namespace
+     * @return Fully qualified name
+     */
+    static std::string getQualifiedName(const Model::IdentifiableRef &identifiable, const Model::IdentifiableRef &parent = nullptr);
+
+    /**
+     * @brief Get namespace of identifiable object
+     * @param identifiable Identifiable object
+     * @return Namespace with trailing :: delimiter or empty if identifiable has no parent
+     */
     static std::string getNamespace(const Model::IdentifiableRef &identifiable);
 
     /**
      * @brief Parse namespace members into rootNamespace starting at node.
-     * @param node          YAML root node
-     * @param rootNamespace Pointer to Namespace object that acts as root for found entries
+     * @param node YAML node that contains a sequence of nodes
+     * @param parentNamespace Pointer to Namespace object that acts as root for found entries
+     * @param root Pointer to object tree root
      */
-    void parseElements(const YAML::Node &node, const Model::NamespaceRef &rootNamespace, const Model::RootRef &root) const;
+    void parseElements(const YAML::Node &node, const Model::NamespaceRef &parentNamespace, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_NAMESPACE section
      * @param node  YAML node that contains namespace definition
-     * @return  Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw  std::runtime_error on incomplete definition
      */
-    Model::ElementRef parseNamespace(const YAML::Node &node, const Model::RootRef &root) const;
+    void parseNamespace(const YAML::Node &node, const Model::ElementRef &parent, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_CLASS section
      * @param node  YAML node that contains class definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ElementRef parseClass(const YAML::Node &node, const Model::RootRef &root) const;
+    void parseClass(const YAML::Node &node, const Model::ElementRef &parent, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_PRIMITIVE section
      * @param node  YAML node that contains primitive definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ElementRef parsePrimitive(const YAML::Node &node, const Model::RootRef &root) const;
+    void parsePrimitive(const YAML::Node &node, const Model::ElementRef &parent, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_ENUM section
      * @param node  YAML node that contains enum definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ElementRef parseEnum(const YAML::Node &node, const Model::RootRef &root) const;
+    void parseEnum(const YAML::Node &node, const Model::ElementRef &parent, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_STRUCT section
      * @param node  YAML node that contains struct definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::ElementRef parseStruct(const YAML::Node &node, const Model::RootRef &root) const;
+    void parseStruct(const YAML::Node &node, const Model::ElementRef &parent, const Model::RootRef &root) const;
 
     /**
      * @brief Parse TYPE_CONSTANT definition
      * @param node  YAML node that contains a constant definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::Class::ConstantRef parseClassConstant(const YAML::Node &node) const;
+    void parseClassConstant(const YAML::Node &node, const Model::ClassRef &parent) const;
 
     /**
      * @brief Parse operation definition (entries of KEY_OPERATIONS inside TYPE_CLASS section);
      * @param node  YAML node that contains a single operation definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::Class::OperationRef parseClassOperation(const YAML::Node &node) const;
+    void parseClassOperation(const YAML::Node &node, const Model::ClassRef &parent) const;
 
     /**
      * @brief Parse event definition (entries of KEY_EVENTS inside TYPE_CLASS section)
      * @param node  YAML node that contains a single event definition
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::Class::EventRef parseClassEvent(const YAML::Node &node) const;
+    void parseClassEvent(const YAML::Node &node, const Model::ClassRef &parent) const;
 
     /**
      * @brief Parse a value definition (KEY_VALUE inside KEY_VALUES section)
      * @param node  YAML node that contains a value definition in KEY_VALUE
-     * @return Shared pointer to a filled Object
+     * @param parent Parent element to which the new element gets attached
+     * @param root Pointer to object tree root
      * @throw std::runtime_error on incomplete definition
      */
-    Model::Enum::ValueRef parseEnumValue(const YAML::Node &node) const;
+    void parseEnumValue(const YAML::Node &node, const Model::EnumRef &parent) const;
 
     /**
      * @brief Parse parameter definition
