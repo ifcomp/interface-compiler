@@ -1,11 +1,13 @@
+var classInstanceHandles = { }
+
 var TypeConversion = {};
 TypeConversion.toJSON = {};
 TypeConversion.toJS = {};
 
 TypeConversion.toJSON['Byte']        = function(value) { return value; }
-TypeConversion.toJSON['Uint16']      = function(value) { return value; }
-TypeConversion.toJSON['Uint32']      = function(value) { return value; }
-TypeConversion.toJSON['Uint64']      = function(value) { return value; }
+TypeConversion.toJSON['UInt16']      = function(value) { return value; }
+TypeConversion.toJSON['UInt32']      = function(value) { return value; }
+TypeConversion.toJSON['UInt64']      = function(value) { return value; }
 TypeConversion.toJSON['Boolean']     = function(value) { return value; }
 TypeConversion.toJSON['TimeStamp']   = function(value) { new Date(value).getTime() / 1000; }
 TypeConversion.toJSON['String']      = function(value) { return value; }
@@ -14,7 +16,7 @@ TypeConversion.toJSON['Uuid']        = function(value) { return value; }
 TypeConversion.toJSON['Buffer']      = function(value) {  
                                             var array = [];
                                             for(var entry in buffer) {
-                                                array.push(entry;
+                                                array.push(entry);
                                             }; 
                                             return array;
                                         ;}
@@ -22,27 +24,114 @@ TypeConversion.toJSON['Buffer']      = function(value) {
 TypeConversion.toJSON['ConstBuffer'] = function(value) { 
                                             var array = [];
                                             for(var entry in buffer) {
-                                                array.push(entry;
+                                                array.push(entry);
                                             }; 
                                             return array;
                                         };
 
-TypeConversion.toJSON['Vector']      = function(value) { return value; }
-TypeConversion.toJSON['List']        = function(value) { return value; }
-TypeConversion.toJSON['Set']         = function(value) { return value; }
-TypeConversion.toJSON['Map']         = function(value) { return value; }
+TypeConversion.toJSON['Vector'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown vector type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
+    }; 
+    return array;
+};
+
+TypeConversion.toJSON['List'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown list type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
+    }; 
+    return array;
+}
+
+TypeConversion.toJSON['Set'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown set type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJSON[params[i]](values[i]));
+    }; 
+    return array;
+}
+
+TypeConversion.toJSON['Map'] = 
+function(values, params) {
+    if (arams.length != 2 &&  values.length != 2) {
+        throw new Error("Unkonwn map type.")
+    };
+    var map = { };
+    for (var i = 0; i < values.length; i++) {
+        map[params[i]](values[i]) = TypeConversion.toJSON[params[i]](values[i]);
+    }; 
+    return map; 
+}
 
 TypeConversion.toJS['Byte']        = function(value) { return value; }
-TypeConversion.toJS['Uint16']      = function(value) { return value; }
-TypeConversion.toJS['Uint32']      = function(value) { return value; }
-TypeConversion.toJS['Uint64']      = function(value) { return value; }
+TypeConversion.toJS['UInt16']      = function(value) { return value; }
+TypeConversion.toJS['UInt32']      = function(value) { return value; }
+TypeConversion.toJS['UInt64']      = function(value) { return value; }
 TypeConversion.toJS['Boolean']     = function(value) { return value; }
 TypeConversion.toJS['TimeStamp']   = function(value) { return new Date(value*1000); }
 TypeConversion.toJS['String']      = function(value) { return value; }
 TypeConversion.toJS['Uuid']        = function(value) { return value; }
 TypeConversion.toJS['Buffer']      = function(value) { return new Uint8Array(value); }
 TypeConversion.toJS['ConstBuffer'] = function(value) { return new Uint8Array(value); }
-TypeConversion.toJS['Vector']      = function(value) { return value; }
-TypeConversion.toJS['List']        = function(value) { return value; }
-TypeConversion.toJS['Set']         = function(value) { return value; }
-TypeConversion.toJS['Map']         = function(value) { return value; }
+
+TypeConversion.toJS['Vector'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown vector type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJS[params[i]](values[i]));
+    }; 
+    return array;
+}
+
+TypeConversion.toJS['List'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown list type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJS[params[i]](values[i]));
+    }; 
+    return array;
+}
+
+TypeConversion.toJS['Set'] = 
+function(values, params) {
+    if (params.length != 1 &&  values.length != 1) {
+        throw new Error('Unknown set type.')
+    };
+    var array;
+    for (var i = 0; i < values.length; i++) {
+        array.push(TypeConversion.toJS[params[i]](values[i]));
+    }; 
+    return array;
+}
+
+TypeConversion.toJS['Map'] = 
+function(values, params) {
+    if (arams.length != 2 &&  values.length != 2) {
+        throw new Error("Unkonwn map type.")
+    };
+    var map = { };
+    for (var i = 0; i < values.length; i++) {
+        map[params[i]](values[i]) = TypeConversion.toJS[params[i]](values[i]);
+    }; 
+    return map; 
+}
