@@ -38,7 +38,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     stream
-        << name(class_) << "Impl::" << name(class_) << "Impl()" << endl << "{ }" << endl << endl
+//        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
         << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
 
     filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/destructor_sync_impl.cpp\"" << endl;

@@ -61,7 +61,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     stream << "public:" << endl;
 
     filter(stream).push<indent>(config.indentData)
-        << name(class_) << "Impl();" << endl
+//        << name(class_) << "Impl();" << endl
         << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
         << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
         << "virtual ~" << name(class_) << "Impl();" << endl << endl;
