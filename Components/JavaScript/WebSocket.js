@@ -29,11 +29,10 @@ function routeMessage(message) {
 };
 
 function processResponse(response) {
-    console.log('Response recieved.');
+    console.log('Response received.');
     var responseId = response[2];
     if (responseId in processes) { 
         var responseVal = response[3];
-        console.log(responseVal);
         var conversionedResult;
         var responseType = processes[responseId][1];
         conversionedResult = TypeConversion.toJS[responseType](responseVal);
@@ -42,7 +41,7 @@ function processResponse(response) {
         delete processes[responseId];
     }
     else {
-        console.log('Respones couldn\'t be mapped')
+        console.log('Response couldn\'t be mapped')
     }
 };
 
