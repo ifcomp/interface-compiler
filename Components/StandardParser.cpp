@@ -5,9 +5,8 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 
-#define addFQNameToException(member, delimiter)     getNamespace(member) + "::" + member->longName() + delimiter + e.what()
-#define addObjectNameToException(member)            member->longName() + " " + e.what()
-#define addSectionToException(key)                  "in section " + string(key) + " : " + e.what()
+#define addFQNameToException(member, delimiter)                 getQualifiedName(member) + delimiter + e.what()
+#define addSectionToException(key)                              "in section " + string(key) + " : " + e.what()
 
 using namespace std;
 using namespace Everbase::InterfaceCompiler::Model;
@@ -224,8 +223,17 @@ void StandardParser::parseClass(const YAML::Node &node, const ElementRef &parent
 {
     ClassRef newClass = newIdentifiable<Class>(node);
 
-    try
+    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
     {
+        // add class to tree before adding children
+        // otherwise class' namespace won't get resolved in error messages
+        parentNamespace->addElement(newClass);
+    }
+    else
+    {
+        throw runtime_error("parseClass() : unsupported parent element");
+    }
+
 //        if (node[FLAG_VALUETYPE].IsScalar() && node[FLAG_VALUETYPE].as<bool>())
 //        {
 //            newClass->setBehavior(Class::Behavior::VALUE);
@@ -235,49 +243,35 @@ void StandardParser::parseClass(const YAML::Node &node, const ElementRef &parent
 //            newClass->setBehavior(Class::Behavior::INTERFACE);
 //        }
 
-        if (checkNode(node, KEY_SUPER))
-        {
-            UnresolvedTypeRef newType = make_shared<UnresolvedType>();
-            newType->setPrimary(node[KEY_SUPER].Scalar());
-            newClass->setSuper(newType);
-        }
-
-        if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
-        {
-            for (auto operationNode : node[KEY_OPERATIONS])
-            {
-                parseClassOperation(operationNode, newClass);
-            }
-        }
-
-        if (checkNode(node, KEY_EVENTS, YAML::NodeType::Sequence))
-        {
-            for (auto eventNode : node[KEY_EVENTS])
-            {
-                parseClassEvent(eventNode, newClass);
-            }
-        }
-
-        if (checkNode(node, KEY_CONSTANTS, YAML::NodeType::Sequence))
-        {
-            for (auto constantNode : node[KEY_CONSTANTS])
-            {
-                parseClassConstant(constantNode, newClass);
-            }
-        }
-    }
-    catch (const runtime_error &e)
+    if (checkNode(node, KEY_SUPER))
     {
-        throw runtime_error(addFQNameToException(newClass, "::"));
+        UnresolvedTypeRef newType = make_shared<UnresolvedType>();
+        newType->setPrimary(node[KEY_SUPER].Scalar());
+        newClass->setSuper(newType);
     }
 
-    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
+    if (checkNode(node, KEY_OPERATIONS, YAML::NodeType::Sequence))
     {
-        parentNamespace->addElement(newClass);
+        for (auto operationNode : node[KEY_OPERATIONS])
+        {
+            parseClassOperation(operationNode, newClass);
+        }
     }
-    else
+
+    if (checkNode(node, KEY_EVENTS, YAML::NodeType::Sequence))
     {
-        throw runtime_error("parseClass() : unsupported parent element");
+        for (auto eventNode : node[KEY_EVENTS])
+        {
+            parseClassEvent(eventNode, newClass);
+        }
+    }
+
+    if (checkNode(node, KEY_CONSTANTS, YAML::NodeType::Sequence))
+    {
+        for (auto constantNode : node[KEY_CONSTANTS])
+        {
+            parseClassConstant(constantNode, newClass);
+        }
     }
 }
 
@@ -286,6 +280,15 @@ void StandardParser::parsePrimitive(const YAML::Node &node, const ElementRef &pa
 {
     // Primitives only consist of their names
     PrimitiveRef newPrimitive = newIdentifiable<Primitive>(node);
+
+    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
+    {
+        parentNamespace->addElement(newPrimitive);
+    }
+    else
+    {
+        throw runtime_error("parsePrimitive() : unsupported parent element");
+    }
 
     try {
         if (checkNode(node, KEY_UNDERLYING, YAML::NodeType::Scalar, true))
@@ -303,21 +306,21 @@ void StandardParser::parsePrimitive(const YAML::Node &node, const ElementRef &pa
     {
         throw runtime_error(addFQNameToException(newPrimitive, " : "));
     }
-
-    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
-    {
-        parentNamespace->addElement(newPrimitive);
-    }
-    else
-    {
-        throw runtime_error("parsePrimitive() : unsupported parent element");
-    }
 }
 
 
 void StandardParser::parseEnum(const YAML::Node &node, const ElementRef &parent, const RootRef &root) const
 {
     EnumRef newEnum = newIdentifiable<Enum>(node);
+
+    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
+    {
+        parentNamespace->addElement(newEnum);
+    }
+    else
+    {
+        throw runtime_error("parseEnum() : unsupported parent element");
+    }
 
     try
     {
@@ -340,21 +343,21 @@ void StandardParser::parseEnum(const YAML::Node &node, const ElementRef &parent,
     {
         throw runtime_error(addFQNameToException(newEnum, " : "));
     }
-
-    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
-    {
-        parentNamespace->addElement(newEnum);
-    }
-    else
-    {
-        throw runtime_error("parseEnum() : unsupported parent element");
-    }
 }
 
 
 void StandardParser::parseStruct(const YAML::Node &node, const ElementRef &parent, const RootRef &root) const
 {
     StructRef newStruct = newIdentifiable<Struct>(node);
+
+    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
+    {
+        parentNamespace->addElement(newStruct);
+    }
+    else
+    {
+        throw runtime_error("parseStruct() : unsupported parent element");
+    }
 
     try
     {
@@ -378,21 +381,13 @@ void StandardParser::parseStruct(const YAML::Node &node, const ElementRef &paren
     {
         throw runtime_error(addFQNameToException(newStruct, " : "));
     }
-
-    if (NamespaceRef parentNamespace = dynamic_pointer_cast<Namespace>(parent))
-    {
-        parentNamespace->addElement(newStruct);
-    }
-    else
-    {
-        throw runtime_error("parseStruct() : unsupported parent element");
-    }
 }
 
 
 void StandardParser::parseClassOperation(const YAML::Node &node, const ClassRef &parent) const
 {
     Class::OperationRef newOperation = newIdentifiable<Class::Operation>(node);
+    parent->addOperation(newOperation);
 
     try
     {
@@ -429,16 +424,15 @@ void StandardParser::parseClassOperation(const YAML::Node &node, const ClassRef 
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addObjectNameToException(newOperation));
+        throw runtime_error(addFQNameToException(newOperation, " : "));
     }
-
-    parent->addOperation(newOperation);
 }
 
 
 void StandardParser::parseClassEvent(const YAML::Node &node, const ClassRef &parent) const
 {
     Class::EventRef newEvent = newIdentifiable<Class::Event>(node);
+    parent->addEvent(newEvent);
 
     try
     {
@@ -458,21 +452,20 @@ void StandardParser::parseClassEvent(const YAML::Node &node, const ClassRef &par
 
         if (newEvent->values().size() == 0)
         {
-            throw runtime_error("event " + newEvent->longName() + " has no values\n");
+            throw runtime_error("event has no values\n");
         }
     }
-    catch (const runtime_error &e)
+    catch (const exception &e)
     {
-        throw runtime_error(addObjectNameToException(newEvent));
+        throw runtime_error(addFQNameToException(newEvent, " : "));
     }
-
-    parent->addEvent(newEvent);
 }
 
 
 void StandardParser::parseClassConstant(const YAML::Node &node, const ClassRef &parent) const
 {
     Class::ConstantRef newConstant = newIdentifiable<Class::Constant>(node);
+    parent->addConstant(newConstant);
 
     try
     {
@@ -494,14 +487,13 @@ void StandardParser::parseClassConstant(const YAML::Node &node, const ClassRef &
     {
         throw runtime_error(addFQNameToException(newConstant, " : "));
     }
-
-    parent->addConstant(newConstant);
 }
 
 
 void StandardParser::parseEnumValue(const YAML::Node &node, const EnumRef &parent) const
 {
     Enum::ValueRef newValue = newIdentifiable<Enum::Value>(node);
+    parent->addValue(newValue);
 
     if (node[KEY_VALUE].IsScalar())
     {
@@ -511,8 +503,6 @@ void StandardParser::parseEnumValue(const YAML::Node &node, const EnumRef &paren
     {
         throw runtime_error("value definition " + newValue->longName() + " has no value!\n");
     }
-
-    parent->addValue(newValue);
 }
 
 
@@ -698,8 +688,6 @@ ElementRef StandardParser::findElement(const ElementRef &parent, string name, bo
 
 ElementRef StandardParser::resolveTypeName(string typeName, const RootRef &root)
 {
-    cout << "resolv: " << typeName << endl;
-
     vector<string> nameParts;
     boost::replace_all(typeName, "::", ":");
     boost::split(nameParts, typeName, boost::is_any_of(":"));
@@ -796,116 +784,118 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
         }
         else if (const ClassRef &classRef = dynamic_pointer_cast<Class>(element))
         {
-            // resolve events, operations & return
-            try {
-                // resolve super
-                if (classRef->super())
-                {
-                    TypeRef superType = resolveType(classRef->super(), root);
+            // resolve super
+            if (classRef->super())
+            {
+                TypeRef superType = resolveType(classRef->super(), root);
 
-                    if (dynamic_pointer_cast<Class>(superType->primary()))
+                if (dynamic_pointer_cast<Class>(superType->primary()))
+                {
+                    classRef->setSuper(superType);
+                }
+                else
+                {
+                    throw runtime_error("inherited element in " + classRef->longName() + " must point to a class\n");
+                }
+            }
+
+            // resolve class operations
+            for (auto operation : classRef->operations())
+            {
+                try {
+                    for (auto parameter : operation->params())
                     {
-                        classRef->setSuper(superType);
+                        resolveParameterType(parameter, root);
                     }
-                    else
+
+                    // resolve operation's return parameter
+                    const ParameterRef &resultParamRef = operation->result();
+
+                    if (resultParamRef)
                     {
-                        throw runtime_error("inherited element in " + classRef->longName() + " must point to a class\n");
+                        resolveParameterType(resultParamRef, root);
                     }
                 }
-
-                for (auto operation : classRef->operations())
+                catch (const runtime_error &e)
                 {
-                    try {
-                        for (auto parameter : operation->params())
-                        {
-                            resolveParameterType(parameter, root);
-                        }
-
-                        // resolve operation's return parameter
-                        const ParameterRef &resultParamRef = operation->result();
-
-                        if (resultParamRef)
-                        {
-                            resolveParameterType(resultParamRef, root);
-                        }
-                    }
-                    catch (const runtime_error &e)
-                    {
-                        throw runtime_error(addObjectNameToException(operation));
-                    }
+                    throw runtime_error(addFQNameToException(operation, " : "));
                 }
+            }
 
-                for (auto event : classRef->events())
-                {
+            // resolve class events
+            for (auto event : classRef->events())
+            {
+
+                try {
                     for (auto value : event->values())
                     {
                         resolveParameterType(value, root);
                     }
                 }
-
-                for (auto constant : classRef->constants())
+                catch (const runtime_error &e)
                 {
-                    // resolve constants
-                    try {
-                        TypeRef resolvedType = resolveType(constant->type(), root);
+                    throw runtime_error(addFQNameToException(event, " : "));
+                }
+            }
 
-                        if (resolvedType)
+            // resolve class constants
+            for (auto constant : classRef->constants())
+            {
+                try {
+                    TypeRef resolvedType = resolveType(constant->type(), root);
+
+                    if (resolvedType)
+                    {
+                        constant->setType(resolvedType);
+
+                        // convert value
+                        std::string value = boost::any_cast<std::string>(constant->value());
+
+                        if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
                         {
-                            constant->setType(resolvedType);
-
-                            // convert value
-                            std::string value = boost::any_cast<std::string>(constant->value());
-
-                            if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
+                            switch( primitive->underlying() )
                             {
-                                switch( primitive->underlying() )
-                                {
-                                    case Primitive::Underlying::BYTE:
-                                        constant->setValue(boost::lexical_cast<std::uint8_t>(value));
-                                        break;
+                                case Primitive::Underlying::BYTE:
+                                    constant->setValue(boost::lexical_cast<std::uint8_t>(value));
+                                    break;
 
-                                    case Primitive::Underlying::UINT16:
-                                        constant->setValue(boost::lexical_cast<std::uint16_t>(value));
-                                        break;
+                                case Primitive::Underlying::UINT16:
+                                    constant->setValue(boost::lexical_cast<std::uint16_t>(value));
+                                    break;
 
-                                    case Primitive::Underlying::UINT32:
-                                        constant->setValue(boost::lexical_cast<std::uint32_t>(value));
-                                        break;
+                                case Primitive::Underlying::UINT32:
+                                    constant->setValue(boost::lexical_cast<std::uint32_t>(value));
+                                    break;
 
-                                    case Primitive::Underlying::UINT64:
-                                        constant->setValue(boost::lexical_cast<std::uint64_t>(value));
-                                        break;
+                                case Primitive::Underlying::UINT64:
+                                    constant->setValue(boost::lexical_cast<std::uint64_t>(value));
+                                    break;
 
-                                    case Primitive::Underlying::BOOLEAN:
-                                        constant->setValue(boost::lexical_cast<bool>(value));
-                                        break;
+                                case Primitive::Underlying::BOOLEAN:
+                                    constant->setValue(boost::lexical_cast<bool>(value));
+                                    break;
 
-                                    case Primitive::Underlying::TIMESTAMP:
-                                        throw std::runtime_error("not supported");
+                                case Primitive::Underlying::TIMESTAMP:
+                                    throw std::runtime_error("not supported");
 
-                                    case Primitive::Underlying::STRING:
-                                        constant->setValue(value);
-                                        break;
+                                case Primitive::Underlying::STRING:
+                                    constant->setValue(value);
+                                    break;
 
-                                    case Primitive::Underlying::UUID:
-                                        constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
-                                        break;
+                                case Primitive::Underlying::UUID:
+                                    constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
+                                    break;
 
-                                    default:
-                                        throw std::runtime_error("not supported");
-                                }
+                                default:
+                                    throw std::runtime_error("not supported");
                             }
                         }
                     }
-                    catch (const runtime_error &e)
-                    {
-                        throw runtime_error(addFQNameToException(element, " "));
-                    }
                 }
-            }
-            catch (const runtime_error &e)
-            {
-                throw runtime_error(addFQNameToException(classRef, "::"));
+                catch (const exception &e)
+                {
+                    throw runtime_error(addFQNameToException(constant, " : "));
+                }
             }
         }
         else if (const StructRef &structRef = dynamic_pointer_cast<Struct>(element))
@@ -919,7 +909,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
             }
             catch (const runtime_error &e)
             {
-                throw runtime_error(addFQNameToException(element, " "));
+                throw runtime_error(addFQNameToException(structRef, " : "));
             }
         }
     }
