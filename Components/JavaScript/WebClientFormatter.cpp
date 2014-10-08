@@ -19,22 +19,6 @@ using namespace Model;
 using namespace StreamFilter;
 
 
-void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
-{
-    if ( namespace_->doc() )
-    {
-        stream << doc(namespace_->doc());
-    }
-    
-	string var = namespace_->parent() ? "" : "var ";
-	stream << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
-	
-	for ( auto element : namespace_->elements() )
-	{
-		filter(stream) << definition(element);
-	}
-}
-
 void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
     if ( struct_->doc() )
@@ -52,7 +36,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef stru
             stream << doc(field->doc());
         }
     
-		stream << "Object.defineProperty(" << qcname(struct_) << ".prototype, '" << name(field) << "', "
+		stream << "Object.defineProperty(" << qname(struct_) << ".prototype, '" << name(field) << "', "
 		       << "{ get: function() { return this._" << name(field) << " }, set: function(" << name(field) << ") { this._" << name(field) << " = " << name(field) << " } } ); "
 		       << "/* " << type(field->type()) << " */" << endl << endl;
 	}
@@ -219,7 +203,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
 	if (operation->result())
 	{
-		f << "processes[message.id] = [ resolve, '" << type(operation->result()->type()) << "' ];" << endl;
+		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' ];" << endl;
 	}
 	else
 	{

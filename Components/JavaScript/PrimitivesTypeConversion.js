@@ -1,3 +1,5 @@
+var classInstanceHandles = { }
+
 var TypeConversion = {};
 TypeConversion.toJSON = {};
 TypeConversion.toJS = {};

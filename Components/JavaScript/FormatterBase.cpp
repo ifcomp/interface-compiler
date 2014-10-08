@@ -82,8 +82,8 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
         stream << doc(namespace_->doc());
     }
     
-	string var = namespace_->parent() ? "" : "var ";
-	stream << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+	string var = namespace_->parent()->parent() ? "" : "var ";
+	stream << var << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 	
 	for ( auto element : namespace_->elements() )
 	{
