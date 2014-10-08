@@ -51,14 +51,6 @@
           type: primitive
           underlying: Uuid
 
-        - name: Buffer
-          type: primitive
-          underlying: Buffer
-
-        - name: ConstBuffer
-          type: primitive
-          underlying: ConstBuffer
-
         - name: Vector
           type: primitive
           underlying: Vector
@@ -753,14 +745,12 @@
             - name: Write
               doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
               params:
-                - { name: SourceBuffer, type: Everbase::Primitives::ConstBuffer }
                 - { name: Position, type: Everbase::Primitives::UInt64 }
                 - { name: Section, type: Everbase::Primitives::Byte }
             - name: Read
               doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
               return: { name: BytesRead, type: Everbase::Primitives::UInt32 }
               params:
-                - { name: TargetBuffer, type: Everbase::Primitives::Buffer }
                 - { name: FillBuffer, type: Everbase::Primitives::Boolean }
                 - { name: Position, type: Everbase::Primitives::UInt64 }
                 - { name: Section, type: Everbase::Primitives::Byte }
@@ -1298,13 +1288,11 @@
             - name: Write
               doc: { brief: 'Writes a block of bytes to the file at the provided position.' }
               params:
-                - { name: SourceBuffer, type: Everbase::Primitives::ConstBuffer }
                 - { name: Position, type: Everbase::Primitives::UInt64 }
             - name: Read
               doc: { brief: 'Reads a block of bytes from the file at the provided position.' }
               return: { name: BytesRead, type: Everbase::Primitives::UInt32 }
               params:
-                - { name: TargetBuffer, type: Everbase::Primitives::Buffer }
                 - { name: FillBuffer, type: Everbase::Primitives::Boolean }
                 - { name: Position, type: Everbase::Primitives::UInt64 }
             - name: Truncate
