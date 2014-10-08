@@ -201,17 +201,26 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	f.push<indent>()
 		<< "//if succeeded" << endl;
 
+	string formattedParams = "";
 	if (operation->result())
 	{
-		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' ];" << endl;
+		if ( std::dynamic_pointer_cast<Model::Type>(operation->result()->type())->params().size() )
+		{
+			auto params = std::dynamic_pointer_cast<Model::Type>(operation->result()->type())->params();
+			for (auto param : params)
+			{
+				formattedParams += param->longName() + ", ";
+			}
+		}
+		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' , [" << formattedParams << "] ];" << endl;
 	}
 	else
 	{
-		f << "processes[message.id] = [ resolve, '' ];" << endl;
+		f << "processes[message[2]] = [ resolve, '' ];" << endl;
 	}
 
 	f   << "//if failed" << endl
-		<< "//processes[message.id] = reject;" << endl;
+		<< "//processes[message[2]] = reject;" << endl;
 
 	f.pop()
 		<< "});" << endl;
@@ -222,6 +231,8 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
 void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const 
 {
+	string paramTypes = "";
+
 	filter f(stream);
 	f << endl;
 	f.push<indent>() << "var message = " << endl;
@@ -235,7 +246,15 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 	if (!operation->isStatic()) { f << "this._handle," << endl; };
 		for (auto param : operation->params())
 		{
-			f << "TypeConversion.toJSON['" << type(param->type()) << "']( " << name(param) << " )," << endl;
+			if (std::dynamic_pointer_cast<Model::Type>(param->type())->params().size())
+			{
+				auto typeParams = std::dynamic_pointer_cast<Model::Type>(param->type())->params();
+				for (auto typeParam : typeParams)
+				{
+					paramTypes += "'" + typeParam->longName() + "' , "; 
+				}
+			}
+			f << "TypeConversion.toJSON[ '" << type(param->type()) << "' ]( " << name(param) << ", [ " << paramTypes << " ] )," << endl;
 		}
 	f.pop() << "]" << endl;
 	f.pop() << "];";

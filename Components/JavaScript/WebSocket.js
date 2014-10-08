@@ -35,7 +35,8 @@ function processResponse(response) {
         var responseVal = response[3];
         var conversionedResult;
         var responseType = processes[responseId][1];
-        conversionedResult = TypeConversion.toJS[responseType](responseVal);
+        var responseParamTypes = processes[responseId][2];
+        conversionedResult = TypeConversion.toJS[responseType](responseVal, responseParamTypes);
 
         processes[responseId][0](conversionedResult); 
         delete processes[responseId];
