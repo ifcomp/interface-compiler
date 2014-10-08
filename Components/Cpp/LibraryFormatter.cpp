@@ -61,7 +61,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
         stream << doc(constant->doc());
     }
 
-    stream << "constexpr " << type(constant->type()) << " " << qname(constant) << endl;
+    stream << "constexpr " << type(constant->type()) << " " << qname(constant) << ";" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
