@@ -8,10 +8,10 @@
 var message =
 [
 	'call',
-	<uuid identifying the call>,
 	<fully qualified canonical name of operation>,
+	<uuid identifying the call>,
 	[
-		<handle to instance of class, if non-static>
+		<handle to instance of class, if non-static>,
 		<value of parameter>,
 		...
 	]
@@ -24,6 +24,7 @@ var message =
 var message =
 [
 	'response',
+	<fully qualified canonical name of operation>,
 	<uuid identifying the associated call>,
 	<value of result>,
 	<null, or string of exception>
@@ -36,8 +37,8 @@ var message =
 var message =
 [
 	'event',
+	<fully qualified canonical canonical name of event>,
 	<uuid identifying the event type>,
-	<fully qualified canonical canonical name of event>
 	[
 		<value>,
 		...
