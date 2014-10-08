@@ -27,6 +27,8 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// " << name(class_) << ": {" << endl << endl;
 
+    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "/def.cpp\"" << endl;
+
     if(class_->operations().size() > 0)
     {
         for( auto operation : class_->operations() )
