@@ -15,22 +15,6 @@ TypeConversion.toJSON['Timestamp']   = function(value) { new Date(value).getTime
 TypeConversion.toJSON['String']      = function(value) { return value; }
 TypeConversion.toJSON['Uuid']        = function(value) { return value; }
 
-TypeConversion.toJSON['Buffer']      = function(value) {  
-                                            var array = [];
-                                            for(var entry in buffer) {
-                                                array.push(entry);
-                                            }; 
-                                            return array;
-                                        ;}
-
-TypeConversion.toJSON['ConstBuffer'] = function(value) { 
-                                            var array = [];
-                                            for(var entry in buffer) {
-                                                array.push(entry);
-                                            }; 
-                                            return array;
-                                        };
-
 TypeConversion.toJSON['Vector'] = 
 function(values, valuesType) {
     if (valuesType.length != 1) {
@@ -38,7 +22,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[valuesType](values[i]));
+        array.push(TypeConversion.toJSON[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -50,7 +34,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[valuesType](values[i]));
+        array.push(TypeConversion.toJSON[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -62,7 +46,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.ToJSON[valuesType](values[i]));
+        array.push(TypeConversion.toJSON[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -100,7 +84,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.toJS[valuesType](values[i]));
+        array.push(TypeConversion.toJS[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -112,7 +96,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.toJS[valuesType](values[i]));
+        array.push(TypeConversion.toJS[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -124,7 +108,7 @@ function(values, valuesType) {
     };
     var array = [];
     for (var i = 0; i < values.length; i++) {
-        array.push(TypeConversion.toJS[valuesType](values[i]));
+        array.push(TypeConversion.toJS[valuesType[0]](values[i]));
     }; 
     return array;
 }
@@ -144,3 +128,4 @@ function(values, valuesType) {
     };
     return map; 
 }
+

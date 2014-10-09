@@ -32,14 +32,22 @@ function routeMessage(message) {
 
 function processResponse(response) {
     var responseId = response[2];
-    if (responseId in processes) { 
+    if (responseId in processes)
+    { 
         var responseVal = response[3];
-        var conversionedResult;
-        var responseType = processes[responseId][1];
-        var responseParamTypes = processes[responseId][2];
-        conversionedResult = TypeConversion.toJS[responseType](responseVal, responseParamTypes);
+       	var responseType = processes[responseId][1];
 
-        processes[responseId][0](conversionedResult); 
+	if(responseType != '')
+	{
+	        var responseParamTypes = processes[responseId][2];
+        	var conversionedResult = TypeConversion.toJS[responseType](responseVal, responseParamTypes);
+	        processes[responseId][0](conversionedResult);
+	}
+	else
+	{
+	        processes[responseId][0]();
+	}
+
         delete processes[responseId];
     }
     else {
