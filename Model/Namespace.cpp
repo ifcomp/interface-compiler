@@ -29,7 +29,7 @@ std::vector<ElementRef> Namespace::elements() const
     return _elements;
 }
 
-void Namespace::clone(ObjectRef clonedObject) const
+void Namespace::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 
@@ -50,7 +50,7 @@ void Namespace::clone(ObjectRef clonedObject) const
     }
 }
 
-void Namespace::addElement(ElementRef element)
+void Namespace::addElement(const ElementRef &element)
 {
     element->setParent(shared_from_this());
 	_elements.push_back(element);

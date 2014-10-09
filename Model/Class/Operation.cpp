@@ -41,7 +41,7 @@ void Class::Operation::setStatic(bool isStatic)
 //	_isSynchronous = isSynchronous;
 //}
 
-void Class::Operation::addParam(ParameterRef param)
+void Class::Operation::addParam(const ParameterRef &param)
 {
     param->setParent(shared_from_this());
     _params.push_back(param);
@@ -52,18 +52,18 @@ std::vector<ParameterRef> Class::Operation::params() const
     return _params;
 }
 
-void Class::Operation::setResult(ParameterRef result)
+void Class::Operation::setResult(const ParameterRef &result)
 {
     result->setParent(shared_from_this());
 	_result = result;
 }
 
-ParameterRef Class::Operation::result() const
+const ParameterRef &Class::Operation::result() const
 {
     return _result;
 }
 
-void Class::Operation::clone(ObjectRef clonedObject) const
+void Class::Operation::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

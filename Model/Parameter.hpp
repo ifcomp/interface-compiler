@@ -20,11 +20,11 @@ public:
     virtual ObjectRef clone() const override;
 
 public:
-    TypeBaseRef type() const;
-    void setType(TypeBaseRef type);
+    const TypeBaseRef &type() const;
+    void setType(const TypeBaseRef &type);
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     TypeBaseRef _type;

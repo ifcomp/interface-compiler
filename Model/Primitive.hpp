@@ -93,7 +93,7 @@ public:
     static std::string listSupportedUnderlying();
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     Underlying _underlying;

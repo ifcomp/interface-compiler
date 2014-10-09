@@ -16,17 +16,26 @@ public:
 public:
     Type();
     virtual ~Type();
+
+    /**
+     * @brief Clone Type object
+     * @note This method clones Type object to UnresolvedType object!
+     * @return UnresolvedType object
+     */
     virtual ObjectRef clone() const override;
 
 public:
-    ElementRef primary() const;
-    void setPrimary(ElementRef primary);
+    const ElementRef &primary() const;
+    void setPrimary(const ElementRef &primary);
 
-    void addParam(ElementRef param);
+    void addParam(const ElementRef &param);
     std::vector<ElementRef> params() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
+
+private:
+    std::string getQualifiedName(const ElementRef &element) const;
 
 private:
     ElementRef _primary;

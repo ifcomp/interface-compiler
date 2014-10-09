@@ -23,7 +23,7 @@ public:
     void setValue(int32_t value);
 
 protected:
-    virtual void clone(ObjectRef clonedObject) const override;
+    virtual void clone(const ObjectRef &clonedObject) const override;
 
 private:
     int32_t _value;

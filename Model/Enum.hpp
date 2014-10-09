@@ -23,11 +23,11 @@ public:
     virtual ObjectRef clone() const override;
 
 public:
-    void addValue(ValueRef value);
+    void addValue(const ValueRef &value);
     std::vector<ValueRef> values() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::vector<ValueRef> _values;

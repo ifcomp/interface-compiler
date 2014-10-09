@@ -20,11 +20,11 @@ public:
     virtual ObjectRef clone() const override;
 
 public:
-    void addElement(ElementRef element);
+    void addElement(const ElementRef &element);
     std::vector<ElementRef> elements() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::vector<ElementRef> _elements;

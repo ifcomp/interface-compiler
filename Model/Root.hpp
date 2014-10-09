@@ -14,14 +14,24 @@ public:
 public:
     Root();
     virtual ~Root();
+
+    /**
+     * @brief Clone object tree
+     *
+     * This method clones the complete object tree. In the first step, all
+     * types are copied as unresoved types. In the second step, types are
+     * resolved to objects contained in the tree.
+     *
+     * @return Pointer to copy of object tree
+     */
     virtual ObjectRef clone() const override;
 
 public:
-    NamespaceRef getNamespace() const;
-	void setNamespace(NamespaceRef ns);
+    const NamespaceRef &getNamespace() const;
+    void setNamespace(const NamespaceRef &ns);
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
 	NamespaceRef _namespace;

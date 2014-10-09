@@ -25,7 +25,7 @@ public:
     const std::vector<std::string>& params() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::string _primary;

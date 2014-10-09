@@ -43,20 +43,20 @@ public:
     //Behavior behavior() const;
     //void setBehavior(Behavior behavior);
 
-    TypeBaseRef super() const;
-    void setSuper(TypeBaseRef super);
+    const TypeBaseRef &super() const;
+    void setSuper(const TypeBaseRef &super);
 
-    void addOperation(OperationRef operation);
+    void addOperation(const OperationRef &operation);
     std::vector<OperationRef> operations() const;
 
-    void addEvent(EventRef event);
+    void addEvent(const EventRef &event);
     std::vector<EventRef> events() const;
 
-    void addConstant(ConstantRef constant);
+    void addConstant(const ConstantRef &constant);
     std::vector<ConstantRef> constants() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     //Behavior _behavior;
