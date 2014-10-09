@@ -209,7 +209,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 			auto params = std::dynamic_pointer_cast<Model::Type>(operation->result()->type())->params();
 			for (auto param : params)
 			{
-				formattedParams += param->longName() + ", ";
+				formattedParams += "'" + param->longName() + "' , ";
 			}
 		}
 		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' , [" << formattedParams << "] ];" << endl;
