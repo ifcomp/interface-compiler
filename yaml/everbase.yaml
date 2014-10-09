@@ -705,7 +705,7 @@
               return: { name: Version, type: Everbase::Primitives::Uuid }
             - name: GetParentVersions
               doc: { brief: 'Returns version ids of predecessors.' }
-              return: { name: Version, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+              return: { name: Version, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ] }
             - name: GetType
               doc: { brief: 'Returns type of the object.' }
               return: { name: Type, type: Everbase::Primitives::Uuid }
@@ -771,7 +771,7 @@
               doc: { brief: 'Commits the current state of the object as a new version.' }
               return: { name: NewVersion, type: Everbase::Primitives::Uuid }
               params:
-                - { name: AdditionalParentVersions, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ] }
+                - { name: AdditionalParentVersions, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ] }
             - name: Rollback
               doc: { brief: 'Discards all changes since the last commit or open operation.' }
             - name: Erase
@@ -848,12 +848,12 @@
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 09c75fc8-02c2-4158-ad4e-f50fd72529e7
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ], doc: { brief: 'Set of conflict ids.' } }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 1399b73f-b327-4f63-8547-abfa1cbc423e
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ], doc: { brief: 'Set of conflict ids.' } }
 
         - name: SyncProcess
           type: class
@@ -1036,10 +1036,10 @@
               doc: { brief: 'Associates the specified value with the specified key in the key value store.', more: 'If the store previously contained the key, the old value is replaced by the specified value.' }
               params:
                 - { name: Key, type: Everbase::Primitives::String }
-                - { name: Value, type: [ Everbase::Primitives::Vector, Everbase::Primitives::Byte ] }
+                - { name: Value, type: [ Everbase::Primitives::Vector, Everbase::FileSystem::Path ] }
             - name: GetValue
               doc: { brief: 'Returns the value to which the specified key is associated.', more: 'Failes in case the store does not contain the specified key.' }
-              return: { name: Value, type: [ Everbase::Primitives::Vector, Everbase::Primitives::Byte ] }
+              return: { name: Value, type: [ Everbase::Primitives::Vector, Everbase::FileSystem::Path ] }
               params:
                 - { name: Key, type: Everbase::Primitives::String }
             - name: Has
@@ -1053,7 +1053,7 @@
                 - { name: Key, type: Everbase::Primitives::String }
             - name: GetKeys
               doc: { brief: 'Returns all keys of the key value store.' }
-              return: { name: Keys, type: [ Everbase::Primitives::Set, Everbase::Primitives::String ] }
+              return: { name: Keys, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ] }
 
         - name: Node
           type: class
@@ -1354,12 +1354,12 @@
               doc: { brief: 'New file version conflicts had been detected.' }
               id: 3c2ea1bf-a594-4102-92ce-9205c7266a58
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ], doc: { brief: 'Set of conflict ids.' } }
             - name: Resolved
               doc: { brief: 'File version conflicts had been resolved.' }
               id: 6c3ea618-4e26-4bb0-9a1d-ea214b917938
               values:
-                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::Primitives::Uuid ], doc: { brief: 'Set of conflict ids.' } }
+                - { name: ConflictIds, type: [ Everbase::Primitives::Set, Everbase::FileSystem::Path ], doc: { brief: 'Set of conflict ids.' } }
 
         - name: SyncProcess
           type: class

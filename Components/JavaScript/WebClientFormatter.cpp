@@ -204,15 +204,25 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	string formattedParams = "";
 	if (operation->result())
 	{
+		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' , [ ";
 		if ( std::dynamic_pointer_cast<Model::Type>(operation->result()->type())->params().size() )
 		{
 			auto params = std::dynamic_pointer_cast<Model::Type>(operation->result()->type())->params();
+			int count = 0;
 			for (auto param : params)
 			{
-				formattedParams += "'" + param->longName() + "' , ";
+				count++;
+				if (count > 1)
+				{
+					f << " , '" << qname(param, ".") << "'";
+				}
+				else 
+				{
+					f << "'" << qname(param, ".") << "'";
+				}
 			}
 		}
-		f << "processes[message[2]] = [ resolve, '" << type(operation->result()->type()) << "' , [" << formattedParams << "] ];" << endl;
+	f << " ] ];" << endl;
 	}
 	else
 	{
@@ -246,15 +256,25 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 	if (!operation->isStatic()) { f << "this._handle," << endl; };
 		for (auto param : operation->params())
 		{
+			f << "TypeConversion.toJSON[ '" << type(param->type()) << "' ]( " << name(param) << ", [ ";
 			if (std::dynamic_pointer_cast<Model::Type>(param->type())->params().size())
 			{
 				auto typeParams = std::dynamic_pointer_cast<Model::Type>(param->type())->params();
+				int count = 0;
 				for (auto typeParam : typeParams)
 				{
-					paramTypes += "'" + typeParam->longName() + "' , "; 
+					count++;
+					if (count > 1)
+					{
+						f << " , '" << qname(typeParam, ".") << "'";
+					}
+					else 
+					{
+						f << "'" << qname(typeParam, ".") << "'";
+					}
 				}
 			}
-			f << "TypeConversion.toJSON[ '" << type(param->type()) << "' ]( " << name(param) << ", [ " << paramTypes << " ] )," << endl;
+			f << " ] )," << endl;
 		}
 	f.pop() << "]" << endl;
 	f.pop() << "];";

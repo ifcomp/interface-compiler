@@ -89,6 +89,8 @@ int main(int argc, char** argv)
     catch (const runtime_error& e)
     {
         cerr << "[ERROR 2] " << e.what() << endl;
+		string c;
+		cin >> c;
         return 1;
     }
 
