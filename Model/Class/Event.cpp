@@ -19,13 +19,13 @@ ObjectRef Class::Event::clone() const
     return newEvent;
 }
 
-void Class::Event::addValue(ParameterRef value)
+void Class::Event::addValue(const ParameterRef &value)
 {
     value->setParent(shared_from_this());
     _values.push_back(value);
 }
 
-std::vector<ParameterRef> Class::Event::values() const
+const std::vector<ParameterRef> &Class::Event::values() const
 {
     return _values;
 }
@@ -40,7 +40,7 @@ boost::uuids::uuid Class::Event::typeId() const
     return _typeId;
 }
 
-void Class::Event::clone(ObjectRef clonedObject) const
+void Class::Event::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

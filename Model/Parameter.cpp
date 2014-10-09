@@ -19,17 +19,17 @@ ObjectRef Parameter::clone() const
     return newParam;
 }
 
-TypeBaseRef Parameter::type() const
+const TypeBaseRef &Parameter::type() const
 {
 	return _type;
 }
 
-void Parameter::setType(TypeBaseRef type)
+void Parameter::setType(const TypeBaseRef &type)
 {
     _type = type;
 }
 
-void Parameter::clone(ObjectRef clonedObject) const
+void Parameter::clone(const ObjectRef &clonedObject) const
 {
     ParameterRef clonedParam = std::dynamic_pointer_cast<Parameter>(clonedObject);
 

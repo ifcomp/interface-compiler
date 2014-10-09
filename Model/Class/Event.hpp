@@ -21,14 +21,14 @@ public:
     virtual ObjectRef clone() const override;
 
 public:
-    void addValue(ParameterRef value);
-    std::vector<ParameterRef> values() const;
+    void addValue(const ParameterRef &value);
+    const std::vector<ParameterRef> &values() const;
 
     void setTypeId(boost::uuids::uuid typeId);
     boost::uuids::uuid typeId() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::vector<ParameterRef> _values;

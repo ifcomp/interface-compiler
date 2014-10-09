@@ -20,7 +20,7 @@ ObjectRef Enum::clone() const
     return newEnum;
 }
 
-void Enum::addValue(Enum::ValueRef value)
+void Enum::addValue(const ValueRef &value)
 {
     value->setParent(shared_from_this());
     _values.push_back(value);
@@ -31,7 +31,7 @@ std::vector<Enum::ValueRef> Enum::values() const
     return _values;
 }
 
-void Enum::clone(ObjectRef clonedObject) const
+void Enum::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

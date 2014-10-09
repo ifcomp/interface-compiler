@@ -80,7 +80,7 @@ std::string Documentation::description(std::string doxygenKey) const
     }
 }
 
-void Documentation::addDocEntry(DocEntry entry)
+void Documentation::addDocEntry(const DocEntry &entry)
 {
     _docEntries.push_back(entry);
 }
@@ -95,7 +95,7 @@ void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, s
     _docEntries.push_back(DocEntry{ doxygenKey, paramName, description });
 }
 
-void Documentation::clone(ObjectRef clonedObject) const
+void Documentation::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

@@ -27,14 +27,14 @@ public:
     //bool isSynchronous() const;
     //void setSynchronous(bool isSynchronous);
 
-    void addParam(ParameterRef param);
+    void addParam(const ParameterRef &param);
     std::vector<ParameterRef> params() const;
 
-    void setResult(ParameterRef result);
-    ParameterRef result() const;
+    void setResult(const ParameterRef &result);
+    const ParameterRef &result() const;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     bool _isStatic;

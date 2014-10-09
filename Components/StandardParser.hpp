@@ -89,21 +89,6 @@ public:
      */
     static void resolve(const Model::RootRef &root);
 
-private:
-    /**
-     * @brief Check if node[key] has a specific type.
-     * @param node  YAML node
-     * @param key   Key name
-     * @param expectedType  YAML node type
-     * @param mandatory if true, key must be found and must have the right type
-     * @return true if node[key] has expectedType
-     * @throw std::runtime_error if types don't match and mandatory is set
-     */
-    static bool checkNode(const YAML::Node &node, const char *key,
-                   YAML::NodeType::value expectedType = YAML::NodeType::Scalar,
-                   bool mandatory = false);
-
-
     /**
      * @brief Get qualified name of Identifiable object.
      * @param identifiable Identifiable object
@@ -118,6 +103,20 @@ private:
      * @return Namespace with trailing :: delimiter or empty if identifiable has no parent
      */
     static std::string getNamespace(const Model::IdentifiableRef &identifiable);
+
+private:
+    /**
+     * @brief Check if node[key] has a specific type.
+     * @param node  YAML node
+     * @param key   Key name
+     * @param expectedType  YAML node type
+     * @param mandatory if true, key must be found and must have the right type
+     * @return true if node[key] has expectedType
+     * @throw std::runtime_error if types don't match and mandatory is set
+     */
+    static bool checkNode(const YAML::Node &node, const char *key,
+                   YAML::NodeType::value expectedType = YAML::NodeType::Scalar,
+                   bool mandatory = false);
 
     /**
      * @brief Parse namespace members into rootNamespace starting at node.

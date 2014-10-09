@@ -39,7 +39,7 @@ const std::vector<std::string> &UnresolvedType::params() const
     return _params;
 }
 
-void UnresolvedType::clone(ObjectRef clonedObject) const
+void UnresolvedType::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

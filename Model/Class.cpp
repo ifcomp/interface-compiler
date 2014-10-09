@@ -35,18 +35,18 @@ ObjectRef Class::clone() const
 //    _behavior = behavior;
 //}
 
-TypeBaseRef Class::super() const
+const TypeBaseRef &Class::super() const
 {
     return _super;
 }
 
-void Class::setSuper(TypeBaseRef super)
+void Class::setSuper(const TypeBaseRef &super)
 {
     super->setParent(shared_from_this());
 	_super = super;
 }
 
-void Class::addOperation(Class::OperationRef operation)
+void Class::addOperation(const OperationRef &operation)
 {
     operation->setParent(shared_from_this());
     _operations.push_back(operation);
@@ -57,7 +57,7 @@ std::vector<Class::OperationRef> Class::operations() const
 	return _operations;
 }
 
-void Class::addEvent(Class::EventRef event)
+void Class::addEvent(const EventRef &event)
 {
     event->setParent(shared_from_this());
     _events.push_back(event);
@@ -68,7 +68,7 @@ std::vector<Class::EventRef> Class::events() const
     return _events;
 }
 
-void Class::addConstant(Class::ConstantRef constant)
+void Class::addConstant(const ConstantRef &constant)
 {
     constant->setParent(shared_from_this());
 	_constants.push_back(constant);
@@ -79,7 +79,7 @@ std::vector<Class::ConstantRef> Class::constants() const
     return _constants;
 }
 
-void Class::clone(ObjectRef clonedObject) const
+void Class::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

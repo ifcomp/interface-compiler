@@ -22,13 +22,13 @@ public:
      * @brief Get pointer to parent object.
      * @return Pointer to parent object
      */
-    ObjectRef parent() const;
+    const ObjectRef &parent() const;
 
     /**
      * @brief Set pointer to parent object.
      * @param parent Pointer to parent object
      */
-    void setParent(ObjectRef parent);
+    void setParent(const ObjectRef &parent);
 
     /**
      * @brief Get Class identifier
@@ -48,7 +48,7 @@ protected:
      * @brief Worker method that actually clones current instance.
      * @param clonedObject Empty object where current instance is copied.
      */
-    virtual void clone(ObjectRef clonedObject) const {}
+    virtual void clone(const ObjectRef &clonedObject) const {}
 
 private:
     ObjectRef _parent;

@@ -21,13 +21,13 @@ public:
     std::string shortName() const;
     void setShortName(std::string shortName);
 
-    DocumentationRef doc() const;
-    void setDoc(DocumentationRef doc);
+    const DocumentationRef &doc() const;
+    void setDoc(const DocumentationRef &doc);
 
     using Object::clone;
 
 protected:
-    void clone(ObjectRef clonedObject) const override;
+    void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::string _longName;

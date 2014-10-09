@@ -109,7 +109,7 @@ std::string Primitive::listSupportedUnderlying()
     return list;
 }
 
-void Primitive::clone(ObjectRef clonedObject) const
+void Primitive::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 
