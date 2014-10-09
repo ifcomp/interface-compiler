@@ -164,7 +164,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
 
     for( auto value : event->values() )
     {
-        stream << "        decoded->" << name(value) << " = event[" << i << "];" << endl;
+        stream << "        decoded->" << name(value) << " = boost::any_cast<" << type(value->type()) << ">(event[" << i << "]);" << endl;
         i += 1;
     }
 
