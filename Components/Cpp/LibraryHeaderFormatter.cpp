@@ -10,6 +10,43 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void LibraryHeaderFormatter::_includes(std::ostream& stream) const
+{
+    FormatterBase::_includes(stream);
+
+    stream
+        << "#include \"Everbase/Threading/SafeAccess.hpp\"" << endl
+        << "#include \"Everbase/Primitives/EventManager.hpp\"" << endl
+        << endl
+        << "#include <list>" << endl
+        << "#include <boost/system/error_code.hpp>" << endl
+        << "#include <boost/system/system_error.hpp>" << endl
+        << "#include <boost/uuid/uuid_generators.hpp>" << endl
+        << "#include <boost/uuid/uuid_io.hpp>" << endl
+        << "#include <boost/date_time/posix_time/posix_time.hpp>" << endl
+        << "#include <boost/algorithm/string.hpp>" << endl
+        << "#include <boost/asio.hpp>" << endl
+        << endl
+        << "#ifdef WIN32" << endl
+        << "#include <codecvt>" << endl
+        << "#ifndef NOMINMAX" << endl
+        << "#define NOMINMAX 1" << endl
+        << "#endif" << endl
+        << "#include <Windows.h>" << endl
+        << "#undef NOMINMAX" << endl
+        << "#endif" << endl
+        << endl
+        << "#if defined(__APPLE__) || defined(WIN32)" << endl
+        << "#include <boost/thread/tss.hpp>" << endl
+        << "#endif" << endl
+        << endl
+        << "namespace Everbase" << endl
+        << "{" << endl
+        << "    extern boost::asio::io_service* iosrv;" << endl
+        << "}" << endl
+        << endl;
+}
+
 void LibraryHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
     if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )

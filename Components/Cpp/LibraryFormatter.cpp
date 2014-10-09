@@ -10,6 +10,18 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void LibraryFormatter::_includes(std::ostream& stream) const
+{
+    FormatterBase::_includes(stream);
+
+    stream
+        << "namespace Everbase" << endl
+        << "{" << endl
+        << "    boost::asio::io_service* iosrv;" << endl
+        << "}" << endl
+        << endl;
+}
+
 void LibraryFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
 }
