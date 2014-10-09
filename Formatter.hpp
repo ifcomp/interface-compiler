@@ -49,6 +49,7 @@ protected:
 	FormatToken<Model::NamespaceRef> definition(Model::NamespaceRef namespace_) const;
 
 	FormatToken<Model::ElementRef> definition(Model::ElementRef element) const;
+	FormatToken<Model::ElementRef, std::uint8_t> definition(Model::ElementRef element, std::uint8_t pass) const;
 	FormatToken<Model::StructRef> definition(Model::StructRef struct_) const;
 	
 	FormatToken<Model::ClassRef> definition(Model::ClassRef class_) const;
@@ -89,6 +90,7 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const = 0;
 
 	virtual void _definition(std::ostream& stream, Model::ElementRef element) const;
+	virtual void _definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const;
 	virtual void _definition(std::ostream& stream, Model::StructRef struct_) const = 0;
 
 	virtual void _definition(std::ostream& stream, Model::ClassRef class_) const = 0;

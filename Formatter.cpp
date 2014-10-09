@@ -128,6 +128,11 @@ FormatToken<Model::ElementRef> Formatter::definition(Model::ElementRef element) 
 	return FormatToken<Model::ElementRef> { this, &Formatter::_definition, std::tuple<Model::ElementRef> { element } };
 }
 
+FormatToken<Model::ElementRef, std::uint8_t> Formatter::definition(Model::ElementRef element, std::uint8_t pass) const
+{
+    return FormatToken<Model::ElementRef, std::uint8_t> { this, &Formatter::_definition, std::tuple<Model::ElementRef, std::uint8_t> { element, pass } };
+}
+
 FormatToken<Model::StructRef> Formatter::definition(Model::StructRef struct_) const
 {
 	return FormatToken<Model::StructRef> { this, &Formatter::_definition, std::tuple<Model::StructRef> { struct_ } };
@@ -534,6 +539,10 @@ void Formatter::_definition(std::ostream& stream, Model::ElementRef element) con
     {
         throw std::runtime_error("unknown namespace element type " + element->typeName());
     }
+}
+
+void Formatter::_definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const
+{
 }
 
 } } // namespace: Everbase::InterfaceCompiler

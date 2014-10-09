@@ -46,7 +46,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
 
 	filter f(stream);
-	f << "TypeConversion.toJSON['" << qname(struct_) << "'] = function(value) {" << endl;
+	f << "TypeConversion.toJSON['" << qcname(struct_) << "'] = function(value) {" << endl;
 	f.push<indent>()
 		<< "var result = new " << qname(struct_) << ";" << endl << endl;
 
@@ -62,7 +62,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	f << "// ----" << endl << endl;
 
 
-	f << "TypeConversion.toJS['" << qname(struct_) << "'] = function(value) {" << endl;
+	f << "TypeConversion.toJS['" << qcname(struct_) << "'] = function(value) {" << endl;
 	f.push<indent>()
 		<< "var result = new " << qname(struct_) << ";" << endl << endl;
 
@@ -90,7 +90,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	filter f(stream);
 
 
-	f << "TypeConversion.toJS['" << qname(class_) << "'] = function(handle) {" << endl;
+	f << "TypeConversion.toJS['" << qcname(class_) << "'] = function(handle) {" << endl;
 	f.push<indent>()
 	    << "if (handle in classInstanceHandles) { " << endl;
 	f.push<indent>()
@@ -115,7 +115,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 
 	f << "// ----" << endl << endl;
 
-	f << "TypeConversion.toJSON['" << qname(class_) << "'] = function(classObj) {" << endl;
+	f << "TypeConversion.toJSON['" << qcname(class_) << "'] = function(classObj) {" << endl;
 	/*for (auto operation : class_->operations())
 	{
 		f << "result." << cname(operation) << " = ";
@@ -192,8 +192,8 @@ void JsonEncoding::_definition(std::ostream& stream, Model::EnumRef enum_) const
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
 	filter f(stream);
-	f << "TypeConversion.toJSON['" << qname(enum_) << "'] = function(value) { return value } " << endl << endl;
-	f << "TypeConversion.toJS['" << qname(enum_) << "'] = function(value) { return value } " << endl << endl;
+	f << "TypeConversion.toJSON['" << qcname(enum_) << "'] = function(value) { return value } " << endl << endl;
+	f << "TypeConversion.toJS['" << qcname(enum_) << "'] = function(value) { return value } " << endl << endl;
 
 	stream << "// enum: }" << endl << endl;
 }

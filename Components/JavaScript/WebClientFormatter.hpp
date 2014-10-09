@@ -51,6 +51,10 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;	
 
 	virtual void _formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const;
+
+	//helpers
+	virtual void _returnType(StreamFilter::filter& f, Model::ParameterRef param) const;
+	virtual void _containerTypes(StreamFilter::filter& f, Model::ParameterRef containerParam) const;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
