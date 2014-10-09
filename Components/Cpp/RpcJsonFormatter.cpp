@@ -209,14 +209,14 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     // *** encodeValues
 
     stream
-        << "    virtual inline json_spirit::mValue encodeValues(Everbase::Rpc::ObjectDirectory& directory, std::map<std::string, boost::any> values) const override" << endl
+        << "    virtual inline json_spirit::mValue encodeValues(Everbase::Rpc::ObjectDirectory& directory, std::vector<boost::any> values) const override" << endl
         << "    {" << endl
         << "        json_spirit::mObject encoded;" << endl;
 
     for( auto value : event->values() )
     {
         stream
-            << "        encoded[\"" << cname(value) << "\"] = Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::encode(directory, boost::any_cast<" << type(value->type()) << ">(values.at(\"" << cname(value) << "\")));" << endl;
+            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::encode(directory, boost::any_cast<" << type(value->type()) << ">(values[\"" << cname(value) << "\"])));" << endl;
     }
 
     stream
@@ -228,19 +228,19 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     // *** decodeValues
 
     stream
-        << "    virtual inline std::map<boost::any> decodeValues(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue values) const override" << endl
+        << "    virtual inline std::vector<boost::any> decodeValues(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue values) const override" << endl
         << "    {" << endl;
 
     if(event->values().size() > 0)
     {
         stream
             << "        const json_spirit::mObject& encoded = values.get_obj();" << endl
-            << "        std::map<std::string, boost::any> decoded;" << endl;
+            << "        std::vector<boost::any> decoded;" << endl;
 
         for( auto value : event->values() )
         {
             stream
-                << "        decoded[\"" << cname(value) << "\"] = boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::decode(directory, encoded.at(\"" << cname(value) << "\")));" << endl;
+                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::decode(directory, encoded[\"" << cname(value) << "\"])));" << endl;
         }
 
         stream
@@ -249,7 +249,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     else
     {
         stream
-            << "        return std::map<std::string, boost::any>();" << endl;
+            << "        return std::vector<boost::any>();" << endl;
     }
 
     stream
