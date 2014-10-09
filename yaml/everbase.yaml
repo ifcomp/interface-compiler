@@ -12,10 +12,6 @@
   doc: { brief: 'Everbase Technology.' }
   members:
 
-    - name: Events
-      type: class
-      doc: { brief: 'dummy...'}
-
 # ********* Primitives *********
 
     - name: Primitives

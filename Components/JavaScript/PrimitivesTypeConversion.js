@@ -11,7 +11,7 @@ TypeConversion.toJSON['UInt16']      = function(value) { return value; }
 TypeConversion.toJSON['UInt32']      = function(value) { return value; }
 TypeConversion.toJSON['UInt64']      = function(value) { return value; }
 TypeConversion.toJSON['Boolean']     = function(value) { return value; }
-TypeConversion.toJSON['TimeStamp']   = function(value) { new Date(value).getTime() / 1000; }
+TypeConversion.toJSON['Timestamp']   = function(value) { new Date(value).getTime() / 1000; }
 TypeConversion.toJSON['String']      = function(value) { return value; }
 TypeConversion.toJSON['Uuid']        = function(value) { return value; }
 
@@ -87,7 +87,7 @@ TypeConversion.toJS['UInt16']      = function(value) { return value; }
 TypeConversion.toJS['UInt32']      = function(value) { return value; }
 TypeConversion.toJS['UInt64']      = function(value) { return value; }
 TypeConversion.toJS['Boolean']     = function(value) { return value; }
-TypeConversion.toJS['TimeStamp']   = function(value) { return new Date(value*1000); }
+TypeConversion.toJS['Timestamp']   = function(value) { return new Date(value*1000); }
 TypeConversion.toJS['String']  = function(value) { return value; }
 TypeConversion.toJS['Uuid']        = function(value) { return value; }
 TypeConversion.toJS['Buffer']      = function(value) { return new Uint8Array(value); }

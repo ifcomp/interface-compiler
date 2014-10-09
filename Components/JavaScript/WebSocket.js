@@ -21,7 +21,7 @@ function routeMessage(message) {
         processResponse(message);
     }
     else if (message[0] === 'event') {
-        console.log('Event recieved.');
+        processEvent(message);
     }
     else {
         console.log('Unknown response type.');
@@ -43,6 +43,22 @@ function processResponse(response) {
     }
     else {
         console.log('Response couldn\'t be mapped')
+    }
+};
+
+function processEvent(event) {
+    try 
+    {
+        console.log('Event received.');
+	console.log(event);
+        var eventName = event[1];
+        var eventValues = event[2];
+        var conversionedEvent = { };
+        conversionedEvent = TypeConversion.toJS[eventName](eventValues);
+        Everbase.EventManager.fireEvent(conversionedEvent);
+    }
+    catch (e){
+        throw Error(e.name + ': ' + e.message);
     }
 };
 

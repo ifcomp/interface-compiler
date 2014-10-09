@@ -38,7 +38,10 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
 
 	virtual void _formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const;
-	
+
+	virtual void _paramType(StreamFilter::filter& f, Model::ParameterRef param) const;
+	virtual void _containerTypes(StreamFilter::filter& f, Model::ParameterRef containerParam) const;
+
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
