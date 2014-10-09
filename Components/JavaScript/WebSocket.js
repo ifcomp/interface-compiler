@@ -50,6 +50,7 @@ function processEvent(event) {
     try 
     {
         console.log('Event received.');
+	console.log(event);
         var eventName = event[1];
         var eventValues = event[2];
         var conversionedEvent = { };

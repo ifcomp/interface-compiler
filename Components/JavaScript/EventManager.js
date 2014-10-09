@@ -25,7 +25,7 @@ Everbase.EventManager._entryCount = 0;
 {
 	var entryId = Everbase.EventManager._entryCount++;
 
-	Everbase.EventManager._observers[entryId] = { observer: observer, callback: callback, eventName: eventType };
+	Everbase.EventManager._observers[entryId] = { observer: observer, callback: callback, eventName: eventType.TYPE_NAME };
 
 	return entryId;
 };
