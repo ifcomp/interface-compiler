@@ -25,6 +25,11 @@ void RpcFormatter::_footer(std::ostream& stream, Model::RootRef root) const
     stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::Operation>> Everbase::Rpc::Operation::operations {" << endl
            << backwards(root->getNamespace())
            << "};" << endl;
+
+    stream << endl;
+    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::Event>> Everbase::Rpc::Event::events {" << endl
+           << definition(root->getNamespace(), 0)
+           << "};" << endl;
 }
 
 void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) const
@@ -43,6 +48,29 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
         {
             stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Operation>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::Operation>(new "
                    << "Everbase::Rpc::" << qcname(operation, "_") << "())}," << endl;
+        }
+    }
+}
+
+void RpcFormatter::_definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const
+{
+    if(pass == 0)
+    {
+        if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+        {
+            for ( auto element : namespace_->elements() )
+            {
+                filter(stream).push<indent>(config.indentData) << definition(element, pass);
+            }
+        }
+        else
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            for( auto event : class_->events() )
+            {
+                stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Event>>{\"" << qcname(event) << "\", std::shared_ptr<Everbase::Rpc::Event>(new "
+                       << "Everbase::Rpc::" << qcname(event, "_") << "())}," << endl;
+            }
         }
     }
 }
@@ -84,6 +112,11 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ClassRef class_) con
         filter(stream).push<indent>(config.indentData) << definition(operation) << endl;
     }
 
+    for( auto event : class_->events() )
+    {
+        filter(stream).push<indent>(config.indentData) << definition(event) << endl;
+    }
+
     stream << "} } // namespace: Everbase::Rpc" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
@@ -95,6 +128,48 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef c
 
 void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    auto class_ = std::dynamic_pointer_cast<Model::Class>(event->parent());
+
+    if ( event->doc() )
+    {
+        stream << doc(event->doc());
+    }
+
+    stream
+        << "struct " << qcname(event, "_") << " : public Everbase::Rpc::Event" << endl
+        << "{" << endl
+        << "    virtual std::vector<boost::any> encode(const Everbase::Primitives::Event& event) const" << endl
+        << "    {" << endl
+        << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl
+        << "        std::vector<boost::any> encoded;" << endl;
+
+    std::size_t i = 0;
+
+    for( auto value : event->values() )
+    {
+        stream << "        encoded.push_back(decoded." << name(value) << ");" << endl;
+        i += 1;
+    }
+
+    stream
+        << "        return encoded;" << endl
+        << "    }" << endl
+        << endl
+        << "    virtual std::unique_ptr<Everbase::Primitives::Event> decode(std::vector<boost::any> event) const" << endl
+        << "    {" << endl
+        << "        std::unique_ptr<" << qname(event) << "> decoded(new " << qname(event) << ");" << endl;
+
+    i = 0;
+
+    for( auto value : event->values() )
+    {
+        stream << "        decoded->" << name(value) << " = event[" << i << "];" << endl;
+        i += 1;
+    }
+
+    stream
+        << "        return decoded;" << endl
+        << "};" << endl;
 }
 
 void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
