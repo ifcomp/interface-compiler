@@ -29,7 +29,7 @@ void Enum::Value::setValue(int32_t value)
     _value = value;
 }
 
-void Enum::Value::clone(ObjectRef clonedObject) const
+void Enum::Value::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

@@ -1,4 +1,5 @@
 #include "Model/Root.hpp"
+#include "Components/StandardParser.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
@@ -14,23 +15,25 @@ Root::~Root()
 
 ObjectRef Root::clone() const
 {
+    using namespace Everbase::InterfaceCompiler::Components;
     RootRef newRoot = std::make_shared<Root>();
     clone(newRoot);
+    StandardParser::resolve(newRoot);
     return newRoot;
 }
 
-NamespaceRef Root::getNamespace() const
+const NamespaceRef &Root::getNamespace() const
 {
 	return _namespace;
 }
 
-void Root::setNamespace(NamespaceRef ns)
+void Root::setNamespace(const NamespaceRef &ns)
 {
     ns->setParent(shared_from_this());
     _namespace = ns;
 }
 
-void Root::clone(ObjectRef clonedObject) const
+void Root::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

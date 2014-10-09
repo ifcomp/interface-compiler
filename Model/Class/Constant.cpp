@@ -20,12 +20,12 @@ ObjectRef Class::Constant::clone() const
     return newConstant;
 }
 
-TypeBaseRef Class::Constant::type() const
+const TypeBaseRef &Class::Constant::type() const
 {
     return _type;
 }
 
-void Class::Constant::setType(TypeBaseRef type)
+void Class::Constant::setType(const TypeBaseRef &type)
 {
     type->setParent(shared_from_this());
     _type = type;
@@ -41,7 +41,7 @@ void Class::Constant::setValue(boost::any value)
     _value = value;
 }
 
-void Class::Constant::clone(ObjectRef clonedObject) const
+void Class::Constant::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

@@ -19,7 +19,7 @@ ObjectRef Struct::clone() const
     return newStruct;
 }
 
-void Struct::addField(ParameterRef field)
+void Struct::addField(const ParameterRef &field)
 {
     field->setParent(shared_from_this());
     _fields.push_back(field);
@@ -30,7 +30,7 @@ std::vector<ParameterRef> Struct::fields() const
     return _fields;
 }
 
-void Struct::clone(ObjectRef clonedObject) const
+void Struct::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 

@@ -1,4 +1,5 @@
 #include "Model/Type.hpp"
+#include "Model/UnresolvedType.hpp"
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
@@ -14,22 +15,22 @@ Type::~Type()
 
 ObjectRef Type::clone() const
 {
-    TypeRef clonedType = std::make_shared<Type>();
+    auto clonedType = std::make_shared<UnresolvedType>();
     clone(clonedType);
     return clonedType;
 }
 
-ElementRef Type::primary() const
+const ElementRef &Type::primary() const
 {
     return _primary;
 }
 
-void Type::setPrimary(ElementRef primary)
+void Type::setPrimary(const ElementRef &primary)
 {
     _primary = primary;
 }
 
-void Type::addParam(ElementRef param)
+void Type::addParam(const ElementRef &param)
 {
     _params.push_back(param);
 }
@@ -39,28 +40,43 @@ std::vector<ElementRef> Type::params() const
     return _params;
 }
 
-void Type::clone(ObjectRef clonedObject) const
+void Type::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 
-    TypeRef clonedType = dynamic_pointer_cast<Type>(clonedObject);
+    UnresolvedTypeRef unresolvedType = dynamic_pointer_cast<UnresolvedType>(clonedObject);
 
-    if (clonedType)
+    if (unresolvedType)
     {
         if (primary())
         {
-            clonedType->setPrimary(dynamic_pointer_cast<Element>(primary()->clone()));
+            unresolvedType->setPrimary(getQualifiedName(primary()));
         }
 
         for (auto param : params())
         {
-            clonedType->addParam(dynamic_pointer_cast<Element>(param->clone()));
+            unresolvedType->addParam(getQualifiedName(param));
         }
     }
     else
     {
-        throw runtime_error("clone() failed: expected Type - got " + clonedObject->typeName());
+        throw runtime_error("clone() failed: expected UnresolvedType - got " + clonedObject->typeName());
     }
+}
+
+std::string Type::getQualifiedName(const ElementRef &element) const
+{
+    std::string output;
+
+    ObjectRef parent = element->parent();
+
+    while (auto parentElement = std::dynamic_pointer_cast<Identifiable>(parent))
+    {
+        output = parentElement->longName() + "::" + output;
+        parent = parent->parent();
+    }
+
+    return output + element->longName();
 }
 
 } } } // namespace Everbase::InterfaceCompiler::Model

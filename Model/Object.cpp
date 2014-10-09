@@ -6,12 +6,12 @@ Object::Object()
 {
 }
 
-ObjectRef Object::parent() const
+const ObjectRef &Object::parent() const
 {
     return _parent;
 }
 
-void Object::setParent(ObjectRef parent)
+void Object::setParent(const ObjectRef &parent)
 {
     _parent = parent;
 }

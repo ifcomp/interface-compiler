@@ -5,8 +5,8 @@
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
 
-#define addFQNameToException(member, delimiter)                 getQualifiedName(member) + delimiter + e.what()
-#define addSectionToException(key)                              "in section " + string(key) + " : " + e.what()
+#define addFQNameToException(member)    getQualifiedName(member) + " : " + e.what()
+#define addSectionToException(key)      "in section " + string(key) + " : " + e.what()
 
 using namespace std;
 using namespace Everbase::InterfaceCompiler::Model;
@@ -79,7 +79,13 @@ RootRef StandardParser::parseFile(istream &stream) const
 
 void StandardParser::resolve(const RootRef &root)
 {
-    resolveTypesInNamespace(root->getNamespace(), root);
+    try {
+        resolveTypesInNamespace(root->getNamespace(), root);
+    }
+    catch (const runtime_error &e)
+    {
+        throw runtime_error(std::string("Type resolver: ") + e.what());
+    }
 }
 
 
@@ -304,7 +310,7 @@ void StandardParser::parsePrimitive(const YAML::Node &node, const ElementRef &pa
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addFQNameToException(newPrimitive, " : "));
+        throw runtime_error(addFQNameToException(newPrimitive));
     }
 }
 
@@ -341,7 +347,7 @@ void StandardParser::parseEnum(const YAML::Node &node, const ElementRef &parent,
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addFQNameToException(newEnum, " : "));
+        throw runtime_error(addFQNameToException(newEnum));
     }
 }
 
@@ -379,7 +385,7 @@ void StandardParser::parseStruct(const YAML::Node &node, const ElementRef &paren
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addFQNameToException(newStruct, " : "));
+        throw runtime_error(addFQNameToException(newStruct));
     }
 }
 
@@ -424,7 +430,7 @@ void StandardParser::parseClassOperation(const YAML::Node &node, const ClassRef 
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addFQNameToException(newOperation, " : "));
+        throw runtime_error(addFQNameToException(newOperation));
     }
 }
 
@@ -457,7 +463,7 @@ void StandardParser::parseClassEvent(const YAML::Node &node, const ClassRef &par
     }
     catch (const exception &e)
     {
-        throw runtime_error(addFQNameToException(newEvent, " : "));
+        throw runtime_error(addFQNameToException(newEvent));
     }
 }
 
@@ -485,7 +491,7 @@ void StandardParser::parseClassConstant(const YAML::Node &node, const ClassRef &
     }
     catch (const runtime_error &e)
     {
-        throw runtime_error(addFQNameToException(newConstant, " : "));
+        throw runtime_error(addFQNameToException(newConstant));
     }
 }
 
@@ -770,16 +776,9 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
     for (auto element : rootNamespace->elements())
     {
         // namespace
-        NamespaceRef nestedNamespace = dynamic_pointer_cast<Namespace>(element);
-        if (nestedNamespace)
+        if (auto nestedNamespace = dynamic_pointer_cast<Namespace>(element))
         {
-            try {
-                resolveTypesInNamespace(nestedNamespace, root);
-            }
-            catch (const runtime_error &e)
-            {
-                throw runtime_error(addFQNameToException(nestedNamespace, ""));
-            }
+            resolveTypesInNamespace(nestedNamespace, root);
         }
         else if (const ClassRef &classRef = dynamic_pointer_cast<Class>(element))
         {
@@ -817,7 +816,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                 }
                 catch (const runtime_error &e)
                 {
-                    throw runtime_error(addFQNameToException(operation, " : "));
+                    throw runtime_error(addFQNameToException(operation));
                 }
             }
 
@@ -833,7 +832,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                 }
                 catch (const runtime_error &e)
                 {
-                    throw runtime_error(addFQNameToException(event, " : "));
+                    throw runtime_error(addFQNameToException(event));
                 }
             }
 
@@ -848,52 +847,55 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                         constant->setType(resolvedType);
 
                         // convert value
-                        std::string value = boost::any_cast<std::string>(constant->value());
-
-                        if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
+                        if (constant->value().type() == typeid(std::string))
                         {
-                            switch( primitive->underlying() )
+                            std::string value = boost::any_cast<std::string>(constant->value());
+
+                            if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
                             {
-                                case Primitive::Underlying::BYTE:
-                                    constant->setValue(boost::lexical_cast<std::uint8_t>(value));
-                                    break;
+                                switch( primitive->underlying() )
+                                {
+                                    case Primitive::Underlying::BYTE:
+                                        constant->setValue(boost::lexical_cast<std::uint8_t>(value));
+                                        break;
 
-                                case Primitive::Underlying::UINT16:
-                                    constant->setValue(boost::lexical_cast<std::uint16_t>(value));
-                                    break;
+                                    case Primitive::Underlying::UINT16:
+                                        constant->setValue(boost::lexical_cast<std::uint16_t>(value));
+                                        break;
 
-                                case Primitive::Underlying::UINT32:
-                                    constant->setValue(boost::lexical_cast<std::uint32_t>(value));
-                                    break;
+                                    case Primitive::Underlying::UINT32:
+                                        constant->setValue(boost::lexical_cast<std::uint32_t>(value));
+                                        break;
 
-                                case Primitive::Underlying::UINT64:
-                                    constant->setValue(boost::lexical_cast<std::uint64_t>(value));
-                                    break;
+                                    case Primitive::Underlying::UINT64:
+                                        constant->setValue(boost::lexical_cast<std::uint64_t>(value));
+                                        break;
 
-                                case Primitive::Underlying::BOOLEAN:
-                                    constant->setValue(boost::lexical_cast<bool>(value));
-                                    break;
+                                    case Primitive::Underlying::BOOLEAN:
+                                        constant->setValue(boost::lexical_cast<bool>(value));
+                                        break;
 
-                                case Primitive::Underlying::TIMESTAMP:
-                                    throw std::runtime_error("not supported");
+                                    case Primitive::Underlying::TIMESTAMP:
+                                        throw std::runtime_error("not supported");
 
-                                case Primitive::Underlying::STRING:
-                                    constant->setValue(value);
-                                    break;
+                                    case Primitive::Underlying::STRING:
+                                        constant->setValue(value);
+                                        break;
 
-                                case Primitive::Underlying::UUID:
-                                    constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
-                                    break;
+                                    case Primitive::Underlying::UUID:
+                                        constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
+                                        break;
 
-                                default:
-                                    throw std::runtime_error("not supported");
+                                    default:
+                                        throw std::runtime_error("not supported");
+                                }
                             }
                         }
                     }
                 }
                 catch (const exception &e)
                 {
-                    throw runtime_error(addFQNameToException(constant, " : "));
+                    throw runtime_error(addFQNameToException(constant));
                 }
             }
         }
@@ -908,7 +910,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
             }
             catch (const runtime_error &e)
             {
-                throw runtime_error(addFQNameToException(structRef, " : "));
+                throw runtime_error(addFQNameToException(structRef));
             }
         }
     }

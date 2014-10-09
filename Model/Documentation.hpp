@@ -40,12 +40,12 @@ public:
     DocEntry docEntry(std::string doxygenKey) const;
     std::string description(std::string doxygenKey) const;
 
-    void addDocEntry(DocEntry entry);
+    void addDocEntry(const DocEntry &entry);
     void addDocEntry(std::string doxygenKey, std::string description);
     void addDocEntry(std::string doxygenKey, std::string paramName, std::string description);
 
 protected:
-    virtual void clone(ObjectRef clonedObject) const override;
+    virtual void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::vector<DocEntry> _docEntries;

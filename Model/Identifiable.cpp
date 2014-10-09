@@ -36,18 +36,18 @@ void Identifiable::setShortName(std::string shortName)
     _shortName = shortName;
 }
 
-DocumentationRef Identifiable::doc() const
+const DocumentationRef &Identifiable::doc() const
 {
 	return _doc;
 }
 
-void Identifiable::setDoc(DocumentationRef doc)
+void Identifiable::setDoc(const DocumentationRef &doc)
 {
     doc->setParent(shared_from_this());
     _doc = doc;
 }
 
-void Identifiable::clone(ObjectRef clonedObject) const
+void Identifiable::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
 
