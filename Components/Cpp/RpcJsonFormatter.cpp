@@ -237,7 +237,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     if(event->values().size() > 0)
     {
         stream
-            << "        const json_spirit::mArray& encoded = values.get_obj();" << endl
+            << "        const json_spirit::mArray& encoded = values.get_array();" << endl
             << "        std::vector<boost::any> decoded;" << endl;
 
         i = 0;
