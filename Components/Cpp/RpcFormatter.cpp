@@ -156,9 +156,9 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
         << "        return encoded;" << endl
         << "    }" << endl
         << endl
-        << "    virtual std::unique_ptr<Everbase::Primitives::Event> decode(std::vector<boost::any> event) const" << endl
+        << "    virtual std::shared_ptr<Everbase::Primitives::Event> decode(std::vector<boost::any> event) const" << endl
         << "    {" << endl
-        << "        std::unique_ptr<" << qname(event) << "> decoded(new " << qname(event) << ");" << endl;
+        << "        std::shared_ptr<" << qname(event) << "> decoded(new " << qname(event) << ");" << endl;
 
     i = 0;
 
