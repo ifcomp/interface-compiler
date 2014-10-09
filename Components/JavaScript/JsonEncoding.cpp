@@ -143,7 +143,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef even
 	int count = 0;
 	for (auto value : event->values())
 	{
-		f << "JsEvent." << cname(value) << " = ";
+		f << "JsEvent." << name(value) << " = ";
 		f << "TypeConversion.toJS['";
 		_paramType(f, value);
 		f << "'](event_values[" << count << "], [ ";
