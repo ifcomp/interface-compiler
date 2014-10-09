@@ -118,12 +118,12 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	{
 		stream << definition(event);
 	}
-	/*
-	//for (auto constant : class_->constants())
-	//{
-	//	stream << definition(constant);
-	//}  
-	*/
+	
+	for (auto constant : class_->constants())
+	{
+		stream << definition(constant);
+	}  
+	
 }
 
 
@@ -187,12 +187,88 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Enum::ValueRef value
 	stream << qname(value) << " = 0x" << std::hex << static_cast<std::uint64_t>(value->value()) << ";" << endl << endl;
 }
 
+void JsonEncoding::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+{
+    if ( constant->doc() )
+    {
+        stream << doc(constant->doc());
+    }
+
+	stream << "//" << qname(constant) << endl << endl;
+    
+
+    if ( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
+    {
+		stream << "TypeConversion.toJS['" << qcname(constant) << "'] = function(constValue) {" << endl;
+		filter f(stream);
+		f.push<indent>();
+		f << "return TypeConversion.toJS[ '";
+        switch( primitive->underlying() )
+        {
+            case Primitive::Underlying::BYTE:
+				f << "Byte' ](" 
+					<< "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint8_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT16:
+				f << "UInt16' ](" 
+					<< "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint16_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT32:
+				f << "UInt32' ](" 
+					<< "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint32_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT64:
+				f << "UInt64' ](" 
+					<< "0x" << std::hex << boost::any_cast<std::uint64_t>(constant->value());
+                break;
+
+            case Primitive::Underlying::BOOLEAN:
+				f << "Boolean' ](" 
+					<< (boost::any_cast<bool>(constant->value()) ? "true" : "false");
+                break;
+
+            case Primitive::Underlying::TIMESTAMP:
+				//f << "Timestamp' ](" 
+                throw std::runtime_error("not supported");
+
+            case Primitive::Underlying::STRING:
+				f << "String' ](" 
+					<< "\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
+                break;
+
+            case Primitive::Underlying::UUID:
+                {
+					f << "Uuid' ](";
+                    auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+
+                    f << "[ ";
+
+                    for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
+                    {
+                        f << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
+                    }
+
+                    f << " ]";
+                }
+                break;
+
+			default:
+			{
+				f << " ](";
+                throw std::runtime_error("not supported");
+			};
+			f << ");";
+        }
+    }
+	stream << ";" << endl << endl;
+}
 
 void JsonEncoding::_definition(std::ostream& stream, Model::Class::OperationRef operation) const { }
 
 void JsonEncoding::_formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const { }
-
-void JsonEncoding::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const { }
 
 void JsonEncoding::_paramType(filter& f, Model::ParameterRef param) const
 {

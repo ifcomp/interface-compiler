@@ -1,7 +1,9 @@
 var processes = { };
 var classInstanceHandles = { }
+var socketOpen = false;
+var queuedMessages = [];
 
-var host = 'ws://' + location.host;
+var host = 'ws://localhost:3000';
 var ws = new WebSocket(host);
 
 ws.onopen = onOpen;
@@ -9,7 +11,13 @@ ws.onmessage = onMessage;
 ws.onclose = onClose;
 ws.onerror = onError;
 
-function onOpen(openEventArgs) { };
+function onOpen(openEventArgs) {
+  socketOpen = true;
+  for (var i = 0; i < queuedMessages; i++) {
+    console.log("Queued Message", queuedMessages[i])
+    WebSocket.prototype.call.send(this, queuedMessages[i]);
+  }
+};
 
 function onMessage(msgEventArgs) {
     var message = JSON.parse(msgEventArgs.data);
@@ -50,7 +58,7 @@ function processEvent(event) {
     try 
     {
         console.log('Event received.');
-	console.log(event);
+    console.log(event);
         var eventName = event[1];
         var eventValues = event[2];
         var conversionedEvent = { };
@@ -66,6 +74,13 @@ function onClose(closeEventArgs) { };
 
 function onError(errorEventArgs) { };
 
-
+ws.send = function(message) {
+    console.log("WS Message", message);
+    if(!socketOpen) {
+      queuedMessages.push(message);
+    } else {
+      WebSocket.prototype.send.call(ws, message);
+    }
+};
 
 
