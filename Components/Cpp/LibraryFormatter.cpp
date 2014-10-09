@@ -54,6 +54,14 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         }
     }
 
+    if(class_->events().size() > 0)
+    {
+        for( auto event : class_->events() )
+        {
+            stream << definition(event) << endl;
+        }
+    }
+
     stream
 //        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
         << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
@@ -78,6 +86,12 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    if ( event->doc() )
+    {
+        stream << doc(event->doc());
+    }
+
+    stream << "constexpr char " << qcname(event) << "::TYPE_NAME[];" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const

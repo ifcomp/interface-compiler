@@ -204,16 +204,9 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    auto typeId = boost::any_cast<boost::uuids::uuid>(event->typeId());
-    
-    stream << "struct " << name(event) << " : public Everbase::Primitives::Event<";
+    stream << "struct " << name(event) << " : public Everbase::Primitives::Event" << endl << "{" << endl;
 
-    for( auto i : indices(std::vector<std::uint8_t>(typeId.data, typeId.data + 16)) )
-    {
-        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
-    }
-    
-    stream << ">" << endl << "{" << endl;
+    filter(stream).push<indent>(config.indentData) << "static constexpr char TYPE_NAME[] = \"" << qcname(event) << "\";" << endl << endl;
 
     for (auto value : event->values())
     {
