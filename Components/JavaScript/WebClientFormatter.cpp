@@ -142,7 +142,6 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Constan
                 throw std::runtime_error("not supported");
         }
     }
-
 	stream << ";" << endl << endl;
 }
 
@@ -157,15 +156,8 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 
 	stream << qname(event) << " = function() { };" << endl << endl;
 	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
-	stream << qname(event) << ".TYPE_ID = ";
-
-	auto eventTypeId = event->typeId();
-    stream << "[ ";
-    for( auto i : indices(std::vector<std::uint8_t>(eventTypeId.data, eventTypeId.data + 16)) )
-    {
-        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
-    }
-    stream << " ];" << endl << endl;
+	stream << qname(event) << ".TYPE_NAME =" << endl;
+	stream << qname(event) << ".prototype.TYPE_NAME = '" << qcname(event) << "'" << endl << endl;
 
 	for (auto value : event->values())
 	{

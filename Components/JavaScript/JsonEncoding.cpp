@@ -53,7 +53,9 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	for (auto field : struct_->fields())
 	{
 		f << "result." << cname(field) << " = ";
-		f << "TypeConversion.toJSON['" << type(field->type()) << "'](value['" << cname(field) << "'])";
+		f << "TypeConversion.toJSON['";
+		_paramType(f, field);
+		f << "'](value['" << cname(field) << "'])";
 		f << endl;
 	}
 	f << "return result;" << endl;
@@ -69,7 +71,9 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	for (auto field : struct_->fields())
 	{
 		f << "result." << cname(field) << " = ";
-		f << "TypeConversion.toJS['" << type(field->type()) << "'](value['" << cname(field) << "'])";
+		f << "TypeConversion.toJS['";
+		_paramType(f, field);
+		f << "'](value['" << cname(field) << "'])";
 		f << endl;
 	}
 	f << "return result;" << endl;
@@ -89,7 +93,6 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 
 	filter f(stream);
 
-
 	f << "TypeConversion.toJS['" << qcname(class_) << "'] = function(handle) {" << endl;
 	f.push<indent>()
 	    << "if (handle in classInstanceHandles) { " << endl;
@@ -99,16 +102,6 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 
 	f << "var result = new " << qname(class_) << "(handle);" << endl;	
 
-	/*	//for (auto event : class_->events())
-	//{
-	//    stream << definition(event);
-	//}
-
-	//for (auto constant : class_->constants())
-	//{
-	//	stream << definition(constant);
-	//} */
-
 	f << "classInstanceHandles[handle] = result;" << endl;
 	f << "return result;" << endl;
 	f.pop() << "}" << endl << endl;
@@ -116,22 +109,16 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	f << "// ----" << endl << endl;
 
 	f << "TypeConversion.toJSON['" << qcname(class_) << "'] = function(classObj) {" << endl;
-	/*for (auto operation : class_->operations())
-	{
-		f << "result." << cname(operation) << " = ";
-		f << "TypeConversion.toJSON['" << qcname(operation) << "'](handle['" << cname(operation) << "'])";
-		f << endl;
-	}*/
 
 	f.push<indent>() << "return classObj._handle;" << endl;
 	f.pop() << "}" << endl << endl;
 	stream << "// class: }" << endl << endl;
 
-	/*	//for (auto event : class_->events())
-	//{
-	//    stream << definition(event);
-	//}
-
+	for (auto event : class_->events())
+	{
+		stream << definition(event);
+	}
+	/*
 	//for (auto constant : class_->constants())
 	//{
 	//	stream << definition(constant);
@@ -146,37 +133,26 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef even
     {
         stream << doc(event->doc());
     }
-    
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
-	/*
-	stream << qname(event) << " = function() { };" << endl << endl;
-	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
-	stream << qname(event) << ".TYPE_ID = ";
+	filter f(stream);
 
-	auto eventTypeId = event->typeId();
-    stream << "[ ";
-    for( auto i : indices(std::vector<std::uint8_t>(eventTypeId.data, eventTypeId.data + 16)) )
-    {
-        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
-    }
-    stream << " ];" << endl << endl;
-
+	f << "TypeConversion.toJS['" << qcname(event) << "'] = function(event_values) {" << endl;
+	f << "var JsEvent = new " << qname(event) << "();" << endl << endl;
+	f.push<indent>();
 	for (auto value : event->values())
 	{
-        if ( value->doc() )
-        {
-            stream << doc(value->doc());
-        }
-    
-		stream << "Object.defineProperty(" << qname(event) << ".prototype, '" << name(value)
-		    << "', { get: function() { return this._" << name(value) << " }, set: function(" << name(value) 
-			<< ") { this._" << name(value) << " = " << name(value) << " } } ); "
-			<< "/* " << type(value->type()) << " */
-
-	/*" << endl << endl;
+		f << "JsEvent." << cname(value) << " = ";
+		f << "TypeConversion.toJS['";
+		_paramType(f, value);
+		f << "'](event_values['" << cname(value) << "'], [ ";
+			
+		_containerTypes(f, value);
+			
+		f << " ] );" << endl << endl;
 	}
-	*/
+	f << "return JsEvent" << endl;
+	f.pop() << "}" << endl << endl;
 
 	stream << "// event: }" << endl << endl;
 }
@@ -215,6 +191,41 @@ void JsonEncoding::_formatRequest(std::ostream& stream, Model::Class::OperationR
 
 void JsonEncoding::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const { }
 
-//void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const { }
+void JsonEncoding::_paramType(filter& f, Model::ParameterRef param) const
+{
+	auto paramType = std::dynamic_pointer_cast<Model::Type>(param->type())->primary();
+	//if primitive
+	if (auto primitive = std::dynamic_pointer_cast<Model::Primitive>(paramType))
+	{
+		f << primitive->underlyingName();
+	}
+	else
+	{
+		f << qcname(paramType);
+	}
+}
+
+void JsonEncoding::_containerTypes(filter& f, Model::ParameterRef containerParam) const
+{
+	bool isFirst = false;
+	//if has container-params
+	if (std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params().size())
+	{
+		auto typeParams = std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params();
+		for (auto typeParam : indices(typeParams))
+		{
+			//if primitive
+			if (auto primitive = std::dynamic_pointer_cast<Model::Primitive>(typeParam.value()))
+			{
+				isFirst = typeParam.first();
+				isFirst ? f << "'" << primitive->underlyingName() << "'" : f << ", '" << primitive->underlyingName() << "'";
+			}
+			else
+			{
+				typeParam.first() ? f << "'" << qcname(typeParam.value()) << "'" : f << ", '" << qcname(typeParam.value()) << "'";
+			}
+		}
+	}
+}
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
