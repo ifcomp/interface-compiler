@@ -229,4 +229,6 @@ void JsonEncoding::_containerTypes(filter& f, Model::ParameterRef containerParam
 	}
 }
 
+void JsonEncoding::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const {}
+
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
