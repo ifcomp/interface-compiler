@@ -487,19 +487,22 @@ void Formatter::_doc(std::ostream& stream, Model::DocumentationRef documentation
 	using namespace Model;
 	using namespace StreamFilter;
 
-	stream << "/**" << endl;
-	
-    if (documentation->keyExists(Documentation::KEY_BRIEF))
-    {
-        filter(stream).push<indent>(" * ").push<wrap>() << "@" << Documentation::KEY_BRIEF << " " << documentation->description(Documentation::KEY_BRIEF) << endl;
-    }
+    stream << "/**" << endl;
 
-    if (documentation->keyExists(Documentation::KEY_MORE))
+    for (const Documentation::DocEntry doc : documentation->docEntries())
     {
-        filter(stream).push<indent>(" * ").push<wrap>() << endl << documentation->description(Documentation::KEY_MORE) << endl;
+        if (doc.doxygenKey == Documentation::KEY_MORE)
+        {
+            filter(stream).push<indent>(" * ").push<wrap>() << endl << doc.description << endl;
+        }
+        else
+        {
+            size_t cnt = 0;
+            filter(stream).push<indent>(" * ").push<counter>(cnt) << "@" << doc.doxygenKey << " ";
+            filter(stream).push<indent>(" * ", cnt).push<wrap>() << doc.description << endl;
+        }
     }
-
-	stream << " */" << endl;
+    stream << " */" << endl;
 }
 
 void Formatter::_definition(std::ostream& stream, Model::RootRef root) const

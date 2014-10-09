@@ -88,10 +88,10 @@ private:
 
 public:
     BasicFilterStream(std::basic_ostream<CharT, Traits>& dest)
-		: std::basic_ostream<CharT, Traits>(new FilterBuffer(*(dest.rdbuf())))
+        : std::basic_ostream<CharT, Traits>(new FilterBuffer(*(dest.rdbuf())))
     {
         // add non-filtering buffer
-		_buffers.push_back(FilterBufferRef(static_cast<FilterBuffer*>(this->rdbuf())));
+        _buffers.push_back(FilterBufferRef(static_cast<FilterBuffer*>(this->rdbuf())));
         this->rdbuf(_buffers.back().get());
     }
 
@@ -144,6 +144,14 @@ template<class CharT, class Traits = std::char_traits<CharT>>
 class BasicIndentBuffer : public BasicFilterBuffer<CharT, Traits>
 {
 public:
+    BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::basic_string<CharT, Traits> prefix, std::size_t count, CharT whitespace = ' ', bool bol = false )
+        : BasicFilterBuffer<CharT, Traits>( dest )
+        , _prefix( prefix )
+        , _data( std::basic_string<CharT, Traits>(count, whitespace) )
+        , _bol( bol )
+    {
+    }
+
     BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::basic_string<CharT, Traits> data )
         : BasicFilterBuffer<CharT, Traits>( dest )
         , _data( data )
@@ -174,6 +182,7 @@ protected:
     {
         if ( _bol )
         {
+            dest.sputn( _prefix.data(), _prefix.size() );
             dest.sputn( _data.data(), _data.size() );
         }
         _bol = ch == '\n';
@@ -182,12 +191,13 @@ protected:
 
     virtual int depth() override
     {
-        return this->BasicFilterBuffer<CharT, Traits>::depth() + _data.length();
+        return this->BasicFilterBuffer<CharT, Traits>::depth() + _prefix.length() + _data.length();
     }
 
 private:
+    std::basic_string<CharT, Traits> _prefix;
     std::basic_string<CharT, Traits> _data;
-	bool _bol;
+    bool _bol;
 };
 
 template<class CharT, class Traits = std::char_traits<CharT>>
@@ -220,28 +230,53 @@ protected:
 
     virtual int_type output( std::basic_streambuf<CharT, Traits>& dest, char_type ch ) override
     {
-        if( ch != '\n' && _current >= _length)
+        if (_current >= _length && ch == ' ')
         {
-            dest.sputc( '\n' );
-            _current = this->depth();
-        }
+            // line is longer than allowed --> search backwards for last delimiter
+            size_t pos = _data.find_last_of(' ');
 
-        if( ch == '\n' )
-        {
-            _current = this->depth();
+            if (pos == std::string::npos)
+            {
+                // no whitespace found --> output whole line
+                dest.sputn( _data.data(), _data.size() );
+                _data.clear();
+            }
+            else
+            {
+                // output until pos and put rest into _data
+                dest.sputn( _data.data(), pos );
+                _data = _data.substr(pos + 1);
+                _data.push_back(ch);
+            }
+
+            dest.sputc('\n');
+            _current = this->depth() + _data.size();
         }
         else
         {
-            _current += 1;   
+            if ( ch == '\n' )
+            {
+                _data.push_back(ch);
+                dest.sputn( _data.data(), _data.size() );
+                _data.clear();
+                _current = this->depth();
+            }
+            else
+            {
+                _data.push_back(ch);
+                _current += 1;
+            }
         }
 
-        return dest.sputc( ch );
+        return 0;
     }
 
 private:
+    std::basic_string<CharT, Traits> _data;
     int _length;
     int _current;
 };
+
 
 template<class CharT, class Traits = std::char_traits<CharT>>
 using wrap = BasicWrapBuffer < CharT, Traits > ;

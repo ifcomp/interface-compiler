@@ -595,6 +595,11 @@ void StandardParser::parseDoc(const YAML::Node &node, const IdentifiableRef &ide
 
         for (auto mapEntry : node[KEY_DOC])
         {
+            if (mapEntry.first.Scalar() == Documentation::KEY_PARAM)
+            {
+                throw runtime_error("key " + string(Documentation::KEY_PARAM) + " is not allowed here! (gets generated from parameter object doc)\n");
+            }
+
             newDoc->addDocEntry(mapEntry.first.Scalar(), mapEntry.second.Scalar());
         }
 
