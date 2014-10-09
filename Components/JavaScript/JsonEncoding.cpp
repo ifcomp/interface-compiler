@@ -52,7 +52,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 
 	for (auto field : struct_->fields())
 	{
-		f << "result." << cname(field) << " = ";
+		f << "result." << name(field) << " = ";
 		f << "TypeConversion.toJSON['";
 		_paramType(f, field);
 		f << "'](value['" << cname(field) << "'])";
@@ -70,7 +70,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 
 	for (auto field : struct_->fields())
 	{
-		f << "result." << cname(field) << " = ";
+		f << "result." << name(field) << " = ";
 		f << "TypeConversion.toJS['";
 		_paramType(f, field);
 		f << "'](value['" << cname(field) << "'])";
