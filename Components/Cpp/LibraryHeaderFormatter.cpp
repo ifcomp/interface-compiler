@@ -39,6 +39,11 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
         << "#if defined(__APPLE__) || defined(WIN32)" << endl
         << "#include <boost/thread/tss.hpp>" << endl
         << "#endif" << endl
+        << endl
+        << "namespace Everbase" << endl
+        << "{" << endl
+        << "    extern boost::asio::io_service* iosrv;" << endl
+        << "}" << endl
         << endl;
 }
 
