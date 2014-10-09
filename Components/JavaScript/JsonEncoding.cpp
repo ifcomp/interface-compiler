@@ -138,18 +138,20 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef even
 	filter f(stream);
 
 	f << "TypeConversion.toJS['" << qcname(event) << "'] = function(event_values) {" << endl;
-	f << "var JsEvent = new " << qname(event) << "();" << endl << endl;
 	f.push<indent>();
+	f << "var JsEvent = new " << qname(event) << "();" << endl << endl;
+	int count = 0;
 	for (auto value : event->values())
 	{
 		f << "JsEvent." << cname(value) << " = ";
 		f << "TypeConversion.toJS['";
-		_paramType(f, value);
+		f << count;
 		f << "'](event_values['" << cname(value) << "'], [ ";
 			
 		_containerTypes(f, value);
 			
-		f << " ] );" << endl << endl;
+		f << " ] );" << endl;
+		count++;
 	}
 	f << "return JsEvent" << endl;
 	f.pop() << "}" << endl << endl;
