@@ -208,27 +208,39 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream
         << "    virtual inline std::vector<boost::any> decodeParameters(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
-        << "    {" << endl
-        << "        const json_spirit::mArray& encoded = parameters.get_array();" << endl
-        << "        std::vector<boost::any> decoded;" << endl;
+        << "    {" << endl;
 
-    if(!operation->isStatic())
+    if(!operation->isStatic() || operation->params().size() > 0)
     {
         stream
-            << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
+            << "        const json_spirit::mArray& encoded = parameters.get_array();" << endl
+            << "        std::vector<boost::any> decoded;" << endl;
+
+        if(!operation->isStatic())
+        {
+            stream
+                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
+        }
+
+        i = operation->isStatic() ? 0 : 1;
+
+        for( auto param : operation->params() )
+        {
+            stream
+                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
+            i += 1;
+        }
+
+        stream
+            << "        return decoded;" << endl;
     }
-
-    i = operation->isStatic() ? 0 : 1;
-
-    for( auto param : operation->params() )
+    else
     {
         stream
-            << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
-        i += 1;
+            << "        return std::vector<boost::any>();" << endl;
     }
 
     stream
-        << "        return decoded;" << endl
         << "    }" << endl
         << endl;
 
