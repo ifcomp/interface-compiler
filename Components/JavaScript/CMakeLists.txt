@@ -8,8 +8,4 @@ set(SRC ${SRC}
 	Components/JavaScript/HeaderFormatter.hpp
 	Components/JavaScript/WebClientFormatter.hpp
         Components/JavaScript/JsonEncoding.hpp
-
-	Components/JavaScript/WebSocket.js
-	Components/JavaScript/PrimitivesTypeConversion.js
-	Components/JavaScript/Uuid.js
 PARENT_SCOPE)
