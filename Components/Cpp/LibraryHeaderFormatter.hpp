@@ -40,6 +40,7 @@ protected:
     using FormatterBase::_definition;
     using FormatterBase::_signature;
     
+    virtual void _includes(std::ostream& stream) const override;
     virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
 
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
