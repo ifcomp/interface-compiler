@@ -16,6 +16,7 @@ void RpcFormatter::_includes(std::ostream& stream) const
 
     stream << "#include <boost/any.hpp>" << endl
            << "#include \"Everbase/Rpc/Operation.hpp\"" << endl
+           << "#include \"Everbase/Rpc/Event.hpp\"" << endl
            << endl;
 }
 
