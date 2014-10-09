@@ -170,6 +170,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
 
     stream
         << "        return decoded;" << endl
+        << "    }" << endl
         << "};" << endl;
 }
 
