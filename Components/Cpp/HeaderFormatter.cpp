@@ -204,7 +204,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    stream << "struct " << name(event) << " : public Everbase::Common::Event" << endl << "{" << endl;
+    stream << "struct " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
     filter(stream).push<indent>(config.indentData) << "static constexpr char TYPE_NAME[] = \"" << qcname(event) << "\";" << endl << endl;
 
