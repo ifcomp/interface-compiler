@@ -15,8 +15,8 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream
-        << "#include \"Everbase/Threading/SafeAccess.hpp\"" << endl
-        << "#include \"Everbase/Primitives/EventManager.hpp\"" << endl
+        << "#include \"common/ThreadSafe.hpp\"" << endl
+        << "#include \"common/EventManager.hpp\"" << endl
         << endl
         << "#include <list>" << endl
         << "#include <boost/system/error_code.hpp>" << endl

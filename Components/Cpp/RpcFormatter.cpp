@@ -15,20 +15,20 @@ void RpcFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream << "#include <boost/any.hpp>" << endl
-           << "#include \"Everbase/Rpc/Operation.hpp\"" << endl
-           << "#include \"Everbase/Rpc/Event.hpp\"" << endl
+           << "#include \"common/rpc/OperationWrapper.hpp\"" << endl
+           << "#include \"common/rpc/EventEncoding.hpp\"" << endl
            << endl;
 }
 
 void RpcFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << endl;
-    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::Operation>> Everbase::Rpc::Operation::operations {" << endl
+    stream << "const std::map<std::string, std::shared_ptr<common::rpc::OperationWrapper>> common::rpc::OperationWrapper::operations {" << endl
            << backwards(root->getNamespace())
            << "};" << endl;
 
     stream << endl;
-    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::Event>> Everbase::Rpc::Event::events {" << endl
+    stream << "const std::map<std::string, std::shared_ptr<common::rpc::EventEncoding>> common::rpc::EventEncoding::events {" << endl
            << definition(root->getNamespace(), 0)
            << "};" << endl;
 }
@@ -47,7 +47,7 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
     {
         for( auto operation : class_->operations() )
         {
-            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Operation>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::Operation>(new "
+            stream << "std::pair<std::string, std::shared_ptr<common::rpc::OperationWrapper>>{\"" << qcname(operation) << "\", std::shared_ptr<common::rpc::OperationWrapper>(new "
                    << "Everbase::Rpc::" << qcname(operation, "_") << "())}," << endl;
         }
     }
@@ -69,7 +69,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ElementRef element, 
         {
             for( auto event : class_->events() )
             {
-                stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::Event>>{\"" << qcname(event) << "\", std::shared_ptr<Everbase::Rpc::Event>(new "
+                stream << "std::pair<std::string, std::shared_ptr<common::rpc::EventEncoding>>{\"" << qcname(event) << "\", std::shared_ptr<common::rpc::EventEncoding>(new "
                        << "Everbase::Rpc::" << qcname(event, "_") << "())}," << endl;
             }
         }
@@ -137,7 +137,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
     }
 
     stream
-        << "struct " << qcname(event, "_") << " : public Everbase::Rpc::Event" << endl
+        << "struct " << qcname(event, "_") << " : public common::rpc::EventEncoding" << endl
         << "{" << endl
         << "    virtual std::vector<boost::any> encode(const Everbase::Primitives::Event& event) const" << endl
         << "    {" << endl
@@ -184,7 +184,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream
-        << "struct " << qcname(operation, "_") << " : public Everbase::Rpc::Operation" << endl
+        << "struct " << qcname(operation, "_") << " : public common::rpc::OperationWrapper" << endl
         << "{" << endl
         << "    inline virtual boost::any call(std::vector<boost::any> params) const" << endl
         << "    {" << endl;

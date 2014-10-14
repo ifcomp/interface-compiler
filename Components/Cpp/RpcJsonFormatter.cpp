@@ -15,21 +15,21 @@ void RpcJsonFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream << "#include <json_spirit/json_spirit.h>" << endl
-           << "#include \"Everbase/Rpc/JSON/TypeEncoding.hpp\"" << endl
-           << "#include \"Everbase/Rpc/JSON/OperationEncoding.hpp\"" << endl
-           << "#include \"Everbase/Rpc/JSON/EventEncoding.hpp\"" << endl
+           << "#include \"common/rpc/json/TypeEncoding.hpp\"" << endl
+           << "#include \"common/rpc/json/OperationEncoding.hpp\"" << endl
+           << "#include \"common/rpc/json/EventEncoding.hpp\"" << endl
            << endl;
 }
 
 void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << endl;
-    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>> Everbase::Rpc::JSON::OperationEncoding::operations {" << endl
+    stream << "const std::map<std::string, std::shared_ptr<common::rpc::json::OperationEncoding>> common::rpc::json::OperationEncoding::operations {" << endl
            << backwards(root->getNamespace())
            << "};" << endl;
 
     stream << endl;
-    stream << "const std::map<std::string, std::shared_ptr<Everbase::Rpc::JSON::EventEncoding>> Everbase::Rpc::JSON::EventEncoding::events {" << endl
+    stream << "const std::map<std::string, std::shared_ptr<common::rpc::json::EventEncoding>> common::rpc::json::EventEncoding::events {" << endl
            << definition(root->getNamespace(), 0)
            << "};" << endl;
 }
@@ -48,7 +48,7 @@ void RpcJsonFormatter::_backwards(std::ostream& stream, Model::ElementRef elemen
     {
         for( auto operation : class_->operations() )
         {
-            stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>>{\"" << qcname(operation) << "\", std::shared_ptr<Everbase::Rpc::JSON::OperationEncoding>(new "
+            stream << "std::pair<std::string, std::shared_ptr<common::rpc::json::OperationEncoding>>{\"" << qcname(operation) << "\", std::shared_ptr<common::rpc::json::OperationEncoding>(new "
                    << "Everbase::Rpc::JSON::" << qcname(operation, "_") << "())}," << endl;
         }
     }
@@ -70,7 +70,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ElementRef eleme
         {
             for( auto event : class_->events() )
             {
-                stream << "std::pair<std::string, std::shared_ptr<Everbase::Rpc::JSON::EventEncoding>>{\"" << qcname(event) << "\", std::shared_ptr<Everbase::Rpc::JSON::EventEncoding>(new "
+                stream << "std::pair<std::string, std::shared_ptr<common::rpc::json::EventEncoding>>{\"" << qcname(event) << "\", std::shared_ptr<common::rpc::json::EventEncoding>(new "
                        << "Everbase::Rpc::JSON::" << qcname(event, "_") << "())}," << endl;
             }
         }
@@ -202,7 +202,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         throw std::runtime_error("invalid event");
 
     stream
-        << "struct " << qcname(event, "_") <<  " : public Everbase::Rpc::JSON::EventEncoding" << endl
+        << "struct " << qcname(event, "_") <<  " : public common::rpc::json::EventEncoding" << endl
         << "{" << endl;
 
 
@@ -274,7 +274,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
         throw std::runtime_error("invalid operation");
 
     stream
-        << "struct " << qcname(operation, "_") <<  " : public Everbase::Rpc::JSON::OperationEncoding" << endl
+        << "struct " << qcname(operation, "_") <<  " : public common::rpc::json::OperationEncoding" << endl
         << "{" << endl;
 
 

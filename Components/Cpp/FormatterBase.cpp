@@ -69,7 +69,7 @@ void FormatterBase::_includes(std::ostream& stream) const
            << "#include <set>" << endl
            << "#include <ctime>" << endl
            << "#include <boost/uuid/uuid.hpp>" << endl
-           << "#include \"Everbase/Primitives/Event.hpp\"" << endl
+           << "#include \"common/Event.hpp\"" << endl
            << endl;
 }
 
