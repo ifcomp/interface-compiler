@@ -48,7 +48,7 @@ void RpcFormatter::_backwards(std::ostream& stream, Model::ElementRef element) c
         for( auto operation : class_->operations() )
         {
             stream << "std::pair<std::string, std::shared_ptr<common::rpc::OperationWrapper>>{\"" << qcname(operation) << "\", std::shared_ptr<common::rpc::OperationWrapper>(new "
-                   << "Everbase::Rpc::" << qcname(operation, "_") << "())}," << endl;
+                   << "common::rpc::" << qcname(operation, "_") << "())}," << endl;
         }
     }
 }
@@ -70,7 +70,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ElementRef element, 
             for( auto event : class_->events() )
             {
                 stream << "std::pair<std::string, std::shared_ptr<common::rpc::EventEncoding>>{\"" << qcname(event) << "\", std::shared_ptr<common::rpc::EventEncoding>(new "
-                       << "Everbase::Rpc::" << qcname(event, "_") << "())}," << endl;
+                       << "common::rpc::" << qcname(event, "_") << "())}," << endl;
             }
         }
     }
@@ -106,7 +106,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ClassRef class_) con
 
     stream << "// class " << name(class_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Rpc {" << endl << endl;
+    stream << "namespace common { namespace rpc {" << endl << endl;
 
     for( auto operation : class_->operations() )
     {
@@ -118,7 +118,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::ClassRef class_) con
         filter(stream).push<indent>(config.indentData) << definition(event) << endl;
     }
 
-    stream << "} } // namespace: Everbase::Rpc" << endl << endl;
+    stream << "} } // namespace: common::rpc" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
 }
@@ -139,7 +139,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
     stream
         << "struct " << qcname(event, "_") << " : public common::rpc::EventEncoding" << endl
         << "{" << endl
-        << "    virtual std::vector<boost::any> encode(const Everbase::Primitives::Event& event) const" << endl
+        << "    virtual std::vector<boost::any> encode(const everbase::common::Event& event) const" << endl
         << "    {" << endl
         << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl
         << "        std::vector<boost::any> encoded;" << endl;
@@ -156,7 +156,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
         << "        return encoded;" << endl
         << "    }" << endl
         << endl
-        << "    virtual std::shared_ptr<Everbase::Primitives::Event> decode(std::vector<boost::any> event) const" << endl
+        << "    virtual std::shared_ptr<everbase::common::Event> decode(std::vector<boost::any> event) const" << endl
         << "    {" << endl
         << "        std::shared_ptr<" << qname(event) << "> decoded(new " << qname(event) << ");" << endl;
 

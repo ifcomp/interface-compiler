@@ -49,7 +49,7 @@ void RpcJsonFormatter::_backwards(std::ostream& stream, Model::ElementRef elemen
         for( auto operation : class_->operations() )
         {
             stream << "std::pair<std::string, std::shared_ptr<common::rpc::json::OperationEncoding>>{\"" << qcname(operation) << "\", std::shared_ptr<common::rpc::json::OperationEncoding>(new "
-                   << "Everbase::Rpc::JSON::" << qcname(operation, "_") << "())}," << endl;
+                   << "common::rpc::json::" << qcname(operation, "_") << "())}," << endl;
         }
     }
 }
@@ -71,7 +71,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ElementRef eleme
             for( auto event : class_->events() )
             {
                 stream << "std::pair<std::string, std::shared_ptr<common::rpc::json::EventEncoding>>{\"" << qcname(event) << "\", std::shared_ptr<common::rpc::json::EventEncoding>(new "
-                       << "Everbase::Rpc::JSON::" << qcname(event, "_") << "())}," << endl;
+                       << "common::rpc::json::" << qcname(event, "_") << "())}," << endl;
             }
         }
     }
@@ -103,13 +103,13 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::StructRef struct
 
     stream << "// struct " << qname(struct_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
+    stream << "namespace common { namespace rpc { namespace json {" << endl << endl;
 
     stream
         << "template<>" << endl
         << "struct TypeEncoding<" << qname(struct_) << ">" << endl
         << "{" << endl
-        << "    static inline json_spirit::mValue encode(Everbase::Rpc::ObjectDirectory& directory, " << qname(struct_) << " source)" << endl
+        << "    static inline json_spirit::mValue encode(common::rpc::ObjectDirectory& directory, " << qname(struct_) << " source)" << endl
         << "    {" << endl
         << "        json_spirit::mObject object;" << endl << endl;
 
@@ -126,7 +126,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::StructRef struct
         << endl;
 
     stream
-        << "    static inline " << qname(struct_) << " decode(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    static inline " << qname(struct_) << " decode(common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
         << "    {" << endl
         << "        const json_spirit::mObject& object = source.get_obj();" << endl
         << "        " << qname(struct_) << " struct_;" << endl << endl;
@@ -143,7 +143,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::StructRef struct
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
+    stream << "} } } // namespace: common::rpc::json" << endl << endl;
 
     stream << "// struct " << name(struct_) << ": }" << endl << endl;
 }
@@ -157,18 +157,18 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
+    stream << "namespace common { namespace rpc { namespace json {" << endl << endl;
 
     stream
         << "template<>" << endl
         << "struct TypeEncoding<" << qname(class_) << "Ref>" << endl
         << "{" << endl
-        << "    static inline json_spirit::mValue encode(Everbase::Rpc::ObjectDirectory& directory, " << qname(class_) << "Ref source)" << endl
+        << "    static inline json_spirit::mValue encode(common::rpc::ObjectDirectory& directory, " << qname(class_) << "Ref source)" << endl
         << "    {" << endl
         << "        return json_spirit::mValue(directory.template registerObject<" << qname(class_) << ">(source));" << endl
         << "    }" << endl
         << endl
-        << "    static inline " << qname(class_) << "Ref decode(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    static inline " << qname(class_) << "Ref decode(common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
         << "    {" << endl
         << "        return directory.lookupObject<" << qname(class_) << ">(source.get_uint64());" << endl
         << "    }" << endl
@@ -185,7 +185,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         stream << definition(event);
     }
 
-    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
+    stream << "} } } // namespace: common::rpc::json" << endl << endl;
 
     stream << "// class " << name(class_) << ": }" << endl << endl;
 }
@@ -209,7 +209,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     // *** encodeValues
 
     stream
-        << "    virtual inline json_spirit::mValue encodeValues(Everbase::Rpc::ObjectDirectory& directory, std::vector<boost::any> values) const override" << endl
+        << "    virtual inline json_spirit::mValue encodeValues(common::rpc::ObjectDirectory& directory, std::vector<boost::any> values) const override" << endl
         << "    {" << endl
         << "        json_spirit::mArray encoded;" << endl;
 
@@ -218,7 +218,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     for( auto value : event->values() )
     {
         stream
-            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::encode(directory, boost::any_cast<" << type(value->type()) << ">(values[" << i << "])));" << endl;
+            << "        encoded.push_back(common::rpc::json::TypeEncoding<" << type(value->type()) << ">::encode(directory, boost::any_cast<" << type(value->type()) << ">(values[" << i << "])));" << endl;
         i += 1;
     }
 
@@ -231,7 +231,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     // *** decodeValues
 
     stream
-        << "    virtual inline std::vector<boost::any> decodeValues(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue values) const override" << endl
+        << "    virtual inline std::vector<boost::any> decodeValues(common::rpc::ObjectDirectory& directory, json_spirit::mValue values) const override" << endl
         << "    {" << endl;
 
     if(event->values().size() > 0)
@@ -245,7 +245,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         for( auto value : event->values() )
         {
             stream
-                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(value->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
+                << "        decoded.push_back(boost::any(common::rpc::json::TypeEncoding<" << type(value->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
             i += 1;
         }
 
@@ -281,14 +281,14 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     // *** encodeParameters
 
     stream
-        << "    virtual inline json_spirit::mValue encodeParameters(Everbase::Rpc::ObjectDirectory& directory, std::vector<boost::any> parameters) const override" << endl
+        << "    virtual inline json_spirit::mValue encodeParameters(common::rpc::ObjectDirectory& directory, std::vector<boost::any> parameters) const override" << endl
         << "    {" << endl
         << "        json_spirit::mArray encoded;" << endl;
 
     if(!operation->isStatic())
     {
         stream
-            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::encode(directory, boost::any_cast<" << qname(class_) << "Ref>(parameters[0])));" << endl;
+            << "        encoded.push_back(common::rpc::json::TypeEncoding<" << qname(class_) << "Ref>::encode(directory, boost::any_cast<" << qname(class_) << "Ref>(parameters[0])));" << endl;
     }
 
     std::size_t i = operation->isStatic() ? 0 : 1;
@@ -296,7 +296,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     for( auto param : operation->params() )
     {
         stream
-            << "        encoded.push_back(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::encode(directory, boost::any_cast<" << type(param->type()) << ">(parameters[" << i << "])));" << endl;
+            << "        encoded.push_back(common::rpc::json::TypeEncoding<" << type(param->type()) << ">::encode(directory, boost::any_cast<" << type(param->type()) << ">(parameters[" << i << "])));" << endl;
         i += 1;
     }
 
@@ -309,7 +309,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     // *** decodeParameters
 
     stream
-        << "    virtual inline std::vector<boost::any> decodeParameters(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
+        << "    virtual inline std::vector<boost::any> decodeParameters(common::rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
         << "    {" << endl;
 
     if(!operation->isStatic() || operation->params().size() > 0)
@@ -321,7 +321,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
         if(!operation->isStatic())
         {
             stream
-                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
+                << "        decoded.push_back(boost::any(common::rpc::json::TypeEncoding<" << qname(class_) << "Ref>::decode(directory, encoded[0])));" << endl;
         }
 
         i = operation->isStatic() ? 0 : 1;
@@ -329,7 +329,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
         for( auto param : operation->params() )
         {
             stream
-                << "        decoded.push_back(boost::any(Everbase::Rpc::JSON::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
+                << "        decoded.push_back(boost::any(common::rpc::json::TypeEncoding<" << type(param->type()) << ">::decode(directory, encoded[" << i << "])));" << endl;
             i += 1;
         }
 
@@ -350,13 +350,13 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     // *** encodeResult
 
     stream
-        << "    virtual inline json_spirit::mValue encodeResult(Everbase::Rpc::ObjectDirectory& directory, boost::any result) const override" << endl
+        << "    virtual inline json_spirit::mValue encodeResult(common::rpc::ObjectDirectory& directory, boost::any result) const override" << endl
         << "    {" << endl;
 
     if(operation->result())
     {
         stream
-            << "        return Everbase::Rpc::JSON::TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, boost::any_cast<" << type(operation->result()->type()) << ">(result));" << endl;   
+            << "        return common::rpc::json::TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, boost::any_cast<" << type(operation->result()->type()) << ">(result));" << endl;   
     }
     else
     {
@@ -371,13 +371,13 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
     // *** decodeResult
 
     stream
-        << "    virtual inline boost::any decodeResult(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue result) const override" << endl
+        << "    virtual inline boost::any decodeResult(common::rpc::ObjectDirectory& directory, json_spirit::mValue result) const override" << endl
         << "    {" << endl;
 
     if(operation->result())
     {
         stream
-            << "        return Everbase::Rpc::JSON::TypeEncoding<" << type(operation->result()->type()) << ">::decode(directory, result);" << endl;   
+            << "        return common::rpc::json::TypeEncoding<" << type(operation->result()->type()) << ">::decode(directory, result);" << endl;   
     }
     else
     {
@@ -401,24 +401,24 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
 
     stream << "// enum " << qname(enum_) << ": {" << endl << endl;
 
-    stream << "namespace Everbase { namespace Rpc { namespace JSON {" << endl << endl;
+    stream << "namespace common { namespace rpc { namespace json {" << endl << endl;
 
     stream
         << "template<>" << endl
         << "struct TypeEncoding<" << qname(enum_) << ">" << endl
         << "{" << endl
-        << "    static inline json_spirit::mValue encode(Everbase::Rpc::ObjectDirectory& directory, " << qname(enum_) << " source)" << endl
+        << "    static inline json_spirit::mValue encode(common::rpc::ObjectDirectory& directory, " << qname(enum_) << " source)" << endl
         << "    {" << endl
         << "        return json_spirit::mValue(static_cast<std::uint64_t>(source));" << endl
         << "    }" << endl
         << endl
-        << "    static inline " << qname(enum_) << " decode(Everbase::Rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    static inline " << qname(enum_) << " decode(common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
         << "    {" << endl
         << "        return static_cast<" << qname(enum_) << ">(source.get_uint64());" << endl
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } // namespace: Everbase::Rpc::JSON" << endl << endl;
+    stream << "} } } // namespace: common::rpc::json" << endl << endl;
 
     stream << "// enum " << name(enum_) << ": }" << endl << endl;
 }

@@ -40,7 +40,7 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
         << "#include <boost/thread/tss.hpp>" << endl
         << "#endif" << endl
         << endl
-        << "namespace Everbase" << endl
+        << "namespace everbase" << endl
         << "{" << endl
         << "    extern boost::asio::io_service* iosrv;" << endl
         << "}" << endl

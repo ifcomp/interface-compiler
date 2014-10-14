@@ -49,8 +49,8 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid")
             },
 //            PrimitiveConfigs2 {
-//                PrimitiveConfig<Primitive::Underlying::BUFFER>("Everbase::Primitives::Buffer"),
-//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("Everbase::Primitives::ConstBuffer")
+//                PrimitiveConfig<Primitive::Underlying::BUFFER>("everbase::common::Buffer"),
+//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("everbase::common::ConstBuffer")
 //            },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
