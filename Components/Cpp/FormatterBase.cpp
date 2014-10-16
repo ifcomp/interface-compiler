@@ -28,7 +28,7 @@ FormatterBase::FormatterBase()
         {
             std::string("::"), std::string(4, ' '), 85,
             NameConfigs {
-                NameConfig<Namespace>        { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Namespace>        { NameStyle::LOWERCASE, "_", false },
                 NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Struct>           { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
