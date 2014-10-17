@@ -12,11 +12,15 @@ using namespace StreamFilter;
 
 void LibraryHeaderFormatter::_includes(std::ostream& stream) const
 {
+    stream
+        << "#pragma once" << endl
+        << endl;
+
     FormatterBase::_includes(stream);
 
     stream
-        << "#include \"Everbase/Threading/SafeAccess.hpp\"" << endl
-        << "#include \"Everbase/Primitives/EventManager.hpp\"" << endl
+        << "#include \"common/ThreadSafe.hpp\"" << endl
+        << "#include \"common/EventManager.hpp\"" << endl
         << endl
         << "#include <list>" << endl
         << "#include <boost/system/error_code.hpp>" << endl
@@ -40,7 +44,7 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
         << "#include <boost/thread/tss.hpp>" << endl
         << "#endif" << endl
         << endl
-        << "namespace Everbase" << endl
+        << "namespace everbase" << endl
         << "{" << endl
         << "    extern boost::asio::io_service* iosrv;" << endl
         << "}" << endl

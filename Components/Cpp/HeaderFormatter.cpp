@@ -12,6 +12,15 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void HeaderFormatter::_includes(std::ostream& stream) const
+{
+    stream
+        << "#pragma once" << endl
+        << endl;
+
+    FormatterBase::_includes(stream);
+}
+
 void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
     if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
@@ -204,7 +213,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    stream << "struct " << name(event) << " : public Everbase::Primitives::Event" << endl << "{" << endl;
+    stream << "struct " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
     filter(stream).push<indent>(config.indentData) << "static constexpr char TYPE_NAME[] = \"" << qcname(event) << "\";" << endl << endl;
 
