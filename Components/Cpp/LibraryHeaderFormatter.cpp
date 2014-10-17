@@ -12,6 +12,10 @@ using namespace StreamFilter;
 
 void LibraryHeaderFormatter::_includes(std::ostream& stream) const
 {
+    stream
+        << "#pragma once" << endl
+        << endl;
+
     FormatterBase::_includes(stream);
 
     stream

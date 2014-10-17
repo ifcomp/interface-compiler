@@ -12,6 +12,15 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void HeaderFormatter::_includes(std::ostream& stream) const
+{
+    stream
+        << "#pragma once" << endl
+        << endl;
+
+    FormatterBase::_includes(stream);
+}
+
 void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
     if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
