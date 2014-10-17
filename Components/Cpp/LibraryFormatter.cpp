@@ -86,7 +86,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         stream << doc(event->doc());
     }
 
-    stream << "constexpr char " << qcname(event) << "::TYPE_NAME[];" << endl;
+    stream << "constexpr char " << qname(event) << "::TYPE_NAME[];" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
