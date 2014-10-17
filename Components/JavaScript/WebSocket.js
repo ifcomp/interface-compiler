@@ -1,88 +1,57 @@
-var processes = { };
-var classInstanceHandles = { }
-var socketOpen = false;
-var queuedMessages = [];
+'use strict';
 
-var host = 'ws://' + location.host;
-var ws = new WebSocket(host);
+var everbase = everbase || { }
 
-function onOpen(openEventArgs) {
-  socketOpen = true;
-  for (var i = 0; i < queuedMessages.length; i++) {
-    WebSocket.prototype.send.call(ws, queuedMessages[i]);
+everbase.rpc = everbase.rpc || { }
+
+everbase.rpc.WebSocket = function(hostAddress) {
+    everbase.rpc.WebSocket._hostAddress = hostAddress;
+    everbase.rpc.WebSocket._connect.call(this);
+}
+
+everbase.rpc.WebSocket._hostAddress = { };
+
+everbase.rpc.WebSocket.prototype._messageHandler = function(jsonMessage) { };
+
+everbase.rpc.WebSocket.prototype.setMessageHandler = function(handler) {
+    this._messageHandler = handler;
+}
+
+everbase.rpc.WebSocket.prototype.send = function(jsonMessage) {
+    var message = JSON.stringify(jsonMessage);
+    if(!this._socketOpen) {
+      this._queuedMessages.push(message);
+    } 
+    else {
+      this._ws.send(message);
+    }
+};
+
+everbase.rpc.WebSocket._connect = function() { 
+    this._ws = new WebSocket(everbase.rpc.WebSocket._hostAddress);
+    this._ws.onopen = everbase.rpc.WebSocket._onOpen.bind(this);
+    this._ws.onmessage = everbase.rpc.WebSocket._onMessage.bind(this);
+    this._ws.onerror = everbase.rpc.WebSocket._onError.bind(this);
+    this._socketOpen = false;
+    this._queuedMessages = [];
+}
+
+everbase.rpc.WebSocket._onOpen = function(openEventArgs) {
+  this._socketOpen = true;
+  for (var i = 0; i < this._queuedMessages; i++) {
+    this._ws.send(this._queuedMessages[i]);
   }
 };
 
-function onMessage(msgEventArgs) {
+everbase.rpc.WebSocket._onMessage = function(msgEventArgs) {
     var message = JSON.parse(msgEventArgs.data);
-    routeMessage(message);
+    this._messageHandler(message);
 };
 
-function routeMessage(message) {
-    if (message[0] === 'response') {
-        processResponse(message);
-    }
-    else if (message[0] === 'event') {
-        processEvent(message);
-    }
-    else {
-        console.log('Unknown response type.');
-    };
+everbase.rpc.WebSocket._onClose = function(closeEventArgs) { 
+    setTimeout(everbase.rpc.WebSocket._connect(this), 10*1000);
 };
 
-function processResponse(response) {
-    var responseId = response[2];
-    if (responseId in processes)
-    { 
-        var responseVal = response[3];
-       	var responseType = processes[responseId][1];
+everbase.rpc.WebSocket._onError = function(errorEventArgs) { };
 
-	if(responseType != '')
-	{
-	        var responseParamTypes = processes[responseId][2];
-        	var conversionedResult = TypeConversion.toJS[responseType](responseVal, responseParamTypes);
-	        processes[responseId][0](conversionedResult);
-	}
-	else
-	{
-	        processes[responseId][0]();
-	}
-
-        delete processes[responseId];
-    }
-    else {
-        console.log('Response couldn\'t be mapped')
-    }
-};
-
-function processEvent(event) {
-    try 
-    {
-        var eventName = event[1];
-        var eventValues = event[2];
-        var conversionedEvent = { };
-        conversionedEvent = TypeConversion.toJS[eventName](eventValues);
-        Everbase.EventManager.fireEvent(conversionedEvent);
-    }
-    catch (e){
-        throw Error(e.name + ': ' + e.message);
-    }
-};
-
-function onClose(closeEventArgs) { };
-
-function onError(errorEventArgs) { };
-
-ws.send = function(message) {
-    if(!socketOpen) {
-      queuedMessages.push(message);
-    } else {
-      WebSocket.prototype.send.call(ws, message);
-    }
-};
-
-ws.onopen = onOpen;
-ws.onmessage = onMessage;
-ws.onclose = onClose;
-ws.onerror = onError;
 

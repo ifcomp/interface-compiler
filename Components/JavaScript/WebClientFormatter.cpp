@@ -19,6 +19,37 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
+{
+	if (!namespace_->parent()->parent() && namespace_->longName() == "Everbase")
+	{
+		stream << "\'use strict\';" << endl << endl;
+	}
+
+    if ( namespace_->doc() )
+    {
+        stream << doc(namespace_->doc());
+    }
+    
+    if (!namespace_->parent()->parent())
+    {
+		stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+		if (namespace_->longName() == "Everbase")
+		{
+			stream << "everbase.rpc = everbase.rpc || { }" << endl << endl;
+			stream << "everbase.rpc.webSocket = everbase.rpc.webSocket || { }" << endl << endl;
+		}
+    }
+    else
+    {
+		stream << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+    }
+
+	for ( auto element : namespace_->elements() )
+	{
+		filter(stream) << definition(element);
+	}
+}
 
 void WebClientFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
@@ -155,7 +186,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 	stream << "// event: " << qname(event) << " {" << endl << endl;
 
 	stream << qname(event) << " = function() { };" << endl << endl;
-	stream << qname(event) << ".prototype" << " = Object.create(Everbase.Event.prototype);" << endl << endl;
+	stream << qname(event) << ".prototype" << " = Object.create(everbase.Event.prototype);" << endl << endl;
 	stream << qname(event) << ".TYPE_NAME =" << endl;
 	stream << qname(event) << ".prototype.TYPE_NAME = '" << qcname(event) << "'" << endl << endl;
 
@@ -188,38 +219,30 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
 	filter f(stream);
 	f.push<indent>()
-		<< "ws.send(JSON.stringify(message));" << endl << endl
+		<< "everbase.webclient.connection.send(message);" << endl << endl
 		<< "return new Promise(function (resolve, reject) {" << endl;
 
-	f.push<indent>()
-		<< "//if succeeded" << endl;
+	f.push<indent>();
 
 	string formattedParams = "";
 	if (auto result = operation->result())
 	{
-		f << "processes[message[2]] = [ resolve, '";
-		
+		f << "everbase.webclient.processes[message[2]] = [ resolve, '";
 		_returnType(f, result);
-
-		f << "' , [ ";
-
+		f << "' , [";
 		_containerTypes(f, result);
-
-		f << " ] ];" << endl;
+		f << "] ];" << endl;
 	}
 	else
 	{
-		f << "processes[message[2]] = [ resolve, '', [] ];" << endl;
+		f << "everbase.webclient.processes[message[2]] = [ resolve, '', [] ];" << endl;
 	}
-
-	f   << "//if failed" << endl
-		<< "//processes[message[2]] = reject;" << endl;
 
 	f.pop()
 		<< "});" << endl;
 
 	f.pop()
-		<< "};" << endl;
+		<< "};" << endl << endl;
 }
 
 void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const 
@@ -234,24 +257,20 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 		<< "\'call\'," << endl
 		<< "\'" << qcname(operation) << "\'," << endl
 		<< "uuid()," << endl
-		<< "[" << endl;
+		<< "["; !operation->isStatic() || operation->params().size() ? f << endl : f;
 	f.push<indent>();
 	if (!operation->isStatic()) { f << "this._handle," << endl; };
-		for (auto param : operation->params())
-		{
-			f << "TypeConversion.toJSON[ '";
-				
-			_returnType(f, param);
-
-			f << "' ]( " << name(param) << ", [ ";
-
-			_containerTypes(f, param);
-
-			f << " ] )," << endl;
-		}
+	for (auto param : operation->params())
+	{
+		f << "everbase.rpc.jsonEncoding._conversions['";
+		_returnType(f, param);
+		f << "'].encode( " << name(param) << ", [";
+		_containerTypes(f, param);
+		f << "] )," << endl;
+	}
 	f.pop() << "]" << endl;
 	f.pop() << "];";
-	f << endl << endl;
+	f << endl;
 }
 
 
