@@ -1,0 +1,32 @@
+{
+  "asi": true,
+  "debug": true,
+  "node": true,
+  "browser": true,
+  "esnext": true,
+  "bitwise": true,
+  "camelcase": true,
+  "curly": true,
+  "eqeqeq": true,
+  "immed": true,
+  "indent": 2,
+  "latedef": "nofunc",
+  "laxcomma": true,
+  "maxerr": 300,
+  "newcap": true,
+  "noarg": true,
+  "nonbsp": true,
+  "quotmark": "single",
+  "regexp": true,
+  "undef": true,
+  "unused": false,
+  "strict": true,
+  "sub": true,
+  "trailing": true,
+  "smarttabs": true,
+  "jquery": true,
+  "devel": true,
+  "globals": {
+    "angular": false
+  }
+}

@@ -30,14 +30,14 @@ FormatterBase::FormatterBase()
         {
             std::string("."), std::string(4, ' '), 85,
             NameConfigs {
-                NameConfig<Namespace>        { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Namespace>        { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },
-                NameConfig<Struct>           { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Struct>           { NameStyle::LOWER_CAMELCASE, "", false },
+                NameConfig<Enum>             { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
                 NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Constant>  { NameStyle::UPPERCASE, "_", false },
-                NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
+                NameConfig<Class::Event>     { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
             PrimitiveConfigs1 {

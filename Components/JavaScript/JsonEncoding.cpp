@@ -18,17 +18,37 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
+const string CONVERSIONS = "everbase.rpc.jsonEncoding._conversions";
+const string HANDLES = "everbase.rpc.jsonEncoding._handles";
 
 void JsonEncoding::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
+	if (!namespace_->parent()->parent() && namespace_->longName() == "Everbase")
+	{
+		stream << "\'use strict\';" << endl << endl;
+	}
+
     if ( namespace_->doc() )
     {
         stream << doc(namespace_->doc());
     }
     
-	string  var = namespace_->parent() ? "" : "var ";
-	stream << "//" << var << " " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
-	
+    if (!namespace_->parent()->parent())
+    {
+		stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+		if (namespace_->longName() == "Everbase")
+		{
+			stream << "everbase.rpc = everbase.rpc || { }" << endl << endl;
+			stream << "everbase.rpc.jsonEncoding = everbase.rpc.jsonEncoding || { }" << endl << endl;
+			stream << CONVERSIONS << " = " << CONVERSIONS << " || { }" << endl << endl;
+			stream << HANDLES << " = " << HANDLES << " || { }" << endl << endl;
+		}
+    }
+    else
+    {
+		stream << "// " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+    }
+
 	for ( auto element : namespace_->elements() )
 	{
 		filter(stream) << definition(element);
@@ -46,37 +66,33 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
 
 	filter f(stream);
-	f << "TypeConversion.toJSON['" << qcname(struct_) << "'] = function(value) {" << endl;
+	f << CONVERSIONS << "['" << qcname(struct_) << "'] = {" << endl;
 	f.push<indent>()
-		<< "var result = new " << qname(struct_) << ";" << endl << endl;
+		<< "encode: function(value) {" << endl;
+	f.push<indent>()	
+			<< "var result = new " << qname(struct_) << "();" << endl;
+			for (auto field : struct_->fields())
+			{
+				f << "result." << name(field) << " = ";
+				f << CONVERSIONS << "['";
+				_paramType(f, field);
+				f << "'].encode(value['" << cname(field) << "'])" << endl;
+			}
+			f << "return result;" << endl;
+	f.pop() << "}," << endl;
+
+	f << "decode: function(value) {" << endl;
+	f.push<indent>()
+		<< "var result = new " << qname(struct_) << "();" << endl;
 
 	for (auto field : struct_->fields())
 	{
-		f << "result." << name(field) << " = ";
-		f << "TypeConversion.toJSON['";
-		_paramType(f, field);
-		f << "'](value['" << cname(field) << "'])";
-		f << endl;
+		f << "result." << name(field) << " = " << CONVERSIONS << "['";
+	    _paramType(f, field);
+		f << "'].decode(value['" << cname(field) << "'])" << endl;
 	}
 	f << "return result;" << endl;
-	f.pop() << "}" << endl << endl;
-
-	f << "// ----" << endl << endl;
-
-
-	f << "TypeConversion.toJS['" << qcname(struct_) << "'] = function(value) {" << endl;
-	f.push<indent>()
-		<< "var result = new " << qname(struct_) << ";" << endl << endl;
-
-	for (auto field : struct_->fields())
-	{
-		f << "result." << name(field) << " = ";
-		f << "TypeConversion.toJS['";
-		_paramType(f, field);
-		f << "'](value['" << cname(field) << "'])";
-		f << endl;
-	}
-	f << "return result;" << endl;
+	f.pop() << "}" << endl;
 	f.pop() << "}" << endl << endl;
 
 	stream << "// struct: }" << endl << endl;
@@ -93,25 +109,28 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 
 	filter f(stream);
 
-	f << "TypeConversion.toJS['" << qcname(class_) << "'] = function(handle) {" << endl;
+	f << CONVERSIONS << "['" << qcname(class_) << "'] = {" << endl;
 	f.push<indent>()
-	    << "if (handle in classInstanceHandles) { " << endl;
+		<< "encode: function (classObj) {" << endl;
+	f.push<indent>() 
+			<< "return classObj._handle;" << endl;
+	f.pop() 
+		<< "}," << endl 
+		<< "decode: function(handle) {" << endl;
 	f.push<indent>()
-        << "return classInstanceHandles[handle]" << endl;
-    f.pop() << "}" << endl << endl;    
+			<< "if (handle in " << HANDLES << ") { " << endl;
+	f.push<indent>()
+				<< "return " <<  HANDLES << "[handle]" << endl;
+    f.pop() 
+			<< "}" << endl  
+			<< "var result = new " << qname(class_) << "(handle);" << endl	
+			<< HANDLES << "[handle] = result;" << endl
+			<< "return result;" << endl;
+	f.pop() 
+		<< "}" << endl;
+	f.pop() 
+	<< "}" << endl << endl;
 
-	f << "var result = new " << qname(class_) << "(handle);" << endl;	
-
-	f << "classInstanceHandles[handle] = result;" << endl;
-	f << "return result;" << endl;
-	f.pop() << "}" << endl << endl;
-
-	f << "// ----" << endl << endl;
-
-	f << "TypeConversion.toJSON['" << qcname(class_) << "'] = function(classObj) {" << endl;
-
-	f.push<indent>() << "return classObj._handle;" << endl;
-	f.pop() << "}" << endl << endl;
 	stream << "// class: }" << endl << endl;
 
 	for (auto event : class_->events())
@@ -137,25 +156,25 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef even
 
 	filter f(stream);
 
-	f << "TypeConversion.toJS['" << qcname(event) << "'] = function(event_values) {" << endl;
-	f.push<indent>();
-	f << "var JsEvent = new " << qname(event) << "();" << endl << endl;
+	f << CONVERSIONS << "['" << qcname(event) << "'] = {" << endl;
+	f.push<indent>()
+		<< "decode: function(eventValues) {" << endl;
+	f.push<indent>()
+			<< "var JsEvent = new " << qname(event) << "();" << endl;
 	int count = 0;
 	for (auto value : event->values())
 	{
-		f << "JsEvent." << name(value) << " = ";
-		f << "TypeConversion.toJS['";
+		f << "JsEvent." << name(value) << " = "
+		  << CONVERSIONS << "['";
 		_paramType(f, value);
-		f << "'](event_values[" << count << "], [ ";
-			
+		f << "'].decode(eventValues[" << count << "], [ ";
 		_containerTypes(f, value);
-			
-		f << " ] );" << endl << endl;
+		f << " ] );" << endl;
 		count++;
 	}
-	f << "return JsEvent" << endl;
+			f << "return JsEvent" << endl;
+		f.pop() << "}" << endl;
 	f.pop() << "}" << endl;
-	
 
 	stream << "// event: }" << endl << endl;
 }
@@ -171,8 +190,12 @@ void JsonEncoding::_definition(std::ostream& stream, Model::EnumRef enum_) const
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
 	filter f(stream);
-	f << "TypeConversion.toJSON['" << qcname(enum_) << "'] = function(value) { return value } " << endl << endl;
-	f << "TypeConversion.toJS['" << qcname(enum_) << "'] = function(value) { return value } " << endl << endl;
+	f << CONVERSIONS << "['" << qcname(enum_) << "'] = {" << endl;
+	f.push<indent>()
+		<< "encode: function(value) { return value }, " << endl
+		<< "decode: function(value) { return value } " << endl;
+	f.pop()
+		<< "}";
 
 	stream << "// enum: }" << endl << endl;
 }

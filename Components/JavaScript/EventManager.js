@@ -1,19 +1,37 @@
+'use strict';
+
+/**
+ * @brief Everbase namespace
+ */
+var everbase = everbase || {};
+
+
+/**
+ * @brief Represents an event.
+ */
+everbase.Event = function() { };
+
+
+/**
+ * @brief Represents an observable object. An observable object can have one or more observers.
+ */
+everbase.EventManager = function() { };
+
 // very inefficient implementation - its required for the dummy only anyway... so we dont care
 
-
-Everbase.EventManager._observers = { };
-Everbase.EventManager._entryCount = 0;
+everbase.EventManager._observers = { };
+everbase.EventManager._entryCount = 0;
 
 /**
  * @brief Fires an event.
  */
-/* void */ Everbase.EventManager.fireEvent = function(/*evb.Event*/ event)
+/* void */ everbase.EventManager.fireEvent = function(/*evb.Event*/ event)
 {
-	for( var entryId in Everbase.EventManager._observers )
+	for( var entryId in everbase.EventManager._observers )
 	{
-		if( Everbase.EventManager._observers[entryId].eventName == event.TYPE_NAME )
+		if( everbase.EventManager._observers[entryId].eventName === event.TYPE_NAME )
 		{
-			Everbase.EventManager._observers[entryId].callback.call(Everbase.EventManager._observers[entryId].observer, event);
+			everbase.EventManager._observers[entryId].callback.call(everbase.EventManager._observers[entryId].observer, event);
 		}
 	}
 };
@@ -21,11 +39,11 @@ Everbase.EventManager._entryCount = 0;
 /**
  * @brief Adds an entry to the event dispatch table with an observer and callback. Returns an observer entry id.
  */
-/* Number */ Everbase.EventManager.addObserver = function(/*Object*/ observer, /*Function*/ callback, /*Type of evb.Event*/ eventType)
+/* Number */ everbase.EventManager.addObserver = function(/*Object*/ observer, /*Function*/ callback, /*Type of evb.Event*/ eventType)
 {
-	var entryId = Everbase.EventManager._entryCount++;
+	var entryId = everbase.EventManager._entryCount++;
 
-	Everbase.EventManager._observers[entryId] = { observer: observer, callback: callback, eventName: eventType.TYPE_NAME };
+	everbase.EventManager._observers[entryId] = { observer: observer, callback: callback, eventName: eventType.TYPE_NAME };
 
 	return entryId;
 };
@@ -33,7 +51,7 @@ Everbase.EventManager._entryCount = 0;
 /**
  * @brief Removes an observer entry from the event dispatch table.
  */
-/* void */ Everbase.EventManager.removeObserver = function(/*Number*/ entryId)
+/* void */ everbase.EventManager.removeObserver = function(/*Number*/ entryId)
 {
-	delete Everbase.EventManager._observers[entryId];
+	delete everbase.EventManager._observers[entryId];
 };
