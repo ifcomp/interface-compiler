@@ -67,6 +67,7 @@ void FormatterBase::_includes(std::ostream& stream) const
            << "#include <ctime>" << endl
            << "#include <boost/uuid/uuid.hpp>" << endl
            << "#include \"everbase/common/Event.hpp\"" << endl
+           << "#include \"everbase/file_system/Path.hpp\"" << endl
            << endl;
 }
 
