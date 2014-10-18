@@ -50,7 +50,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("Uuid"),
                 PrimitiveConfig<Primitive::Underlying::OBJECTID>("ObjectId<$0>"),
-                PrimitiveConfig<Primitive::Underlying::VERSIONID>("VersionId<$0>")
+                PrimitiveConfig<Primitive::Underlying::VERSIONID>("VersionId")
             },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("Vector<$0>"),
