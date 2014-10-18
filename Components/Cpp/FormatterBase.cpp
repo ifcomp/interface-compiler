@@ -46,7 +46,9 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("bool"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
-                PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid")
+                PrimitiveConfig<Primitive::Underlying::UUID>("everbase::common::Uuid<>"),
+                PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<$0>"),
+                PrimitiveConfig<Primitive::Underlying::VERSIONID>("everbase::common::VersionId<$0>")
             },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
@@ -65,7 +67,7 @@ void FormatterBase::_includes(std::ostream& stream) const
     stream << "#include <memory>" << endl
            << "#include <set>" << endl
            << "#include <ctime>" << endl
-           << "#include <boost/uuid/uuid.hpp>" << endl
+           << "#include \"everbase/common/Id.hpp\"" << endl
            << "#include \"everbase/common/Event.hpp\"" << endl
            << "#include \"everbase/file_system/Path.hpp\"" << endl
            << endl;

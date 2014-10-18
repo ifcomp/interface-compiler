@@ -24,6 +24,8 @@ public:
         TIMESTAMP,
         STRING,
         UUID,
+        OBJECTID,
+        VERSIONID,
         VECTOR,
         LIST,
         SET,
