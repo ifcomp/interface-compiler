@@ -14,12 +14,11 @@ const char* Primitive::underlyingNames[] =
     "Timestamp",
     "String",
     "Uuid",
-//    "Buffer",
-//    "ConstBuffer",
     "Vector",
     "List",
     "Set",
-    "Map"
+    "Map",
+    "FileSystem::Path"
 };
 
 const unsigned int Primitive::underlyingParamCounts[] =
@@ -32,12 +31,11 @@ const unsigned int Primitive::underlyingParamCounts[] =
     0,
     0,
     0,
-//    0,
-//    0,
     1,
     1,
     1,
-    2
+    2,
+    0
 };
 
 Primitive::Primitive()

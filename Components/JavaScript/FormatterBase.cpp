@@ -50,15 +50,12 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("Uuid")
             },
-//            PrimitiveConfigs2 {
-//                PrimitiveConfig<Primitive::Underlying::BUFFER>("Buffer"),
-//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("ConstBuffer")
-//            },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("Vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("List<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("Set<$0>"),
-                PrimitiveConfig<Primitive::Underlying::MAP>("Map<$0, $1>")
+                PrimitiveConfig<Primitive::Underlying::MAP>("Map<$0, $1>"),
+                PrimitiveConfig<Primitive::Underlying::FILESYSTEM_PATH>("FileSystem::Path")
             },
             { }
         })

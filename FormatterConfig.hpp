@@ -112,16 +112,12 @@ struct FormatterConfig
 		PrimitiveConfig<Model::Primitive::Underlying::UUID>
 	> PrimitiveConfigs1;
 
-//	typedef boost::tuple<
-//		PrimitiveConfig<Model::Primitive::Underlying::BUFFER>,
-//		PrimitiveConfig<Model::Primitive::Underlying::CONST_BUFFER>
-//	> PrimitiveConfigs2;
-
 	typedef boost::tuple<
 		PrimitiveConfig<Model::Primitive::Underlying::VECTOR>,
 		PrimitiveConfig<Model::Primitive::Underlying::LIST>,
 		PrimitiveConfig<Model::Primitive::Underlying::SET>,
-		PrimitiveConfig<Model::Primitive::Underlying::MAP>
+		PrimitiveConfig<Model::Primitive::Underlying::MAP>,
+		PrimitiveConfig<Model::Primitive::Underlying::FILESYSTEM_PATH>
 	> PrimitiveConfigs3;
 
 	typedef std::vector<std::string> StripVerbs;
@@ -131,17 +127,15 @@ struct FormatterConfig
 	std::uint8_t documentationWrapping;
 	NameConfigs nameConfigs;
 	PrimitiveConfigs1 primitiveConfigs1;
-//	PrimitiveConfigs2 primitiveConfigs2;
 	PrimitiveConfigs3 primitiveConfigs3;
 	StripVerbs stripVerbs;
 
-	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs1 primitiveConfigs1, /*PrimitiveConfigs2 primitiveConfigs2,*/ PrimitiveConfigs3 primitiveConfigs3, StripVerbs stripVerbs)
+	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs1 primitiveConfigs1, PrimitiveConfigs3 primitiveConfigs3, StripVerbs stripVerbs)
 		: namespaceDelimiter(namespaceDelimiter)
 		, indentData(indentData)
 		, documentationWrapping(documentationWrapping)
 		, nameConfigs(nameConfigs)
 		, primitiveConfigs1(primitiveConfigs1)
-//		, primitiveConfigs2(primitiveConfigs2)
 		, primitiveConfigs3(primitiveConfigs3)
 		, stripVerbs(stripVerbs)
 	{ }
@@ -152,7 +146,6 @@ struct FormatterConfig
 		, documentationWrapping(other.documentationWrapping)
 		, nameConfigs(other.nameConfigs)
 		, primitiveConfigs1(other.primitiveConfigs1)
-//		, primitiveConfigs2(other.primitiveConfigs2)
 		, primitiveConfigs3(other.primitiveConfigs3)
 		, stripVerbs(other.stripVerbs)
 	{ }
@@ -163,7 +156,6 @@ struct FormatterConfig
 		, documentationWrapping(std::move(other.documentationWrapping))
 		, nameConfigs(std::move(other.nameConfigs))
 		, primitiveConfigs1(std::move(other.primitiveConfigs1))
-//		, primitiveConfigs2(std::move(other.primitiveConfigs2))
 		, primitiveConfigs3(std::move(other.primitiveConfigs3))
 		, stripVerbs(std::move(other.stripVerbs))
 	{ }
@@ -179,12 +171,6 @@ struct FormatterConfig
 	{
 		return TupleHelper::get<PrimitiveConfig<U>>(primitiveConfigs1);
 	}
-
-//	template<Model::Primitive::Underlying U>
-//	PrimitiveConfig<U> primitiveConfig2() const
-//	{
-//		return TupleHelper::get<PrimitiveConfig<U>>(primitiveConfigs2);
-//	}
 
 	template<Model::Primitive::Underlying U>
 	PrimitiveConfig<U> primitiveConfig3() const

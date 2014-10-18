@@ -48,15 +48,12 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("boost::uuids::uuid")
             },
-//            PrimitiveConfigs2 {
-//                PrimitiveConfig<Primitive::Underlying::BUFFER>("everbase::common::Buffer"),
-//                PrimitiveConfig<Primitive::Underlying::CONST_BUFFER>("everbase::common::ConstBuffer")
-//            },
             PrimitiveConfigs3 {
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),
-                PrimitiveConfig<Primitive::Underlying::MAP>("std::map<$0, $1>")
+                PrimitiveConfig<Primitive::Underlying::MAP>("std::map<$0, $1>"),
+                PrimitiveConfig<Primitive::Underlying::FILESYSTEM_PATH>("everbase::file_system::Path")
             },
             { "From", "Get" }
         })

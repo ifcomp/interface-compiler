@@ -24,12 +24,11 @@ public:
         TIMESTAMP,
         STRING,
         UUID,
-//        BUFFER,
-//        CONST_BUFFER,
         VECTOR,
         LIST,
         SET,
         MAP,
+        FILESYSTEM_PATH,
         _COUNT_       ///< Number of enum entries. THIS MUST BE THE LAST ENTRY!
     };
 
