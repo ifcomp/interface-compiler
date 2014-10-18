@@ -187,14 +187,14 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
-                    stream << "{ ";
+                    stream << "{ { ";
 
                     for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
                     {
                         stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
                     }
 
-                    stream << " }";
+                    stream << " } }";
                 }
                 break;
 
