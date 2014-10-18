@@ -47,7 +47,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("everbase::common::Uuid<>"),
-                PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<$0>"),
+                PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<%0>"),
                 PrimitiveConfig<Primitive::Underlying::VERSIONID>("everbase::common::VersionId")
             },
             PrimitiveConfigs3 {

@@ -469,14 +469,28 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
 
     for( auto param : params )
     {
-        std::string f = std::string("$") + std::to_string(i);
-        auto j = native.find(f);
-
-        if( j != std::string::npos )
         {
-            std::stringstream p;
-            p << type(param, std::vector<Model::ElementRef>());
-            native.replace(j, f.length(), p.str() );
+            std::string f = std::string("$") + std::to_string(i);
+            auto j = native.find(f);
+
+            if( j != std::string::npos )
+            {
+                std::stringstream p;
+                p << type(param, std::vector<Model::ElementRef>());
+                native.replace(j, f.length(), p.str() );
+            }   
+        }
+
+        {
+            std::string f = std::string("%") + std::to_string(i);
+            auto j = native.find(f);
+
+            if( j != std::string::npos )
+            {
+                std::stringstream p;
+                p << qname(param);
+                native.replace(j, f.length(), p.str() );
+            }   
         }
 
         ++i;
