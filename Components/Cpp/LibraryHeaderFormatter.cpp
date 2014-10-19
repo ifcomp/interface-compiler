@@ -19,35 +19,7 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
     FormatterBase::_includes(stream);
 
     stream
-        << "#include \"common/ThreadSafe.hpp\"" << endl
-        << "#include \"common/EventManager.hpp\"" << endl
-        << endl
-        << "#include <list>" << endl
-        << "#include <boost/system/error_code.hpp>" << endl
-        << "#include <boost/system/system_error.hpp>" << endl
-        << "#include <boost/uuid/uuid_generators.hpp>" << endl
-        << "#include <boost/uuid/uuid_io.hpp>" << endl
-        << "#include <boost/date_time/posix_time/posix_time.hpp>" << endl
-        << "#include <boost/algorithm/string.hpp>" << endl
-        << "#include <boost/asio.hpp>" << endl
-        << endl
-        << "#ifdef WIN32" << endl
-        << "#include <codecvt>" << endl
-        << "#ifndef NOMINMAX" << endl
-        << "#define NOMINMAX 1" << endl
-        << "#endif" << endl
-        << "#include <Windows.h>" << endl
-        << "#undef NOMINMAX" << endl
-        << "#endif" << endl
-        << endl
-        << "#if defined(__APPLE__) || defined(WIN32)" << endl
-        << "#include <boost/thread/tss.hpp>" << endl
-        << "#endif" << endl
-        << endl
-        << "namespace everbase" << endl
-        << "{" << endl
-        << "    extern boost::asio::io_service* iosrv;" << endl
-        << "}" << endl
+        << "#include \"library/ZmqClient.hpp\"" << endl
         << endl;
 }
 
@@ -96,8 +68,6 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
 
     stream << endl << "{" << endl;
 
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/decl.hpp\"" << endl;
-
     if(class_->operations().size() > 0)
     {
         stream << "public:" << endl;
@@ -114,7 +84,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     stream << "public:" << endl;
 
     filter(stream).push<indent>(config.indentData)
-//        << name(class_) << "Impl();" << endl
+        << name(class_) << "Impl();" << endl
         << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
         << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
         << "virtual ~" << name(class_) << "Impl();" << endl << endl;

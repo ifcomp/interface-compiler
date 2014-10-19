@@ -13,8 +13,6 @@ using namespace StreamFilter;
 void LibraryFormatter::_includes(std::ostream& stream) const
 {
     FormatterBase::_includes(stream);
-
-    filter(stream).push<reset>() << "#include \"dummy_impl/library.cpp\"" << endl << endl;
 }
 
 void LibraryFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
@@ -33,8 +31,6 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     stream << "// " << name(class_) << ": {" << endl << endl;
-
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/def.cpp\"" << endl << endl;
 
     for( auto constant : class_->constants() )
     {
@@ -58,13 +54,8 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     stream
-//        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
-        << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
-
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << "Impl/destructor_sync_impl.cpp\"" << endl;
-
-    stream
-        << "}" << endl << endl;
+        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
+        << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
 
     stream << "// " << name(class_) << ": }" << endl << endl;
 }
@@ -119,12 +110,10 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << ")" << endl << "{" << endl;
 
-//    if (operation->result())
-//    {
-//        stream << "    return " << type(operation->result()->type()) << "();" << endl;
-//    }
-
-    filter(stream).push<reset>() << "#include \"dummy_impl/" << qname(class_, "/") << (!operation->isStatic() ? "Impl" : "") << "/" << name(operation) << "_sync_impl.cpp\"" << endl;
+    if (operation->result())
+    {
+        stream << "    return " << type(operation->result()->type()) << "();" << endl;
+    }
 
     stream << "}" << endl;
 }
