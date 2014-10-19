@@ -23,6 +23,8 @@ public:
         BOOLEAN,
         TIMESTAMP,
         STRING,
+        UUID,
+        ID256,
         OBJECTID,
         VERSIONID,
         TYPEID,

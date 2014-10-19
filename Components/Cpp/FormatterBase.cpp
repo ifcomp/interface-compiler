@@ -46,11 +46,13 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("bool"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
-                PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<%0>"),
-                PrimitiveConfig<Primitive::Underlying::VERSIONID>("everbase::common::VersionId<%0>"),
-                PrimitiveConfig<Primitive::Underlying::TYPEID>("everbase::common::TypeId<%0>")
+                PrimitiveConfig<Primitive::Underlying::UUID>("everbase::common::Uuid"),
+                PrimitiveConfig<Primitive::Underlying::ID256>("everbase::common::Id256")
             },
             PrimitiveConfigs3 {
+                PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<%0>"),
+                PrimitiveConfig<Primitive::Underlying::VERSIONID>("everbase::common::VersionId<%0>"),
+                PrimitiveConfig<Primitive::Underlying::TYPEID>("everbase::common::TypeId<%0>"),
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("std::vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("std::list<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("std::set<$0>"),

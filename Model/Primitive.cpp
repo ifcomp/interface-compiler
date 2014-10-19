@@ -13,6 +13,8 @@ const char* Primitive::underlyingNames[] =
     "Boolean",
     "Timestamp",
     "String",
+    "Uuid",
+    "Id256",
     "ObjectId",
     "VersionId",
     "TypeId",
@@ -25,6 +27,8 @@ const char* Primitive::underlyingNames[] =
 
 const unsigned int Primitive::underlyingParamCounts[] =
 {
+    0,
+    0,
     0,
     0,
     0,

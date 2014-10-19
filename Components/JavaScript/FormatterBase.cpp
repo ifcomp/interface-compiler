@@ -48,11 +48,13 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("Boolean"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("Timestamp"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
-                PrimitiveConfig<Primitive::Underlying::OBJECTID>("ObjectId<$0>"),
-                PrimitiveConfig<Primitive::Underlying::VERSIONID>("VersionId<$0>"),
-                PrimitiveConfig<Primitive::Underlying::TYPEID>("TypeId<$0>")
+                PrimitiveConfig<Primitive::Underlying::UUID>("Uuid"),
+                PrimitiveConfig<Primitive::Underlying::ID256>("Id256")
             },
             PrimitiveConfigs3 {
+                PrimitiveConfig<Primitive::Underlying::OBJECTID>("ObjectId<$0>"),
+                PrimitiveConfig<Primitive::Underlying::VERSIONID>("VersionId<$0>"),
+                PrimitiveConfig<Primitive::Underlying::TYPEID>("TypeId<$0>"),
                 PrimitiveConfig<Primitive::Underlying::VECTOR>("Vector<$0>"),
                 PrimitiveConfig<Primitive::Underlying::LIST>("List<$0>"),
                 PrimitiveConfig<Primitive::Underlying::SET>("Set<$0>"),

@@ -429,16 +429,24 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
             native = config.primitiveConfig1<Model::Primitive::Underlying::STRING>().native;
             break;
 
+        case Model::Primitive::Underlying::UUID:
+            native = config.primitiveConfig1<Model::Primitive::Underlying::UUID>().native;
+            break;
+
+        case Model::Primitive::Underlying::ID256:
+            native = config.primitiveConfig1<Model::Primitive::Underlying::ID256>().native;
+            break;
+
         case Model::Primitive::Underlying::OBJECTID:
-            native = config.primitiveConfig1<Model::Primitive::Underlying::OBJECTID>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::OBJECTID>().native;
             break;
 
         case Model::Primitive::Underlying::VERSIONID:
-            native = config.primitiveConfig1<Model::Primitive::Underlying::VERSIONID>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::VERSIONID>().native;
             break;
 
         case Model::Primitive::Underlying::TYPEID:
-            native = config.primitiveConfig1<Model::Primitive::Underlying::TYPEID>().native;
+            native = config.primitiveConfig3<Model::Primitive::Underlying::TYPEID>().native;
             break;
 
         case Model::Primitive::Underlying::VECTOR:
