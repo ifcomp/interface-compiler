@@ -17,10 +17,6 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
         << endl;
 
     FormatterBase::_includes(stream);
-
-    stream
-        << "#include \"library/ZmqClient.hpp\"" << endl
-        << endl;
 }
 
 void LibraryHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
