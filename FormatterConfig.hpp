@@ -109,9 +109,9 @@ struct FormatterConfig
 		PrimitiveConfig<Model::Primitive::Underlying::BOOLEAN>,
 		PrimitiveConfig<Model::Primitive::Underlying::TIMESTAMP>,
 		PrimitiveConfig<Model::Primitive::Underlying::STRING>,
-		PrimitiveConfig<Model::Primitive::Underlying::UUID>,
 		PrimitiveConfig<Model::Primitive::Underlying::OBJECTID>,
-		PrimitiveConfig<Model::Primitive::Underlying::VERSIONID>
+		PrimitiveConfig<Model::Primitive::Underlying::VERSIONID>,
+		PrimitiveConfig<Model::Primitive::Underlying::TYPEID>
 	> PrimitiveConfigs1;
 
 	typedef boost::tuple<
