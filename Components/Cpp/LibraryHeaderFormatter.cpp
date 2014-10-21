@@ -39,6 +39,42 @@ void LibraryHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef e
     }
 }
 
+void LibraryHeaderFormatter::_footer(std::ostream& stream, Model::RootRef root) const
+{
+    stream << backwards(root->getNamespace());
+
+    stream << endl;
+    stream << "namespace everbase { namespace internal { namespace common { namespace rpc {" << endl
+           << definition(root->getNamespace(), 0)
+           << "} } } } // namespace: everbase::internal::common::rpc" << endl;
+}
+
+void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const
+{
+    if(pass == 0)
+    {
+        if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+        {
+            for ( auto element : namespace_->elements() )
+            {
+                filter(stream).push<indent>(config.indentData) << definition(element, pass);
+            }
+        }
+        else
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            stream << "template<>" << endl
+                   << "struct TypeFactory<" << qname(class_) << ">" << endl
+                   << "{" << endl
+                   << "    virtual std::shared_ptr<void> create() const override" << endl
+                   << "    {" << endl
+                   << "        return std::make_shared<" << qname(class_) << "Impl>();" << endl
+                   << "    }" << endl
+                   << "};" << endl;
+        }
+    }
+}
+
 void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 }

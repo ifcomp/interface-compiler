@@ -42,6 +42,9 @@ protected:
     
     virtual void _includes(std::ostream& stream) const override;
     virtual void _forwards(std::ostream& stream, Model::ElementRef element) const override;
+    
+    virtual void _footer(std::ostream& stream, Model::RootRef root) const override;
+    virtual void _definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const override;
 
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
