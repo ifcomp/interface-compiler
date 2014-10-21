@@ -13,6 +13,9 @@ using namespace StreamFilter;
 void LibraryFormatter::_includes(std::ostream& stream) const
 {
     FormatterBase::_includes(stream);
+
+    stream << "#include \"library/library.hpp\"" << endl
+           << endl;
 }
 
 void LibraryFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
@@ -110,9 +113,25 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << ")" << endl << "{" << endl;
 
+    filter(stream).push<indent>()
+        << "std::vector<boost::any> params;" << endl;
+
+    for (auto parameter : operation->params())
+    {
+        filter(stream).push<indent>()
+            << "params.push_back(boost::any(" << name(parameter) << "));";
+    }
+
     if (operation->result())
     {
-        stream << "    return " << type(operation->result()->type()) << "();" << endl;
+        filter(stream).push<indent>()
+            << "return boost::any_cast<" << type(operation->result()->type()) << ">("
+                << "everbase::internal::library::client->call(\"" << qcname(operation) << "\", params));" << endl;
+    }
+    else
+    {
+        filter(stream).push<indent>()
+            << "everbase::internal::library::client->call(\"" << qcname(operation) << "\", params);" << endl;
     }
 
     stream << "}" << endl;
