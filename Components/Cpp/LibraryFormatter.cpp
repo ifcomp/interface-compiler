@@ -119,7 +119,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
     for (auto parameter : operation->params())
     {
         filter(stream).push<indent>()
-            << "params.push_back(boost::any(" << name(parameter) << "));";
+            << "params.push_back(boost::any(" << name(parameter) << "));" << endl;
     }
 
     if (operation->result())
