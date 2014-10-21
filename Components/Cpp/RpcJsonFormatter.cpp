@@ -165,12 +165,12 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         << "{" << endl
         << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname(class_) << "Ref source)" << endl
         << "    {" << endl
-        << "        return json_spirit::mValue(directory.template registerObject<" << qname(class_) << ">(source));" << endl
+        << "        return json_spirit::mValue(directory.translate<" << qname(class_) << ">(source));" << endl
         << "    }" << endl
         << endl
         << "    static inline " << qname(class_) << "Ref decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
         << "    {" << endl
-        << "        return directory.lookupObject<" << qname(class_) << ">(source.get_uint64());" << endl
+        << "        return directory.translate<" << qname(class_) << ">(source.get_uint64());" << endl
         << "    }" << endl
         << "};" << endl << endl;
 
