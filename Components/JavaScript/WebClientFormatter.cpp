@@ -33,7 +33,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef n
     
     if (!namespace_->parent()->parent())
     {
-		stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+		//stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 		if (namespace_->longName() == "Everbase")
 		{
 			stream << "everbase.rpc = everbase.rpc || { }" << endl << endl;

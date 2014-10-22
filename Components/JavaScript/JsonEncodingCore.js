@@ -1,8 +1,4 @@
-'use strict';
-
 var classInstanceHandles = { }
-
-var everbase = everbase || { }
 
 everbase.rpc = everbase.rpc || { }
 

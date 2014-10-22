@@ -1,7 +1,3 @@
-'use strict';
-
-var everbase = everbase || { }
-
 everbase.rpc = everbase.rpc || { }
 
 everbase.rpc.WebSocket = function(hostAddress) {

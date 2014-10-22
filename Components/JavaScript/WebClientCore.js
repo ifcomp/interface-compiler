@@ -1,7 +1,3 @@
-'use strict';
-
-var everbase = everbase || { };
-
 everbase.webclient = everbase.webclient || { };
 
 everbase.webclient.connection = new everbase.rpc.WebSocket('ws://' + location.host);

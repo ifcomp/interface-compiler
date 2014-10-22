@@ -25,7 +25,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::NamespaceRef namespa
 {
 	if (!namespace_->parent()->parent() && namespace_->longName() == "Everbase")
 	{
-		stream << "\'use strict\';" << endl << endl;
+		//stream << "\'use strict\';" << endl << endl;
 	}
 
     if ( namespace_->doc() )
@@ -35,7 +35,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::NamespaceRef namespa
     
     if (!namespace_->parent()->parent())
     {
-		stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
+		//stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
 		if (namespace_->longName() == "Everbase")
 		{
 			stream << "everbase.rpc = everbase.rpc || { }" << endl << endl;

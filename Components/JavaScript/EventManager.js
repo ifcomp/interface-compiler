@@ -1,11 +1,3 @@
-'use strict';
-
-/**
- * @brief Everbase namespace
- */
-var everbase = everbase || {};
-
-
 /**
  * @brief Represents an event.
  */
