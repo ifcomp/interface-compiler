@@ -17,7 +17,6 @@ everbase.webclient._routeMessage = function(message) {
 }
 
 everbase.webclient._processResponse = function(response) {
-    console.log('Response received.');
     var responseId = response[2];
     if (responseId in everbase.webclient.processes) { 
         var responseVal = response[3];
@@ -27,8 +26,7 @@ everbase.webclient._processResponse = function(response) {
         {
             var responseParamTypes = everbase.webclient.processes[responseId][2];
             conversionedResult = everbase.rpc.jsonEncoding._conversions[responseType].decode(responseVal, responseParamTypes);
-            everbase.webclient.processes[responseId][0](conversionedResult); 
-            console.log(conversionedResult);
+            everbase.webclient.processes[responseId][0](conversionedResult);
         }
         else
         {
