@@ -69,7 +69,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
         {
             filter(stream).push<indent>(config.indentData)
                    << "template<>" << endl
-                   << "struct TypeFactory<" << qname(class_) << ">" << endl
+                   << "struct TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
                    << "{" << endl
                    << "    virtual std::shared_ptr<void> create() const override" << endl
                    << "    {" << endl
