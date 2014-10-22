@@ -14,12 +14,13 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
 {
     stream
         << "#pragma once" << endl
-        << endl
-        << "#include common/rpc/ObjectDirectory.hpp" << endl
-        << endl
         << endl;
 
     FormatterBase::_includes(stream);
+
+    stream
+        << "#include \"common/rpc/ObjectDirectory.hpp\"" << endl
+        << endl;
 }
 
 void LibraryHeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
