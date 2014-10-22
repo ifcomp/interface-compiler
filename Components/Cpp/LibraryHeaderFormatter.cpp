@@ -14,6 +14,9 @@ void LibraryHeaderFormatter::_includes(std::ostream& stream) const
 {
     stream
         << "#pragma once" << endl
+        << endl
+        << "#include common/rpc/ObjectDirectory.hpp" << endl
+        << endl
         << endl;
 
     FormatterBase::_includes(stream);
@@ -57,13 +60,14 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
         {
             for ( auto element : namespace_->elements() )
             {
-                filter(stream).push<indent>(config.indentData) << definition(element, pass);
+                stream << definition(element, pass);
             }
         }
         else
         if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
         {
-            stream << "template<>" << endl
+            filter(stream).push<indent>(config.indentData)
+                   << "template<>" << endl
                    << "struct TypeFactory<" << qname(class_) << ">" << endl
                    << "{" << endl
                    << "    virtual std::shared_ptr<void> create() const override" << endl
