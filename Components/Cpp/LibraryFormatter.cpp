@@ -119,7 +119,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
     if(!operation->isStatic())
     {
         filter(stream).push<indent>()
-            << "params.push_back(boost::any(shared_from_this()));" << endl;
+            << "params.push_back(boost::any(std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())));" << endl;
     }
 
     for (auto parameter : operation->params())
