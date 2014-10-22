@@ -23,7 +23,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef n
 {
 	if (!namespace_->parent()->parent() && namespace_->longName() == "Everbase")
 	{
-		stream << "\'use strict\';" << endl << endl;
+		//stream << "\'use strict\';" << endl << endl;
 	}
 
     if ( namespace_->doc() )
