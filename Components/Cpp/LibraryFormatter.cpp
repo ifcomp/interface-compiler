@@ -116,6 +116,12 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
     filter(stream).push<indent>()
         << "std::vector<boost::any> params;" << endl;
 
+    if(!operation->isStatic())
+    {
+        filter(stream).push<indent>()
+            << "params.push_back(boost::any(shared_from_this()));" << endl;
+    }
+
     for (auto parameter : operation->params())
     {
         filter(stream).push<indent>()
