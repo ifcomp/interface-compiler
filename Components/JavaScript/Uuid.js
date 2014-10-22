@@ -1,5 +1,3 @@
-'use strict';
-
 var uuid = function () {
 	var uuid = [];
 	for (var i = 0; i < 16; i++) {
