@@ -12,7 +12,9 @@ everbase.rpc.jsonEncoding._conversions['UInt32'] =
 everbase.rpc.jsonEncoding._conversions['UInt64'] = 
 everbase.rpc.jsonEncoding._conversions['Boolean'] = 
 everbase.rpc.jsonEncoding._conversions['String'] = 
-everbase.rpc.jsonEncoding._conversions['Uuid'] = {
+everbase.rpc.jsonEncoding._conversions['Uuid'] = 
+everbase.rpc.jsonEncoding._conversions['Id256'] = 
+everbase.rpc.jsonEncoding._conversions['FileSystem::Path'] = {
     encode: function(value) { return value },
     decode: function(value) { return value }
 };
