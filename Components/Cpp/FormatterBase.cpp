@@ -68,6 +68,7 @@ void FormatterBase::_includes(std::ostream& stream) const
 {
     stream << "#include <memory>" << endl
            << "#include <set>" << endl
+           << "#include <map>" << endl
            << "#include <ctime>" << endl
            << "#include \"everbase/common/Id.hpp\"" << endl
            << "#include \"everbase/common/Event.hpp\"" << endl
