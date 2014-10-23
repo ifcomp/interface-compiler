@@ -34,7 +34,7 @@ everbase.rpc.WebSocket._connect = function() {
 
 everbase.rpc.WebSocket._onOpen = function(openEventArgs) {
   this._socketOpen = true;
-  for (var i = 0; i < this._queuedMessages; i++) {
+  for (var i = 0; i < this._queuedMessages.length; i++) {
     this._ws.send(this._queuedMessages[i]);
   }
 };
