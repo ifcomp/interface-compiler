@@ -16,6 +16,7 @@ void RpcBinaryFormatter::_includes(std::ostream& stream) const
 
     stream << "#include \"common/rpc/binary/MessageType.hpp\"" << endl
            << "#include \"common/rpc/binary/TypeEncoding.hpp\"" << endl
+           << "#include \"common/rpc/binary/OperationWrapper.hpp\"" << endl
            << endl;
 }
 
