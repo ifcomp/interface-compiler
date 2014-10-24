@@ -113,32 +113,45 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << ")" << endl << "{" << endl;
 
-    filter(stream).push<indent>()
-        << "std::vector<boost::any> params;" << endl;
+    if (operation->result())
+    {
+        filter(stream).push<indent>() << "return ";
+    }
+
+    filter(stream).push<indent>() << "everbase::internal::library::client->call<";
+
+    if (operation->result())
+    {
+        filter(stream).push<indent>() << type(operation->result()->type());
+    }
+    else
+    {
+        filter(stream).push<indent>() << type("void");
+    }
 
     if(!operation->isStatic())
     {
-        filter(stream).push<indent>()
-            << "params.push_back(boost::any(std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())));" << endl;
+        filter(stream).push<indent>() << ", " << type(class_);
     }
 
     for (auto parameter : operation->params())
     {
-        filter(stream).push<indent>()
-            << "params.push_back(boost::any(" << name(parameter) << "));" << endl;
+        filter(stream).push<indent>() << ", " << type(parameter->type());
     }
 
-    if (operation->result())
+    filter(stream).push<indent>() << ">(\"" << qcname(operation) << "\", ";
+
+    if(!operation->isStatic())
     {
-        filter(stream).push<indent>()
-            << "return boost::any_cast<" << type(operation->result()->type()) << ">("
-                << "everbase::internal::library::client->call(\"" << qcname(operation) << "\", params));" << endl;
+        filter(stream).push<indent>() << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())";
     }
-    else
+
+    for (auto parameter : operation->params())
     {
-        filter(stream).push<indent>()
-            << "everbase::internal::library::client->call(\"" << qcname(operation) << "\", params);" << endl;
+        filter(stream).push<indent>() << ", std::move(" << name(parameter) << ")";
     }
+
+    filter(stream).push<indent>() << ");" << endl;
 
     stream << "}" << endl;
 }
