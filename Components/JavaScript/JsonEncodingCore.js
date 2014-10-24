@@ -6,14 +6,16 @@ everbase.rpc.jsonEncoding = everbase.rpc.jsonEncoding || { }
 
 everbase.rpc.jsonEncoding._conversions = everbase.rpc.jsonEncoding._conversions || { }
 
-everbase.rpc.jsonEncoding._conversions['Byte'] = 
-everbase.rpc.jsonEncoding._conversions['UInt16'] = 
-everbase.rpc.jsonEncoding._conversions['UInt32'] = 
-everbase.rpc.jsonEncoding._conversions['UInt64'] = 
-everbase.rpc.jsonEncoding._conversions['Boolean'] = 
-everbase.rpc.jsonEncoding._conversions['String'] = 
-everbase.rpc.jsonEncoding._conversions['Uuid'] = 
-everbase.rpc.jsonEncoding._conversions['Id256'] = 
+everbase.rpc.jsonEncoding._conversions['Byte'] =
+everbase.rpc.jsonEncoding._conversions['UInt16'] =
+everbase.rpc.jsonEncoding._conversions['UInt32'] =
+everbase.rpc.jsonEncoding._conversions['UInt64'] =
+everbase.rpc.jsonEncoding._conversions['Boolean'] =
+everbase.rpc.jsonEncoding._conversions['String'] =
+everbase.rpc.jsonEncoding._conversions['Uuid'] =
+everbase.rpc.jsonEncoding._conversions['Id256'] =
+everbase.rpc.jsonEncoding._conversions['ObjectId'] =
+everbase.rpc.jsonEncoding._conversions['VersionId'] =
 everbase.rpc.jsonEncoding._conversions['FileSystem::Path'] = {
     encode: function(value) { return value },
     decode: function(value) { return value }
@@ -24,8 +26,8 @@ everbase.rpc.jsonEncoding._conversions['Timestamp'] = {
     decode: function(value) { return new Date(value*1000); }
 };
 
-everbase.rpc.jsonEncoding._conversions['Vector'] = 
-everbase.rpc.jsonEncoding._conversions['List'] = 
+everbase.rpc.jsonEncoding._conversions['Vector'] =
+everbase.rpc.jsonEncoding._conversions['List'] =
 everbase.rpc.jsonEncoding._conversions['Set'] = {
     encode: function(values, valuesType) {
         if (valuesType.length !== 1) {
