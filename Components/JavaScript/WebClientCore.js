@@ -1,6 +1,6 @@
 everbase.webclient = everbase.webclient || { };
 
-everbase.webclient.connection = new everbase.rpc.WebSocket('ws://' + location.host);
+everbase.webclient.connection = new everbase.rpc.WebSocket('ws://' + location.hostname + ':' + 42230);
 
 everbase.webclient.processes = { };
 
