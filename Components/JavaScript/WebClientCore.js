@@ -9,7 +9,7 @@ everbase.webclient._routeMessage = function(message) {
         everbase.webclient._processResponse(message);
     }
     else if (message[0] === 'event') {
-        everbase.webclient.processEvent(message);
+        everbase.webclient._processEvent(message);
     }
     else {
         throw Error('Unknown response type.');
@@ -40,7 +40,7 @@ everbase.webclient._processResponse = function(response) {
 }
 
 everbase.webclient._processEvent = function(event) {
-    try 
+    try
     {
         var eventName = event[1];
         var eventValues = event[2];
