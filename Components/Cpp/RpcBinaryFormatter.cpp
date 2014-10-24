@@ -181,7 +181,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     if( !operation->isStatic() )
     {
-        stream << "        " << qname(class_) << " this_ = TypeEncoding<std::shared_ptr<" << qname(class_) << ">>::decode(directory, call);" << endl << endl;
+        stream << "        std::shared_ptr<" << qname(class_) << "> this_ = TypeEncoding<std::shared_ptr<" << qname(class_) << ">>::decode(directory, call);" << endl << endl;
     }
 
     for( auto param : operation->params() )
