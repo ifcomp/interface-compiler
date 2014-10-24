@@ -131,7 +131,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     if(!operation->isStatic())
     {
-        filter(stream).push<indent>() << ", " << type(class_);
+        filter(stream).push<indent>() << ", std::shared_ptr<" << qname(class_) << ">";
     }
 
     for (auto parameter : operation->params())
