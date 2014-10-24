@@ -23,9 +23,11 @@ void RpcBinaryFormatter::_includes(std::ostream& stream) const
 void RpcBinaryFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << endl;
+    filter(stream).push<reset>() << "#if defined(RPC_BINARY_IMPLEMENTATION)" << endl;
     stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>> everbase::internal::common::rpc::binary::OperationWrapper::operations {" << endl
            << definition(root->getNamespace(), 0)
            << "};" << endl;
+    filter(stream).push<reset>() << "#endif" << endl;
 }
 
 void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const
