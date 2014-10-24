@@ -176,7 +176,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
     stream << "class " << qcname(operation, "_") << " : public OperationWrapper" << endl
            << "{" << endl;
 
-    stream << "    virtual inline void execute(common::rpc::ObjectDirectory& directory, std::istream& call, std::ostream& response) override" << endl
+    stream << "    virtual inline void execute(common::rpc::ObjectDirectory& directory, std::istream& call, std::ostream& response) const override" << endl
            << "    {" << endl;
 
     if( !operation->isStatic() )
