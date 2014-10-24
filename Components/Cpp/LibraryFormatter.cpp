@@ -118,40 +118,40 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
         filter(stream).push<indent>() << "return ";
     }
 
-    filter(stream).push<indent>() << "everbase::internal::library::client->call<";
+    stream << "everbase::internal::library::client->call<";
 
     if (operation->result())
     {
-        filter(stream).push<indent>() << type(operation->result()->type());
+        stream << type(operation->result()->type());
     }
     else
     {
-        filter(stream).push<indent>() << "void";
+        stream << "void";
     }
 
     if(!operation->isStatic())
     {
-        filter(stream).push<indent>() << ", std::shared_ptr<" << qname(class_) << ">";
+        stream << ", std::shared_ptr<" << qname(class_) << ">";
     }
 
     for (auto parameter : operation->params())
     {
-        filter(stream).push<indent>() << ", " << type(parameter->type());
+        stream << ", " << type(parameter->type());
     }
 
-    filter(stream).push<indent>() << ">(\"" << qcname(operation) << "\", ";
+    stream << ">(\"" << qcname(operation) << "\"";
 
     if(!operation->isStatic())
     {
-        filter(stream).push<indent>() << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())";
+        stream << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())";
     }
 
     for (auto parameter : operation->params())
     {
-        filter(stream).push<indent>() << ", std::move(" << name(parameter) << ")";
+        stream << ", std::move(" << name(parameter) << ")";
     }
 
-    filter(stream).push<indent>() << ");" << endl;
+    stream << ");" << endl;
 
     stream << "}" << endl;
 }
