@@ -12,7 +12,9 @@ using namespace StreamFilter;
 
 void RpcBinaryFormatter::_includes(std::ostream& stream) const
 {
-    stream << "#pragma once" << endl << endl;
+    stream << "#if !defined(RPC_BINARY_HEADER)" << endl
+           << "#define RPC_BINARY_HEADER" << endl
+           << endl;
 
     FormatterBase::_includes(stream);
 
@@ -25,6 +27,8 @@ void RpcBinaryFormatter::_includes(std::ostream& stream) const
 
 void RpcBinaryFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
+    stream << "#endif" << endl;
+
     stream << endl;
     filter(stream).push<reset>() << "#if defined(RPC_BINARY_IMPLEMENTATION)" << endl;
     stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>> everbase::internal::common::rpc::binary::OperationWrapper::operations {" << endl
