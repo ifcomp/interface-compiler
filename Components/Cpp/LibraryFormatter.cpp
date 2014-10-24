@@ -126,7 +126,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
     }
     else
     {
-        filter(stream).push<indent>() << type("void");
+        filter(stream).push<indent>() << "void";
     }
 
     if(!operation->isStatic())
