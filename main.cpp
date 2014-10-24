@@ -4,6 +4,7 @@
 #include "Components/Cpp/LibraryHeaderFormatter.hpp"
 #include "Components/Cpp/LibraryFormatter.hpp"
 #include "Components/Cpp/RpcFormatter.hpp"
+#include "Components/Cpp/RpcBinaryFormatter.hpp"
 #include "Components/Cpp/RpcJsonFormatter.hpp"
 
 #include "Components/JavaScript/HeaderFormatter.hpp"
@@ -33,6 +34,7 @@ int main(int argc, char** argv)
         cerr << "           C++-LibraryHeader" << endl;
         cerr << "           C++-Library" << endl;
         cerr << "           C++-Rpc" << endl;
+        cerr << "           C++-RpcBinary" << endl;
         cerr << "           C++-RpcJson" << endl;
         cerr << "           C++-WebService" << endl;
         cerr << "           C++-Kernel" << endl;
@@ -69,7 +71,6 @@ int main(int argc, char** argv)
     }
     catch (const runtime_error& e)
     {
-		
         cerr << "[ERROR 1] " << e.what() << endl;
         return 1;
     }
@@ -121,6 +122,12 @@ int main(int argc, char** argv)
             if( format.first == "C++-Rpc" )
             {
                 Components::Cpp::RpcFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "C++-RpcBinary" )
+            {
+                Components::Cpp::RpcBinaryFormatter format;
                 format.execute(root, output);
             }
             else
