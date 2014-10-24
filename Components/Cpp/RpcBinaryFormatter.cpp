@@ -20,6 +20,37 @@ void RpcBinaryFormatter::_includes(std::ostream& stream) const
            << endl;
 }
 
+void RpcBinaryFormatter::_footer(std::ostream& stream, Model::RootRef root) const
+{
+    stream << endl;
+    stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>> everbase::internal::common::rpc::binary::OperationWrapper::operations {" << endl
+           << definition(root->getNamespace(), 0)
+           << "};" << endl;
+}
+
+void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const
+{
+    if(pass == 0)
+    {
+        if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+        {
+            for ( auto element : namespace_->elements() )
+            {
+                filter(stream).push<indent>(config.indentData) << definition(element, pass);
+            }
+        }
+        else
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            for( auto operation : class_->operations() )
+            {
+                stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>>{\"" << qcname(operation) << "\", std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>(new "
+                       << "everbase::internal::common::rpc::binary::" << qcname(operation, "_") << "())}," << endl;
+            }
+        }
+    }
+}
+
 void RpcBinaryFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )
