@@ -19,6 +19,7 @@ void RpcBinaryFormatter::_includes(std::ostream& stream) const
     stream << "#include \"common/rpc/binary/MessageType.hpp\"" << endl
            << "#include \"common/rpc/binary/TypeEncoding.hpp\"" << endl
            << "#include \"common/rpc/binary/OperationWrapper.hpp\"" << endl
+           << "#include \"common/rpc/binary/EventWrapper.hpp\"" << endl
            << endl;
 }
 
@@ -28,6 +29,9 @@ void RpcBinaryFormatter::_footer(std::ostream& stream, Model::RootRef root) cons
     filter(stream).push<reset>() << "#if defined(RPC_BINARY_IMPLEMENTATION)" << endl;
     stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>> everbase::internal::common::rpc::binary::OperationWrapper::operations {" << endl
            << definition(root->getNamespace(), 0)
+           << "};" << endl;
+    stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::EventWrapper>> everbase::internal::common::rpc::binary::EventWrapper::events {" << endl
+           << definition(root->getNamespace(), 1)
            << "};" << endl;
     filter(stream).push<reset>() << "#endif" << endl;
 }
@@ -50,6 +54,26 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ElementRef ele
             {
                 stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>>{\"" << qcname(operation) << "\", std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>(new "
                        << "everbase::internal::common::rpc::binary::" << qcname(operation, "_") << "())}," << endl;
+            }
+        }
+    }
+    else
+    if(pass == 1)
+    {
+        if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+        {
+            for ( auto element : namespace_->elements() )
+            {
+                filter(stream).push<indent>(config.indentData) << definition(element, pass);
+            }
+        }
+        else
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            for( auto event : class_->events() )
+            {
+                stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::EventWrapper>>{\"" << qcname(event) << "\", std::shared_ptr<everbase::internal::common::rpc::binary::EventWrapper>(new "
+                       << "everbase::internal::common::rpc::binary::" << qcname(event, "_") << "())}," << endl;
             }
         }
     }
@@ -128,6 +152,11 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ClassRef class
     {
         stream << definition(operation) << endl;
     }
+
+    for( auto event : class_->events() )
+    {
+        stream << definition(event) << endl;
+    }
 }
 
 void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
@@ -146,20 +175,21 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
     stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace binary {" << endl << endl;
 
     stream
-        << "struct TypeEncoding<" << qname(event) << ">" << endl
+        << "struct " << qcname(event, "_") << " : public EventWrapper" << endl
         << "{" << endl;
 
 
     // *** encode
 
     stream
-        << "    static inline void encode(everbase::internal::common::rpc::ObjectDirectory& directory, std::ostream& stream, " << qname(event) << " event)" << endl
-        << "    {" << endl;
+        << "    virtual inline void encode(everbase::internal::common::rpc::ObjectDirectory& directory, std::ostream& stream, everbase::common::Event& event) const override" << endl
+        << "    {" << endl
+        << "        " << qname(event) << "& event_ = dynamic_cast<" << qname(event) << "&>(event);" << endl;
 
     for( auto value : event->values() )
     {
         stream
-            << "        TypeEncoding<" << type(value->type()) << ">::encode(directory, stream, event." << name(value) << ");" << endl;
+            << "        TypeEncoding<" << type(value->type()) << ">::encode(directory, stream, event_." << name(value) << ");" << endl;
     }
 
     stream
@@ -170,14 +200,14 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
     // *** decode
 
     stream
-        << "    static inline std::vector<boost::any> decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream)" << endl
+        << "    virtual inline std::shared_ptr<everbase::common::Event> decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream) const override" << endl
         << "    {" << endl
-        << "        " << qname(event) << " event;" << endl;
+        << "        std::shared_ptr<" << qname(event) << "> event = std::make_shared<" << qname(event) << ">();" << endl;
 
     for( auto value : event->values() )
     {
         stream
-            << "        event." << name(value) << " = TypeEncoding<" << type(value->type()) << ">::decode(directory, stream);" << endl;
+            << "        event->" << name(value) << " = TypeEncoding<" << type(value->type()) << ">::decode(directory, stream);" << endl;
     }
 
     stream
