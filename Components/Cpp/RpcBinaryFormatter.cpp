@@ -12,6 +12,8 @@ using namespace StreamFilter;
 
 void RpcBinaryFormatter::_includes(std::ostream& stream) const
 {
+    stream << "#pragma once" << endl << endl;
+
     FormatterBase::_includes(stream);
 
     stream << "#include \"common/rpc/binary/MessageType.hpp\"" << endl
