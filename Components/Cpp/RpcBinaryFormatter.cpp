@@ -316,7 +316,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
     stream << "        if(hasException)" << endl
            << "        {" << endl
            << "            TypeEncoding<bool>::encode(directory, response, true);" << endl
-           << "            TypeEncoding<std::string>::encode(directory, response, exception);" << endl
+           << "            TypeEncoding<std::string>::encode(directory, response, std::move(exception));" << endl
            << "        }" << endl
            << "        else" << endl
            << "        {" << endl
