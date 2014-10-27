@@ -3,6 +3,7 @@
 #include "Model/TypeBase.hpp"
 
 #include <vector>
+#include <string>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
