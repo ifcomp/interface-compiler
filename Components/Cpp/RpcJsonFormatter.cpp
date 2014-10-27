@@ -165,7 +165,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         << "{" << endl
         << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname(class_) << "Ref source)" << endl
         << "    {" << endl
-        << "        return json_spirit::mValue(directory.translate<" << qname(class_) << ">(source));" << endl
+        << "        return json_spirit::mValue(static_cast<std::uint64_t>(directory.translate<" << qname(class_) << ">(source)));" << endl
         << "    }" << endl
         << endl
         << "    static inline " << qname(class_) << "Ref decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
