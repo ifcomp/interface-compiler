@@ -16,6 +16,7 @@ everbase.rpc.jsonEncoding._conversions['Uuid'] =
 everbase.rpc.jsonEncoding._conversions['Id256'] =
 everbase.rpc.jsonEncoding._conversions['ObjectId'] =
 everbase.rpc.jsonEncoding._conversions['VersionId'] =
+everbase.rpc.jsonEncoding._conversions['TypeId'] =
 everbase.rpc.jsonEncoding._conversions['FileSystem::Path'] = {
     encode: function(value) { return value },
     decode: function(value) { return value }
