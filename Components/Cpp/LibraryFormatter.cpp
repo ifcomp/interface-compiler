@@ -1,5 +1,7 @@
 #include "Components/Cpp/LibraryFormatter.hpp"
 
+#include <boost/algorithm/string/replace.hpp>
+
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
 using std::endl;
@@ -70,7 +72,60 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
         stream << doc(constant->doc());
     }
 
-    stream << "constexpr " << type(constant->type()) << " " << qname(constant) << ";" << endl;
+    stream << "const " << type(constant->type()) << " " << qname(constant) << " = ";
+
+    if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
+    {
+        switch( primitive->underlying() )
+        {
+            case Primitive::Underlying::BYTE:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint8_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT16:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint16_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT32:
+                stream << "0x" << std::hex << static_cast<std::uint64_t>(boost::any_cast<std::uint32_t>(constant->value()));
+                break;
+
+            case Primitive::Underlying::UINT64:
+                stream << "0x" << std::hex << boost::any_cast<std::uint64_t>(constant->value());
+                break;
+
+            case Primitive::Underlying::BOOLEAN:
+                stream << (boost::any_cast<bool>(constant->value()) ? "true" : "false");
+                break;
+
+            case Primitive::Underlying::TIMESTAMP:
+                throw std::runtime_error("not supported");
+
+            case Primitive::Underlying::STRING:
+                stream << "\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
+                break;
+
+            case Primitive::Underlying::UUID:
+                {
+                    auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+
+                    stream << "{ { ";
+
+                    for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
+                    {
+                        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
+                    }
+
+                    stream << " } }";
+                }
+                break;
+
+            default:
+                throw std::runtime_error("not supported");
+        }
+    }
+
+    stream << ";" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
@@ -80,7 +135,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         stream << doc(event->doc());
     }
 
-    stream << "constexpr char " << qname(event) << "::TYPE_NAME[];" << endl;
+    stream << "const char " << qname(event) << "::TYPE_NAME[] = \"" << qcname(event) << "\";" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const

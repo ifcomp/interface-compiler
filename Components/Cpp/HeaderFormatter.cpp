@@ -150,7 +150,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
         stream << doc(constant->doc());
     }
 
-    stream << "static constexpr " << type(constant->type()) << " " << name(constant) << " = ";
+    stream << "static const " << type(constant->type()) << " " << name(constant) << "; // = ";
 
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
@@ -203,7 +203,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
         }
     }
 
-    stream << ";" << endl;
+    stream << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
@@ -215,7 +215,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
     stream << "struct " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
-    filter(stream).push<indent>(config.indentData) << "static constexpr char TYPE_NAME[] = \"" << qcname(event) << "\";" << endl << endl;
+    filter(stream).push<indent>(config.indentData) << "static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl << endl;
 
     for (auto value : event->values())
     {
@@ -223,7 +223,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         {
             filter(stream).push<indent>(config.indentData) << doc(value->doc());
         }
-    
+
         filter(stream).push<indent>(config.indentData) << param(value) << ";" << endl << endl;
     }
 
