@@ -208,7 +208,41 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         stream << doc(event->doc());
     }
 
-    stream << "const NSString* " << qname(class_) << name(event) << "TypeName = @\"" << qcname(event) << "\";" << endl;
+    stream << "const NSString* " << qname(class_) << name(event) << "TypeName = @\"" << qcname(event) << "\";" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
+           << "    using encoded_type = " << qname(class_) << name(event) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        " << cpp.qname(event) << " tgt;" << endl;
+
+    for(auto value : event->values())
+    {
+        stream << "        tgt." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(src." << name(value) << "());" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        " << qname(class_) << name(event) << " tgt;" << endl;
+
+    for(auto value : event->values())
+    {
+        stream << "        tgt." << name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << "());" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
