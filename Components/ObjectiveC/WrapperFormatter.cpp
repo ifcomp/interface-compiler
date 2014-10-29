@@ -41,7 +41,10 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "template<>" << endl
            << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
            << "{" << endl
-           << "    inline static " << cpp.qname(class_) << "Ref decode(" << qname(class_) << "* src)" << endl
+           << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
+           << "    using encoded_type = " << qname(class_) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
            << "        if(!src || ![src data])" << endl
            << "        {" << endl
@@ -50,7 +53,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
            << "    }" << endl
            << endl
-           << "    inline static " << qname(class_) << "* encode(" << cpp.qname(class_) << "Ref src)" << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
            << "    {" << endl
            << "        if(!src)" << endl
            << "            { return nil; }" << endl
@@ -288,12 +291,15 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
            << "template<>" << endl
            << "struct TypeEncoding<" << cpp.qname(enum_) << ">" << endl
            << "{" << endl
-           << "    inline static " << cpp.qname(enum_) << " decode(" << qname(enum_) << " src)" << endl
+           << "    using unencoded_type = " << cpp.qname(enum_) << ";" << endl
+           << "    using encoded_type = " << qname(enum_) << ";" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
            << "        return static_cast<" << cpp.qname(enum_) << ">(src);" << endl
            << "    }" << endl
            << endl
-           << "    inline static " << qname(enum_) << " encode(" << cpp.qname(enum_) << " src)" << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
            << "    {" << endl
            << "        return static_cast<" << qname(enum_) << ">(src);" << endl
            << "    }" << endl
