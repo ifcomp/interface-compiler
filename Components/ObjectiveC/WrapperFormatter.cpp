@@ -1,8 +1,8 @@
-#include "Components/Cpp/LibraryFormatter.hpp"
+#include "Components/ObjectiveC/WrapperFormatter.hpp"
 
 #include <boost/algorithm/string/replace.hpp>
 
-namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
+namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace ObjectiveC {
 
 using std::endl;
 using std::flush;
@@ -12,35 +12,32 @@ using IndexList::indices;
 using namespace Model;
 using namespace StreamFilter;
 
-void LibraryFormatter::_includes(std::ostream& stream) const
+void WrapperFormatter::_includes(std::ostream& stream) const
 {
     FormatterBase::_includes(stream);
 
-    stream << "#include \"library/library.hpp\"" << endl
+    stream << "#include \"everbase/everbase.h\"" << endl
            << endl;
 }
 
-void LibraryFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
+void WrapperFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
     if ( class_->doc() )
     {
         stream << doc(class_->doc()) << endl;
     }
 
-    stream << "// " << name(class_) << ": {" << endl << endl;
+    stream << "// " << qname(class_) << ": {" << endl << endl;
 
-    for( auto constant : class_->constants() )
-    {
-        stream << definition(constant) << endl;
-    }
+    stream << "@implementation " << qname(class_) << endl;
 
     if(class_->operations().size() > 0)
     {
@@ -48,6 +45,19 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         {
             stream << definition(operation) << endl;
         }
+    }
+
+    stream
+        << "- (id) init {" << endl << "}" << endl << endl
+        << "- (id) initWithData:(void*)data {" << endl << "}" << endl << endl
+        << "- (void) dealloc {" << endl << "}" << endl << endl
+        << "- (void*) data {" << endl << "}" << endl << endl;
+
+    stream << "@end" << endl;
+
+    for( auto constant : class_->constants() )
+    {
+        stream << definition(constant) << endl;
     }
 
     if(class_->events().size() > 0)
@@ -58,21 +68,19 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         }
     }
 
-    stream
-        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
-        << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
-
-    stream << "// " << name(class_) << ": }" << endl << endl;
+    stream << "// " << qname(class_) << ": }" << endl << endl;
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
+    auto class_ = std::dynamic_pointer_cast<Class>(constant->parent());
+
     if ( constant->doc() )
     {
         stream << doc(constant->doc());
     }
 
-    stream << "const " << type(constant->type()) << " " << qname(constant) << " = ";
+    stream << "const " << type(constant->type()) << " " << qname(class_) << name(constant) << " = ";
 
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
@@ -102,21 +110,21 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
                 throw std::runtime_error("not supported");
 
             case Primitive::Underlying::STRING:
-                stream << "\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
+                stream << "@\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
                 break;
 
             case Primitive::Underlying::UUID:
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
-                    stream << "{ { ";
+                    stream << "[NSUUID initWithUUIDBytes:{ ";
 
                     for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
                     {
                         stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
                     }
 
-                    stream << " } }";
+                    stream << " }]";
                 }
                 break;
 
@@ -128,17 +136,19 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
     stream << ";" << endl;
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
+    auto class_ = std::dynamic_pointer_cast<Class>(event->parent());
+
     if ( event->doc() )
     {
         stream << doc(event->doc());
     }
 
-    stream << "const char " << qname(event) << "::TYPE_NAME[] = \"" << qcname(event) << "\";" << endl;
+    stream << "const NSString* " << qname(class_) << name(event) << "TypeName = @\"" << qcname(event) << "\";" << endl;
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
 {
     auto class_ = std::dynamic_pointer_cast<Model::Class>(operation->parent());
 
@@ -150,73 +160,19 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
         stream << doc(operation->doc());
     }
 
-    if (operation->result())
-    {
-        stream << type(operation->result()->type());
-    }
-    else
-    {
-        stream << "void";
-    }
+    stream << signature(operation);
 
-    stream << " " << name(class_) << (!operation->isStatic() ? "Impl" : "") << "::" << name(operation) << "(";
-
-    for (auto parameter : indices(operation->params()))
-    {
-        stream << param(parameter.value()) << (!parameter.last() ? ", " : "");
-    }
-
-    stream << ")" << endl << "{" << endl;
-
-    if (operation->result())
-    {
-        filter(stream).push<indent>() << "return ";
-    }
-
-    stream << "everbase::internal::library::client->call<";
-
-    if (operation->result())
-    {
-        stream << type(operation->result()->type());
-    }
-    else
-    {
-        stream << "void";
-    }
-
-    if(!operation->isStatic())
-    {
-        stream << ", std::shared_ptr<" << qname(class_) << ">";
-    }
-
-    for (auto parameter : operation->params())
-    {
-        stream << ", " << type(parameter->type());
-    }
-
-    stream << ">(\"" << qcname(operation) << "\"";
-
-    if(!operation->isStatic())
-    {
-        stream << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())";
-    }
-
-    for (auto parameter : operation->params())
-    {
-        stream << ", std::move(" << name(parameter) << ")";
-    }
-
-    stream << ");" << endl;
+    stream << " {" << endl;
 
     stream << "}" << endl;
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
 }
 
-void LibraryFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
+void WrapperFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
 }
 
-} } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp
+} } } } // namespace: Everbase::InterfaceCompiler::Components::ObjectiveC

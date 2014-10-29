@@ -149,7 +149,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
         stream << doc(constant->doc());
     }
 
-    stream << "extern " << type(constant->type()) << " " << qname(class_) << name(constant) << "; // = ";
+    stream << "extern const " << type(constant->type()) << " " << qname(class_) << name(constant) << "; // = ";
 
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
@@ -179,21 +179,21 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
                 throw std::runtime_error("not supported");
 
             case Primitive::Underlying::STRING:
-                stream << "\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
+                stream << "@\"" << boost::replace_all_copy(boost::any_cast<std::string>(constant->value()), "\"", "\\\"") << "\"";
                 break;
 
             case Primitive::Underlying::UUID:
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
-                    stream << "{ { ";
+                    stream << "[NSUUID initWithUUIDBytes:{ ";
 
                     for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
                     {
                         stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
                     }
 
-                    stream << " } }";
+                    stream << " }]";
                 }
                 break;
 
@@ -221,12 +221,12 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
             stream << doc(value->doc());
         }
 
-        stream << param(value) << ";" << endl << endl;
+        stream << "@property(assign) " << type(value->type()) << " " << name(value) << ";" << endl << endl;
     }
 
     stream << "@end // interface " << qname(event) << endl << endl;
 
-    stream << "+ NSString* " << qname(event) << "TypeName; // = \"" << qcname(event) << "\"" << endl << endl;
+    stream << "extern const NSString* " << qname(event) << "TypeName; // = @\"" << qcname(event) << "\"" << endl << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const

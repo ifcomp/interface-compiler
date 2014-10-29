@@ -12,7 +12,7 @@
 #include "Components/JavaScript/JsonEncoding.hpp"
 
 #include "Components/ObjectiveC/HeaderFormatter.hpp"
-//#include "Components/ObjectiveC/WrapperFormatter.hpp"
+#include "Components/ObjectiveC/WrapperFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -160,8 +160,8 @@ int main(int argc, char** argv)
             else
             if( format.first == "ObjC-Wrapper" )
             {
-                //Components::ObjectiveC::WrapperFormatter format;
-                //format.execute(root, output);
+                Components::ObjectiveC::WrapperFormatter format;
+                format.execute(root, output);
             }
             else
             if( format.first == "Js-Header" )
