@@ -54,7 +54,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "    {" << endl
            << "        if(!src)" << endl
            << "            { return nil; }" << endl
-           << "        return return [[[" << qname(class_) << " alloc] initWithData:&src] autorelease];" << endl
+           << "        return [[[" << qname(class_) << " alloc] initWithData:&src] autorelease];" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
