@@ -37,7 +37,8 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// " << qname(class_) << ": {" << endl << endl;
 
-    stream << "template<>" << endl
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
            << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
            << "{" << endl
            << "    inline static " << cpp.qname(class_) << "Ref decode(" << qname(class_) << "* src)" << endl
@@ -55,7 +56,8 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "            { return nil; }" << endl
            << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
            << "    }" << endl
-           << "};" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
            << endl << endl;
 
     stream << "@implementation " << qname(class_) << endl;
