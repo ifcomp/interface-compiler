@@ -26,6 +26,48 @@ void WrapperFormatter::_forwards(std::ostream& stream, Model::ElementRef element
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
+    if ( struct_->doc() )
+    {
+        stream << doc(struct_->doc()) << endl;
+    }
+
+    stream << "// " << qname(struct_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(struct_) << ">" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(struct_) << ";" << endl
+           << "    using encoded_type = " << qname(struct_) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        " << cpp.qname(struct_) << " tgt;" << endl;
+
+    for(auto field : struct_->fields())
+    {
+        stream << "        tgt." << cpp.name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::decode(src." << name(field) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        " << qname(struct_) << "* tgt = [[" << qname(struct_) << " new] autorelease];" << endl;
+
+    for(auto field : struct_->fields())
+    {
+        stream << "        tgt." << name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::encode(src." << cpp.name(field) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
+
+    stream << "// " << qname(struct_) << ": }" << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
@@ -269,7 +311,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::Operation
     }
     else
     {
-        stream << "    ";
+        stream << "        ";
     }
 
     if(operation->isStatic())
