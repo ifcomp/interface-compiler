@@ -231,7 +231,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
            << endl
            << "    inline static encoded_type encode(unencoded_type src)" << endl
            << "    {" << endl
-           << "        " << qname(class_) << name(event) << " tgt;" << endl;
+           << "        " << qname(class_) << name(event) << "* tgt = [[" << qname(class_) << name(event) << " new] autorelease];" << endl;
 
     for(auto value : event->values())
     {
