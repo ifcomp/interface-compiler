@@ -136,11 +136,11 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
 
     if (operation->result())
     {
-        stream << type(operation->result()->type());
+        stream << "(" << type(operation->result()->type()) << ")";
     }
     else
     {
-        stream << "void";
+        stream << "(void)";
     }
 
     stream << " " << name(operation);
