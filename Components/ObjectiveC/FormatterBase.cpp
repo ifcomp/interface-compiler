@@ -102,6 +102,23 @@ void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::
     }
 }
 
+void FormatterBase::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::vector<Model::ElementRef> params) const
+{
+    if(params.size() != primitive->underlyingParamCount())
+        throw std::runtime_error("unexpected count of type parameters");
+
+    if(    primitive->underlying() == Model::Primitive::Underlying::VECTOR
+        && std::dynamic_pointer_cast<Model::Primitive>(params[0])
+        && std::dynamic_pointer_cast<Model::Primitive>(params[0])->underlying() == Model::Primitive::Underlying::BYTE )
+    {
+        stream << "NSData*";
+    }
+    else
+    {
+        Formatter::_type(stream, primitive, params);
+    }
+}
+
 void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
 {
     if ( namespace_->doc() )

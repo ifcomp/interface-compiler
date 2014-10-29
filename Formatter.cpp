@@ -486,7 +486,7 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
                 std::stringstream p;
                 p << type(param, std::vector<Model::ElementRef>());
                 native.replace(j, f.length(), p.str() );
-            }   
+            }
         }
 
         {
@@ -498,7 +498,7 @@ void Formatter::_type(std::ostream& stream, Model::PrimitiveRef primitive, std::
                 std::stringstream p;
                 p << qname(param);
                 native.replace(j, f.length(), p.str() );
-            }   
+            }
         }
 
         ++i;
