@@ -37,6 +37,27 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// " << qname(class_) << ": {" << endl << endl;
 
+    stream << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
+           << "{" << endl
+           << "    inline static " << cpp.qname(class_) << "Ref decode(" << qname(class_) << "* src)" << endl
+           << "    {" << endl
+           << "        if(!src || ![src data])" << endl
+           << "        {" << endl
+           << "            return " << cpp.qname(class_) << "Ref();" << endl
+           << "        }" << endl
+           << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static " << qname(class_) << " decode(" << cpp.qname(class_) << "Ref src)" << endl
+           << "    {" << endl
+           << "        if(!src)" << endl
+           << "            { return nil; }" << endl
+           << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
+           << "    }" << endl
+           << "};" << endl
+           << endl << endl;
+
     stream << "@implementation " << qname(class_) << endl;
 
     if(class_->operations().size() > 0)
