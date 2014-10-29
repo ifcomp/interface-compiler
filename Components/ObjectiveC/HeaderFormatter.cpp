@@ -16,9 +16,15 @@ void HeaderFormatter::_includes(std::ostream& stream) const
 {
     stream
         << "#pragma once" << endl
-        << endl;
+        << endl
+        << "extern \"C\" {" << endl;
 
     FormatterBase::_includes(stream);
+}
+
+void HeaderFormatter::_footer(std::ostream& stream, Model::RootRef root) const
+{
+    stream << "} // extern \"C\"" << endl;
 }
 
 void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
