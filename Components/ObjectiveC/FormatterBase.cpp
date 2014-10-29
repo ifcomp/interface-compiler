@@ -68,11 +68,11 @@ void FormatterBase::_includes(std::ostream& stream) const
     stream << "#include <stdint.h>" << endl
            << "#include <time.h>" << endl
            << "#include <stdbool.h>" << endl
-           << "#include <Foundation/NSString.h>" << endl
-           << "#include <Foundation/NSUUID.h>" << endl
-           << "#include <Foundation/NSArray.h>" << endl
-           << "#include <Foundation/NSSet.h>" << endl
-           << "#include <Foundation/NSDictionary.h>" << endl
+           << "#import <Foundation/NSString.h>" << endl
+           << "#import <Foundation/NSUUID.h>" << endl
+           << "#import <Foundation/NSArray.h>" << endl
+           << "#import <Foundation/NSSet.h>" << endl
+           << "#import <Foundation/NSDictionary.h>" << endl
            << "#include \"everbase/id.h\"" << endl
            << "#include \"everbase/Event.h\"" << endl
            << endl;
