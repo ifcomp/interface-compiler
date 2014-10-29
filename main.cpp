@@ -11,6 +11,9 @@
 #include "Components/JavaScript/WebClientFormatter.hpp"
 #include "Components/JavaScript/JsonEncoding.hpp"
 
+#include "Components/ObjectiveC/HeaderFormatter.hpp"
+//#include "Components/ObjectiveC/WrapperFormatter.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <memory>
@@ -38,6 +41,8 @@ int main(int argc, char** argv)
         cerr << "           C++-RpcJson" << endl;
         cerr << "           C++-WebService" << endl;
         cerr << "           C++-Kernel" << endl;
+        cerr << "           ObjC-Header" << endl;
+        cerr << "           ObjC-Wrapper" << endl;
         cerr << "           Js-Header" << endl;
         cerr << "           Js-JsonEncoding" << endl;
         cerr << "           Js-WebClient" << endl;
@@ -145,6 +150,18 @@ int main(int argc, char** argv)
             if( format.first == "C++-Kernel" )
             {
                 throw std::runtime_error("not implemented");
+            }
+            else
+            if( format.first == "ObjC-Header" )
+            {
+                Components::ObjectiveC::HeaderFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "ObjC-Wrapper" )
+            {
+                //Components::ObjectiveC::WrapperFormatter format;
+                //format.execute(root, output);
             }
             else
             if( format.first == "Js-Header" )
