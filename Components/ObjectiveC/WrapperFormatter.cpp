@@ -277,6 +277,31 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
+    if ( enum_->doc() )
+    {
+        stream << doc(enum_->doc()) << endl;
+    }
+
+    stream << "// " << qname(enum_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(enum_) << ">" << endl
+           << "{" << endl
+           << "    inline static " << cpp.qname(enum_) << " decode(" << qname(enum_) << " src)" << endl
+           << "    {" << endl
+           << "        return reinterpret_cast<" << cpp.qname(enum_) << ">(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static " << qname(enum_) << " encode(" << cpp.qname(enum_) << " src)" << endl
+           << "    {" << endl
+           << "        return reinterpret_cast<" << qname(enum_) << ">(src);" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
+
+    stream << "// " << qname(enum_) << ": }" << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
