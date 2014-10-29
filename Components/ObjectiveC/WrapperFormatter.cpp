@@ -16,7 +16,7 @@ void WrapperFormatter::_includes(std::ostream& stream) const
 {
     FormatterBase::_includes(stream);
 
-    stream << "#include \"everbase.h\"" << endl
+    stream << "#include \"everbase/everbase.h\"" << endl
            << endl;
 }
 
