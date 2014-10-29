@@ -2,8 +2,6 @@
 
 #include "Model/Model.hpp"
 
-#include <boost/tuple/tuple.hpp>
-
 namespace Everbase { namespace InterfaceCompiler {
 
 namespace TupleHelper
@@ -23,9 +21,9 @@ namespace TupleHelper
 	};
 
 	template<class T, class... Types>
-	T& get(boost::tuple<Types...> tuple)
+	T& get(std::tuple<Types...> tuple)
 	{
-	    return boost::get<get_internal<0,T,Types...>::type::index>(tuple);
+	    return std::get<get_internal<0,T,Types...>::type::index>(tuple);
 	}
 }
 
@@ -66,7 +64,7 @@ struct FormatterConfig
 		using NameConfigBase::NameConfigBase;
 	};
 
-	typedef boost::tuple<
+	typedef std::tuple<
 		NameConfig<Model::Namespace>,
 		NameConfig<Model::Parameter>,
 		NameConfig<Model::Struct>,
@@ -101,7 +99,7 @@ struct FormatterConfig
 		using PrimitiveConfigBase::PrimitiveConfigBase;
 	};
 
-	typedef boost::tuple<
+	typedef std::tuple<
 		PrimitiveConfig<Model::Primitive::Underlying::BYTE>,
 		PrimitiveConfig<Model::Primitive::Underlying::UINT16>,
 		PrimitiveConfig<Model::Primitive::Underlying::UINT32>,
@@ -110,10 +108,7 @@ struct FormatterConfig
 		PrimitiveConfig<Model::Primitive::Underlying::TIMESTAMP>,
 		PrimitiveConfig<Model::Primitive::Underlying::STRING>,
 		PrimitiveConfig<Model::Primitive::Underlying::UUID>,
-		PrimitiveConfig<Model::Primitive::Underlying::ID256>
-	> PrimitiveConfigs1;
-
-	typedef boost::tuple<
+		PrimitiveConfig<Model::Primitive::Underlying::ID256>,
 		PrimitiveConfig<Model::Primitive::Underlying::OBJECTID>,
 		PrimitiveConfig<Model::Primitive::Underlying::VERSIONID>,
 		PrimitiveConfig<Model::Primitive::Underlying::TYPEID>,
@@ -122,7 +117,7 @@ struct FormatterConfig
 		PrimitiveConfig<Model::Primitive::Underlying::SET>,
 		PrimitiveConfig<Model::Primitive::Underlying::MAP>,
 		PrimitiveConfig<Model::Primitive::Underlying::FILESYSTEM_PATH>
-	> PrimitiveConfigs3;
+	> PrimitiveConfigs;
 
 	typedef std::vector<std::string> StripVerbs;
 
@@ -130,17 +125,15 @@ struct FormatterConfig
 	std::string indentData;
 	std::uint8_t documentationWrapping;
 	NameConfigs nameConfigs;
-	PrimitiveConfigs1 primitiveConfigs1;
-	PrimitiveConfigs3 primitiveConfigs3;
+	PrimitiveConfigs primitiveConfigs;
 	StripVerbs stripVerbs;
 
-	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs1 primitiveConfigs1, PrimitiveConfigs3 primitiveConfigs3, StripVerbs stripVerbs)
+	FormatterConfig(std::string namespaceDelimiter, std::string indentData, std::uint8_t documentationWrapping, NameConfigs nameConfigs, PrimitiveConfigs primitiveConfigs, StripVerbs stripVerbs)
 		: namespaceDelimiter(namespaceDelimiter)
 		, indentData(indentData)
 		, documentationWrapping(documentationWrapping)
 		, nameConfigs(nameConfigs)
-		, primitiveConfigs1(primitiveConfigs1)
-		, primitiveConfigs3(primitiveConfigs3)
+		, primitiveConfigs(primitiveConfigs)
 		, stripVerbs(stripVerbs)
 	{ }
 
@@ -149,8 +142,7 @@ struct FormatterConfig
 		, indentData(other.indentData)
 		, documentationWrapping(other.documentationWrapping)
 		, nameConfigs(other.nameConfigs)
-		, primitiveConfigs1(other.primitiveConfigs1)
-		, primitiveConfigs3(other.primitiveConfigs3)
+		, primitiveConfigs(other.primitiveConfigs)
 		, stripVerbs(other.stripVerbs)
 	{ }
 
@@ -159,8 +151,7 @@ struct FormatterConfig
 		, indentData(std::move(other.indentData))
 		, documentationWrapping(std::move(other.documentationWrapping))
 		, nameConfigs(std::move(other.nameConfigs))
-		, primitiveConfigs1(std::move(other.primitiveConfigs1))
-		, primitiveConfigs3(std::move(other.primitiveConfigs3))
+		, primitiveConfigs(std::move(other.primitiveConfigs))
 		, stripVerbs(std::move(other.stripVerbs))
 	{ }
 
@@ -171,15 +162,9 @@ struct FormatterConfig
 	}
 
 	template<Model::Primitive::Underlying U>
-	PrimitiveConfig<U> primitiveConfig1() const
+	PrimitiveConfig<U> primitiveConfig() const
 	{
-		return TupleHelper::get<PrimitiveConfig<U>>(primitiveConfigs1);
-	}
-
-	template<Model::Primitive::Underlying U>
-	PrimitiveConfig<U> primitiveConfig3() const
-	{
-		return TupleHelper::get<PrimitiveConfig<U>>(primitiveConfigs3);
+		return TupleHelper::get<PrimitiveConfig<U>>(primitiveConfigs);
 	}
 };
 

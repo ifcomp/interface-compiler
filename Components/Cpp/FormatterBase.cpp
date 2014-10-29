@@ -19,9 +19,7 @@ template <Model::Primitive::Underlying U>
 using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
-using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
-//using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
-using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
+using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
@@ -38,7 +36,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
-            PrimitiveConfigs1 {
+            PrimitiveConfigs {
                 PrimitiveConfig<Primitive::Underlying::BYTE>("std::uint8_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT16>("std::uint16_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT32>("std::uint32_t"),
@@ -47,9 +45,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("std::time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("std::string"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("everbase::common::Uuid"),
-                PrimitiveConfig<Primitive::Underlying::ID256>("everbase::common::Id256")
-            },
-            PrimitiveConfigs3 {
+                PrimitiveConfig<Primitive::Underlying::ID256>("everbase::common::Id256"),
                 PrimitiveConfig<Primitive::Underlying::OBJECTID>("everbase::common::ObjectId<%0>"),
                 PrimitiveConfig<Primitive::Underlying::VERSIONID>("everbase::common::VersionId<%0>"),
                 PrimitiveConfig<Primitive::Underlying::TYPEID>("everbase::common::TypeId<%0>"),

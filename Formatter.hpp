@@ -51,7 +51,7 @@ protected:
 	FormatToken<Model::ElementRef> definition(Model::ElementRef element) const;
 	FormatToken<Model::ElementRef, std::uint8_t> definition(Model::ElementRef element, std::uint8_t pass) const;
 	FormatToken<Model::StructRef> definition(Model::StructRef struct_) const;
-	
+
 	FormatToken<Model::ClassRef> definition(Model::ClassRef class_) const;
 	FormatToken<Model::Class::ConstantRef> definition(Model::Class::ConstantRef constant) const;
 	FormatToken<Model::Class::EventRef> definition(Model::Class::EventRef event) const;

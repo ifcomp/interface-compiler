@@ -21,9 +21,7 @@ template <Model::Primitive::Underlying U>
 using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
-using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
-//using PrimitiveConfigs2 = FormatterConfig::PrimitiveConfigs2;
-using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
+using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
@@ -40,7 +38,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Event>     { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
-            PrimitiveConfigs1 {
+            PrimitiveConfigs {
                 PrimitiveConfig<Primitive::Underlying::BYTE>("Byte"),
                 PrimitiveConfig<Primitive::Underlying::UINT16>("UInt16"),
                 PrimitiveConfig<Primitive::Underlying::UINT32>("UInt32"),
@@ -49,9 +47,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("Timestamp"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("String"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("Uuid"),
-                PrimitiveConfig<Primitive::Underlying::ID256>("Id256")
-            },
-            PrimitiveConfigs3 {
+                PrimitiveConfig<Primitive::Underlying::ID256>("Id256"),
                 PrimitiveConfig<Primitive::Underlying::OBJECTID>("ObjectId<$0>"),
                 PrimitiveConfig<Primitive::Underlying::VERSIONID>("VersionId<$0>"),
                 PrimitiveConfig<Primitive::Underlying::TYPEID>("TypeId<$0>"),
@@ -82,10 +78,10 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     {
         stream << doc(namespace_->doc());
     }
-    
+
 	string var = namespace_->parent()->parent() ? "" : "var ";
 	stream << var << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
-	
+
 	for ( auto element : namespace_->elements() )
 	{
 		filter(stream) << definition(element);
@@ -96,27 +92,13 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
 {
 	if(operation->result())
 	{
-		//if (!operation->isSynchronous())
-		//{
-			stream << "/* Promise [" << type(operation->result()->type()) << " " << name(operation->result()) << "] */";
-		//}
-		//else 
-		//{
-		//	stream << "/* " << type(operation->result()->type()) <<  " " << name(operation->result()) << " */";
-		//}
+        stream << "/* Promise [" << type(operation->result()->type()) << " " << name(operation->result()) << "] */";
 	}
-	else 
+	else
 	{
-		//if (!operation->isSynchronous())
-		//{
-			stream << "/* Promise [] */";
-		//}
-		//else
-		//{
-		//	stream << "/* void */";
-		//}
+        stream << "/* Promise [] */";
 	}
-	
+
     stream << " " << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parent())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";
 
 	for( auto parameter : indices(operation->params()) )

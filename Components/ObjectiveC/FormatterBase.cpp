@@ -19,8 +19,7 @@ template <Model::Primitive::Underlying U>
 using PrimitiveConfig = FormatterConfig::PrimitiveConfig<U>;
 
 using NameConfigs = FormatterConfig::NameConfigs;
-using PrimitiveConfigs1 = FormatterConfig::PrimitiveConfigs1;
-using PrimitiveConfigs3 = FormatterConfig::PrimitiveConfigs3;
+using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
@@ -37,7 +36,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
-            PrimitiveConfigs1 {
+            PrimitiveConfigs {
                 PrimitiveConfig<Primitive::Underlying::BYTE>("uint8_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT16>("uint16_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT32>("uint32_t"),
@@ -46,9 +45,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("time_t"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("NSString*"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("NSUUID*"),
-                PrimitiveConfig<Primitive::Underlying::ID256>("evb_id256_t")
-            },
-            PrimitiveConfigs3 {
+                PrimitiveConfig<Primitive::Underlying::ID256>("evb_id256_t"),
                 PrimitiveConfig<Primitive::Underlying::OBJECTID>("NSUUID*"),
                 PrimitiveConfig<Primitive::Underlying::VERSIONID>("evb_id256_t"),
                 PrimitiveConfig<Primitive::Underlying::TYPEID>("NSUUID*"),
