@@ -50,7 +50,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
            << "    }" << endl
            << endl
-           << "    inline static " << qname(class_) << " decode(" << cpp.qname(class_) << "Ref src)" << endl
+           << "    inline static " << qname(class_) << "* encode(" << cpp.qname(class_) << "Ref src)" << endl
            << "    {" << endl
            << "        if(!src)" << endl
            << "            { return nil; }" << endl
