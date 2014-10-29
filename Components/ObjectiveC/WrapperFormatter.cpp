@@ -47,11 +47,48 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         }
     }
 
+    if(class_->super())
+    {
+        stream
+            << "- (id) init {" << endl
+            << "    return [super init];" << endl
+            << "}" << endl
+            << endl;
+    }
+    else
+    {
+        stream
+            << "- (id) init {" << endl
+            << "    self = [super init];" << endl
+            << "    if(self) {" << endl
+            << "        self->_data = new " << cpp.qname(class_) << "Ref();" << endl
+            << "    }" << endl
+            << "    return self;" << endl
+            << "}" << endl
+            << endl;
+    }
+
     stream
-        << "- (id) init {" << endl << "}" << endl << endl
-        << "- (id) initWithData:(void*)data {" << endl << "}" << endl << endl
-        << "- (void) dealloc {" << endl << "}" << endl << endl
-        << "- (void*) data {" << endl << "}" << endl << endl;
+        << "- (id) initWithData:(void*)data {" << endl
+        << "    self = [self init];" << endl
+        << "    if(self) {" << endl
+        << "        *(static_cast<std::shared_ptr<" << cpp.qname(class_) << "Ref>*>(self->_data)) = *(static_cast<std::shared_ptr<" << cpp.qname(class_) << "Ref>*>(data));" << endl
+        << "    }" << endl
+        << "    return self;" << endl
+        << "}" << endl
+        << endl
+        << "- (void) dealloc {" << endl
+        << "    if(self->_data != 0) {" << endl
+        << "        delete static_cast<std::shared_ptr<" << cpp.qname(class_) << "Ref>*>(self->_data);" << endl
+        << "        self->_data = 0;" << endl
+        << "    }" << endl
+        << "    [super dealloc];" << endl
+        << "}" << endl
+        << endl
+        << "- (void*) data {" << endl
+        << "    return self->_data;" << endl
+        << "}" << endl
+        << endl;
 
     stream << "@end" << endl;
 
@@ -162,9 +199,57 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << signature(operation);
 
-    stream << " {" << endl;
+    stream << " {" << endl
+           << "    using namespace everbase::internal::library::objc;" << endl
+           << "    try {" << endl;
 
-    stream << "}" << endl;
+    if(operation->result())
+    {
+        stream << "        return TypeEncoding<" << cpp.type(operation->result()->type()) << ">::encode(";
+    }
+    else
+    {
+        stream << "    ";
+    }
+
+    if(operation->isStatic())
+    {
+        stream << cpp.qname(operation);
+    }
+    else
+    {
+        stream << "TypeEncoding<" << cpp.qname(class_) << "Ref>::decode(self)->" << cpp.name(operation);
+    }
+
+    stream << "(";
+
+    for(auto param : indices(operation->params()))
+    {
+        stream << "TypeEncoding<" << cpp.type(param.value()->type()) << ">::decode(" << name(param.value()) << ")";
+
+        if(!param.last())
+            { stream << ", "; }
+    }
+
+    stream << ")";
+
+    if(operation->result())
+    {
+        stream << ");" << endl;
+    }
+    else
+    {
+        stream << ";" << endl;
+    }
+
+    stream << "    }" << endl
+           << "    catch(const std::exception& e) {" << endl
+           << "        @throw TypeEncoding<std::exception>::encode(e);" << endl
+           << "    }" << endl
+           << "    catch(...) {" << endl
+           << "        @throw [NSException exceptionWithName:@\"Unknown Exception\" reason:@\"Unknown exception within C++ context\" userInfo:nil];" << endl
+           << "    }" << endl
+           << "}" << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
