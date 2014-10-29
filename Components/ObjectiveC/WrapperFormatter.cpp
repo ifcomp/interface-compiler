@@ -290,12 +290,12 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
            << "{" << endl
            << "    inline static " << cpp.qname(enum_) << " decode(" << qname(enum_) << " src)" << endl
            << "    {" << endl
-           << "        return reinterpret_cast<" << cpp.qname(enum_) << ">(src);" << endl
+           << "        return static_cast<" << cpp.qname(enum_) << ">(src);" << endl
            << "    }" << endl
            << endl
            << "    inline static " << qname(enum_) << " encode(" << cpp.qname(enum_) << " src)" << endl
            << "    {" << endl
-           << "        return reinterpret_cast<" << qname(enum_) << ">(src);" << endl
+           << "        return static_cast<" << qname(enum_) << ">(src);" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
