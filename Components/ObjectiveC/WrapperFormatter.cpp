@@ -223,7 +223,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
 
     for(auto value : event->values())
     {
-        stream << "        tgt." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(src." << name(value) << "());" << endl;
+        stream << "        tgt." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(src." << name(value) << ");" << endl;
     }
 
     stream << "        return tgt;" << endl
@@ -235,7 +235,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
 
     for(auto value : event->values())
     {
-        stream << "        tgt." << name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << "());" << endl;
+        stream << "        tgt." << name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << ");" << endl;
     }
 
     stream << "        return tgt;" << endl
