@@ -117,7 +117,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
-                    stream << "[NSUUID initWithUUIDBytes:(uint8_t[16]){ ";
+                    stream << "[[NSUUID alloc] initWithUUIDBytes:(uuid_t){ ";
 
                     for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
                     {
