@@ -218,7 +218,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    stream << "@interface " << qname(event) << " : EVBEvent" << endl << "{" << endl;
+    stream << "@interface " << qname(event) << " : EVBEvent" << "{" << endl << "}" << endl;
 
     for (auto value : event->values())
     {
