@@ -269,7 +269,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl << endl;
     }
 
-    stream << "} " << qname(enum_) << endl << ";" << endl;
+    stream << "} " << qname(enum_) << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
