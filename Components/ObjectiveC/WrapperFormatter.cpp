@@ -71,14 +71,14 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct
 
     stream << "@implementation " << qname(struct_) << endl;
 
-    for (auto param : struct_->params())
+    for (auto field : struct_->fields())
     {
-        if ( param->doc() )
+        if ( field->doc() )
         {
-            stream << doc(param->doc());
+            stream << doc(field->doc());
         }
 
-        stream << "@synthesize " << name(param) << " = _" << name(param) << ";" << endl << endl;
+        stream << "@synthesize " << name(field) << " = _" << name(field) << ";" << endl << endl;
     }
 
     stream << "@end // implementation " << qname(struct_) << endl << endl;
