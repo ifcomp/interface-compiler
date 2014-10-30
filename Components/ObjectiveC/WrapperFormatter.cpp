@@ -68,6 +68,20 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct
            << endl << endl;
 
     stream << "// " << qname(struct_) << ": }" << endl << endl;
+
+    stream << "@implementation " << qname(struct_) << endl;
+
+    for (auto param : struct_->params())
+    {
+        if ( param->doc() )
+        {
+            stream << doc(param->doc());
+        }
+
+        stream << "@synthesize " << name(param) << " = _" << name(param) << ";" << endl << endl;
+    }
+
+    stream << "@end // implementation " << qname(struct_) << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
