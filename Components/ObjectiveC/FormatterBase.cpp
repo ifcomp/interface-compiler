@@ -93,6 +93,13 @@ void FormatterBase::_type(std::ostream& stream, Model::ElementRef primary, std::
 
         stream << qname(primary) << "*";
     }
+    else if( auto struct_ = std::dynamic_pointer_cast<Struct>(primary) )
+    {
+        if(params.size() > 0)
+            { throw std::runtime_error("type parameters not supported"); }
+
+        stream << qname(primary) << "*";
+    }
     else
     {
         if(params.size() > 0)
