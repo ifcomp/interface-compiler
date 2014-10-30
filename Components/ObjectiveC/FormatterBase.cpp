@@ -55,7 +55,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::MAP>("NSDictionary*"),
                 PrimitiveConfig<Primitive::Underlying::FILESYSTEM_PATH>("NSString*")
             },
-            { "From", "Get" }
+            { "Get" }
         })
 {
 }
