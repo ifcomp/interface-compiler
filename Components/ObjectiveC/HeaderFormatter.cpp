@@ -48,11 +48,15 @@ void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element)
     if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
     {
         stream << "@class " << qname(class_) << ";" << endl;
+        for ( auto event : class_->events() )
+        {
+            stream << "@class " << qname(class_) << name(event) << ";" << endl;
+        }
     }
     else
     if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
     {
-        stream << "struct " << qname(struct_) << ";" << endl;
+        stream << "@class " << qname(struct_) << ";" << endl;
     }
 }
 
@@ -63,19 +67,19 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
         stream << doc(struct_->doc());
     }
 
-    stream << "struct " << qname(struct_) << endl << "{" << endl;
+    stream << "@interface " << qname(struct_) << " : NSObject" << endl << endl;
 
     for (auto field : struct_->fields())
     {
         if ( field->doc() )
         {
-            filter(stream).push<indent>(config.indentData) << doc(field->doc());
+            stream << doc(field->doc());
         }
 
-        filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl << endl;
+        stream << "@property(assign) " << type(field->type()) << " " << name(field) << ";" << endl << endl;
     }
 
-    stream << "};" << endl;
+    stream << "@end // interface " << qname(struct_) << endl << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
