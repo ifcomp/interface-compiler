@@ -299,11 +299,11 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     stream << "+ (uint32_t) addObserver:(id)observer selector:(SEL)selector {" << endl
            << "    using namespace everbase::common;" << endl
            << "    using namespace everbase::internal::library::objc;" << endl
-           << "    return addObserver([observer, selector](const " << cpp.qname(event) << "& event) {" << endl
+           << "    return addObserver(ObserverCallback<" << cpp.qname(event) << ">([observer, selector](const " << cpp.qname(event) << "& event) {" << endl
            << "        @autoreleasepool {" << endl
            << "            [observer performSelector:selector withObject:TypeEncoding<" << cpp.qname(event) << ">::encode(event)];" << endl
            << "        }" << endl
-           << "    });" << endl
+           << "    }));" << endl
            << "}" << endl << endl;
 
     stream << "@end // implementation " << qname(event) << endl << endl;
