@@ -300,7 +300,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
            << "    using namespace everbase::internal::library::objc;" << endl
            << "    return addObserver([observer, selector](const " << cpp.qname(event) << "& event) {" << endl
            << "        @autoreleasepool {" << endl
-           << "            [observer performSelector:selector withObject:TypeEncoding<std::string>::encode(event)];" << endl
+           << "            [observer performSelector:selector withObject:TypeEncoding<" << cpp.qname(event) << ">::encode(event)];" << endl
            << "        }" << endl
            << "    });" << endl
            << "}" << endl << endl;
