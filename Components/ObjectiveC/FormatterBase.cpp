@@ -70,7 +70,6 @@ void FormatterBase::_includes(std::ostream& stream) const
            << "#import <Foundation/NSArray.h>" << endl
            << "#import <Foundation/NSSet.h>" << endl
            << "#import <Foundation/NSDictionary.h>" << endl
-           << "#include \"everbase/id.h\"" << endl
            << "#include \"everbase/Event.h\"" << endl
            << endl;
 }
