@@ -42,7 +42,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::UINT32>("uint32_t"),
                 PrimitiveConfig<Primitive::Underlying::UINT64>("uint64_t"),
                 PrimitiveConfig<Primitive::Underlying::BOOLEAN>("bool"),
-                PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("time_t"),
+                PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("NSDate*"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("NSString*"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("NSUUID*"),
                 PrimitiveConfig<Primitive::Underlying::ID256>("NSValue*"),
