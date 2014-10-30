@@ -262,14 +262,14 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         stream << doc(enum_->doc());
     }
 
-    stream << "enum " << qname(enum_) << endl << "{" << endl;
+    stream << "typedef enum {" << endl;
 
     for (auto value : indices(enum_->values()))
     {
         filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl << endl;
     }
 
-    stream << "};" << endl;
+    stream << "} " << qname(enum_) << endl << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
