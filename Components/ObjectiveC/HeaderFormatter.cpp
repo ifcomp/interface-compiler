@@ -238,6 +238,8 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << "@property(assign) " << type(value->type()) << " " << name(value) << ";" << endl << endl;
     }
 
+    stream << "+ (uint32_t) addObserver:(id)observer selector:(SEL)selector;" << endl << endl;
+
     stream << "@end // interface " << qname(event) << endl << endl;
 
     stream << "extern const NSString* " << qname(event) << "TypeName; // = @\"" << qcname(event) << "\"" << endl << endl;

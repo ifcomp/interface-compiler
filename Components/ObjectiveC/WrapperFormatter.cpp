@@ -250,8 +250,6 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         stream << doc(event->doc());
     }
 
-    stream << "const NSString* " << qname(class_) << name(event) << "TypeName = @\"" << qcname(event) << "\";" << endl << endl;
-
     stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
            << "template<>" << endl
            << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
@@ -285,6 +283,31 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
            << endl << endl;
+
+    stream << "@implementation " << qname(event) << endl;
+
+    for (auto value : event->values())
+    {
+        if ( value->doc() )
+        {
+            stream << doc(value->doc());
+        }
+
+        stream << "@synthesize " << name(value) << " = _" << name(value) << ";" << endl << endl;
+    }
+
+    stream << "+ (uint32_t) addObserver:(id)observer selector:(SEL)selector {" << endl
+           << "    using namespace everbase::internal::library::objc;" << endl
+           << "    return addObserver([observer, selector](const " << cpp.qname(event) << "& event) {" << endl
+           << "        @autoreleasepool {" << endl
+           << "            [observer performSelector:selector withObject:TypeEncoding<std::string>::encode(event)];" << endl
+           << "        }" << endl
+           << "    });" << endl
+           << "}" << endl << endl;
+
+    stream << "@end // implementation " << qname(event) << endl << endl;
+
+    stream << "const NSString* " << qname(class_) << name(event) << "TypeName = @\"" << qcname(event) << "\";" << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
