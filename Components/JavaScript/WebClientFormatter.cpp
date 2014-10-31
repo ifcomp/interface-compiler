@@ -30,7 +30,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::NamespaceRef n
     {
         stream << doc(namespace_->doc());
     }
-    
+
     if (!namespace_->parent()->parent())
     {
 		//stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
@@ -227,7 +227,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	string formattedParams = "";
 	if (auto result = operation->result())
 	{
-		f << "everbase.webclient.processes[message[2]] = [ resolve, '";
+		f << "everbase.webclient.processes[message[2]] = [ resolve, reject, '";
 		_returnType(f, result);
 		f << "' , [";
 		_containerTypes(f, result);
@@ -235,7 +235,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	}
 	else
 	{
-		f << "everbase.webclient.processes[message[2]] = [ resolve, '', [] ];" << endl;
+		f << "everbase.webclient.processes[message[2]] = [ resolve, reject, '', [] ];" << endl;
 	}
 
 	f.pop()
