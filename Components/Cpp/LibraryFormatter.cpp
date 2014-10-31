@@ -168,7 +168,8 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     stream << ")" << endl << "{" << endl;
 
-    stream << "if(!everbase::internal::library::client)" << endl
+    filter(stream).push<indent>()
+           << "if(!everbase::internal::library::client)" << endl
            << "    { throw std::runtime_error(\"no connection available\"); }" << endl;
 
     if (operation->result())
