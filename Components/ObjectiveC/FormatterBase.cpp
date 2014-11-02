@@ -37,11 +37,11 @@ FormatterBase::FormatterBase()
                 NameConfig<Class::Operation> { NameStyle::LOWER_CAMELCASE, "", false }
             },
             PrimitiveConfigs {
-                PrimitiveConfig<Primitive::Underlying::BYTE>("NSNumber*"),
-                PrimitiveConfig<Primitive::Underlying::UINT16>("NSNumber*"),
-                PrimitiveConfig<Primitive::Underlying::UINT32>("NSNumber*"),
-                PrimitiveConfig<Primitive::Underlying::UINT64>("NSNumber*"),
-                PrimitiveConfig<Primitive::Underlying::BOOLEAN>("NSNumber*"),
+                PrimitiveConfig<Primitive::Underlying::BYTE>("uint8_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT16>("uint16_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT32>("uint32_t"),
+                PrimitiveConfig<Primitive::Underlying::UINT64>("uint64_t"),
+                PrimitiveConfig<Primitive::Underlying::BOOLEAN>("BOOL"),
                 PrimitiveConfig<Primitive::Underlying::TIMESTAMP>("NSDate*"),
                 PrimitiveConfig<Primitive::Underlying::STRING>("NSString*"),
                 PrimitiveConfig<Primitive::Underlying::UUID>("NSUUID*"),
