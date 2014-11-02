@@ -39,6 +39,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(struct_) << ";" << endl
            << "    using encoded_type = " << qname(struct_) << "*;" << endl
+           << "    using container_encoded_type = " << qname(struct_) << "*;" << endl
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
@@ -62,6 +63,16 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct
     }
 
     stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
@@ -99,6 +110,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
            << "    using encoded_type = " << qname(class_) << "*;" << endl
+           << "    using container_encoded_type = " << qname(class_) << "*;" << endl
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
@@ -114,6 +126,16 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "        if(!src)" << endl
            << "            { return nil; }" << endl
            << "        return [[[" << qname(class_) << " alloc] initWithData:&src] autorelease];" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
@@ -270,6 +292,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
            << "    using encoded_type = " << qname(class_) << name(event) << "*;" << endl
+           << "    using container_encoded_type = " << qname(class_) << name(event) << "*;" << endl
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
@@ -293,6 +316,16 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     }
 
     stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
@@ -407,6 +440,7 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(enum_) << ";" << endl
            << "    using encoded_type = " << qname(enum_) << ";" << endl
+           << "    using container_encoded_type = NSNumber*;" << endl
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
@@ -416,6 +450,16 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
            << "    inline static encoded_type encode(unencoded_type src)" << endl
            << "    {" << endl
            << "        return static_cast<" << qname(enum_) << ">(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return static_cast<" << cpp.qname(enum_) << ">([src unsignedLongLongValue]);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return [NSNumber numberWithUnsignedLongLong:static_cast<unsigned long long>(src)];" << endl
            << "    }" << endl
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
