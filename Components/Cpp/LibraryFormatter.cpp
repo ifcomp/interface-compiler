@@ -136,6 +136,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
     }
 
     stream << "const char " << qname(event) << "::TYPE_NAME[] = \"" << qcname(event) << "\";" << endl;
+    stream << "const bool " << qname(event) << "::TYPE_EXTERNAL = true;" << endl;
 }
 
 void LibraryFormatter::_definition(std::ostream& stream, Model::Class::OperationRef operation) const
