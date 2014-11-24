@@ -15,6 +15,7 @@
 #include "Components/ObjectiveC/WrapperFormatter.hpp"
 
 #include "Components/Ruby/NamespacesFormatter.hpp"
+#include "Components/Ruby/ClassesFormatter.hpp"
 #include "Components/Ruby/OperationsFormatter.hpp"
 
 #include <iostream>
@@ -50,6 +51,7 @@ int main(int argc, char** argv)
         cerr << "           Js-JsonEncoding" << endl;
         cerr << "           Js-WebClient" << endl;
         cerr << "           Ruby-Namespaces" << endl;
+        cerr << "           Ruby-Classes" << endl;
         cerr << "           Ruby-Operations" << endl;
         return 1;
     }
@@ -190,6 +192,12 @@ int main(int argc, char** argv)
             if( format.first == "Ruby-Namespaces" )
             {
                 Components::Ruby::NamespacesFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ruby-Classes" )
+            {
+                Components::Ruby::ClassesFormatter format;
                 format.execute(root, output);
             }
             else
