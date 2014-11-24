@@ -14,6 +14,8 @@
 #include "Components/ObjectiveC/HeaderFormatter.hpp"
 #include "Components/ObjectiveC/WrapperFormatter.hpp"
 
+#include "Components/Ruby/OperationsFormatter.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <memory>
@@ -46,6 +48,7 @@ int main(int argc, char** argv)
         cerr << "           Js-Header" << endl;
         cerr << "           Js-JsonEncoding" << endl;
         cerr << "           Js-WebClient" << endl;
+        cerr << "           Ruby-Operations" << endl;
         return 1;
     }
 
@@ -179,6 +182,12 @@ int main(int argc, char** argv)
             if( format.first == "Js-WebClient" )
             {
                 Components::JavaScript::WebClientFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ruby-Operations" )
+            {
+                Components::Ruby::OperationsFormatter format;
                 format.execute(root, output);
             }
             else
