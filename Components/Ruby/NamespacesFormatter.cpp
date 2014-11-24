@@ -30,18 +30,14 @@ void NamespacesFormatter::_definition(std::ostream& stream, Model::NamespaceRef 
 
     stream << "// namespace " << qname(namespace_) << ": {" << endl << endl;
 
-    stream << "EVERBASE_RUBY_NAMESPACE(" << qcname(namespace_, "_") << ", ";
-
     if(parent)
     {
-        stream << qcname(parent, "_");
+        stream << "EVERBASE_RUBY_NAMESPACE(" << qcname(namespace_, "_") << ", " << qcname(parent, "_") << ", \"" << name(namespace_) << "\");" << endl << endl;
     }
     else
     {
-        stream << "rb_cObject";
+        stream << "EVERBASE_RUBY_NAMESPACE_ROOT(" << qcname(namespace_, "_") << ", \"" << name(namespace_) << "\");" << endl << endl;
     }
-
-    stream  << ", \"" << name(namespace_) << "\");" << endl << endl;
 
     for ( auto element : namespace_->elements() )
     {
