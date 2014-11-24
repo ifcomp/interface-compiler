@@ -56,7 +56,7 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
-    stream << "EVERBASE_RUBY_CLASS(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\");" << endl << endl;
+    stream << "EVERBASE_RUBY_CLASS(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\")" << endl << endl;
 
     stream << "// class " << qname(class_) << ": }" << endl << endl;
 }

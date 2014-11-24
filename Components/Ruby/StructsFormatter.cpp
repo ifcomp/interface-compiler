@@ -52,11 +52,11 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
 
     stream << "// struct " << qname(struct_) << ": {" << endl << endl;
 
-    stream << "EVERBASE_RUBY_STRUCT(" << qcname(struct_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(struct_) << "\");" << endl << endl;
+    stream << "EVERBASE_RUBY_STRUCT(" << qcname(struct_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(struct_) << "\")" << endl << endl;
 
     for( auto field : struct_->fields() )
     {
-        stream << "EVERBASE_RUBY_STRUCT_FIELD(" << qcname(field, "_") << ", " << qcname(struct_, "_") << ", \"" << name(field) << "\");" << endl;
+        stream << "EVERBASE_RUBY_STRUCT_FIELD(" << qcname(field, "_") << ", " << qcname(struct_, "_") << ", \"" << name(field) << "\")" << endl;
     }
 
     stream << endl;

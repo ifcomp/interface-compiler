@@ -72,11 +72,11 @@ void EnumsFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) con
 
     stream << "// enum " << qname(enum_) << ": {" << endl << endl;
 
-    stream << "EVERBASE_RUBY_ENUM(" << qcname(enum_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(enum_) << "\");" << endl << endl;
+    stream << "EVERBASE_RUBY_ENUM(" << qcname(enum_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(enum_) << "\")" << endl << endl;
 
     for( auto value : enum_->values() )
     {
-        stream << "EVERBASE_RUBY_ENUM_VALUE(" << qcname(value, "_") << ", " << qcname(enum_, "_") << ", \"" << name(value) << "\");" << endl;
+        stream << "EVERBASE_RUBY_ENUM_VALUE(" << qcname(value, "_") << ", " << qcname(enum_, "_") << ", \"" << name(value) << "\")" << endl;
     }
 
     stream << endl;

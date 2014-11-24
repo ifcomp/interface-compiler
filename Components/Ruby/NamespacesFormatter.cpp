@@ -32,11 +32,11 @@ void NamespacesFormatter::_definition(std::ostream& stream, Model::NamespaceRef 
 
     if(parent)
     {
-        stream << "EVERBASE_RUBY_NAMESPACE(" << qcname(namespace_, "_") << ", " << qcname(parent, "_") << ", \"" << name(namespace_) << "\");" << endl << endl;
+        stream << "EVERBASE_RUBY_NAMESPACE(" << qcname(namespace_, "_") << ", " << qcname(parent, "_") << ", \"" << name(namespace_) << "\")" << endl << endl;
     }
     else
     {
-        stream << "EVERBASE_RUBY_NAMESPACE_ROOT(" << qcname(namespace_, "_") << ", \"" << name(namespace_) << "\");" << endl << endl;
+        stream << "EVERBASE_RUBY_NAMESPACE_ROOT(" << qcname(namespace_, "_") << ", \"" << name(namespace_) << "\")" << endl << endl;
     }
 
     for ( auto element : namespace_->elements() )

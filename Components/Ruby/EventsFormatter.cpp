@@ -68,11 +68,11 @@ void EventsFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
     stream << "// event " << qname(event) << ": {" << endl << endl;
 
-    stream << "EVERBASE_RUBY_EVENT(" << qcname(event, "_") << ", " << qcname(class_, "_") << ", \"" << name(event) << "\");" << endl << endl;
+    stream << "EVERBASE_RUBY_EVENT(" << qcname(event, "_") << ", " << qcname(class_, "_") << ", \"" << name(event) << "\")" << endl << endl;
 
     for( auto value : event->values() )
     {
-        stream << "EVERBASE_RUBY_EVENT_VALUE(" << qcname(value, "_") << ", " << qcname(event, "_") << ", \"" << name(value) << "\");" << endl;
+        stream << "EVERBASE_RUBY_EVENT_VALUE(" << qcname(value, "_") << ", " << qcname(event, "_") << ", \"" << name(value) << "\")" << endl;
     }
 
     stream << endl;
