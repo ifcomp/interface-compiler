@@ -17,6 +17,7 @@
 #include "Components/Ruby/NamespacesFormatter.hpp"
 #include "Components/Ruby/StructsFormatter.hpp"
 #include "Components/Ruby/ClassesFormatter.hpp"
+#include "Components/Ruby/EventsFormatter.hpp"
 #include "Components/Ruby/OperationsFormatter.hpp"
 
 #include <iostream>
@@ -206,6 +207,12 @@ int main(int argc, char** argv)
             if( format.first == "Ruby-Classes" )
             {
                 Components::Ruby::ClassesFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ruby-Events" )
+            {
+                Components::Ruby::EventsFormatter format;
                 format.execute(root, output);
             }
             else
