@@ -123,7 +123,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
     stream << "    }" << endl
            << "    catch(const std::exception& e)" << endl
            << "    {" << endl
-           << "        rb_raise(rb_eException, e.c_str());" << endl
+           << "        rb_raise(rb_eException, e.what());" << endl
            << "    }" << endl
            << "    catch(...)" << endl
            << "    {" << endl
