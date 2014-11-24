@@ -15,6 +15,7 @@
 #include "Components/ObjectiveC/WrapperFormatter.hpp"
 
 #include "Components/Ruby/NamespacesFormatter.hpp"
+#include "Components/Ruby/EnumsFormatter.hpp"
 #include "Components/Ruby/StructsFormatter.hpp"
 #include "Components/Ruby/ClassesFormatter.hpp"
 #include "Components/Ruby/EventsFormatter.hpp"
@@ -53,8 +54,10 @@ int main(int argc, char** argv)
         cerr << "           Js-JsonEncoding" << endl;
         cerr << "           Js-WebClient" << endl;
         cerr << "           Ruby-Namespaces" << endl;
+        cerr << "           Ruby-Enums" << endl;
         cerr << "           Ruby-Structs" << endl;
         cerr << "           Ruby-Classes" << endl;
+        cerr << "           Ruby-Events" << endl;
         cerr << "           Ruby-Operations" << endl;
         return 1;
     }
@@ -195,6 +198,12 @@ int main(int argc, char** argv)
             if( format.first == "Ruby-Namespaces" )
             {
                 Components::Ruby::NamespacesFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ruby-Enums" )
+            {
+                Components::Ruby::EnumsFormatter format;
                 format.execute(root, output);
             }
             else

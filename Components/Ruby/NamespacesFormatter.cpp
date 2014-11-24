@@ -12,7 +12,6 @@ using namespace StreamFilter;
 
 void NamespacesFormatter::_includes(std::ostream& stream) const
 {
-    FormatterBase::_includes(stream);
 }
 
 void NamespacesFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const

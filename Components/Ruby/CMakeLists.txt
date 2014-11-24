@@ -1,6 +1,7 @@
 set(SRC ${SRC}
 	Components/Ruby/FormatterBase.cpp
 	Components/Ruby/NamespacesFormatter.cpp
+	Components/Ruby/EnumsFormatter.cpp
 	Components/Ruby/StructsFormatter.cpp
 	Components/Ruby/ClassesFormatter.cpp
 	Components/Ruby/EventsFormatter.cpp

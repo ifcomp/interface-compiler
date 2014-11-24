@@ -12,7 +12,6 @@ using namespace StreamFilter;
 
 void EventsFormatter::_includes(std::ostream& stream) const
 {
-    FormatterBase::_includes(stream);
 }
 
 void EventsFormatter::_definition(std::ostream& stream, Model::NamespaceRef namespace_) const
