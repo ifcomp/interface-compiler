@@ -66,7 +66,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
 
     stream << "// operation " << qname(operation) << ": {" << endl << endl;
 
-    stream << "VALUE " << qcname(operation, "_") << "(";
+    stream << "extern \"C\" VALUE " << qcname(operation, "_") << "(";
 
     if( !operation->isStatic() )
     {
@@ -129,8 +129,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
            << "    catch(...)" << endl
            << "    {" << endl
            << "        rb_raise(rb_eException, \"unknown exception\");" << endl
-           << "    }" << endl
-           << endl;
+           << "    }" << endl;
 
     stream << "}" << endl << endl;
 
