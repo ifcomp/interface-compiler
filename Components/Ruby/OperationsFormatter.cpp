@@ -67,17 +67,11 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
 
     stream << "extern \"C\" VALUE " << qcname(operation, "_") << "(";
 
-    if( !operation->isStatic() )
-    {
-        stream << "VALUE self";
+    stream << "VALUE self";
 
-        if(operation->params().size() > 0)
-            {  stream << ", "; }
-    }
-
-    for( auto param : indices(operation->params()) )
+    for( auto param : operation->params() )
     {
-        stream << "VALUE " << name(param.value()) << (!param.last() ? ", " : "");
+        stream << ", VALUE " << name(param);
     }
 
     stream << ")" << endl
