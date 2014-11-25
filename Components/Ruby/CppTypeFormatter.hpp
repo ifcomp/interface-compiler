@@ -6,10 +6,12 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
+class ClassesFormatter;
 class OperationsFormatter;
 
 class CppTypeFormatter : public Cpp::FormatterBase
 {
+    friend ClassesFormatter;
     friend OperationsFormatter;
 
 protected:
