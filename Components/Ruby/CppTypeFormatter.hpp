@@ -9,6 +9,7 @@ namespace Everbase { namespace InterfaceCompiler { namespace Components { namesp
 class EnumsFormatter;
 class StructsFormatter;
 class ClassesFormatter;
+class EventsFormatter;
 class OperationsFormatter;
 
 class CppTypeFormatter : public Cpp::FormatterBase
@@ -16,6 +17,7 @@ class CppTypeFormatter : public Cpp::FormatterBase
     friend EnumsFormatter;
     friend StructsFormatter;
     friend ClassesFormatter;
+    friend EventsFormatter;
     friend OperationsFormatter;
 
 protected:

@@ -77,6 +77,44 @@ void EventsFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
     stream << endl;
 
+    stream
+        << "template<>" << endl
+        << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
+        << "{" << endl
+        << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
+        << "    using encoded_type = VALUE;" << endl
+        << endl
+        << "    static inline encoded_type encode(unencoded_type src)" << endl
+        << "    {" << endl
+        << "        encoded_type event;" << endl << endl;
+
+    for( auto value : event->values() )
+    {
+        stream
+            << "        rb_iv_set(event, \"@" << name(value) << "\", TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << "));" << endl;
+    }
+
+    stream
+        << "    }" << endl
+        << endl;
+
+    stream
+        << "    static inline unencoded_type decode(encoded_type src)" << endl
+        << "    {" << endl
+        << "        unencoded_type event;" << endl << endl;
+
+    for( auto value : event->values() )
+    {
+        stream
+            << "        event." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(rb_iv_get(src, \"@" << name(value) << "\"));" << endl;
+    }
+
+    stream
+        << endl
+        << "        return event;" << endl
+        << "    }" << endl
+        << "};" << endl << endl;
+
     stream << "// event " << qname(event) << ": }" << endl << endl;
 }
 
