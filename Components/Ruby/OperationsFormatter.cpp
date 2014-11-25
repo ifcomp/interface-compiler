@@ -65,7 +65,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
 
     stream << "// operation " << qname(operation) << ": {" << endl << endl;
 
-    stream << "extern \"C\" VALUE " << qcname(operation, "_") << "(";
+    stream << "extern \"C\" VALUE " << qcname(operation, "_") << "_cpp(";
 
     stream << "VALUE self";
 
@@ -74,7 +74,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
         stream << ", VALUE " << name(param);
     }
 
-    stream << ")" << endl
+    stream << ", Exception& exception)" << endl
            << "{" << endl;
 
     stream << "    try" << endl
@@ -118,14 +118,40 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
     stream << "    }" << endl
            << "    catch(const std::exception& e)" << endl
            << "    {" << endl
-           << "        rb_raise(rb_eException, \"%s\", e.what());" << endl
+           << "        exception.caught = true;" << endl
+           << "        snprintf(exception.message, sizeof(exception.message), \"%s\", e.what());" << endl
            << "    }" << endl
            << "    catch(...)" << endl
            << "    {" << endl
-           << "        rb_raise(rb_eException, \"unknown exception\");" << endl
+           << "        exception.caught = true;" << endl
+           << "        snprintf(exception.message, sizeof(exception.message), \"%s\", \"unknown exception\");" << endl
            << "    }" << endl;
 
-    stream << "}" << endl << endl;
+    stream << "    return Qnil;"
+           << "}" << endl << endl;
+
+    stream << "extern \"C\" VALUE " << qcname(operation, "_") << "(";
+
+    stream << "VALUE self";
+
+    for( auto param : operation->params() )
+    {
+        stream << ", VALUE " << name(param);
+    }
+
+    stream << ")" << endl
+           << "{" << endl
+           << "    Exception exception { false, { 0 } };" << endl
+           << endl
+           << "    VALUE result = " << qcname(operation, "_") << "_cpp(self, exception);" << endl
+           << endl
+           << "    if(exception.caught)" << endl
+           << "    {" << endl
+           << "        rb_raise(rb_eException, \"%s\", exception.message);" << endl
+           << "    }" << endl
+           << endl
+           << "    return result;" << endl
+           << "}" << endl << endl;
 
     if(operation->isStatic())
     {
