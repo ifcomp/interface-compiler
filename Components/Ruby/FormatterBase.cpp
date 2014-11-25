@@ -55,7 +55,7 @@ FormatterBase::FormatterBase()
                 PrimitiveConfig<Primitive::Underlying::MAP>("Map<$0, $1>"),
                 PrimitiveConfig<Primitive::Underlying::FILESYSTEM_PATH>("FileSystemPath")
             },
-            { }
+            { "Get" }
         })
 {
 }
