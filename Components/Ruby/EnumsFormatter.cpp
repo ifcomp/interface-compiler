@@ -76,7 +76,7 @@ void EnumsFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) con
 
     for( auto value : enum_->values() )
     {
-        stream << "EVERBASE_RUBY_ENUM_VALUE(" << qcname(value, "_") << ", " << qcname(enum_, "_") << ", \"" << name(value) << "\")" << endl;
+        stream << "EVERBASE_RUBY_ENUM_VALUE(" << qcname(value, "_") << ", " << qcname(enum_, "_") << ", \"" << name(value) << "\", 0x" << std::hex << static_cast<std::uint64_t>(value->value()) << ")" << endl;
     }
 
     stream << endl;
