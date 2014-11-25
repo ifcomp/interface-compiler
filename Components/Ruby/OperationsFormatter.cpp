@@ -127,7 +127,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
            << "        snprintf(exception.message, sizeof(exception.message), \"%s\", \"unknown exception\");" << endl
            << "    }" << endl;
 
-    stream << "    return Qnil;"
+    stream << "    return Qnil;" << endl
            << "}" << endl << endl;
 
     stream << "extern \"C\" VALUE " << qcname(operation, "_") << "(";
@@ -143,7 +143,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
            << "{" << endl
            << "    Exception exception { false, { 0 } };" << endl
            << endl
-           << "    VALUE result = " << qcname(operation, "_") << "_cpp(self, " << endl;
+           << "    VALUE result = " << qcname(operation, "_") << "_cpp(self, ";
 
     for( auto param : operation->params() )
     {
