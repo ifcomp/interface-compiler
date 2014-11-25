@@ -75,7 +75,7 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
     for( auto field : struct_->fields() )
     {
         stream
-            << "        rb_iv_set(struct_, \"@" << name(field) << "\", TypeEncoding<" << cpp.type(field->type()) << ">::encode(src." << name(field) << "));" << endl;
+            << "        rb_iv_set(struct_, \"@" << name(field) << "\", TypeEncoding<" << cpp.type(field->type()) << ">::encode(src." << cpp.name(field) << "));" << endl;
     }
 
     stream
@@ -90,7 +90,7 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
     for( auto field : struct_->fields() )
     {
         stream
-            << "        struct_." << name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::decode(rb_iv_get(src, \"@" << name(field) << "\"));" << endl;
+            << "        struct_." << cpp.name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::decode(rb_iv_get(src, \"@" << name(field) << "\"));" << endl;
     }
 
     stream
