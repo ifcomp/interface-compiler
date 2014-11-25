@@ -118,6 +118,7 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
     else
     {
         stream << ");" << endl;
+        stream << "        return Qnil;" << endl;
     }
 
     stream << "    }" << endl
