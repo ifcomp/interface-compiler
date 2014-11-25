@@ -56,6 +56,20 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
+    if(class_->super())
+    {
+        if( auto super = std::dynamic_pointer_cast<Model::Class>(std::dynamic_pointer_cast<Type>(class_->super())->primary()) )
+        {
+            stream << "EVERBASE_RUBY_CLASS_WITH_SUPER(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\", " << qcname(super, "_") << ")" << endl << endl;
+        }
+        else
+            throw std::runtime_error("invalid super type");
+    }
+    else
+    {
+        stream << "EVERBASE_RUBY_CLASS(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\")" << endl << endl;
+    }
+
     stream << "template<>" << endl
            << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
            << "{" << endl
@@ -84,20 +98,6 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << "        return Data_Wrap_Struct(" << qcname(class_, "_") << ", 0, &FreeObject<" << cpp.qname(class_) << "Ref>::free, new unencoded_type(src));" << endl
            << "    }" << endl
            << "};" << endl << endl;
-
-    if(class_->super())
-    {
-        if( auto super = std::dynamic_pointer_cast<Model::Class>(std::dynamic_pointer_cast<Type>(class_->super())->primary()) )
-        {
-            stream << "EVERBASE_RUBY_CLASS_WITH_SUPER(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\", " << qcname(super, "_") << ")" << endl << endl;
-        }
-        else
-            throw std::runtime_error("invalid super type");
-    }
-    else
-    {
-        stream << "EVERBASE_RUBY_CLASS(" << qcname(class_, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(class_) << "\")" << endl << endl;
-    }
 
     stream << "// class " << qname(class_) << ": }" << endl << endl;
 }
