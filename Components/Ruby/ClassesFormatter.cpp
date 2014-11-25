@@ -64,7 +64,7 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
-           << "        if(unencoded == Qnil)" << endl
+           << "        if(src == Qnil)" << endl
            << "        {" << endl
            << "            return unencoded_type();" << endl
            << "        }" << endl
