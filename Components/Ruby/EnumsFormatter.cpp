@@ -82,7 +82,7 @@ void EnumsFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) con
     stream << endl;
 
     stream << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(enum_) << ">" << endl
+           << "struct TypeEncoding<" << cpp.qname(enum_) << ", void>" << endl
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(enum_) << ";" << endl
            << "    using encoded_type = VALUE;" << endl

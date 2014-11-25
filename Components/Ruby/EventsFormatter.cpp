@@ -79,7 +79,7 @@ void EventsFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
 
     stream
         << "template<>" << endl
-        << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
+        << "struct TypeEncoding<" << cpp.qname(event) << ", void>" << endl
         << "{" << endl
         << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
         << "    using encoded_type = VALUE;" << endl

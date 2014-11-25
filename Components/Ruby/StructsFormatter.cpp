@@ -63,7 +63,7 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
 
     stream
         << "template<>" << endl
-        << "struct TypeEncoding<" << cpp.qname(struct_) << ">" << endl
+        << "struct TypeEncoding<" << cpp.qname(struct_) << ", void>" << endl
         << "{" << endl
         << "    using unencoded_type = " << cpp.qname(struct_) << ";" << endl
         << "    using encoded_type = VALUE;" << endl

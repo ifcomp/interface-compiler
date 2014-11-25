@@ -71,7 +71,7 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     stream << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
+           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref, void>" << endl
            << "{" << endl
            << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
            << "    using encoded_type = VALUE;" << endl
