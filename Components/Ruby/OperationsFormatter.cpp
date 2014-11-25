@@ -132,7 +132,14 @@ void OperationsFormatter::_definition(std::ostream& stream, Model::Class::Operat
 
     stream << "}" << endl << endl;
 
-    stream << "EVERBASE_RUBY_OPERATION(" << qcname(operation, "_") << ", " << qcname(class_, "_") << ", \"" << name(operation) << "\", " << operation->params().size() << ", " << (operation->isStatic() ? "true" : "false") << ")" << endl << endl;
+    if(operation->isStatic())
+    {
+        stream << "EVERBASE_RUBY_OPERATION_STATIC(" << qcname(operation, "_") << ", " << qcname(class_, "_") << ", \"" << name(operation) << "\", " << operation->params().size() << ")" << endl << endl;
+    }
+    else
+    {
+        stream << "EVERBASE_RUBY_OPERATION(" << qcname(operation, "_") << ", " << qcname(class_, "_") << ", \"" << name(operation) << "\", " << operation->params().size() << ")" << endl << endl;
+    }
 
     stream << "// operation " << qname(operation) << ": }" << endl << endl;
 
