@@ -56,6 +56,35 @@ void ClassesFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
 
     stream << "// class " << qname(class_) << ": {" << endl << endl;
 
+    stream << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
+           << "    using encoded_type = VALUE;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        if(unencoded == Qnil)" << endl
+           << "        {" << endl
+           << "            return unencoded_type();" << endl
+           << "        }" << endl
+           << "        unencoded_type* unencoded = nullptr;" << endl
+           << "        Data_Get_Struct(src, unencoded_type, unencoded);" << endl
+           << "        if(!unencoded)" << endl
+           << "        {" << endl
+           << "            return unencoded_type();" << endl
+           << "        }" << endl
+           << "        return *unencoded;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        if(!src)" << endl
+           << "            { return Qnil; }" << endl
+           << "        return Data_Wrap_Struct(" << qcname(class_, "_") << ", 0, &FreeObject<" << cpp.qname(class_) << "Ref>::free, new unencoded_type(src));" << endl
+           << "    }" << endl
+           << "};" << endl << endl;
+
     if(class_->super())
     {
         if( auto super = std::dynamic_pointer_cast<Model::Class>(std::dynamic_pointer_cast<Type>(class_->super())->primary()) )
