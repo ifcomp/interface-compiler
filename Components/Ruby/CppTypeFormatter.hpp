@@ -6,11 +6,13 @@
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
+class EnumsFormatter;
 class ClassesFormatter;
 class OperationsFormatter;
 
 class CppTypeFormatter : public Cpp::FormatterBase
 {
+    friend EnumsFormatter;
     friend ClassesFormatter;
     friend OperationsFormatter;
 
