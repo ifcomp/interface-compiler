@@ -7,12 +7,14 @@
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
 class EnumsFormatter;
+class StructsFormatter;
 class ClassesFormatter;
 class OperationsFormatter;
 
 class CppTypeFormatter : public Cpp::FormatterBase
 {
     friend EnumsFormatter;
+    friend StructsFormatter;
     friend ClassesFormatter;
     friend OperationsFormatter;
 

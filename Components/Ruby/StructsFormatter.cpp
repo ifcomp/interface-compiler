@@ -61,6 +61,44 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
 
     stream << endl;
 
+    stream
+        << "template<>" << endl
+        << "struct TypeEncoding<" << cpp.qname(struct_) << ">" << endl
+        << "{" << endl
+        << "    using unencoded_type = " << cpp.qname(struct_) << "Ref;" << endl
+        << "    using encoded_type = VALUE;" << endl
+        << endl
+        << "    static inline encoded_type encode(unencoded_type src)" << endl
+        << "    {" << endl
+        << "        encoded_type struct_;" << endl << endl;
+
+    for( auto field : struct_->fields() )
+    {
+        stream
+            << "        rb_iv_set(struct_, \"@" << name(field) << "\", TypeEncoding<" << type(field->type()) << ">::encode(src." << name(field) << ");" << endl;
+    }
+
+    stream
+        << "    }" << endl
+        << endl;
+
+    stream
+        << "    static inline unencoded_type decode(encoded_type src)" << endl
+        << "    {" << endl
+        << "        unencoded_type struct_;" << endl << endl;
+
+    for( auto field : struct_->fields() )
+    {
+        stream
+            << "        struct_." << name(field) << " = TypeEncoding<" << type(field->type()) << ">::decode(rb_iv_get(src, \"@" << name(field) << "\"));" << endl;
+    }
+
+    stream
+        << endl
+        << "        return struct_;" << endl
+        << "    }" << endl
+        << "};" << endl << endl;
+
     stream << "// struct " << qname(struct_) << ": }" << endl << endl;
 }
 

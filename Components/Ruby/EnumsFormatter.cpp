@@ -89,7 +89,7 @@ void EnumsFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) con
            << endl
            << "    inline static unencoded_type decode(encoded_type src)" << endl
            << "    {" << endl
-           << "        return static_cast<int>(NUM2INT(src));" << endl
+           << "        return static_cast<unencoded_type>(NUM2INT(src));" << endl
            << "    }" << endl
            << endl
            << "    inline static encoded_type encode(unencoded_type src)" << endl
