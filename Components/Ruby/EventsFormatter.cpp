@@ -95,6 +95,7 @@ void EventsFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
     }
 
     stream
+        << "        return event;" << endl
         << "    }" << endl
         << endl;
 

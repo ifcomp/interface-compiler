@@ -79,6 +79,7 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
     }
 
     stream
+        << "        return struct_;" << endl
         << "    }" << endl
         << endl;
 
