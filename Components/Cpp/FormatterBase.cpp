@@ -152,6 +152,11 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
     }
 
     stream << ")";
+
+    if( operation->isConst() )
+    {
+        stream << " const";
+    }
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp
