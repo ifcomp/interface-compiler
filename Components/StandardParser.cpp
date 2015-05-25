@@ -40,6 +40,7 @@ const char *StandardParser::KEY_EVENTS              = "events";
 const char *StandardParser::KEY_CONSTANTS           = "constants";
 
 const char *StandardParser::FLAG_STATIC             = "static";
+const char *StandardParser::FLAG_CONST              = "const";
 const char *StandardParser::FLAG_SYNCHRONOUS        = "synchronous";
 const char *StandardParser::FLAG_VALUETYPE          = "valueType";
 const char *StandardParser::KEY_SUPER               = "super";
@@ -400,6 +401,11 @@ void StandardParser::parseClassOperation(const YAML::Node &node, const ClassRef 
         if (checkNode(node, FLAG_STATIC))
         {
             newOperation->setStatic(node[FLAG_STATIC].as<bool>());
+        }
+
+        if (checkNode(node, FLAG_CONST))
+        {
+            newOperation->setConst(node[FLAG_Const].as<bool>());
         }
 
 //        if (checkNode(node, FLAG_SYNCHRONOUS))
