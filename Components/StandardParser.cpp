@@ -405,7 +405,7 @@ void StandardParser::parseClassOperation(const YAML::Node &node, const ClassRef 
 
         if (checkNode(node, FLAG_CONST))
         {
-            newOperation->setConst(node[FLAG_Const].as<bool>());
+            newOperation->setConst(node[FLAG_CONST].as<bool>());
         }
 
 //        if (checkNode(node, FLAG_SYNCHRONOUS))
