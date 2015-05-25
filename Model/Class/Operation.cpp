@@ -31,6 +31,16 @@ void Class::Operation::setStatic(bool isStatic)
 	_isStatic = isStatic;
 }
 
+bool Class::Operation::isConst() const
+{
+	return _isConst;
+}
+
+void Class::Operation::setConst(bool isConst)
+{
+	_isConst = isConst;
+}
+
 //bool Class::Operation::isSynchronous() const
 //{
 //	return _isSynchronous;
@@ -73,6 +83,7 @@ void Class::Operation::clone(const ObjectRef &clonedObject) const
     {
         Identifiable::clone(clonedOp);
         clonedOp->setStatic(isStatic());
+        clonedOp->setConst(isConst());
         //clonedOp->setSynchronous(isSynchronous());
 
         if (result())

@@ -24,6 +24,9 @@ public:
     bool isStatic() const;
     void setStatic(bool isStatic);
 
+    bool isConst() const;
+    void setConst(bool isConst);
+
     //bool isSynchronous() const;
     //void setSynchronous(bool isSynchronous);
 
@@ -38,6 +41,7 @@ protected:
 
 private:
     bool _isStatic;
+    bool _isConst;
     //bool _isSynchronous;
     std::vector<ParameterRef> _params;
     ParameterRef _result;
