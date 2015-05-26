@@ -191,7 +191,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     if(!operation->isStatic())
     {
-        stream << ", std::shared_ptr<" << qname(class_) << ">";
+        stream << ", std::shared_ptr<" << (operation->isConst() ? "const " : "") << qname(class_) << ">";
     }
 
     for (auto parameter : operation->params())
@@ -203,7 +203,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
     if(!operation->isStatic())
     {
-        stream << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())";
+        stream << ", std::dynamic_pointer_cast<" << (operation->isConst() ? "const " : "") << qname(class_) << ">(shared_from_this())";
     }
 
     for (auto parameter : operation->params())
