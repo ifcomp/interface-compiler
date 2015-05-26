@@ -167,7 +167,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::Operation
         stream << param(parameter.value()) << (!parameter.last() ? ", " : "");
     }
 
-    stream << ")" (operation->isConst() ? " const" : "") << endl << "{" << endl;
+    stream << ")" << (operation->isConst() ? " const" : "") << endl << "{" << endl;
 
     filter(stream).push<indent>()
            << "if(!everbase::internal::library::client)" << endl
