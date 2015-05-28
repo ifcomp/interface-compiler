@@ -6,6 +6,7 @@ const char* Class::Operation::TYPE_NAME = "Operation";
 
 Class::Operation::Operation()
     : _isStatic(false)
+    , _isConst(false)
 //  , _isSynchronous(false)
 {
 }
