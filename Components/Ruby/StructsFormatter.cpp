@@ -70,7 +70,8 @@ void StructsFormatter::_definition(std::ostream& stream, Model::StructRef struct
         << endl
         << "    static inline encoded_type encode(unencoded_type src)" << endl
         << "    {" << endl
-        << "        encoded_type struct_;" << endl << endl;
+        << "        encoded_type struct_ = rb_obj_alloc(" << qcname(struct_, "_") << ");" << endl
+        << "        rb_obj_call_init(struct_, 0, 0);" << endl << endl;
 
     for( auto field : struct_->fields() )
     {
