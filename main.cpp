@@ -231,6 +231,7 @@ int main(int argc, char** argv)
                 Components::Ruby::OperationsFormatter format;
                 format.execute(root, output);
             }
+            else
             if( format.first == "Ruby-Constants" )
             {
                 Components::Ruby::ConstantsFormatter format;
