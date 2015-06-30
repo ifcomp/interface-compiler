@@ -20,6 +20,7 @@
 #include "Components/Ruby/ClassesFormatter.hpp"
 #include "Components/Ruby/EventsFormatter.hpp"
 #include "Components/Ruby/OperationsFormatter.hpp"
+#include "Components/Ruby/ConstantsFormatter.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -228,6 +229,11 @@ int main(int argc, char** argv)
             if( format.first == "Ruby-Operations" )
             {
                 Components::Ruby::OperationsFormatter format;
+                format.execute(root, output);
+            }
+            if( format.first == "Ruby-Constants" )
+            {
+                Components::Ruby::ConstantsFormatter format;
                 format.execute(root, output);
             }
             else

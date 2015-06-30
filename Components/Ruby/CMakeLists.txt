@@ -5,6 +5,7 @@ set(SRC ${SRC}
 	Components/Ruby/StructsFormatter.cpp
 	Components/Ruby/ClassesFormatter.cpp
 	Components/Ruby/EventsFormatter.cpp
-	Components/Ruby/OperationsFormatter.cpp
+    Components/Ruby/OperationsFormatter.cpp
+    Components/Ruby/ConstantsFormatter.cpp
 	Components/Ruby/CppTypeFormatter.cpp
 PARENT_SCOPE)

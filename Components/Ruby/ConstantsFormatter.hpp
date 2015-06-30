@@ -1,27 +1,14 @@
 #pragma once
 
-#include "Components/Cpp/FormatterBase.hpp"
+#include "Components/Ruby/FormatterBase.hpp"
+#include "Components/Ruby/CppTypeFormatter.hpp"
 
 #include <fstream>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
-class EnumsFormatter;
-class StructsFormatter;
-class ClassesFormatter;
-class EventsFormatter;
-class OperationsFormatter;
-class ConstantsFormatter;
-
-class CppTypeFormatter : public Cpp::FormatterBase
+class ConstantsFormatter : public FormatterBase
 {
-    friend EnumsFormatter;
-    friend StructsFormatter;
-    friend ClassesFormatter;
-    friend EventsFormatter;
-    friend OperationsFormatter;
-    friend ConstantsFormatter;
-    
 protected:
     using FormatterBase::header;
     using FormatterBase::footer;
@@ -54,13 +41,22 @@ protected:
     using FormatterBase::_definition;
     using FormatterBase::_signature;
 
+    virtual void _includes(std::ostream& stream) const override;
+
+    virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
+
     virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
+
     virtual void _definition(std::ostream& stream, Model::ClassRef class_) const override;
     virtual void _definition(std::ostream& stream, Model::Class::ConstantRef constant) const override;
     virtual void _definition(std::ostream& stream, Model::Class::EventRef event) const override;
     virtual void _definition(std::ostream& stream, Model::Class::OperationRef operation) const override;
+
     virtual void _definition(std::ostream& stream, Model::EnumRef enum_) const override;
     virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
+
+private:
+    CppTypeFormatter cpp;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Ruby
