@@ -97,7 +97,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
             case Primitive::Underlying::UUID:
             {
                 auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-                stream << uuid;
+                stream << "\"" << uuid << "\"";
             }
             break;
 

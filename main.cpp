@@ -60,6 +60,7 @@ int main(int argc, char** argv)
         cerr << "           Ruby-Classes" << endl;
         cerr << "           Ruby-Events" << endl;
         cerr << "           Ruby-Operations" << endl;
+        cerr << "           Ruby-Constants" << endl;
         return 1;
     }
 
