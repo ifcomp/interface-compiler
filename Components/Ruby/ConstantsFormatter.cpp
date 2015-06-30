@@ -51,18 +51,21 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::ClassRef class
 
 void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
 {
+    auto namespace_ = std::dynamic_pointer_cast<Model::Class>(constant->parent());
+    
+    if(!namespace_)
+        throw std::runtime_error("invalid constant");
+    
     if ( constant->doc() )
     {
-        stream << doc(constant->doc());
+        stream << doc(constant->doc()) << endl;
     }
-
-    std::stringstream ss;
-    ss << name(constant);
-    std::string str = ss.str();
-    boost::to_upper(str);
-
-    stream << str << " = ";
-
+    
+    stream << "// constant " << qname(constant) << ": {" << endl << endl;
+    
+    
+    stream << "EVERBASE_RUBY_CONSTANT(" << qcname(constant, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(constant) << "\", ";
+    
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
         switch( primitive->underlying() )
@@ -94,17 +97,18 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
             case Primitive::Underlying::UUID:
             {
                 auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-
-                stream << "\"" << uuid << "\"";
+                stream << uuid;
             }
             break;
-            
+
             default:
                 throw std::runtime_error("not supported");
         }
     }
     
-    stream << endl;
+    stream << ")" << endl << endl;
+    
+    stream << "// constant " << qname(constant) << ": }" << endl << endl;
 }
 
 void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::EventRef event) const
