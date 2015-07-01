@@ -103,7 +103,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
                 const auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
                 auto str = boost::lexical_cast<std::string>(uuid);
                 
-                std::remove(str.begin(), str.end(), '-');
+                std::erase(std::remove(str.begin(), str.end(), '-'), str.end());
                 
                 stream << "Uuid(\"" << str << "\")";
             }
