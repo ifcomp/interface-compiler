@@ -66,6 +66,8 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
     
     stream << "EVERBASE_RUBY_CONSTANT(" << qcname(constant, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(constant) << "\", ";
     
+    stream << "TypeEncoding<" << name(constant->type()) << ">::encode(";
+    
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
         switch( primitive->underlying() )
@@ -106,7 +108,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
         }
     }
     
-    stream << ")" << endl << endl;
+    stream << ")))" << endl << endl;
     
     stream << "// constant " << qname(constant) << ": }" << endl << endl;
 }
