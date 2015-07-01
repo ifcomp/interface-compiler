@@ -63,6 +63,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
     
     stream << "// constant " << qname(constant) << ": {" << endl << endl;
     
+    stream << "using namespace everbase::common;" << endl << endl;
     
     stream << "EVERBASE_RUBY_CONSTANT(" << qcname(constant, "_") << ", " << qcname(namespace_, "_") << ", \"" << name(constant) << "\", ";
     
