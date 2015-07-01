@@ -6,6 +6,7 @@
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
@@ -102,8 +103,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
             {
                 const auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
                 auto str = boost::lexical_cast<std::string>(uuid);
-                
-                std::erase(std::remove(str.begin(), str.end(), '-'), str.end());
+                boost::erase_all(str, '-');
                 
                 stream << "Uuid(\"" << str << "\")";
             }
