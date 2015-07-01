@@ -5,6 +5,7 @@
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Ruby {
 
@@ -99,8 +100,12 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
 
             case Primitive::Underlying::UUID:
             {
-                auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-                stream << "\"" << uuid << "\"";
+                const auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
+                auto str = boost::lexical_cast<std::string>(uuid);
+                
+                std::remove(str.begin(), str.end(), '-');
+                
+                stream << "Uuid(\"" << str << "\")";
             }
             break;
 
