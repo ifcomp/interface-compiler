@@ -114,7 +114,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
         }
     }
     
-    stream << ")))" << endl << endl;
+    stream << "))" << endl << endl;
     
     stream << "// constant " << qname(constant) << ": }" << endl << endl;
 }
