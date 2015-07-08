@@ -158,14 +158,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Constan
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
-                    stream << "[ ";
-
-                    for( auto i : indices(std::vector<std::uint8_t>(uuid.data, uuid.data + 16)) )
-                    {
-                        stream << "0x" << std::hex << static_cast<std::uint64_t>(i.value()) << (!i.last() ? ", " : "");
-                    }
-
-                    stream << " ]";
+                    stream << "\"" << uuid << "\"";
                 }
                 break;
 
