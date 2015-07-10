@@ -259,13 +259,6 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     stream << endl;
 
-    if( operation->result() )
-    {
-        stream << "        " << type(operation->result()->type()) << " result;" << endl;
-    }
-
-    stream << endl;
-
     stream << "        bool hasException = false;" << endl
            << "        std::string exception;" << endl << endl;
 
@@ -274,7 +267,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     if( operation->result() )
     {
-        stream << "            result = ";
+        stream << "            " << type(operation->result()->type()) << " result = ";
     }
     else
     {
@@ -297,8 +290,16 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
         stream << "std::move(param_" << name(param.value()) << (!param.last() ? "), " : ")");
     }
 
-    stream << ");" << endl;
+    stream << ");" << endl
+           << endl;
 
+    stream << "            TypeEncoding<bool>::encode(directory, response, false);" << endl;
+    
+    if( operation->result() )
+    {
+        stream << "            TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, response, std::move(result));" << endl;
+    }
+    
     stream << "        }" << endl
            << "        catch(const std::exception& e)" << endl
            << "        {" << endl
@@ -316,18 +317,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
            << "        {" << endl
            << "            TypeEncoding<bool>::encode(directory, response, true);" << endl
            << "            TypeEncoding<std::string>::encode(directory, response, std::move(exception));" << endl
-           << "        }" << endl
-           << "        else" << endl
-           << "        {" << endl
-           << "            TypeEncoding<bool>::encode(directory, response, false);" << endl;
-
-    if( operation->result() )
-    {
-        stream << "            TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, response, std::move(result));" << endl;
-    }
-
-    stream << "        }" << endl
-           << endl;
+           << "        }" << endl;
 
     stream << "    }" << endl;
 
