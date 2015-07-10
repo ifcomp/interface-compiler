@@ -131,17 +131,16 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::StructRef stru
     stream
         << "    static inline " << qname(struct_) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream)" << endl
         << "    {" << endl
-        << "        " << qname(struct_) << " struct_;" << endl << endl;
+        << "        " << "return " << qname(struct_) << "(" << endl;
 
-    for( auto field : struct_->fields() )
+    for( auto field : indices(struct_->fields()) )
     {
         stream
-            << "        struct_." << name(field) << " = TypeEncoding<" << type(field->type()) << ">::decode(directory, stream);" << endl;
+            << "            TypeEncoding<" << type(field.value()->type()) << ">::decode(directory, stream)"<< (field.last() ? "" : ",") << endl;
     }
 
     stream
-        << endl
-        << "        return struct_;" << endl
+        << "        );" << endl
         << "    }" << endl
         << "};" << endl << endl;
 
