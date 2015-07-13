@@ -19,6 +19,10 @@ void HeaderFormatter::_includes(std::ostream& stream) const
         << endl;
 
     FormatterBase::_includes(stream);
+    
+    stream
+        << "#include \"everbase/common/EnableSharedFromThisMultiple.hpp\"" << endl
+        << endl;
 }
 
 void HeaderFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
@@ -111,7 +115,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
     }
     else
     {
-        stream << "std::enable_shared_from_this<" << name(class_) << ">";
+        stream << "everbase::common::EnableSharedFromThisMultiple<" << name(class_) << ">";
     }
 
     stream << endl << "{" << endl;
