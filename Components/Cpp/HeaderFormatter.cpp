@@ -283,7 +283,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         filter(stream).push<indent>(config.indentData) << definition(value.value()) << (!value.last() ? "," : "") << endl << endl;
     }
 
-    stream << "};" << endl;
+    stream << "};" << endl << endl;
+
+    std::string operators( "|&^" );
+    for ( char &op :operators )
+    {
+        stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
+            << "{" << endl;
+        filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
+        stream << "}" << endl << endl;
+    }
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
