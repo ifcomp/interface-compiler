@@ -156,8 +156,8 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Constan
 
             case Primitive::Underlying::UUID:
                 {
-                    auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
-
+                    auto uuid = boost::uuids::to_string(boost::any_cast<boost::uuids::uuid>(constant->value()));
+                    uuid.erase(std::remove(uuid.begin(), uuid.end(), '-'), uuid.end());
                     stream << "\"" << uuid << "\"";
                 }
                 break;
