@@ -128,6 +128,10 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::StructRef stru
         << "    }" << endl
         << endl;
 
+    // use an aggregate initializer here because according to §8.5.4 in the standard it's evaluation order is equal to 
+    // the order the arguments are written. This is important for using structs in RPCs where the order of the function
+    // calls to restore the values is important because the values are extracted in a certain order from a streambuffer.
+
     stream
         << "    static inline " << qname(struct_) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream)" << endl
         << "    {" << endl
