@@ -59,29 +59,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
     }
     
     stream << "struct " << name(struct_) << endl << "{" << endl;
-    
-    // Default Constructor
-    filter(stream).push<indent>(config.indentData) << name(struct_) << "() = default;" << endl << endl;
-    
-    // Default Constructor with all fields as params
-    filter(stream).push<indent>(config.indentData) << name(struct_) << "(";
-    
-    for (auto field : indices(struct_->fields()))
-    {
-        stream << param(field.value()) << (!field.last() ? ", " : "");
-    }
-    
-    stream << ")" << endl;
-    
-    for (auto field :indices(struct_->fields()))
-    {
-        filter(stream).push<indent>(config.indentData).push<indent>(config.indentData)
-            << (field.first() ? ": " : ", ") << name(field.value()) << "(" << name(field.value()) << ")" << endl;
-    }
-    
-    filter(stream).push<indent>(config.indentData) << "{ }" << endl << endl;
-    
-    // Fields
+
     for (auto field : struct_->fields())
     {
         if ( field->doc() )

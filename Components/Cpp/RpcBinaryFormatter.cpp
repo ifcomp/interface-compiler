@@ -131,16 +131,17 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::StructRef stru
     stream
         << "    static inline " << qname(struct_) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream)" << endl
         << "    {" << endl
-        << "        " << "return " << qname(struct_) << "(" << endl;
+        << "        " << qname(struct_) << " struct_;" << endl << endl;
 
-    for( auto field : indices(struct_->fields()) )
+    for( auto field : struct_->fields() )
     {
         stream
-            << "            TypeEncoding<" << type(field.value()->type()) << ">::decode(directory, stream)"<< (field.last() ? "" : ",") << endl;
+            << "        struct_." << name(field) << " = TypeEncoding<" << type(field->type()) << ">::decode(directory, stream);" << endl;
     }
 
     stream
-        << "        );" << endl
+        << endl
+        << "        return struct_;" << endl
         << "    }" << endl
         << "};" << endl << endl;
 
@@ -259,6 +260,13 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     stream << endl;
 
+    if( operation->result() )
+    {
+        stream << "        " << type(operation->result()->type()) << " result;" << endl;
+    }
+
+    stream << endl;
+
     stream << "        bool hasException = false;" << endl
            << "        std::string exception;" << endl << endl;
 
@@ -267,7 +275,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     if( operation->result() )
     {
-        stream << "            " << type(operation->result()->type()) << " result = ";
+        stream << "            result = ";
     }
     else
     {
@@ -290,16 +298,8 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
         stream << "std::move(param_" << name(param.value()) << (!param.last() ? "), " : ")");
     }
 
-    stream << ");" << endl
-           << endl;
+    stream << ");" << endl;
 
-    stream << "            TypeEncoding<bool>::encode(directory, response, false);" << endl;
-    
-    if( operation->result() )
-    {
-        stream << "            TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, response, std::move(result));" << endl;
-    }
-    
     stream << "        }" << endl
            << "        catch(const std::exception& e)" << endl
            << "        {" << endl
@@ -317,7 +317,18 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::Operati
            << "        {" << endl
            << "            TypeEncoding<bool>::encode(directory, response, true);" << endl
            << "            TypeEncoding<std::string>::encode(directory, response, std::move(exception));" << endl
-           << "        }" << endl;
+           << "        }" << endl
+           << "        else" << endl
+           << "        {" << endl
+           << "            TypeEncoding<bool>::encode(directory, response, false);" << endl;
+
+    if( operation->result() )
+    {
+        stream << "            TypeEncoding<" << type(operation->result()->type()) << ">::encode(directory, response, std::move(result));" << endl;
+    }
+
+    stream << "        }" << endl
+           << endl;
 
     stream << "    }" << endl;
 
