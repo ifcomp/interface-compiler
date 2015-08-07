@@ -271,6 +271,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
         stream << "}" << endl << endl;
     }
+
+    stream << "inline std::string std::to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
+    filter(stream).push<indent>(config.indentData) << "switch(enumerator)" << endl << "{" << endl;
+
+    for (auto value : enum_->values()) {
+        filter(stream).push<indent>(config.indentData) << "case " << name(value) << ":" << endl << "    return \"" << name(value) << "\";" << endl;
+    }
+
+    filter(stream).push<indent>(config.indentData) << "}" << endl;
+    stream << "}" << endl << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
