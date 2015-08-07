@@ -26,11 +26,16 @@ public:
     void addValue(const ValueRef &value);
     std::vector<ValueRef> values() const;
 
+public:
+    bool isBitfield();
+    void setBitfield(bool isBitfield);
+
 protected:
     void clone(const ObjectRef &clonedObject) const override;
 
 private:
     std::vector<ValueRef> _values;
+    bool _isBitfield = false;
 };
 
 typedef std::shared_ptr<Enum> EnumRef;

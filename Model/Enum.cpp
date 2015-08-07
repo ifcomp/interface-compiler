@@ -31,6 +31,14 @@ std::vector<Enum::ValueRef> Enum::values() const
     return _values;
 }
 
+bool Enum::isBitfield() {
+    return _isBitfield;
+}
+
+void Enum::setBitfield(bool isBitfield) {
+    _isBitfield = isBitfield;
+}
+
 void Enum::clone(const ObjectRef &clonedObject) const
 {
     using namespace std;
