@@ -7,6 +7,7 @@ const char* Enum::TYPE_NAME = "Enum";
 
 Enum::Enum()
 {
+    _isBitfield = false;
 }
 
 Enum::~Enum()
@@ -29,6 +30,16 @@ void Enum::addValue(const ValueRef &value)
 std::vector<Enum::ValueRef> Enum::values() const
 {
     return _values;
+}
+
+bool Enum::isBitfield()
+{
+    return _isBitfield;
+}
+
+void Enum::setBitfield(bool isBitfield)
+{
+    _isBitfield = isBitfield;
 }
 
 void Enum::clone(const ObjectRef &clonedObject) const

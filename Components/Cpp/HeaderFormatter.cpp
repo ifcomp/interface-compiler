@@ -263,23 +263,68 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
     stream << "};" << endl << endl;
 
-    std::string operators( "|&^" );
-    for ( char &op :operators )
+    if( enum_->isBitfield() )
     {
-        stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
-            << "{" << endl;
-        filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
-        stream << "}" << endl << endl;
+        std::string operators( "|&^" );
+        for ( char &op :operators )
+        {
+            stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
+                   << "{" << endl;
+            filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
+            stream << "}" << endl << endl;
+        }
     }
 
     stream << "inline std::string std::to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
-    filter(stream).push<indent>(config.indentData) << "switch(enumerator)" << endl << "{" << endl;
+    if( enum_->isBitfield() )
+    {
+        filter(stream).push<indent>(config.indentData) << "std::string values(\"\");" << endl << endl;
 
-    for (auto value : enum_->values()) {
-        filter(stream).push<indent>(config.indentData) << "case " << name(value) << ":" << endl << "    return \"" << name(value) << "\";" << endl;
+    }
+    else
+    {
+        filter(stream).push<indent>(config.indentData) << "switch( enumerator )" << endl << "{" << endl;
     }
 
-    filter(stream).push<indent>(config.indentData) << "default:" << endl << "    return \"UNKNOWN(\" + enumerator + \")\";" << endl << "}" << endl;
+    bool nullValue = true;
+    for (auto value : enum_->values())
+    {
+
+        if( enum_->isBitfield() )
+        {
+            if( nullValue )
+            {
+                filter(stream).push<indent>(config.indentData) << "if( enumerator == " << name(enum_) << "::" << name(value) << " )" << endl
+                                                               << "{" << endl;
+                filter(stream).push<indent>(config.indentData) << "    return \"" << name(value) << "\";" << endl
+                                                               << "}" << endl << endl;
+                nullValue = false;
+            }
+            else
+            {
+                filter(stream).push<indent>(config.indentData) << "if( enumerator & " << name(enum_) << "::" << name(value)
+                                                               << " == " << name(enum_) << "::" << name(value) << " )" << endl
+                                                               << "{" << endl;
+                filter(stream).push<indent>(config.indentData) << "    values += ( values.empty() ? \"\" : \" | \" );" << endl;
+                filter(stream).push<indent>(config.indentData) << "    values += \"" << name(value) << "\";" << endl
+                                                               << "}" << endl << endl;
+            }
+        }
+        else
+        {
+            filter(stream).push<indent>(config.indentData) << "case " << name(value) << ":" << endl << "    return \"" << name(value) << "\";" << endl;
+        }
+    }
+
+    if( enum_->isBitfield() )
+    {
+        filter(stream).push<indent>(config.indentData) << "return values;" << endl;
+    }
+    else
+    {
+        filter(stream).push<indent>(config.indentData) << "default:" << endl << "    return \"UNKNOWN(\" + enumerator + \")\";" << endl << "}" << endl;
+    }
+
     stream << "}" << endl << endl;
 }
 

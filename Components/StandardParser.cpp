@@ -43,6 +43,7 @@ const char *StandardParser::FLAG_STATIC             = "static";
 const char *StandardParser::FLAG_CONST              = "const";
 const char *StandardParser::FLAG_SYNCHRONOUS        = "synchronous";
 const char *StandardParser::FLAG_VALUETYPE          = "valueType";
+const char *StandardParser::FLAG_BITFIELD           = "bitfield";
 const char *StandardParser::KEY_SUPER               = "super";
 
 const char *StandardParser::KEY_ID                  = "id";
@@ -344,6 +345,11 @@ void StandardParser::parseEnum(const YAML::Node &node, const ElementRef &parent,
             {
                 throw runtime_error(addSectionToException(KEY_VALUES));
             }
+        }
+
+        if (checkNode(node, FLAG_BITFIELD))
+        {
+            newEnum->setBitfield(node[FLAG_BITFIELD].as<bool>());
         }
     }
     catch (const runtime_error &e)
