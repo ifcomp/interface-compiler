@@ -76,7 +76,14 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 				f << "result." << name(field) << " = ";
 				f << CONVERSIONS << "['";
 				_paramType(f, field);
-				f << "'].encode(value['" << cname(field) << "'])" << endl;
+				f << "'].encode(value['" << cname(field) << "']";
+                if ( _hasContainerTypes( field ) )
+                {
+                    f << ", [";
+                    _containerTypes(f, field);
+                    f << "]";
+                }
+                f << ")" << endl;
 			}
 			f << "return result;" << endl;
 	f.pop() << "}," << endl;
@@ -233,7 +240,7 @@ void JsonEncoding::_containerTypes(filter& f, Model::ParameterRef containerParam
 {
 	bool isFirst = false;
 	//if has container-params
-	if (std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params().size())
+	if (std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params().size() > 0)
 	{
 		auto typeParams = std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params();
 		for (auto typeParam : indices(typeParams))
@@ -250,6 +257,11 @@ void JsonEncoding::_containerTypes(filter& f, Model::ParameterRef containerParam
 			}
 		}
 	}
+}
+
+bool JsonEncoding::_hasContainerTypes( ParameterRef containerParam ) const
+{
+    return std::dynamic_pointer_cast<Model::Type>(containerParam->type())->params().size() > 0;
 }
 
 void JsonEncoding::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const {}
