@@ -263,7 +263,8 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
     stream << "};" << endl << endl;
 
-    if(enum_->isBitfield()) {
+    if( enum_->isBitfield() )
+    {
         std::string operators( "|&^" );
         for ( char &op :operators )
         {

@@ -35,7 +35,7 @@ protected:
 
 private:
     std::vector<ValueRef> _values;
-    bool _isBitfield = false;
+    bool _isBitfield;
 };
 
 typedef std::shared_ptr<Enum> EnumRef;
