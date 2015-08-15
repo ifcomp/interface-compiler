@@ -21,7 +21,7 @@ namespace TupleHelper
 	};
 
 	template<class T, class... Types>
-	T& get(std::tuple<Types...> tuple)
+	T get(std::tuple<Types...> tuple)
 	{
 	    return std::get<get_internal<0,T,Types...>::type::index>(tuple);
 	}
