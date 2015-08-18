@@ -44,7 +44,7 @@ protected:
     virtual void _footer(std::ostream& stream, Model::RootRef root) const override;
     virtual void _backwards(std::ostream& stream, Model::ElementRef element) const override;
     
-    virtual void _definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const;
+    virtual void _definition(std::ostream& stream, Model::ElementRef element, std::uint8_t pass) const override;
     
     virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
 

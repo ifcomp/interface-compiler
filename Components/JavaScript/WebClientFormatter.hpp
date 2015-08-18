@@ -56,7 +56,7 @@ protected:
 	virtual void _returnType(StreamFilter::filter& f, Model::ParameterRef param) const;
 	virtual void _containerTypes(StreamFilter::filter& f, Model::ParameterRef containerParam) const;
 
-	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const;
+	virtual void _definition(std::ostream& stream, Model::NamespaceRef namespace_) const override;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
