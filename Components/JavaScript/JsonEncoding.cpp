@@ -96,8 +96,15 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	{
 		f << "result." << name(field) << " = " << CONVERSIONS << "['";
 	    _paramType(f, field);
-		f << "'].decode(value['" << cname(field) << "'])" << endl;
-	}
+		f << "'].decode(value['" << cname(field) << "']";
+        if ( _hasContainerTypes( field ) )
+        {
+            f << ", [";
+            _containerTypes(f, field);
+            f << "]";
+        }
+        f << ")" << endl;
+    }
 	f << "return result;" << endl;
 	f.pop() << "}" << endl;
 	f.pop() << "}" << endl << endl;
