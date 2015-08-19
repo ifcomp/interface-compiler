@@ -86,7 +86,7 @@ void EventsFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         << endl
         << "    static inline encoded_type encode(unencoded_type src)" << endl
         << "    {" << endl
-        << "        encoded_type event;" << endl << endl;
+        << "        encoded_type event = 0.0;" << endl << endl;
 
     for( auto value : event->values() )
     {
