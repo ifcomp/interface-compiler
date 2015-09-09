@@ -71,7 +71,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
                    << "template<>" << endl
                    << "struct TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
                    << "{" << endl
-                   << "    virtual std::shared_ptr<void> create() const override" << endl
+                   << "    virtual std::shared_ptr<everbase::common::SharedFromThisBase> create() const override" << endl
                    << "    {" << endl
                    << "        return std::make_shared<" << qname(class_) << "Impl>();" << endl
                    << "    }" << endl
