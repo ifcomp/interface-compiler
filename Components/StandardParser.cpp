@@ -454,7 +454,7 @@ void StandardParser::parseClassEvent(const YAML::Node &node, const ClassRef &par
 
     try
     {
-        if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, true))
+        if (checkNode(node, KEY_VALUES, YAML::NodeType::Sequence, false))
         {
             for (auto valueNode : node[KEY_VALUES])
             {
@@ -466,11 +466,6 @@ void StandardParser::parseClassEvent(const YAML::Node &node, const ClassRef &par
         if (checkNode(node, KEY_ID, YAML::NodeType::Scalar, true))
         {
             newEvent->setTypeId(boost::lexical_cast<boost::uuids::uuid>(node[KEY_ID].Scalar()));
-        }
-
-        if (newEvent->values().size() == 0)
-        {
-            throw runtime_error("event has no values\n");
         }
     }
     catch (const exception &e)
