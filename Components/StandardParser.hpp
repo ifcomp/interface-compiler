@@ -65,6 +65,7 @@ public:
     static const char *FLAG_CONST;
     static const char *FLAG_SYNCHRONOUS;
     static const char *FLAG_VALUETYPE;
+    static const char *FLAG_BITFIELD;
     /** @} */
 
     /**

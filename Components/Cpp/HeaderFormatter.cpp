@@ -263,13 +263,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
     stream << "};" << endl << endl;
 
-    std::string operators( "|&^" );
-    for ( char &op :operators )
+    if( enum_->isBitfield() )
     {
-        stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
-            << "{" << endl;
-        filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
-        stream << "}" << endl << endl;
+        std::string operators( "|&^" );
+        for ( char &op :operators )
+        {
+            stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
+                   << "{" << endl;
+            filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
+            stream << "}" << endl << endl;
+        }
     }
 }
 
