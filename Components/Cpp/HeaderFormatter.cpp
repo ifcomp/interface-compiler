@@ -275,7 +275,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         }
     }
 
-    stream << "inline std::string ::std::to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
+    stream << "inline std::string to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
     if( enum_->isBitfield() )
     {
         filter(stream).push<indent>(config.indentData) << "std::string values(\"\");" << endl << endl;
