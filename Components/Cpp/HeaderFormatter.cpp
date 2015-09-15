@@ -278,7 +278,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
     stream << "inline std::string to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
     if( enum_->isBitfield() )
     {
-        filter(stream).push<indent>(config.indentData) << "std::string values(\"\");" << endl << endl;
+        filter(stream).push<indent>(config.indentData) << "std::string values( \"\" );" << endl << endl;
 
     }
     else
@@ -295,8 +295,8 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
             if( nullValue )
             {
                 filter(stream).push<indent>(config.indentData) << "if( enumerator == " << name(enum_) << "::" << name(value) << " )" << endl
-                                                               << "{" << endl;
-                filter(stream).push<indent>(config.indentData) << "    return \"" << name(value) << "\";" << endl
+                                                               << "{" << endl
+                                                               << "    return \"" << name(value) << "\";" << endl
                                                                << "}" << endl << endl;
                 nullValue = false;
             }
@@ -304,15 +304,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
             {
                 filter(stream).push<indent>(config.indentData) << "if( enumerator & " << name(enum_) << "::" << name(value)
                                                                << " == " << name(enum_) << "::" << name(value) << " )" << endl
-                                                               << "{" << endl;
-                filter(stream).push<indent>(config.indentData) << "    values += ( values.empty() ? \"\" : \" | \" );" << endl;
-                filter(stream).push<indent>(config.indentData) << "    values += \"" << name(value) << "\";" << endl
+                                                               << "{" << endl
+                                                               << "    values += \"" << name(value) << "\";" << endl
+                                                               << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
                                                                << "}" << endl << endl;
             }
         }
         else
         {
-            filter(stream).push<indent>(config.indentData) << "case " << name(value) << ":" << endl << "    return \"" << name(value) << "\";" << endl;
+            filter(stream).push<indent>(config.indentData) << "    case " << name(value) << ":" << endl
+                                                           << "        return \"" << name(enum_) << "::" << name(value) << "\";" << endl;
         }
     }
 
