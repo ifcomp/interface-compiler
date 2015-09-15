@@ -323,7 +323,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
     }
     else
     {
-        filter(stream).push<indent>(config.indentData) << "default:" << endl << "    return \"UNKNOWN(\" + enumerator + \")\";" << endl << "}" << endl;
+        filter(stream).push<indent>(config.indentData) << "default:" << endl << "    return std::string( \"UNKNOWN(\" ) + enumerator + \")\";" << endl << "}" << endl;
     }
 
     stream << "}" << endl << endl;
