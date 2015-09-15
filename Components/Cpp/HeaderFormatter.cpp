@@ -274,6 +274,58 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
             stream << "}" << endl << endl;
         }
     }
+
+    stream << "inline std::string to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
+    if( enum_->isBitfield() )
+    {
+        filter(stream).push<indent>(config.indentData) << "std::string values( \"\" );" << endl << endl;
+
+    }
+    else
+    {
+        filter(stream).push<indent>(config.indentData) << "switch( enumerator )" << endl << "{" << endl;
+    }
+
+    bool nullValue = true;
+    for (auto value : enum_->values())
+    {
+
+        if( enum_->isBitfield() )
+        {
+            if( nullValue )
+            {
+                filter(stream).push<indent>(config.indentData) << "if( enumerator == " << name(enum_) << "::" << name(value) << " )" << endl
+                                                               << "{" << endl
+                                                               << "    return \"" << name(value) << "\";" << endl
+                                                               << "}" << endl << endl;
+                nullValue = false;
+            }
+            else
+            {
+                filter(stream).push<indent>(config.indentData) << "if( (int)enumerator & (int)" << name(enum_) << "::" << name(value) << " )" << endl
+                                                               << "{" << endl
+                                                               << "    values += \"" << name(value) << "\";" << endl
+                                                               << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
+                                                               << "}" << endl << endl;
+            }
+        }
+        else
+        {
+            filter(stream).push<indent>(config.indentData) << "    case " << name(enum_) << "::" << name(value) << ":" << endl
+                                                           << "        return \"" << name(value) << "\";" << endl;
+        }
+    }
+
+    if( enum_->isBitfield() )
+    {
+        filter(stream).push<indent>(config.indentData) << "return values;" << endl;
+    }
+    else
+    {
+        filter(stream).push<indent>(config.indentData) << "default:" << endl << "    return std::string( \"UNKNOWN(\" ) + std::to_string( (int)enumerator ) + \")\";" << endl << "}" << endl;
+    }
+
+    stream << "}" << endl << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
