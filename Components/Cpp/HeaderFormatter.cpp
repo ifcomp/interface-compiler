@@ -302,8 +302,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
             }
             else
             {
-                filter(stream).push<indent>(config.indentData) << "if( enumerator & " << name(enum_) << "::" << name(value)
-                                                               << " == " << name(enum_) << "::" << name(value) << " )" << endl
+                filter(stream).push<indent>(config.indentData) << "if( enumerator & " << name(enum_) << "::" << name(value) << " )" << endl
                                                                << "{" << endl
                                                                << "    values += \"" << name(value) << "\";" << endl
                                                                << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
