@@ -286,28 +286,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         filter(stream).push<indent>(config.indentData) << "switch( enumerator )" << endl << "{" << endl;
     }
 
-    bool nullValue = true;
     for (auto value : enum_->values())
     {
 
         if( enum_->isBitfield() )
         {
-            if( nullValue )
-            {
-                filter(stream).push<indent>(config.indentData) << "if( enumerator == " << name(enum_) << "::" << name(value) << " )" << endl
-                                                               << "{" << endl
-                                                               << "    return \"" << name(value) << "\";" << endl
-                                                               << "}" << endl << endl;
-                nullValue = false;
-            }
-            else
-            {
-                filter(stream).push<indent>(config.indentData) << "if( (int)enumerator & (int)" << name(enum_) << "::" << name(value) << " )" << endl
-                                                               << "{" << endl
-                                                               << "    values += \"" << name(value) << "\";" << endl
-                                                               << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
-                                                               << "}" << endl << endl;
-            }
+            filter(stream).push<indent>(config.indentData) << "if( (int)enumerator & (int)" << name(enum_) << "::" << name(value) << " )" << endl
+                                                           << "{" << endl
+                                                           << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
+                                                           << "    values += \"" << name(value) << "\";" << endl
+                                                           << "}" << endl << endl;
         }
         else
         {
