@@ -1,4 +1,6 @@
 #include "Components/Cpp/RpcBinaryFormatter.hpp"
+#include <string>
+#include <sstream> 
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
