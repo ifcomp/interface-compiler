@@ -1,4 +1,6 @@
 #include "Components/Cpp/RpcBinaryFormatter.hpp"
+#include <string>
+#include <sstream> 
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -191,13 +193,23 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 
     stream
         << "    virtual inline void encode(everbase::internal::common::rpc::ObjectDirectory& directory, std::ostream& stream, everbase::common::Event& event) const override" << endl
-        << "    {" << endl
-        << "        " << qname(event) << "& event_ = dynamic_cast<" << qname(event) << "&>(event);" << endl;
+        << "    {" << endl;    
 
+    
+    std::stringstream ssVar;
+    ssVar << "        " << qname(event) << "& event_ = dynamic_cast<" << qname(event) << "&>(event);" << endl;
+    
+    std::stringstream ss;   
     for( auto value : event->values() )
     {
-        stream
-            << "        TypeEncoding<" << type(value->type()) << ">::encode(directory, stream, event_." << name(value) << ");" << endl;
+        ss << "        TypeEncoding<" << type(value->type()) << ">::encode(directory, stream, event_." << name(value) << ");" << endl;
+    }
+    
+    std::string s = ss.str();
+    if ( s != "" ) 
+    {
+        stream << ssVar.str();
+        stream << s;
     }
 
     stream
