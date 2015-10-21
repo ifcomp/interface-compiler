@@ -1,4 +1,6 @@
 #include "Components/Cpp/RpcFormatter.hpp"
+#include <string>
+#include <sstream> 
 
 namespace Everbase { namespace InterfaceCompiler { namespace Components { namespace Cpp {
 
@@ -135,23 +137,33 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
     {
         stream << doc(event->doc());
     }
-
+  
     stream
         << "struct " << qcname(event, "_") << " : public everbase::internal::common::rpc::EventEncoding" << endl
         << "{" << endl
         << "    virtual std::vector<boost::any> encode(const everbase::common::Event& event) const" << endl
         << "    {" << endl
-        << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl
         << "        std::vector<boost::any> encoded;" << endl;
 
-    std::size_t i = 0;
-
+    std::stringstream ssVar;   
+    ssVar    
+        << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl;
+    
+        
+    std::stringstream ss;
     for( auto value : event->values() )
     {
-        stream << "        encoded.push_back(decoded." << name(value) << ");" << endl;
-        i += 1;
+        ss << "        encoded.push_back(decoded." << name(value) << ");" << endl;
     }
-
+    
+    std::string s = ss.str();
+    if ( s != "" )
+    {
+        stream << ssVar.str();
+    }
+    
+    stream << s;
+    
     stream
         << "        return encoded;" << endl
         << "    }" << endl
