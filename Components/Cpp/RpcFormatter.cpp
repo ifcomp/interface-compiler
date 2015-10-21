@@ -140,8 +140,15 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
         << "struct " << qcname(event, "_") << " : public everbase::internal::common::rpc::EventEncoding" << endl
         << "{" << endl
         << "    virtual std::vector<boost::any> encode(const everbase::common::Event& event) const" << endl
-        << "    {" << endl
-        << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl
+        << "    {" << endl;
+
+    if ( !event->values().empty() )
+    {
+        stream
+        << "        const " << qname(event) << "& decoded = dynamic_cast<const " << qname(event) << "&>(event);" << endl;
+    }
+    
+        stream
         << "        std::vector<boost::any> encoded;" << endl;
 
     std::size_t i = 0;
