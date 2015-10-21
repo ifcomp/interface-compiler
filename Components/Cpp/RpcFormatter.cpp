@@ -172,7 +172,7 @@ void RpcFormatter::_definition(std::ostream& stream, Model::Class::EventRef even
         << "    {" << endl
         << "        std::shared_ptr<" << qname(event) << "> decoded(new " << qname(event) << ");" << endl;
 
-    i = 0;
+    std::size_t i = 0;
 
     for( auto value : event->values() )
     {
