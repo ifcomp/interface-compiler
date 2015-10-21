@@ -191,8 +191,13 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 
     stream
         << "    virtual inline void encode(everbase::internal::common::rpc::ObjectDirectory& directory, std::ostream& stream, everbase::common::Event& event) const override" << endl
-        << "    {" << endl
+        << "    {" << endl;
+
+    if ( event->values().size() > 0 )
+    {
+        stream
         << "        " << qname(event) << "& event_ = dynamic_cast<" << qname(event) << "&>(event);" << endl;
+    }
 
     for( auto value : event->values() )
     {
@@ -209,8 +214,13 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 
     stream
         << "    virtual inline std::shared_ptr<everbase::common::Event> decode(everbase::internal::common::rpc::ObjectDirectory& directory, std::istream& stream) const override" << endl
-        << "    {" << endl
+        << "    {" << endl;
+
+    if ( event->values().size() > 0 )
+    {
+        stream
         << "        std::shared_ptr<" << qname(event) << "> event = std::make_shared<" << qname(event) << ">();" << endl;
+    }
 
     for( auto value : event->values() )
     {
