@@ -191,8 +191,13 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::EventRe
 
     stream
         << "    virtual inline void encode(everbase::internal::common::rpc::ObjectDirectory& directory, std::ostream& stream, everbase::common::Event& event) const override" << endl
-        << "    {" << endl
+        << "    {" << endl;
+
+    if ( !event->values().empty() )
+    {
+        stream
         << "        " << qname(event) << "& event_ = dynamic_cast<" << qname(event) << "&>(event);" << endl;
+    }
 
     for( auto value : event->values() )
     {
