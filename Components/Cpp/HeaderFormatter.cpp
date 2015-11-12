@@ -19,7 +19,7 @@ void HeaderFormatter::_includes(std::ostream& stream) const
         << endl;
 
     FormatterBase::_includes(stream);
-    
+
     stream
         << "#include \"everbase/common/EnableSharedFromThisMultiple.hpp\"" << endl
         << endl;
@@ -57,7 +57,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
     {
         stream << doc(struct_->doc());
     }
-    
+
     stream << "struct " << name(struct_) << endl << "{" << endl;
 
     for (auto field : struct_->fields())
@@ -66,7 +66,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
         {
             filter(stream).push<indent>(config.indentData) << doc(field->doc());
         }
-    
+
         filter(stream).push<indent>(config.indentData) << param(field) << ";" << endl << endl;
     }
 
@@ -79,7 +79,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
     {
         stream << doc(class_->doc());
     }
-    
+
     stream << "class " << name(class_) << " : public virtual ";
 
     if(class_->super())
@@ -253,7 +253,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
     {
         stream << doc(enum_->doc());
     }
-    
+
     stream << "enum class " << name(enum_) << endl << "{" << endl;
 
     for (auto value : indices(enum_->values()))
@@ -265,12 +265,22 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
     if( enum_->isBitfield() )
     {
-        std::string operators( "|&^" );
-        for ( char &op :operators )
+        std::string bitops( "|&^" );
+        for ( char &op :bitops )
         {
             stream << "inline " << name(enum_) << " operator" << op << "( " << name(enum_) << " a, " << name(enum_) << " b )" << endl
                    << "{" << endl;
             filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op << " static_cast<int>(b));" << endl;
+            stream << "}" << endl << endl;
+        }
+
+        std::vector<std::string> assops( { "|=", "&=", "^=" } );
+        for ( auto &op :assops )
+        {
+            stream << "inline " << name(enum_) << "& operator" << op << "( " << name(enum_) << "& a, " << name(enum_) << " b )" << endl
+                   << "{" << endl;
+            filter(stream).push<indent>(config.indentData) << "a = static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op[0] << " static_cast<int>(b));" << endl;
+            filter(stream).push<indent>(config.indentData) << "return a;" << endl;
             stream << "}" << endl << endl;
         }
     }
@@ -322,7 +332,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef va
     {
         stream << doc(value->doc());
     }
-    
+
     stream << name(value) << " = 0x" << std::hex << static_cast<std::uint64_t>(value->value());
 }
 
