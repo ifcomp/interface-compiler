@@ -74,6 +74,10 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         << ">(\"" << qcname(class_) << "::~" << name(class_) << "\""
         << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())"
         << ");" << endl
+        << "}" << endl
+        << "catch(const std::exception& e)" << endl
+        << "{" << endl
+        << "    throw e;" << endl
         << "}" << endl;
     stream << "}" << endl << endl;
 
