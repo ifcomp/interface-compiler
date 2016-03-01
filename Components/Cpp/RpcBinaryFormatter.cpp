@@ -185,7 +185,7 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ClassRef class
 
     stream << "        try" << endl
            << "        {" << endl;
-    stream << "            directory.remove(handle_)" << endl;
+    stream << "            directory.erase(handle_)" << endl;
     stream << "        }" << endl
            << "        catch(const std::exception& e)" << endl
            << "        {" << endl
