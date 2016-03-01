@@ -59,6 +59,8 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ElementRef ele
                 stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>>{\"" << qcname(operation) << "\", std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>(new "
                        << "everbase::internal::common::rpc::binary::" << qcname(operation, "_") << "())}," << endl;
             }
+            stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>>{\"" << qcname(class_) << "::~" << name(class_) << "\", std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>(new "
+                   << "everbase::internal::common::rpc::binary::" << qcname(class_, "_") << "__Destructor__())}," << endl;
         }
     }
     else
@@ -165,6 +167,52 @@ void RpcBinaryFormatter::_definition(std::ostream& stream, Model::ClassRef class
     {
         stream << definition(event) << endl;
     }
+
+    stream << "// destructor for " << qname(class_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace binary {" << endl << endl;
+
+    stream << "class " << qcname(class_, "_") << "__Destructor__" << " : public OperationWrapper" << endl
+           << "{" << endl;
+
+    stream << "    virtual inline void execute(common::rpc::ObjectDirectory& directory, std::istream& call, std::ostream& response) const override" << endl
+           << "    {" << endl;
+
+    stream << "        std::size_t handle_ = TypeEncoding<std::size_t>::decode(directory, call);" << endl << endl;
+
+    stream << "        bool hasException = false;" << endl
+           << "        std::string exception;" << endl << endl;
+
+    stream << "        try" << endl
+           << "        {" << endl;
+    stream << "            directory.remove(handle_)" << endl;
+    stream << "        }" << endl
+           << "        catch(const std::exception& e)" << endl
+           << "        {" << endl
+           << "            hasException = true;" << endl
+           << "            exception = e.what();" << endl
+           << "        }" << endl
+           << "        catch(...)" << endl
+           << "        {" << endl
+           << "            hasException = true;" << endl
+           << "            exception = \"unknown exception\";" << endl
+           << "        }" << endl
+           << endl;
+    stream << "        if(hasException)" << endl
+           << "        {" << endl
+           << "            TypeEncoding<bool>::encode(directory, response, true);" << endl
+           << "            TypeEncoding<std::string>::encode(directory, response, std::move(exception));" << endl
+           << "        }" << endl
+           << "        else" << endl
+           << "        {" << endl
+           << "            TypeEncoding<bool>::encode(directory, response, false);" << endl;
+    stream << "        }" << endl;
+    stream << "    }" << endl;
+    stream << "};" << endl << endl;
+
+    stream << "} } } } } // namespace: everbase::internal::common::rpc::binary" << endl << endl;
+
+    stream << "// destructor for " << qname(class_) << " }" << endl << endl << endl;
 }
 
 void RpcBinaryFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
