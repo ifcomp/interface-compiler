@@ -58,9 +58,28 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         }
     }
 
-    stream
-        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
-        << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
+    // constructor
+    stream << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl;
+
+    // destructor
+    stream << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
+    filter(stream).push<indent>()
+        << "if(!everbase::internal::library::client)" << endl
+        << "{" << endl
+        << "    return;" << endl
+        << "}" << endl << endl
+        << "try" << endl
+        << "{" << endl
+        << "    everbase::internal::library::client->call<void, std::shared_ptr<" << qname(class_) << ">"
+        << ">(\"" << qcname(class_) << "::~" << name(class_) << "\""
+        << ", std::dynamic_pointer_cast<" << qname(class_) << ">(shared_from_this())"
+        << ");" << endl
+        << "}" << endl
+        << "catch( ... )" << endl
+        << "{" << endl
+        << "    return;" << endl
+        << "}" << endl;
+    stream << "}" << endl << endl;
 
     stream << "// " << name(class_) << ": }" << endl << endl;
 }
