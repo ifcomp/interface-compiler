@@ -58,7 +58,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
         stream << doc(struct_->doc());
     }
 
-    stream << "struct EVERBASE_EXPORT " << name(struct_) << endl << "{" << endl;
+    stream << "struct EVERBASE_LIB_EXPORT " << name(struct_) << endl << "{" << endl;
 
     for (auto field : struct_->fields())
     {
@@ -80,7 +80,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         stream << doc(class_->doc());
     }
 
-    stream << "class EVERBASE_EXPORT " << name(class_) << " : public virtual ";
+    stream << "class EVERBASE_LIB_EXPORT " << name(class_) << " : public virtual ";
 
     if(class_->super())
     {
@@ -217,7 +217,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    stream << "struct EVERBASE_EXPORT " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
+    stream << "struct EVERBASE_LIB_EXPORT " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
     filter(stream).push<indent>(config.indentData)
         << "static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl
