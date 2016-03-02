@@ -70,8 +70,8 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         << "}" << endl << endl
         << "try" << endl
         << "{" << endl
-        << "    everbase::internal::library::client->destroyProxyObject<void, everbase::internal::common::rpc::ObjectDirectory::HandleT>"
-        << ">(\"" << qcname(class_) << "::~" << name(class_) << "\", handle_);" << endl
+        << "    everbase::internal::library::client->destroyProxyObject"
+        << "(\"" << qcname(class_) << "::~" << name(class_) << "\", handle_);" << endl
         << "}" << endl
         << "catch(const std::exception& e)" << endl
         << "{" << endl
