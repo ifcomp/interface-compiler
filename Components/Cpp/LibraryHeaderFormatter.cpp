@@ -132,7 +132,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     stream << "public:" << endl;
 
     filter(stream).push<indent>(config.indentData)
-        << name(class_) << "Impl(const everbase::internal::common::rpc::ObjectDirectory::HandleT& handle);" << endl
+        << name(class_) << "Impl();" << endl
         << name(class_) << "Impl(const " << name(class_) << "Impl& other) = delete;" << endl
         << name(class_) << "Impl(" << name(class_) << "Impl&& other) = delete;" << endl
         << "virtual ~" << name(class_) << "Impl();" << endl << endl;
@@ -140,11 +140,6 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     filter(stream).push<indent>(config.indentData)
         << name(class_) << "Impl& operator=(const " << name(class_) << "Impl& other) = delete;" << endl
         << name(class_) << "Impl& operator=(" << name(class_) << "Impl&& other) = delete;" << endl << endl;
-
-    stream << "private:" << endl;
-    filter(stream).push<indent>(config.indentData)
-        << name(class_) << "Impl();" << endl
-        << "everbase::internal::common::rpc::ObjectDirectory::HandleT _handle;" << endl << endl;
 
     stream << "};" << endl;
 }
