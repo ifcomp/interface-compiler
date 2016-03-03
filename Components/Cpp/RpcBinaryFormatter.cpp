@@ -80,7 +80,7 @@ void RpcBinaryFormatter::_footer(std::ostream& stream, Model::RootRef root) cons
 
     // operations
     stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>> everbase::internal::common::rpc::binary::OperationWrapper::operations {" << endl
-           << definition(root->getNamespace(), 0)
+           << definition(root->getNamespace(), 0);
 
     // single OperationWrapper to notify that a proxy object was destroyed
     stream << "std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>>{\"Everbase::Internal::Library::SharedMemoryClient::ProxyObjectDestroyed\", std::shared_ptr<everbase::internal::common::rpc::binary::OperationWrapper>(new "
