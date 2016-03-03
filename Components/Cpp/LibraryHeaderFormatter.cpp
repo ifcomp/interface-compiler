@@ -72,16 +72,21 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
                    << "class TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
                    << "{" << endl
                    << "public:" << endl
-                   << "    TypeFactory(everbase::internal::common::rpc::ObjectDirectory::HandleT handle) : handle_(handle) { }" << endl << endl
+                   << "    TypeFactory(std::function<void()> destroy_callback) : _destroy_callback (destroy_callback) { }" << endl
+                   << endl
                    << "    virtual std::shared_ptr<everbase::common::SharedFromThisBase> create() const override" << endl
                    << "    {" << endl
-                   << "        return std::make_shared<" << qname(class_) << "Impl>( _handle );" << endl
+                   << "        auto deleter = [_destroy_callback](" << qname(class_) << "Impl* instance)" << endl
+                   << "            {" << endl
+                   << "                delete instance;" << endl
+                   << "                _destroy_callback();" << endl
+                   << "            };" << endl
+                   << "        return std::shared_ptr<" << qname(class_) << "Impl>(new " << qname(class_) <<"Impl, deleter);" << endl
                    << "    }" << endl
                    << endl
                    << "private:" << endl
-                   << "    TypeFactory() { }" << endl
-                   << "    everbase::internal::common::rpc::ObjectDirectory::HandleT _handle;" << endl
-                   << "};" << endl;
+                   << "    std::function<void()> _destroy_callback;" << endl
+                   << "};" << endl << endl;
         }
     }
 }
