@@ -59,7 +59,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     }
 
     // constructor
-    stream << name(class_) << "Impl::" << name(class_) << "Impl(const everbase::internal::common::rpc::ObjectDirectory::HandleT& handle) : handle_(handle) { }" << endl << endl;
+    stream << name(class_) << "Impl::" << name(class_) << "Impl(const everbase::internal::common::rpc::ObjectDirectory::HandleT& handle) : _handle(handle) { }" << endl << endl;
 
     // destructor
     stream << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{" << endl;
@@ -71,7 +71,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         << "try" << endl
         << "{" << endl
         << "    everbase::internal::library::client->destroyProxyObject"
-        << "(\"" << qcname(class_) << "::~" << name(class_) << "\", handle_);" << endl
+        << "(\"" << qcname(class_) << "::~" << name(class_) << "\", _handle);" << endl
         << "}" << endl
         << "catch(const std::exception& e)" << endl
         << "{" << endl

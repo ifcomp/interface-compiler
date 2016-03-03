@@ -69,11 +69,12 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
         {
             filter(stream).push<indent>(config.indentData)
                    << "template<>" << endl
-                   << "struct TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
+                   << "class TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
                    << "{" << endl
+                   << "public:" << endl
                    << "    virtual std::shared_ptr<everbase::common::SharedFromThisBase> create() const override" << endl
                    << "    {" << endl
-                   << "        return std::make_shared<" << qname(class_) << "Impl>();" << endl
+                   << "        return std::make_shared<" << qname(class_) << "Impl>( _handle );" << endl
                    << "    }" << endl
                    << "};" << endl;
         }
@@ -133,7 +134,7 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ClassRef c
     stream << "private:" << endl;
     filter(stream).push<indent>(config.indentData)
         << name(class_) << "Impl();" << endl
-        << "everbase::internal::common::rpc::ObjectDirectory::HandleT handle_;" << endl << endl;
+        << "everbase::internal::common::rpc::ObjectDirectory::HandleT _handle;" << endl << endl;
 
     stream << "};" << endl;
 }
