@@ -80,7 +80,8 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
                    << "        auto deleter = [destroy_callback](" << qname(class_) << "Impl* instance)" << endl
                    << "            {" << endl
                    << "                delete instance;" << endl
-                   << "                destroy_callback();" << endl
+                   << "                if(destroy_callback)" << endl
+                   << "                    { destroy_callback(); }" << endl
                    << "            };" << endl
                    << "        return std::shared_ptr<" << qname(class_) << "Impl>(new " << qname(class_) <<"Impl, deleter);" << endl
                    << "    }" << endl
