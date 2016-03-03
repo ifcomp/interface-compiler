@@ -76,10 +76,11 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
                    << endl
                    << "    virtual std::shared_ptr<everbase::common::SharedFromThisBase> create() const override" << endl
                    << "    {" << endl
-                   << "        auto deleter = [_destroy_callback](" << qname(class_) << "Impl* instance)" << endl
+                   << "        auto destroy_callback = _destroy_callback;" << endl
+                   << "        auto deleter = [destroy_callback](" << qname(class_) << "Impl* instance)" << endl
                    << "            {" << endl
                    << "                delete instance;" << endl
-                   << "                _destroy_callback();" << endl
+                   << "                destroy_callback();" << endl
                    << "            };" << endl
                    << "        return std::shared_ptr<" << qname(class_) << "Impl>(new " << qname(class_) <<"Impl, deleter);" << endl
                    << "    }" << endl
