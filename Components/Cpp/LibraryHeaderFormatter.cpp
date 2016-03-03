@@ -81,7 +81,16 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
                    << "            {" << endl
                    << "                delete instance;" << endl
                    << "                if(destroy_callback)" << endl
-                   << "                    { destroy_callback(); }" << endl
+                   << "                {" << endl
+                   << "                    try" << endl
+                   << "                    {" << endl
+                   << "                        destroy_callback();" << endl
+                   << "                    }" << endl
+                   << "                    catch(...)" << endl
+                   << "                    {" << endl
+                   << "                        // catch to prevent abort()" << endl
+                   << "                    }" << endl
+                   << "                }" << endl
                    << "            };" << endl
                    << "        return std::shared_ptr<" << qname(class_) << "Impl>(new " << qname(class_) <<"Impl, deleter);" << endl
                    << "    }" << endl
