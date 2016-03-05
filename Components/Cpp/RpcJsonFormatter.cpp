@@ -76,7 +76,7 @@ void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
            << backwards(root->getNamespace());
 
     // single OperationEncoding to notify that a proxy object was destroyed
-    stream << "        std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>>{\"Everbase::Internal::Kernel::WebServoce::ProxyObjectDestroyed\", std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>(new "
+    stream << "        std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>>{\"Everbase::Internal::Kernel::WebService::ProxyObjectDestroyed\", std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>(new "
            << "everbase::internal::common::rpc::json::Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed())}," << endl
            << "};" << endl;
 
