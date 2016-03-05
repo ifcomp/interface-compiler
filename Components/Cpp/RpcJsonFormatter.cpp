@@ -27,7 +27,7 @@ void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 
     stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
 
-    stream << "struct Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed : public everbase::internal::common::rpc::json::OperatonEncoding" << endl
+    stream << "struct Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed : public everbase::internal::common::rpc::json::OperationEncoding" << endl
            << "{" << endl;
 
     // *** encodeParameters
