@@ -124,7 +124,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
 	f << "[" <<endl;
 	f.push<indent>()
 		<< "\'call\'," << endl
-		<< "\'" << qcname(class_) << "::~" << name(class_) << "\'," << endl
+		<< "\'Everbase::Internal::Kernel::WebService::ProxyObjectDestroyed\'," << endl
 		<< "uuid()," << endl
 		<< "["; !destroy->isStatic() || destroy->params().size() ? f << endl : f;
 	f.push<indent>();
