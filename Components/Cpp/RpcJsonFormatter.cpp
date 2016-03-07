@@ -35,7 +35,7 @@ void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
         << "    virtual inline json_spirit::mValue encodeParameters(everbase::internal::common::rpc::ObjectDirectory& directory, std::vector<boost::any> parameters) const override" << endl
         << "    {" << endl
         << "        json_spirit::mArray encoded;" << endl
-        << "        encoded.push_back(everbase::internal::common::rpc::json::TypeEncoding<std::size_t>::encode(directory, boost::any_cast<std::size_t>(parameters[0])));" << endl
+        << "        encoded.push_back(everbase::internal::common::rpc::json::TypeEncoding<std::uint64_t>::encode(directory, boost::any_cast<std::uint64_t>(parameters[0])));" << endl
         << "        return encoded;" << endl
         << "    }" << endl
         << endl;
@@ -46,7 +46,7 @@ void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
         << "    {" << endl
         << "        const json_spirit::mArray& encoded = parameters.get_array();" << endl
         << "        std::vector<boost::any> decoded;" << endl
-        << "        decoded.push_back(boost::any(everbase::internal::common::rpc::json::TypeEncoding<std::size_t>::decode(directory, encoded[0])));" << endl
+        << "        decoded.push_back(boost::any(everbase::internal::common::rpc::json::TypeEncoding<std::uint64_t>::decode(directory, encoded[0])));" << endl
         << "        return decoded;" << endl
         << "    }" << endl
         << endl;
