@@ -23,9 +23,61 @@ void RpcJsonFormatter::_includes(std::ostream& stream) const
 
 void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
+    stream << "// operation to for destroyed client proxy objects: {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
+
+    stream << "struct Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed : public everbase::internal::common::rpc::json::OperationEncoding" << endl
+           << "{" << endl;
+
+    // *** encodeParameters
+    stream
+        << "    virtual inline json_spirit::mValue encodeParameters(everbase::internal::common::rpc::ObjectDirectory& directory, std::vector<boost::any> parameters) const override" << endl
+        << "    {" << endl
+        << "        json_spirit::mArray encoded;" << endl
+        << "        encoded.push_back(everbase::internal::common::rpc::json::TypeEncoding<std::size_t>::encode(directory, boost::any_cast<std::size_t>(parameters[0])));" << endl
+        << "        return encoded;" << endl
+        << "    }" << endl
+        << endl;
+
+    // *** decodeParameters
+    stream
+        << "    virtual inline std::vector<boost::any> decodeParameters(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue parameters) const override" << endl
+        << "    {" << endl
+        << "        const json_spirit::mArray& encoded = parameters.get_array();" << endl
+        << "        std::vector<boost::any> decoded;" << endl
+        << "        decoded.push_back(boost::any(everbase::internal::common::rpc::json::TypeEncoding<std::size_t>::decode(directory, encoded[0])));" << endl
+        << "        return decoded;" << endl
+        << "    }" << endl
+        << endl;
+
+
+    // *** encodeResult
+    stream
+        << "    virtual inline json_spirit::mValue encodeResult(everbase::internal::common::rpc::ObjectDirectory& directory, boost::any result) const override" << endl
+        << "    {" << endl
+        << "        return json_spirit::mValue();" << endl
+        << "    }" << endl << endl;
+
+
+    // *** decodeResult
+    stream
+        << "    virtual inline boost::any decodeResult(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue result) const override" << endl
+        << "    {" << endl
+        << "        return boost::any();" << endl
+        << "    }" << endl
+        << "};" << endl << endl
+        << "} } } } } // namespace: everbase::internal::common::rpc::json" << endl << endl;
+
+
+    // all OperationEncodings
     stream << endl;
     stream << "const std::map<std::string, std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>> everbase::internal::common::rpc::json::OperationEncoding::operations {" << endl
-           << backwards(root->getNamespace())
+           << backwards(root->getNamespace());
+
+    // single OperationEncoding to notify that a proxy object was destroyed
+    stream << "        std::pair<std::string, std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>>{\"Everbase::Internal::Kernel::WebService::ProxyObjectDestroyed\", std::shared_ptr<everbase::internal::common::rpc::json::OperationEncoding>(new "
+           << "everbase::internal::common::rpc::json::Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed())}," << endl
            << "};" << endl;
 
     stream << endl;

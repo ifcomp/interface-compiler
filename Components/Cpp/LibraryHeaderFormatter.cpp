@@ -69,13 +69,35 @@ void LibraryHeaderFormatter::_definition(std::ostream& stream, Model::ElementRef
         {
             filter(stream).push<indent>(config.indentData)
                    << "template<>" << endl
-                   << "struct TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
+                   << "class TypeFactory<" << qname(class_) << "> : public TypeFactoryBase" << endl
                    << "{" << endl
+                   << "public:" << endl
+                   << "    TypeFactory(std::function<void()> destroy_callback) : _destroy_callback (destroy_callback) { }" << endl
+                   << endl
                    << "    virtual std::shared_ptr<everbase::common::SharedFromThisBase> create() const override" << endl
                    << "    {" << endl
-                   << "        return std::make_shared<" << qname(class_) << "Impl>();" << endl
+                   << "        auto destroy_callback = _destroy_callback;" << endl
+                   << "        auto deleter = [destroy_callback](" << qname(class_) << "Impl* instance)" << endl
+                   << "            {" << endl
+                   << "                delete instance;" << endl
+                   << "                if(destroy_callback)" << endl
+                   << "                {" << endl
+                   << "                    try" << endl
+                   << "                    {" << endl
+                   << "                        destroy_callback();" << endl
+                   << "                    }" << endl
+                   << "                    catch(...)" << endl
+                   << "                    {" << endl
+                   << "                        // catch to prevent abort()" << endl
+                   << "                    }" << endl
+                   << "                }" << endl
+                   << "            };" << endl
+                   << "        return std::shared_ptr<" << qname(class_) << "Impl>(new " << qname(class_) <<"Impl, deleter);" << endl
                    << "    }" << endl
-                   << "};" << endl;
+                   << endl
+                   << "private:" << endl
+                   << "    std::function<void()> _destroy_callback;" << endl
+                   << "};" << endl << endl;
         }
     }
 }

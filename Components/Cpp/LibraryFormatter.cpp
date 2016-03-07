@@ -58,9 +58,10 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
         }
     }
 
-    stream
-        << name(class_) << "Impl::" << name(class_) << "Impl()" << "{ }" << endl << endl
-        << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
+    // constructor
+    stream << name(class_) << "Impl::" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
+    // destructor
+    stream << name(class_) << "Impl::~" << name(class_) << "Impl()" << endl << "{ }" << endl << endl;
 
     stream << "// " << name(class_) << ": }" << endl << endl;
 }
