@@ -70,6 +70,16 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
 		stream << definition(operation);
 	}
 
+        // Don't add the operation to the class since we want to generate
+        // a custom body for it. Set class as parent of operation so that
+        // names are resolved.
+        auto destroy = std::make_shared<Model::Class::Operation>();
+        destroy->setLongName("destroy");
+        //destroy->setDoc("@breif Explicitly call this function when the object is no longer needed and should be destroyed.\n\nThis notifies the server that the client will no longer use this proxy object.\nAll operations on this object after calling this function result in undefined behaviour.\n");
+        destroy->setParent(class_);
+
+        stream << definition(destroy);
+
 	for (auto event : class_->events())
 	{
 		stream << definition(event);

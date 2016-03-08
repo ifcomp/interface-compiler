@@ -85,7 +85,10 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
     
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
-	stream << qname(class_) << " = function(handle) { this._handle = typeof handle !== 'undefined' ? handle : null };" << endl << endl;
+	stream << qname(class_) << " = function(handle) {" << endl
+               << "    this._handle = typeof handle !== 'undefined' ? handle : null;" << endl
+               << "    this._destroyed = false;" << endl
+               << "};" << endl << endl;
 
 	if( auto super = std::dynamic_pointer_cast<Model::Type>(class_->super()) )
 	{
@@ -104,6 +107,41 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
 	{
 		stream << definition(operation);
 	}
+
+        // destroy() has a custom body
+        auto destroy = std::make_shared<Model::Class::Operation>();
+        destroy->setLongName("destroy");
+        destroy->setParent(class_);
+
+	stream << signature(destroy) << " {" << endl
+               << "    if(this._destroyed) {" << endl
+               << "        throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
+               << "    }" << endl;
+
+	filter f(stream);
+        f << endl;
+	f.push<indent>() << "var message = " << endl;
+	f << "[" <<endl;
+	f.push<indent>()
+		<< "\'call\'," << endl
+		<< "\'Everbase::Internal::Kernel::WebService::ProxyObjectDestroyed\'," << endl
+		<< "uuid()," << endl
+		<< "["; !destroy->isStatic() || destroy->params().size() ? f << endl : f;
+	f.push<indent>();
+	f << "this._handle," << endl;
+	f.pop() << "]" << endl;
+	f.pop() << "];";
+	f << endl;
+	f << "everbase.webclient.connection.send(message);" << endl << endl;
+        f << "this._destroyed = true;" << endl;
+        f << "delete everbase.rpc.jsonEncoding._handles[this._handle]" << endl;
+	f << "return new Promise(function (resolve, reject) {" << endl;
+	f.push<indent>();
+        f << "everbase.webclient.processes[message[2]] = [ resolve, reject, '', [] ];" << endl;
+	f.pop()
+		<< "});" << endl;
+	f.pop()
+		<< "};" << endl << endl;
 
 	for (auto event : class_->events())
 	{
@@ -206,7 +244,11 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 		stream << doc(operation->doc());
 	}
 
-	stream << signature(operation) << " {"; 
+	stream << signature(operation) << " {" << endl;
+
+        stream << "    if(this._destroyed) {" << endl
+               << "        throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
+               << "    }" << endl;
 
 	_formatRequest(stream, operation);
 
