@@ -66,6 +66,7 @@ void FormatterBase::_includes(std::ostream& stream) const
            << "#include <set>" << endl
            << "#include <map>" << endl
            << "#include <ctime>" << endl
+           << "#include \"everbase/export.hpp\"" << endl
            << "#include \"everbase/common/Id.hpp\"" << endl
            << "#include \"everbase/common/Event.hpp\"" << endl
            << "#include \"everbase/file_system/Path.hpp\"" << endl
@@ -112,7 +113,7 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
     {
         stream << doc(namespace_->doc());
     }
-    
+
     stream << "namespace " << name(namespace_) << endl << "{" << endl;
 
     for ( auto element : namespace_->elements() )
