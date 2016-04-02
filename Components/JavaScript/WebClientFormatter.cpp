@@ -132,7 +132,8 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
     f.pop() << "]" << endl;
     f.pop() << "];";
     f << endl;
-    f << "everbase.webclient.connection.send(message);" << endl << endl;
+    f << "everbase.webclient.connection.send(message);" << endl;
+    stream << endl;
     f << "this._destroyed = true;" << endl;
     f << "delete everbase.rpc.jsonEncoding._handles[this._handle]" << endl;
     f << "return new Promise(function (resolve, reject) {" << endl;
