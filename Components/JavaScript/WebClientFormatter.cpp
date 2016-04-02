@@ -120,7 +120,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
 
 	filter f(stream);
         f << endl;
-	f.push<indent>() << "var message = " << endl;
+	f.push<indent>() << "var message =" << endl;
 	f << "[" <<endl;
 	f.push<indent>()
 		<< "\'call\'," << endl
@@ -253,9 +253,9 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 	_formatRequest(stream, operation);
 
 	filter f(stream);
-	f.push<indent>()
-		<< "everbase.webclient.connection.send(message);" << endl << endl
-		<< "return new Promise(function (resolve, reject) {" << endl;
+	f.push<indent>() << "everbase.webclient.connection.send(message);" << endl;
+    stream << endl;
+    f << "return new Promise(function (resolve, reject) {" << endl;
 
 	f.push<indent>();
 
@@ -286,7 +286,7 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 
 	filter f(stream);
 	f << endl;
-	f.push<indent>() << "var message = " << endl;
+	f.push<indent>() << "var message =" << endl;
 	f << "[" <<endl;
 	f.push<indent>()
 		<< "\'call\'," << endl

@@ -519,7 +519,8 @@ void Formatter::_doc(std::ostream& stream, Model::DocumentationRef documentation
     {
         if (doc.doxygenKey == Documentation::KEY_MORE)
         {
-            filter(stream).push<indent>(" * ").push<wrap>() << endl << doc.description << endl;
+            filter(stream).push<indent>(" *") << endl;
+            filter(stream).push<indent>(" * ").push<wrap>() << doc.description << endl;
         }
         else
         {
