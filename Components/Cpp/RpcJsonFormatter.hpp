@@ -60,8 +60,8 @@ protected:
     virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
 
 private:
-    void _typeEnocde( std::ostream& stream, Model::StructRef struct_ ) const;
-    void _typeEnocde( std::ostream& stream, Model::ClassRef class_ ) const;
+    void _typeEncode( std::ostream& stream, Model::StructRef struct_ ) const;
+    void _typeEncode( std::ostream& stream, Model::ClassRef class_ ) const;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp

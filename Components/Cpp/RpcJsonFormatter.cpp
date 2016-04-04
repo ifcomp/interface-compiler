@@ -437,7 +437,7 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef v
 {
 }
 
-void RpcJsonFormatter::_typeEnocde( std::ostream& stream, Model::StructRef struct_ ) const
+void RpcJsonFormatter::_typeEncode( std::ostream& stream, Model::StructRef struct_ ) const
 {
     if( struct_->doc() )
     {
@@ -487,7 +487,7 @@ void RpcJsonFormatter::_typeEnocde( std::ostream& stream, Model::StructRef struc
     stream << "// struct " << name( struct_ ) << ": }" << endl << endl;
 }
 
-void RpcJsonFormatter::_typeEnocde( std::ostream& stream, Model::ClassRef class_ ) const
+void RpcJsonFormatter::_typeEncode( std::ostream& stream, Model::ClassRef class_ ) const
 {
     if( class_->doc() )
     {
