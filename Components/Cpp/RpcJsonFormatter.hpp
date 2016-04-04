@@ -62,6 +62,7 @@ protected:
 private:
     void _typeEncode( std::ostream& stream, Model::StructRef struct_ ) const;
     void _typeEncode( std::ostream& stream, Model::ClassRef class_ ) const;
+    void _typeEncode( std::ostream& stream, Model::EnumRef enum_ ) const;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp

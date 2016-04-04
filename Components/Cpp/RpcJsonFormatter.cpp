@@ -19,26 +19,21 @@ void RpcJsonFormatter::_includes(std::ostream& stream) const
            << "#include \"common/rpc/json/OperationEncoding.hpp\"" << endl
            << "#include \"common/rpc/json/EventEncoding.hpp\"" << endl
            << endl;
+
+    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
 }
 
 void RpcJsonFormatter::_forwards( std::ostream& stream, Model::ElementRef element ) const
 {
     if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
     {
-        stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
-
         for( auto element : namespace_->elements() )
         {
-            filter( stream ).push<indent>( config.indentData ) << forwards( element );
+            stream << forwards( element );
         }
     }
     else
     {
-        if( element->doc() )
-        {
-            stream << doc( element->doc() ) << endl;
-        }
-
         if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
         {
             _typeEncode( stream, class_ );
@@ -46,6 +41,10 @@ void RpcJsonFormatter::_forwards( std::ostream& stream, Model::ElementRef elemen
         else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
         {
             _typeEncode( stream, struct_ );
+        }
+        else if( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(element) )
+        {
+            _typeEncode( stream, enum_ );
         }
     }
 }
@@ -404,29 +403,6 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
-    if ( enum_->doc() )
-    {
-        stream << doc(enum_->doc()) << endl;
-    }
-
-    stream << "// enum " << qname(enum_) << ": {" << endl << endl;
-
-    stream
-        << "template<>" << endl
-        << "struct TypeEncoding<" << qname(enum_) << ">" << endl
-        << "{" << endl
-        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname(enum_) << " source)" << endl
-        << "    {" << endl
-        << "        return json_spirit::mValue(static_cast<std::uint64_t>(source));" << endl
-        << "    }" << endl
-        << endl
-        << "    static inline " << qname(enum_) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
-        << "    {" << endl
-        << "        return static_cast<" << qname(enum_) << ">(source.get_uint64());" << endl
-        << "    }" << endl
-        << "};" << endl << endl;
-
-    stream << "// enum " << name(enum_) << ": }" << endl << endl;
 }
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
@@ -508,6 +484,33 @@ void RpcJsonFormatter::_typeEncode( std::ostream& stream, Model::ClassRef class_
         << "};" << endl << endl;
 
     stream << "// class " << name( class_ ) << ": }" << endl << endl;
+}
+
+void RpcJsonFormatter::_typeEncode( std::ostream& stream, Model::EnumRef enum_ ) const
+{
+    if( enum_->doc() )
+    {
+        stream << doc( enum_->doc() ) << endl;
+    }
+
+    stream << "// enum " << qname( enum_ ) << ": {" << endl << endl;
+
+    stream
+        << "template<>" << endl
+        << "struct TypeEncoding<" << qname( enum_ ) << ">" << endl
+        << "{" << endl
+        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname( enum_ ) << " source)" << endl
+        << "    {" << endl
+        << "        return json_spirit::mValue(static_cast<std::uint64_t>(source));" << endl
+        << "    }" << endl
+        << endl
+        << "    static inline " << qname( enum_ ) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    {" << endl
+        << "        return static_cast<" << qname( enum_ ) << ">(source.get_uint64());" << endl
+        << "    }" << endl
+        << "};" << endl << endl;
+
+    stream << "// enum " << name( enum_ ) << ": }" << endl << endl;
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp
