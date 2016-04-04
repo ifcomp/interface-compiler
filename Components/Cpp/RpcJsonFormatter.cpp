@@ -21,11 +21,42 @@ void RpcJsonFormatter::_includes(std::ostream& stream) const
            << endl;
 }
 
+void RpcJsonFormatter::_forwards( std::ostream& stream, Model::ElementRef element ) const
+{
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
+    {
+        stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
+
+        for( auto element : namespace_->elements() )
+        {
+            filter( stream ).push<indent>( config.indentData ) << forwards( element );
+        }
+    }
+    else
+    {
+        if( element->doc() )
+        {
+            stream << doc( element->doc() ) << endl;
+        }
+
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            _typeEncode( stream, class_ );
+        }
+        else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+        {
+            _typeEncode( stream, struct_ );
+        }
+        else
+        {
+            throw std::runtime_error( std::string(__FUNCTION__) + ": invalid element type" );
+        }
+    }
+}
+
 void RpcJsonFormatter::_footer(std::ostream& stream, Model::RootRef root) const
 {
     stream << "// operation to for destroyed client proxy objects: {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
 
     stream << "struct Everbase_Internal_Kernel_WebService_ProxyObjectDestroyed : public everbase::internal::common::rpc::json::OperationEncoding" << endl
            << "{" << endl;
@@ -148,98 +179,29 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::NamespaceRef nam
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
 {
-    if ( struct_->doc() )
-    {
-        stream << doc(struct_->doc()) << endl;
-    }
-
-    stream << "// struct " << qname(struct_) << ": {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
-
-    stream
-        << "template<>" << endl
-        << "struct TypeEncoding<" << qname(struct_) << ">" << endl
-        << "{" << endl
-        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname(struct_) << " source)" << endl
-        << "    {" << endl
-        << "        json_spirit::mObject object;" << endl << endl;
-
-    for( auto field : struct_->fields() )
-    {
-        stream
-            << "        object[\"" << cname(field) << "\"] = TypeEncoding<" << type(field->type()) << ">::encode(directory, source." << name(field) << ");" << endl;
-    }
-
-    stream
-        << endl
-        << "        return json_spirit::mValue(object);" << endl
-        << "    }" << endl
-        << endl;
-
-    stream
-        << "    static inline " << qname(struct_) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
-        << "    {" << endl
-        << "        const json_spirit::mObject& object = source.get_obj();" << endl
-        << "        " << qname(struct_) << " struct_;" << endl << endl;
-
-    for( auto field : struct_->fields() )
-    {
-        stream
-            << "        struct_." << name(field) << " = TypeEncoding<" << type(field->type()) << ">::decode(directory, object.at(\"" << cname(field) << "\"));" << endl;
-    }
-
-    stream
-        << endl
-        << "        return struct_;" << endl
-        << "    }" << endl
-        << "};" << endl << endl;
-
-    stream << "} } } } } // namespace: everbase::internal::common::rpc::json" << endl << endl;
-
-    stream << "// struct " << name(struct_) << ": }" << endl << endl;
 }
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::ClassRef class_) const
 {
-    if ( class_->doc() )
+    auto operations = class_->operations();
+    auto events = class_->events();
+
+    if( operations.size() || events.size() )
     {
-        stream << doc(class_->doc()) << endl;
+        stream << "// class " << qname( class_ ) << ": {" << endl << endl;
+
+        for( auto operation : operations )
+        {
+            stream << definition( operation );
+        }
+
+        for( auto event : events )
+        {
+            stream << definition( event );
+        }
+
+        stream << "// class " << name( class_ ) << ": }" << endl << endl;
     }
-
-    stream << "// class " << qname(class_) << ": {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
-
-    stream
-        << "template<>" << endl
-        << "struct TypeEncoding<" << qname(class_) << "Ref>" << endl
-        << "{" << endl
-        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname(class_) << "Ref source)" << endl
-        << "    {" << endl
-        << "        return json_spirit::mValue(static_cast<std::uint64_t>(directory.translate<" << qname(class_) << ">(source)));" << endl
-        << "    }" << endl
-        << endl
-        << "    static inline " << qname(class_) << "Ref decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
-        << "    {" << endl
-        << "        return directory.translate<" << qname(class_) << ">(source.get_uint64());" << endl
-        << "    }" << endl
-        << "};" << endl << endl;
-
-
-    for( auto operation : class_->operations() )
-    {
-        stream << definition(operation);
-    }
-
-    for( auto event : class_->events() )
-    {
-        stream << definition(event);
-    }
-
-    stream << "} } } } } // namespace: everbase::internal::common::rpc::json" << endl << endl;
-
-    stream << "// class " << name(class_) << ": }" << endl << endl;
 }
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::Class::ConstantRef constant) const
@@ -453,8 +415,6 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
 
     stream << "// enum " << qname(enum_) << ": {" << endl << endl;
 
-    stream << "namespace everbase { namespace internal { namespace common { namespace rpc { namespace json {" << endl << endl;
-
     stream
         << "template<>" << endl
         << "struct TypeEncoding<" << qname(enum_) << ">" << endl
@@ -470,13 +430,88 @@ void RpcJsonFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
         << "    }" << endl
         << "};" << endl << endl;
 
-    stream << "} } } } } // namespace: everbase::internal::common::rpc::json" << endl << endl;
-
     stream << "// enum " << name(enum_) << ": }" << endl << endl;
 }
 
 void RpcJsonFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
+}
+
+void RpcJsonFormatter::_typeEnocde( std::ostream& stream, Model::StructRef struct_ ) const
+{
+    if( struct_->doc() )
+    {
+        stream << doc( struct_->doc() ) << endl;
+    }
+
+    stream << "// struct " << qname( struct_ ) << ": {" << endl << endl;
+
+    stream
+        << "template<>" << endl
+        << "struct TypeEncoding<" << qname( struct_ ) << ">" << endl
+        << "{" << endl
+        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname( struct_ ) << " source)" << endl
+        << "    {" << endl
+        << "        json_spirit::mObject object;" << endl << endl;
+
+    for( auto field : struct_->fields() )
+    {
+        stream
+            << "        object[\"" << cname( field ) << "\"] = TypeEncoding<" << type( field->type() ) << ">::encode(directory, source." << name( field ) << ");" << endl;
+    }
+
+    stream
+        << endl
+        << "        return json_spirit::mValue(object);" << endl
+        << "    }" << endl
+        << endl;
+
+    stream
+        << "    static inline " << qname( struct_ ) << " decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    {" << endl
+        << "        const json_spirit::mObject& object = source.get_obj();" << endl
+        << "        " << qname( struct_ ) << " struct_;" << endl << endl;
+
+    for( auto field : struct_->fields() )
+    {
+        stream
+            << "        struct_." << name( field ) << " = TypeEncoding<" << type( field->type() ) << ">::decode(directory, object.at(\"" << cname( field ) << "\"));" << endl;
+    }
+
+    stream
+        << endl
+        << "        return struct_;" << endl
+        << "    }" << endl
+        << "};" << endl << endl;
+
+    stream << "// struct " << name( struct_ ) << ": }" << endl << endl;
+}
+
+void RpcJsonFormatter::_typeEnocde( std::ostream& stream, Model::ClassRef class_ ) const
+{
+    if( class_->doc() )
+    {
+        stream << doc( class_->doc() ) << endl;
+    }
+
+    stream << "// class " << qname( class_ ) << ": {" << endl << endl;
+
+    stream
+        << "template<>" << endl
+        << "struct TypeEncoding<" << qname( class_ ) << "Ref>" << endl
+        << "{" << endl
+        << "    static inline json_spirit::mValue encode(everbase::internal::common::rpc::ObjectDirectory& directory, " << qname( class_ ) << "Ref source)" << endl
+        << "    {" << endl
+        << "        return json_spirit::mValue(static_cast<std::uint64_t>(directory.translate<" << qname( class_ ) << ">(source)));" << endl
+        << "    }" << endl
+        << endl
+        << "    static inline " << qname( class_ ) << "Ref decode(everbase::internal::common::rpc::ObjectDirectory& directory, json_spirit::mValue source)" << endl
+        << "    {" << endl
+        << "        return directory.translate<" << qname( class_ ) << ">(source.get_uint64());" << endl
+        << "    }" << endl
+        << "};" << endl << endl;
+
+    stream << "// class " << name( class_ ) << ": }" << endl << endl;
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp
