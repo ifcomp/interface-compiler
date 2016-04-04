@@ -47,10 +47,6 @@ void RpcJsonFormatter::_forwards( std::ostream& stream, Model::ElementRef elemen
         {
             _typeEncode( stream, struct_ );
         }
-        else
-        {
-            throw std::runtime_error( std::string(__FUNCTION__) + ": invalid element type" );
-        }
     }
 }
 
