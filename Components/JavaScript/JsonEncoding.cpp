@@ -132,7 +132,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 		<< "}," << endl 
 		<< "decode: function(handle) {" << endl;
 	f.push<indent>()
-			<< "if (handle in " << HANDLES << ") { " << endl;
+			<< "if (handle in " << HANDLES << ") {" << endl;
 	f.push<indent>()
 				<< "return " <<  HANDLES << "[handle]" << endl;
     f.pop() 

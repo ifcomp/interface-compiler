@@ -40,3 +40,6 @@ cmake_install.cmake
 
 # msvc files
 *.filters
+*.opendb
+*.sdf
+*.suo

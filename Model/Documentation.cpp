@@ -27,30 +27,34 @@ ObjectRef Documentation::clone() const
 
 bool Documentation::keyExists(std::string doxygenKey) const
 {
-    for (auto entry : _docEntries)
-    {
-        if (entry.doxygenKey == doxygenKey)
-        {
-            return true;
-        }
-    }
-    return false;
+    return _docEntries.find( doxygenKey ) != _docEntries.end();
 }
 
 std::vector<Documentation::DocEntry> Documentation::docEntries() const
 {
-    return _docEntries;
+    std::vector<DocEntry> entries;
+    entries.reserve( _docEntries.size() );
+
+    for( auto& entry : _docEntries )
+    {
+        entries.push_back( entry.second );
+    }
+
+    return entries;
 }
 
 std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxygenKey) const
 {
     std::vector<DocEntry> entries;
 
-    for (auto entry : _docEntries)
+    auto range = _docEntries.equal_range( doxygenKey );
+    if( range.first != range.second )
     {
-        if (entry.doxygenKey == doxygenKey)
+        entries.reserve( std::distance( range.first, range.second ) );
+
+        for( auto it = range.first; it != range.second; ++range.first )
         {
-            entries.push_back(entry);
+            entries.push_back( it->second );
         }
     }
 
@@ -59,12 +63,10 @@ std::vector<Documentation::DocEntry> Documentation::docEntries(std::string doxyg
 
 Documentation::DocEntry Documentation::docEntry(std::string doxygenKey) const
 {
-    for (auto entry : _docEntries)
+    auto it = _docEntries.find( doxygenKey );
+    if( it != _docEntries.end() )
     {
-        if (entry.doxygenKey == doxygenKey)
-        {
-            return entry;
-        }
+        return it->second;
     }
     throw std::runtime_error("doxygenKey " + doxygenKey + " not set");
 }
@@ -82,17 +84,17 @@ std::string Documentation::description(std::string doxygenKey) const
 
 void Documentation::addDocEntry(const DocEntry &entry)
 {
-    _docEntries.push_back(entry);
+    _docEntries.insert( std::pair<std::string, DocEntry>( entry.doxygenKey, entry ) );
 }
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string description)
 {
-    _docEntries.push_back(DocEntry{ doxygenKey, "", description });
+    _docEntries.insert( std::pair<std::string, DocEntry>( doxygenKey, DocEntry{ doxygenKey, "", description } ) );
 }
 
 void Documentation::addDocEntry(std::string doxygenKey, std::string paramName, std::string description)
 {
-    _docEntries.push_back(DocEntry{ doxygenKey, paramName, description });
+    _docEntries.insert( std::pair<std::string, DocEntry>( doxygenKey, DocEntry{ doxygenKey, paramName, description } ) );
 }
 
 void Documentation::clone(const ObjectRef &clonedObject) const

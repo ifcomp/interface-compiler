@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include <list>
+#include <map>
 
 namespace Everbase { namespace InterfaceCompiler { namespace Model {
 
@@ -48,7 +49,7 @@ protected:
     virtual void clone(const ObjectRef &clonedObject) const override;
 
 private:
-    std::vector<DocEntry> _docEntries;
+    std::multimap<std::string, DocEntry> _docEntries;
 };
 
 typedef std::shared_ptr<Documentation> DocumentationRef;
