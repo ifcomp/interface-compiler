@@ -41,6 +41,7 @@ protected:
     using FormatterBase::_signature;
     
     virtual void _includes(std::ostream& stream) const override;
+    virtual void _forwards( std::ostream& stream, Model::ElementRef element ) const override;
     virtual void _footer(std::ostream& stream, Model::RootRef root) const override;
     virtual void _backwards(std::ostream& stream, Model::ElementRef element) const override;
     
@@ -57,6 +58,11 @@ protected:
 
     virtual void _definition(std::ostream& stream, Model::EnumRef enum_) const override;
     virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
+
+private:
+    void _typeEncode( std::ostream& stream, Model::StructRef struct_ ) const;
+    void _typeEncode( std::ostream& stream, Model::ClassRef class_ ) const;
+    void _typeEncode( std::ostream& stream, Model::EnumRef enum_ ) const;
 };
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::Cpp
