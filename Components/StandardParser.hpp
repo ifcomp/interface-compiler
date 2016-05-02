@@ -108,12 +108,13 @@ public:
 
 private:
     /**
-     * @brief Check if node[key] has a specific type.
+     * @brief Check if node[key] is defined and has a specific type.
      * @param node  YAML node
      * @param key   Key name
      * @param expectedType  YAML node type
      * @param mandatory if true, key must be found and must have the right type
-     * @return true if node[key] has expectedType
+     * @return true  if node[key] is defined and has expectedType
+     * @return false if node[key] is not defined or has different type
      * @throw std::runtime_error if types don't match and mandatory is set
      */
     static bool checkNode(const YAML::Node &node, const char *key,

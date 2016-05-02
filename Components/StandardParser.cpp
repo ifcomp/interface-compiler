@@ -93,24 +93,33 @@ void StandardParser::resolve(const RootRef &root)
 
 bool StandardParser::checkNode(const YAML::Node &node, const char *key, YAML::NodeType::value expectedType, bool mandatory)
 {
-    if (node[key].Type() == expectedType)
-    {
-        return true;
-    }
-
     if (!node[key].IsDefined())
     {
         if (mandatory)
         {
             throw runtime_error("definition of key '" + string(key) + "' is missing!\n");
         }
+        else
+        {
+            return false;
+        }
+    }
+
+    if (node[key].Type() == expectedType)
+    {
+        return true;
     }
     else
     {
-        throw runtime_error("bad definition of key '" + string(key) + "'\n");
+        if (mandatory)
+        {
+            throw runtime_error("bad definition of key '" + string(key) + "'\n");
+        }
+        else
+        {
+            return false;
+        }
     }
-
-    return false;
 }
 
 
