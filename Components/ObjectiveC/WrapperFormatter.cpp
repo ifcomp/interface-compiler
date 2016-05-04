@@ -34,14 +34,14 @@ void WrapperFormatter::_forwards(std::ostream& stream, Model::ElementRef element
         if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
         {
             _typeEncode( stream, class_ );
+            for( auto event : class_->events() )
+            {
+                _typeEncode(stream, event);
+            }
         }
         else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
         {
             _typeEncode( stream, struct_ );
-        }
-        else if( auto event_ = std::dynamic_pointer_cast<Model::Class::Event>(element) )
-        {
-            _typeEncode( stream, event_ );
         }
         else if( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(element) )
         {
