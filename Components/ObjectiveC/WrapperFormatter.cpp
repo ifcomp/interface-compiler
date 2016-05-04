@@ -22,22 +22,31 @@ void WrapperFormatter::_includes(std::ostream& stream) const
 
 void WrapperFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
-    if( element->doc() )
+    if( auto namespace_ = std::dynamic_pointer_cast<Model::Namespace>(element) )
     {
-        stream << doc( element->doc() ) << endl;
-    }
-
-    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
-    {
-        _typeEncode( stream, class_ );
-    }
-    else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
-    {
-        _typeEncode( stream, struct_ );
+        for( auto element : namespace_->elements() )
+        {
+            stream << forwards( element );
+        }
     }
     else
     {
-        throw std::runtime_error( std::string(__FUNCTION__) + ": invalid element type" );
+        if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+        {
+            _typeEncode( stream, class_ );
+        }
+        else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+        {
+            _typeEncode( stream, struct_ );
+        }
+        else if( auto event_ = std::dynamic_pointer_cast<Model::Class::Event>(element) )
+        {
+            _typeEncode( stream, event_ );
+        }
+        else if( auto enum_ = std::dynamic_pointer_cast<Model::Enum>(element) )
+        {
+            _typeEncode( stream, enum_ );
+        }
     }
 }
 
@@ -311,45 +320,6 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::Operation
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
 {
-    if ( enum_->doc() )
-    {
-        stream << doc(enum_->doc()) << endl;
-    }
-
-    stream << "// " << qname(enum_) << ": {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
-           << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(enum_) << ">" << endl
-           << "{" << endl
-           << "    using unencoded_type = " << cpp.qname(enum_) << ";" << endl
-           << "    using encoded_type = " << qname(enum_) << ";" << endl
-           << "    using container_encoded_type = NSNumber*;" << endl
-           << endl
-           << "    inline static unencoded_type decode(encoded_type src)" << endl
-           << "    {" << endl
-           << "        return static_cast<" << cpp.qname(enum_) << ">(src);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static encoded_type encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        return static_cast<" << qname(enum_) << ">(src);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
-           << "    {" << endl
-           << "        return static_cast<" << cpp.qname(enum_) << ">([src unsignedLongLongValue]);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        return [NSNumber numberWithUnsignedLongLong:static_cast<unsigned long long>(src)];" << endl
-           << "    }" << endl
-           << "};" << endl << endl
-           << "} } } } // namespace: everbase::internal::library::objc" << endl
-           << endl << endl;
-
-    stream << "// " << qname(enum_) << ": }" << endl << endl;
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
@@ -499,6 +469,49 @@ void WrapperFormatter::_typeEncode( std::ostream& stream, Model::Class::EventRef
            << "};" << endl << endl
            << "} } } } // namespace: everbase::internal::library::objc" << endl
            << endl << endl;
+}
+
+void WrapperFormatter::_typeEncode( std::ostream& stream, Model::EnumRef enum_ ) const
+{
+    if ( enum_->doc() )
+    {
+        stream << doc(enum_->doc()) << endl;
+    }
+
+    stream << "// " << qname(enum_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(enum_) << ">" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(enum_) << ";" << endl
+           << "    using encoded_type = " << qname(enum_) << ";" << endl
+           << "    using container_encoded_type = NSNumber*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        return static_cast<" << cpp.qname(enum_) << ">(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return static_cast<" << qname(enum_) << ">(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return static_cast<" << cpp.qname(enum_) << ">([src unsignedLongLongValue]);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return [NSNumber numberWithUnsignedLongLong:static_cast<unsigned long long>(src)];" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
+
+    stream << "// " << qname(enum_) << ": }" << endl << endl;
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::ObjectiveC

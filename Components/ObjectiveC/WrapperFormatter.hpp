@@ -58,6 +58,7 @@ private:
     void _typeEncode( std::ostream& stream, Model::StructRef struct_ ) const;
     void _typeEncode( std::ostream& stream, Model::ClassRef class_ ) const;
     void _typeEncode( std::ostream& stream, Model::Class::EventRef event ) const;
+    void _typeEncode( std::ostream& stream, Model::EnumRef enum_ ) const;
 
     CppTypeFormatter cpp;
 };
