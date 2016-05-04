@@ -22,6 +22,23 @@ void WrapperFormatter::_includes(std::ostream& stream) const
 
 void WrapperFormatter::_forwards(std::ostream& stream, Model::ElementRef element) const
 {
+    if( element->doc() )
+    {
+        stream << doc( element->doc() ) << endl;
+    }
+
+    if( auto class_ = std::dynamic_pointer_cast<Model::Class>(element) )
+    {
+        _typeEncode( stream, class_ );
+    }
+    else if( auto struct_ = std::dynamic_pointer_cast<Model::Struct>(element) )
+    {
+        _typeEncode( stream, struct_ );
+    }
+    else
+    {
+        throw std::runtime_error( std::string(__FUNCTION__) + ": invalid element type" );
+    }
 }
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct_) const
@@ -30,55 +47,6 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::StructRef struct
     {
         stream << doc(struct_->doc()) << endl;
     }
-
-    stream << "// " << qname(struct_) << ": {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
-           << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(struct_) << ">" << endl
-           << "{" << endl
-           << "    using unencoded_type = " << cpp.qname(struct_) << ";" << endl
-           << "    using encoded_type = " << qname(struct_) << "*;" << endl
-           << "    using container_encoded_type = " << qname(struct_) << "*;" << endl
-           << endl
-           << "    inline static unencoded_type decode(encoded_type src)" << endl
-           << "    {" << endl
-           << "        " << cpp.qname(struct_) << " tgt;" << endl;
-
-    for(auto field : struct_->fields())
-    {
-        stream << "        tgt." << cpp.name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::decode(src." << name(field) << ");" << endl;
-    }
-
-    stream << "        return tgt;" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static encoded_type encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        " << qname(struct_) << "* tgt = [[" << qname(struct_) << " new] autorelease];" << endl;
-
-    for(auto field : struct_->fields())
-    {
-        stream << "        tgt." << name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::encode(src." << cpp.name(field) << ");" << endl;
-    }
-
-    stream << "        return tgt;" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
-           << "    {" << endl
-           << "        return decode(src);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        return encode(src);" << endl
-           << "    }" << endl
-           << "};" << endl << endl
-           << "} } } } // namespace: everbase::internal::library::objc" << endl
-           << endl << endl;
-
-    stream << "// " << qname(struct_) << ": }" << endl << endl;
 
     stream << "@implementation " << qname(struct_) << endl;
 
@@ -101,45 +69,6 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::ClassRef class_)
     {
         stream << doc(class_->doc()) << endl;
     }
-
-    stream << "// " << qname(class_) << ": {" << endl << endl;
-
-    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
-           << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
-           << "{" << endl
-           << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
-           << "    using encoded_type = " << qname(class_) << "*;" << endl
-           << "    using container_encoded_type = " << qname(class_) << "*;" << endl
-           << endl
-           << "    inline static unencoded_type decode(encoded_type src)" << endl
-           << "    {" << endl
-           << "        if(!src || ![src data])" << endl
-           << "        {" << endl
-           << "            return " << cpp.qname(class_) << "Ref();" << endl
-           << "        }" << endl
-           << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static encoded_type encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        if(!src)" << endl
-           << "            { return nil; }" << endl
-           << "        return [[[" << qname(class_) << " alloc] initWithData:&src] autorelease];" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
-           << "    {" << endl
-           << "        return decode(src);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        return encode(src);" << endl
-           << "    }" << endl
-           << "};" << endl << endl
-           << "} } } } // namespace: everbase::internal::library::objc" << endl
-           << endl << endl;
 
     stream << "@implementation " << qname(class_) << endl;
 
@@ -286,51 +215,6 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::Class::EventRef 
         stream << doc(event->doc());
     }
 
-    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
-           << "template<>" << endl
-           << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
-           << "{" << endl
-           << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
-           << "    using encoded_type = " << qname(class_) << name(event) << "*;" << endl
-           << "    using container_encoded_type = " << qname(class_) << name(event) << "*;" << endl
-           << endl
-           << "    inline static unencoded_type decode(encoded_type src)" << endl
-           << "    {" << endl
-           << "        " << cpp.qname(event) << " tgt;" << endl;
-
-    for(auto value : event->values())
-    {
-        stream << "        tgt." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(src." << name(value) << ");" << endl;
-    }
-
-    stream << "        return tgt;" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static encoded_type encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        " << qname(class_) << name(event) << "* tgt = [[" << qname(class_) << name(event) << " new] autorelease];" << endl;
-
-    for(auto value : event->values())
-    {
-        stream << "        tgt." << name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << ");" << endl;
-    }
-
-    stream << "        return tgt;" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
-           << "    {" << endl
-           << "        return decode(src);" << endl
-           << "    }" << endl
-           << endl
-           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
-           << "    {" << endl
-           << "        return encode(src);" << endl
-           << "    }" << endl
-           << "};" << endl << endl
-           << "} } } } // namespace: everbase::internal::library::objc" << endl
-           << endl << endl;
-
     stream << "@implementation " << qname(event) << endl;
 
     for (auto value : event->values())
@@ -470,6 +354,151 @@ void WrapperFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) c
 
 void WrapperFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef value) const
 {
+}
+
+void WrapperFormatter::_typeEncode( std::ostream& stream, Model::StructRef struct_ ) const
+{
+    stream << "// " << qname(struct_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(struct_) << ">" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(struct_) << ";" << endl
+           << "    using encoded_type = " << qname(struct_) << "*;" << endl
+           << "    using container_encoded_type = " << qname(struct_) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        " << cpp.qname(struct_) << " tgt;" << endl;
+
+    for(auto field : struct_->fields())
+    {
+        stream << "        tgt." << cpp.name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::decode(src." << name(field) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        " << qname(struct_) << "* tgt = [[" << qname(struct_) << " new] autorelease];" << endl;
+
+    for(auto field : struct_->fields())
+    {
+        stream << "        tgt." << name(field) << " = TypeEncoding<" << cpp.type(field->type()) << ">::encode(src." << cpp.name(field) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
+
+    stream << "// " << qname(struct_) << ": }" << endl << endl;
+}
+
+void WrapperFormatter::_typeEncode( std::ostream& stream, Model::ClassRef class_ ) const
+{
+    stream << "// " << qname(class_) << ": {" << endl << endl;
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(class_) << "Ref>" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(class_) << "Ref;" << endl
+           << "    using encoded_type = " << qname(class_) << "*;" << endl
+           << "    using container_encoded_type = " << qname(class_) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        if(!src || ![src data])" << endl
+           << "        {" << endl
+           << "            return " << cpp.qname(class_) << "Ref();" << endl
+           << "        }" << endl
+           << "        return *(static_cast<" << cpp.qname(class_) << "Ref*>([src data]));" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        if(!src)" << endl
+           << "            { return nil; }" << endl
+           << "        return [[[" << qname(class_) << " alloc] initWithData:&src] autorelease];" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
+
+}
+
+void WrapperFormatter::_typeEncode( std::ostream& stream, Model::Class::EventRef event ) const
+{
+    auto class_ = std::dynamic_pointer_cast<Class>(event->parent());
+
+    stream << "namespace everbase { namespace internal { namespace library { namespace objc {" << endl << endl
+           << "template<>" << endl
+           << "struct TypeEncoding<" << cpp.qname(event) << ">" << endl
+           << "{" << endl
+           << "    using unencoded_type = " << cpp.qname(event) << ";" << endl
+           << "    using encoded_type = " << qname(class_) << name(event) << "*;" << endl
+           << "    using container_encoded_type = " << qname(class_) << name(event) << "*;" << endl
+           << endl
+           << "    inline static unencoded_type decode(encoded_type src)" << endl
+           << "    {" << endl
+           << "        " << cpp.qname(event) << " tgt;" << endl;
+
+    for(auto value : event->values())
+    {
+        stream << "        tgt." << cpp.name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::decode(src." << name(value) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static encoded_type encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        " << qname(class_) << name(event) << "* tgt = [[" << qname(class_) << name(event) << " new] autorelease];" << endl;
+
+    for(auto value : event->values())
+    {
+        stream << "        tgt." << name(value) << " = TypeEncoding<" << cpp.type(value->type()) << ">::encode(src." << cpp.name(value) << ");" << endl;
+    }
+
+    stream << "        return tgt;" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static unencoded_type container_decode(container_encoded_type src)" << endl
+           << "    {" << endl
+           << "        return decode(src);" << endl
+           << "    }" << endl
+           << endl
+           << "    inline static container_encoded_type container_encode(unencoded_type src)" << endl
+           << "    {" << endl
+           << "        return encode(src);" << endl
+           << "    }" << endl
+           << "};" << endl << endl
+           << "} } } } // namespace: everbase::internal::library::objc" << endl
+           << endl << endl;
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::ObjectiveC
