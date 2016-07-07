@@ -30,7 +30,7 @@ FormatterBase::FormatterBase()
                 NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Struct>           { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Enum>             { NameStyle::UPPER_CAMELCASE, "", false },
-                NameConfig<Enum::Value>      { NameStyle::UPPERCASE, "_", false },
+                NameConfig<Enum::Value>      { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class>            { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Constant>  { NameStyle::UPPER_CAMELCASE, "", false },
                 NameConfig<Class::Event>     { NameStyle::UPPER_CAMELCASE, "", false },

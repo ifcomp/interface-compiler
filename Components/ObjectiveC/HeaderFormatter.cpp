@@ -279,7 +279,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Enum::ValueRef va
         stream << doc(value->doc());
     }
 
-    stream << name(value) << " = 0x" << std::hex << static_cast<std::uint64_t>(value->value());
+    stream << qname(value) << " = 0x" << std::hex << static_cast<std::uint64_t>(value->value());
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::ObjectiveC
