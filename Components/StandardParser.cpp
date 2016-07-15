@@ -908,7 +908,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                                         break;
 
                                     default:
-                                        throw std::runtime_error("support for underlying type" + primitive->underlyingName() + "not implemented");
+                                        throw std::runtime_error("support for underlying type " + primitive->underlyingName() + " not implemented");
                                 }
                             }
                         }
