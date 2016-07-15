@@ -907,6 +907,10 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                                         constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
                                         break;
 
+                                    case Primitive::Underlying::TYPEID:
+                                        constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
+                                        break;
+
                                     default:
                                         throw std::runtime_error("support for underlying type " + primitive->underlyingName() + " not implemented");
                                 }
