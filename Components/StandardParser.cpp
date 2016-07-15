@@ -897,7 +897,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                                         break;
 
                                     case Primitive::Underlying::TIMESTAMP:
-                                        throw std::runtime_error("not supported");
+                                        throw std::runtime_error("support for underlying type of TIMESTAMP not implemented");
 
                                     case Primitive::Underlying::STRING:
                                         constant->setValue(value);
@@ -908,7 +908,7 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                                         break;
 
                                     default:
-                                        throw std::runtime_error("not supported");
+                                        throw std::runtime_error("support for underlying type" + primitive->underlyingName() + "not implemented");
                                 }
                             }
                         }
