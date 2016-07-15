@@ -194,6 +194,7 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Constan
                 break;
 
             case Primitive::Underlying::UUID:
+            case Primitive::Underlying::TYPEID:
                 {
                     auto uuid = boost::uuids::to_string(boost::any_cast<boost::uuids::uuid>(constant->value()));
                     uuid.erase(std::remove(uuid.begin(), uuid.end(), '-'), uuid.end());

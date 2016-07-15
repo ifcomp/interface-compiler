@@ -904,9 +904,6 @@ void StandardParser::resolveTypesInNamespace(const NamespaceRef &rootNamespace, 
                                         break;
 
                                     case Primitive::Underlying::UUID:
-                                        constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
-                                        break;
-
                                     case Primitive::Underlying::TYPEID:
                                         constant->setValue(boost::lexical_cast<boost::uuids::uuid>(value));
                                         break;

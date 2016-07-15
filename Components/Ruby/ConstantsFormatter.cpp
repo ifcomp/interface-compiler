@@ -100,6 +100,7 @@ void ConstantsFormatter::_definition(std::ostream& stream, Model::Class::Constan
                 break;
 
             case Primitive::Underlying::UUID:
+            case Primitive::Underlying::TYPEID:
             {
                 const auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
                 auto str = boost::lexical_cast<std::string>(uuid);

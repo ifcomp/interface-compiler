@@ -107,6 +107,7 @@ void LibraryFormatter::_definition(std::ostream& stream, Model::Class::ConstantR
                 break;
 
             case Primitive::Underlying::UUID:
+            case Primitive::Underlying::TYPEID:
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 

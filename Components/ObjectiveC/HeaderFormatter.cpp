@@ -197,6 +197,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
                 break;
 
             case Primitive::Underlying::UUID:
+            case Primitive::Underlying::TYPEID:
                 {
                     auto uuid = boost::any_cast<boost::uuids::uuid>(constant->value());
 
