@@ -25,6 +25,7 @@ endif()
 # Enable Boost
 
 if(NOT DEFINED Boost_USE_STATIC_LIBS)
+    message(STATUS "Setting Boost_USE_STATIC_LIBS ON")
     set(Boost_USE_STATIC_LIBS ON)
 endif()
 
