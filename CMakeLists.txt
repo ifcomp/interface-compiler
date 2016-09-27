@@ -24,7 +24,10 @@ endif()
 
 # Enable Boost
 
-set(Boost_USE_STATIC_LIBS ON) 
+if(NOT DEFINED Boost_USE_STATIC_LIBS)
+    set(Boost_USE_STATIC_LIBS ON)
+endif()
+
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost COMPONENTS regex filesystem system)
