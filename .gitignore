@@ -43,3 +43,5 @@ cmake_install.cmake
 *.opendb
 *.sdf
 *.suo
+*.ilk
+*.pdb
