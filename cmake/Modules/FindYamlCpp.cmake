@@ -6,10 +6,10 @@
 
 find_path(YamlCpp_INCLUDE_DIRS NAMES yaml-cpp/yaml.h PATHS $ENV{YamlCpp_ROOT}/include)
 
-if(${CMAKE_BUILD_TYPE} MATCHES Release)
-find_library(YamlCpp_LIBRARIES NAMES yaml-cpp libyaml-cpp libyaml-cppmt libyaml-cppmd PATHS $ENV{YamlCpp_ROOT}/lib $ENV{YamlCpp_ROOT}/build/Release)
-else()
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
 find_library(YamlCpp_LIBRARIES NAMES yaml-cpp libyaml-cpp libyaml-cppmtd libyaml-cppmdd PATHS $ENV{YamlCpp_ROOT}/lib $ENV{YamlCpp_ROOT}/build/Debug)
+else() # for Release, RelWithDebInfo and MinSizeRel
+find_library(YamlCpp_LIBRARIES NAMES yaml-cpp libyaml-cpp libyaml-cppmt libyaml-cppmd PATHS $ENV{YamlCpp_ROOT}/lib $ENV{YamlCpp_ROOT}/build/Release)
 endif()
 
 include(FindPackageHandleStandardArgs)
