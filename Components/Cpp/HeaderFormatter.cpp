@@ -220,8 +220,8 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
     stream << "struct " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
     filter(stream).push<indent>(config.indentData)
-        << "static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl
-        << "static const bool TYPE_EXTERNAL; // = true" << endl
+        << "EVERBASE_LIB_EXPORT static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl
+        << "EVERBASE_LIB_EXPORT static const bool TYPE_EXTERNAL; // = true" << endl
         << endl;
 
     for (auto value : event->values())
