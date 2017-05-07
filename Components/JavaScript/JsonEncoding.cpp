@@ -132,7 +132,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 		<< "}," << endl
 		<< "decode: function(handle) {" << endl;
 	f.push<indent>()
-            << "// 4294967295 == uint32_t(-1), js max int is 2^53-1"
+            << "// 4294967295 == uint32_t(-1), js max int is 2^53-1" << endl
             << "if (handle == 4294967295) {" << endl;
     f.push<indent>()
                 << "return null;" << endl;
