@@ -32,7 +32,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::NamespaceRef namespa
     {
         stream << doc(namespace_->doc());
     }
-    
+
     if (!namespace_->parent()->parent())
     {
 		//stream << "var " << qname(namespace_) << " = " << qname(namespace_) << " || { };" << endl << endl;
@@ -62,14 +62,14 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
     {
         stream << doc(struct_->doc());
     }
-    
+
 	stream << "// struct: " << qname(struct_) << " {" << endl << endl;
 
 	filter f(stream);
 	f << CONVERSIONS << "['" << qcname(struct_) << "'] = {" << endl;
 	f.push<indent>()
 		<< "encode: function(value) {" << endl;
-	f.push<indent>()	
+	f.push<indent>()
 			<< "var result = new " << qname(struct_) << "();" << endl;
 			for (auto field : struct_->fields())
 			{
@@ -118,7 +118,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
     {
         stream << doc(class_->doc());
     }
-    
+
 	stream << "// class: " << qname(class_) << " {" << endl << endl;
 
 	filter f(stream);
@@ -126,10 +126,10 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	f << CONVERSIONS << "['" << qcname(class_) << "'] = {" << endl;
 	f.push<indent>()
 		<< "encode: function (classObj) {" << endl;
-	f.push<indent>() 
+	f.push<indent>()
 			<< "return classObj._handle;" << endl;
-	f.pop() 
-		<< "}," << endl 
+	f.pop()
+		<< "}," << endl
 		<< "decode: function(handle) {" << endl;
 	f.push<indent>()
             << "// 4294967295 == uint32_t(-1), js max int is 2^53-1"
@@ -140,15 +140,15 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
             << "}" << endl
 			<< "if (handle in " << HANDLES << ") {" << endl;
 	f.push<indent>()
-				<< "return " <<  HANDLES << "[handle]" << endl;
-    f.pop() 
-			<< "}" << endl  
-			<< "var result = new " << qname(class_) << "(handle);" << endl	
+				<< "return " << HANDLES << "[handle]" << endl;
+    f.pop()
+			<< "}" << endl
+			<< "var result = new " << qname(class_) << "(handle);" << endl
 			<< HANDLES << "[handle] = result;" << endl
 			<< "return result;" << endl;
-	f.pop() 
+	f.pop()
 		<< "}" << endl;
-	f.pop() 
+	f.pop()
 	<< "}" << endl << endl;
 
 	stream << "// class: }" << endl << endl;
@@ -157,16 +157,16 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	{
 		stream << definition(event);
 	}
-	
+
 	for (auto constant : class_->constants())
 	{
 		stream << definition(constant);
-	}  
-	
+	}
+
 }
 
 
-void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef event) const 
+void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef event) const
 {
     if ( event->doc() )
     {
@@ -206,7 +206,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::EnumRef enum_) const
     {
         stream << doc(enum_->doc());
     }
-    
+
 	stream << "// enum: " << qname(enum_) << " {" << endl << endl;
 
 	filter f(stream);
