@@ -58,7 +58,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::StructRef struct_
         stream << doc(struct_->doc());
     }
 
-    stream << "struct EVERBASE_LIB_EXPORT " << name(struct_) << endl << "{" << endl;
+    stream << "struct " << name(struct_) << endl << "{" << endl;
 
     for (auto field : struct_->fields())
     {
@@ -80,7 +80,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::ClassRef class_) 
         stream << doc(class_->doc());
     }
 
-    stream << "class EVERBASE_LIB_EXPORT " << name(class_) << " : public virtual ";
+    stream << "class " << name(class_) << " : public virtual ";
 
     if(class_->super())
     {
@@ -154,7 +154,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::ConstantRe
         stream << doc(constant->doc());
     }
 
-    stream << "static const " << type(constant->type()) << " " << name(constant) << "; // = ";
+    stream << "EVERBASE_LIB_EXPORT static const " << type(constant->type()) << " " << name(constant) << "; // = ";
 
     if( auto primitive = std::dynamic_pointer_cast<Primitive>(std::dynamic_pointer_cast<Type>(constant->type())->primary()) )
     {
@@ -217,11 +217,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::EventRef e
         stream << doc(event->doc());
     }
 
-    stream << "struct EVERBASE_LIB_EXPORT " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
+    stream << "struct " << name(event) << " : public everbase::common::Event" << endl << "{" << endl;
 
     filter(stream).push<indent>(config.indentData)
-        << "static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl
-        << "static const bool TYPE_EXTERNAL; // = true" << endl
+        << "EVERBASE_LIB_EXPORT static const char TYPE_NAME[]; // = \"" << qcname(event) << "\"" << endl
+        << "EVERBASE_LIB_EXPORT static const bool TYPE_EXTERNAL; // = true" << endl
         << endl;
 
     for (auto value : event->values())
@@ -244,7 +244,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::Class::OperationR
         stream << doc(operation->doc());
     }
 
-    stream << signature(operation) << (!operation->isStatic() ? " = 0" : "") << ";" << endl;
+    stream << ( operation->isStatic() ? "EVERBASE_LIB_EXPORT " : "" ) << signature(operation) << (!operation->isStatic() ? " = 0" : "") << ";" << endl;
 }
 
 void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) const
