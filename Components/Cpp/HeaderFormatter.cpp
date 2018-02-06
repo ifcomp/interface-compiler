@@ -284,13 +284,13 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
         {
             stream << "inline " << name(enum_) << "& operator" << op << "( " << name(enum_) << "& a, " << name(enum_) << " b )" << endl
                    << "{" << endl;
-            filter(stream).push<indent>(config.indentData) << "a = static_cast<" << name(enum_) << ">(static_cast<int>(a) " << op[0] << " static_cast<int>(b));" << endl;
+            filter(stream).push<indent>(config.indentData) << "a = static_cast<" << name(enum_) << ">( static_cast<int>(a) " << op[0] << " static_cast<int>(b) );" << endl;
             filter(stream).push<indent>(config.indentData) << "return a;" << endl;
             stream << "}" << endl << endl;
         }
     }
 
-    stream << "inline std::string to_string(" << name(enum_) << " enumerator)" << endl << "{" << endl;
+    stream << "inline std::string to_string( " << name(enum_) << " enumerator )" << endl << "{" << endl;
     if( enum_->isBitfield() )
     {
         filter(stream).push<indent>(config.indentData) << "std::string values( \"\" );" << endl << endl;
