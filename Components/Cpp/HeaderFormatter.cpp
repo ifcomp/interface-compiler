@@ -306,7 +306,7 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
 
         if( enum_->isBitfield() )
         {
-            filter(stream).push<indent>(config.indentData) << "if( (int)enumerator & (int)" << name(enum_) << "::" << name(value) << " )" << endl
+            filter(stream).push<indent>(config.indentData) << "if( ( enumerator & " << name(enum_) << "::" << name(value) << " ) == " << name(enum_) << "::" << name(value) << " )" << endl
                                                            << "{" << endl
                                                            << "    values += ( values.empty() ? \"\" : \" | \" );" << endl
                                                            << "    values += \"" << name(value) << "\";" << endl
