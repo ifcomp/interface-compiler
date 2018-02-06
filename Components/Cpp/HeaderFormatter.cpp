@@ -274,6 +274,11 @@ void HeaderFormatter::_definition(std::ostream& stream, Model::EnumRef enum_) co
             stream << "}" << endl << endl;
         }
 
+        stream << "inline " << name(enum_) << " operator" << "~" << "( " << name(enum_) << " a )" << endl
+               << "{" << endl;
+        filter(stream).push<indent>(config.indentData) << "return static_cast<" << name(enum_) << ">( ~static_cast<int>(a) );" << endl;
+        stream << "}" << endl << endl;
+
         std::vector<std::string> assops( { "|=", "&=", "^=" } );
         for ( auto &op :assops )
         {
