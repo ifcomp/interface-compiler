@@ -46,3 +46,4 @@ cmake_install.cmake
 *.ilk
 *.pdb
 *.db
+*.user
