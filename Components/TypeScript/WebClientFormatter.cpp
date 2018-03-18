@@ -89,8 +89,8 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
     stream << "// class: " << qname(class_) << " {" << endl << endl;
 
     stream << qname(class_) << " = function(handle) {" << endl
-        << "    this._handle = typeof handle !== 'undefined' ? handle : null;" << endl
-        << "    this._destroyed = false;" << endl
+        << config.indentData << "this._handle = typeof handle !== 'undefined' ? handle : null;" << endl
+        << config.indentData << "this._destroyed = false;" << endl
         << "};" << endl << endl;
 
     if( auto super = std::dynamic_pointer_cast<Model::Type>(class_->super()) )
@@ -116,14 +116,16 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::ClassRef class
     destroy->setLongName("destroy");
     destroy->setParent(class_);
 
-    stream << signature(destroy) << " {" << endl
-        << "    if(this._destroyed) {" << endl
-        << "        throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
-        << "    }" << endl;
+    filter f( stream );
 
-    filter f(stream);
+    f << signature( destroy ) << " {" << endl;
+    f.push<indent>( config.indentData )
+        << "if(this._destroyed) {" << endl
+        << config.indentData << "throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
+        << "}" << endl;
+
     f << endl;
-    f.push<indent>( config.indentData ) << "var message: any =" << endl;
+    f << "var message: any =" << endl;
     f << "[" <<endl;
     f.push<indent>( config.indentData )
         << "\'call\'," << endl
@@ -252,14 +254,15 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     stream << signature(operation) << " {" << endl;
 
-    stream << "    if(this._destroyed) {" << endl
-        << "        throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
-        << "    }" << endl;
+    filter f( stream );
+    f.push<indent>( config.indentData )
+        << "if(this._destroyed) {" << endl
+        << config.indentData << "throw new Error(\"Tried to call function on object after destroy() was called.\");" << endl
+        << "}" << endl;
 
-    _formatRequest(stream, operation);
+    _formatRequest( f, operation );
 
-    filter f(stream);
-    f.push<indent>( config.indentData ) << "everbase.webclient.connection.send(message);" << endl;
+    f << "everbase.webclient.connection.send(message);" << endl;
     stream << endl;
     f << "return new Promise(function (resolve, reject) {" << endl;
 
@@ -281,7 +284,6 @@ void WebClientFormatter::_definition(std::ostream& stream, Model::Class::Operati
 
     f.pop()
         << "});" << endl;
-
     f.pop()
         << "};" << endl << endl;
 }
@@ -293,7 +295,7 @@ void WebClientFormatter::_formatRequest(std::ostream& stream, Model::Class::Oper
 
     filter f(stream);
     f << endl;
-    f.push<indent>( config.indentData ) << "var message: any =" << endl;
+    f << "var message: any =" << endl;
     f << "[" <<endl;
     f.push<indent>( config.indentData )
         << "\'call\'," << endl
