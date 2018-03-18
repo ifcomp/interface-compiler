@@ -140,14 +140,14 @@ using wfilter = BasicFilterStream < wchar_t > ;
  * @brief Indent
  */
 
-template<class CharT, class Traits = std::char_traits<CharT>>
+template<class CharT, class Traits = std::char_traits<CharT>, std::size_t COUNT = 4, CharT WHITESPACE = ' '>
 class BasicIndentBuffer : public BasicFilterBuffer<CharT, Traits>
 {
 public:
-    BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::basic_string<CharT, Traits> prefix, std::size_t count, CharT whitespace = ' ', bool bol = false )
+    BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::basic_string<CharT, Traits> prefix, std::size_t count, CharT whitespace = WHITESPACE, bool bol = false )
         : BasicFilterBuffer<CharT, Traits>( dest )
         , _prefix( prefix )
-        , _data( std::basic_string<CharT, Traits>(count, whitespace) )
+        , _data( std::basic_string<CharT, Traits>( count, whitespace ) )
         , _bol( bol )
     {
     }
@@ -159,13 +159,13 @@ public:
     {
     }
 
-    BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, CharT data = ' ', std::size_t count = 4 )
-        : BasicIndentBuffer( dest, std::basic_string<CharT, Traits>(count, data) )
+    BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, std::size_t count = COUNT, CharT whitespace = WHITESPACE )
+        : BasicIndentBuffer( dest, std::basic_string<CharT, Traits>( count, whitespace ) )
     {
     }
 
     BasicIndentBuffer( std::basic_streambuf<CharT, Traits>& dest, const char* data )
-        : BasicIndentBuffer( dest, std::string(data) )
+        : BasicIndentBuffer( dest, std::string( data ) )
     {
     }
 
@@ -201,7 +201,7 @@ private:
 };
 
 template<class CharT, class Traits = std::char_traits<CharT>>
-using indent = BasicIndentBuffer < CharT, Traits > ;
+using indent = BasicIndentBuffer<CharT, Traits>;
 
 
 /**

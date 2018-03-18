@@ -39,7 +39,7 @@ protected:
     using FormatterBase::_doc;
     using FormatterBase::_definition;
     using FormatterBase::_signature;
-    
+
 	virtual void _definition(std::ostream& stream, Model::StructRef struct_) const override;
 
 	virtual void _definition(std::ostream& stream, Model::ClassRef class_) const override;
@@ -48,7 +48,7 @@ protected:
 	virtual void _definition(std::ostream& stream, Model::Class::OperationRef operation) const override;
 
 	virtual void _definition(std::ostream& stream, Model::EnumRef enum_) const override;
-	virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;	
+	virtual void _definition(std::ostream& stream, Model::Enum::ValueRef value) const override;
 
 	virtual void _formatRequest(std::ostream& stream, Model::Class::OperationRef operation) const;
 

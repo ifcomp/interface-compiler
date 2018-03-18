@@ -26,7 +26,7 @@ using PrimitiveConfigs = FormatterConfig::PrimitiveConfigs;
 FormatterBase::FormatterBase()
     : Formatter(FormatterConfig
         {
-            std::string("."), std::string(4, ' '), 85,
+            std::string("."), std::string(2, ' '), 85,
             NameConfigs {
                 NameConfig<Namespace>        { NameStyle::LOWER_CAMELCASE, "", false },
                 NameConfig<Parameter>        { NameStyle::LOWER_CAMELCASE, "", false },

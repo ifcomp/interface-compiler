@@ -67,9 +67,9 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 
 	filter f(stream);
 	f << CONVERSIONS << "['" << qcname(struct_) << "'] = {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 		<< "encode: function(value) {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 			<< "var result = new " << qname(struct_) << "();" << endl;
 			for (auto field : struct_->fields())
 			{
@@ -89,7 +89,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::StructRef struct_) c
 	f.pop() << "}," << endl;
 
 	f << "decode: function(value) {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 		<< "var result = new " << qname(struct_) << "();" << endl;
 
 	for (auto field : struct_->fields())
@@ -124,22 +124,22 @@ void JsonEncoding::_definition(std::ostream& stream, Model::ClassRef class_) con
 	filter f(stream);
 
 	f << CONVERSIONS << "['" << qcname(class_) << "'] = {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 		<< "encode: function (classObj) {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 			<< "return classObj._handle;" << endl;
 	f.pop()
 		<< "}," << endl
 		<< "decode: function(handle) {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
             << "// 4294967295 == uint32_t(-1), js max int is 2^53-1" << endl
             << "if (handle == 4294967295) {" << endl;
-    f.push<indent>()
+    f.push<indent>( config.indentData )
                 << "return null;" << endl;
     f.pop()
             << "}" << endl
 			<< "if (handle in " << HANDLES << ") {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 				<< "return " << HANDLES << "[handle]" << endl;
     f.pop()
 			<< "}" << endl
@@ -177,9 +177,9 @@ void JsonEncoding::_definition(std::ostream& stream, Model::Class::EventRef even
 	filter f(stream);
 
 	f << CONVERSIONS << "['" << qcname(event) << "'] = {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 		<< "decode: function(eventValues) {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 			<< "var JsEvent = new " << qname(event) << "();" << endl;
 	int count = 0;
 	for (auto value : event->values())
@@ -211,7 +211,7 @@ void JsonEncoding::_definition(std::ostream& stream, Model::EnumRef enum_) const
 
 	filter f(stream);
 	f << CONVERSIONS << "['" << qcname(enum_) << "'] = {" << endl;
-	f.push<indent>()
+	f.push<indent>( config.indentData )
 		<< "encode: function(value) { return value }, " << endl
 		<< "decode: function(value) { return value } " << endl;
 	f.pop()
