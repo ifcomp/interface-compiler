@@ -212,8 +212,8 @@ void JsonEncoding::_definition(std::ostream& stream, Model::EnumRef enum_) const
 	filter f(stream);
 	f << CONVERSIONS << "['" << qcname(enum_) << "'] = {" << endl;
 	f.push<indent>( config.indentData )
-		<< "encode: function(value) { return value }, " << endl
-		<< "decode: function(value) { return value } " << endl;
+		<< "encode: function(value) { return value }," << endl
+		<< "decode: function(value) { return value }" << endl;
 	f.pop()
 		<< "}";
 
