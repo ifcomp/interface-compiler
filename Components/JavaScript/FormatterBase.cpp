@@ -90,16 +90,7 @@ void FormatterBase::_definition(std::ostream& stream, Model::NamespaceRef namesp
 
 void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef operation) const
 {
-	if(operation->result())
-	{
-        stream << "/* Promise [" << type(operation->result()->type()) << " " << name(operation->result()) << "] */";
-	}
-	else
-	{
-        stream << "/* Promise [] */";
-	}
-
-    stream << " " << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parent())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";
+    stream << qname(std::dynamic_pointer_cast<Model::Identifiable>(operation->parent())) << (!operation->isStatic() ? ".prototype." : ".") <<  name(operation) <<  " = function" << "(";
 
 	for( auto parameter : indices(operation->params()) )
 	{
@@ -107,6 +98,15 @@ void FormatterBase::_signature(std::ostream& stream, Model::Class::OperationRef 
 	}
 
 	stream << ")";
+
+    if( operation->result() )
+    {
+        stream << " /* -> Promise [" << type( operation->result()->type() ) << " " << name( operation->result() ) << "] */";
+    }
+    else
+    {
+        stream << " /* -> Promise [] */";
+    }
 }
 
 } } } } // namespace: Everbase::InterfaceCompiler::Components::JavaScript
