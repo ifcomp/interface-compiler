@@ -62,6 +62,7 @@ include_directories(
     ${YamlCpp_INCLUDE_DIRS}
     Components/Cpp
     Components/JavaScript
+    Components/TypeScript
     Components
     Model
     .

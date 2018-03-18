@@ -22,6 +22,10 @@
 #include "Components/Ruby/OperationsFormatter.hpp"
 #include "Components/Ruby/ConstantsFormatter.hpp"
 
+#include "Components/TypeScript/HeaderFormatter.hpp"
+#include "Components/TypeScript/WebClientFormatter.hpp"
+#include "Components/TypeScript/JsonEncoding.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <memory>
@@ -61,6 +65,9 @@ int main(int argc, char** argv)
         cerr << "           Ruby-Events" << endl;
         cerr << "           Ruby-Operations" << endl;
         cerr << "           Ruby-Constants" << endl;
+        cerr << "           Ts-Header" << endl;
+        cerr << "           Ts-JsonEncoding" << endl;
+        cerr << "           Ts-WebClient" << endl;
         return 1;
     }
 
@@ -236,6 +243,24 @@ int main(int argc, char** argv)
             if( format.first == "Ruby-Constants" )
             {
                 Components::Ruby::ConstantsFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ts-Header" )
+            {
+                Components::TypeScript::HeaderFormatter format;
+                format.execute(root, output);
+            }
+            else
+            if (format.first == "Ts-JsonEncoding")
+            {
+                Components::TypeScript::JsonEncoding format;
+                format.execute(root, output);
+            }
+            else
+            if( format.first == "Ts-WebClient" )
+            {
+                Components::TypeScript::WebClientFormatter format;
                 format.execute(root, output);
             }
             else
